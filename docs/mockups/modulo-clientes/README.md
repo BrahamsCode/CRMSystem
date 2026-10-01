@@ -26,3 +26,21 @@ Lienzo interactivo (Claude Design): https://claude.ai/artifact/H85itqausayWcS3rn
 ## Capturas del sistema legacy
 
 Referencia de las pantallas originales en `legacy/`: `inicio.webp`, `buscar-clientes.webp`, `resumen-clientes.png`, `lista-clientes.webp`, `estadisticas.png`, `campos-csv.png`.
+
+## Temas y propuestas de diseño
+
+Página «Temas y propuestas» del lienzo:
+
+- `Tema-Personalizador.dc.html`: pantalla interactiva con panel de personalización (modo claro/oscuro, color principal, disposición del menú doble/lateral/superior, estilo del menú, tarjetas, esquinas, densidad, tipografía y títulos). Genera las variables CSS del tema.
+- `Propuesta-1…6-*.dc.html`: la misma pantalla con cada propuesta aplicada, para presentar al cliente.
+
+| Propuesta | Idea | Referencia |
+|---|---|---|
+| 1 · Coral moderno | Diseño actual de los mockups, menú doble | — |
+| 2 · Azul corporativo | Menú superior, tarjetas con sombra | [Tabler](https://github.com/tabler/tabler) (MIT) |
+| 3 · Laravel Filament | Menú lateral claro, ámbar, esquinas redondeadas | [Filament](https://filamentphp.com) (MIT) |
+| 4 · Minimal monocromo | Negro y blanco, compacto | [shadcn-admin](https://github.com/satnaing/shadcn-admin) (MIT) |
+| 5 · Washi · Ai-iro | Papel cálido, índigo japonés, títulos Mincho | Estética japonesa tradicional |
+| 6 · Nocturno | Modo oscuro | [AdminLTE](https://github.com/ColorlibHQ/AdminLTE) / Tabler (modo oscuro) |
+
+En Laravel el tema se guarda como ajustes (por empresa o usuario) y se aplica con variables CSS y atributos `data-*` en `<body>`, como muestra el bloque que genera el panel.

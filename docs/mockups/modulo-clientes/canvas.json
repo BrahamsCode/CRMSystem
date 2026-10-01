@@ -2,24 +2,6 @@
   "v": 3,
   "attachments": {},
   "boards": {
-    "Login.dc.html": {
-      "expand": "fill",
-      "h": 900,
-      "is_interactive": true,
-      "title": "Acceso · Iniciar sesión",
-      "w": 1440,
-      "x": -1520,
-      "y": 0
-    },
-    "Clientes-Resumen.dc.html": {
-      "expand": "fill",
-      "h": 1000,
-      "is_interactive": true,
-      "title": "Clientes · Resumen del módulo",
-      "w": 1440,
-      "x": 1520,
-      "y": 0
-    },
     "Clientes-Buscar.dc.html": {
       "expand": "fill",
       "h": 2500,
@@ -47,6 +29,24 @@
       "x": 4560,
       "y": 0
     },
+    "Clientes-Resumen.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "title": "Clientes · Resumen del módulo",
+      "w": 1440,
+      "x": 1520,
+      "y": 0
+    },
+    "Login.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "is_interactive": true,
+      "title": "Acceso · Iniciar sesión",
+      "w": 1440,
+      "x": -1520,
+      "y": 0
+    },
     "Main.dc.html": {
       "expand": "fill",
       "h": 1100,
@@ -55,6 +55,70 @@
       "w": 1440,
       "x": 0,
       "y": 0
+    },
+    "Tema-Personalizador.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "is_interactive": true,
+      "title": "Personalizador de tema (interactivo)",
+      "w": 1440,
+      "x": 0,
+      "y": 0,
+      "page": "temas"
+    },
+    "Propuesta-1-coral.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "title": "Propuesta 1 · Coral moderno",
+      "w": 1440,
+      "x": 0,
+      "y": 1500,
+      "page": "temas"
+    },
+    "Propuesta-2-tabler.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "title": "Propuesta 2 · Azul corporativo",
+      "w": 1440,
+      "x": 1520,
+      "y": 1500,
+      "page": "temas"
+    },
+    "Propuesta-3-filament.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "title": "Propuesta 3 · Laravel Filament",
+      "w": 1440,
+      "x": 3040,
+      "y": 1500,
+      "page": "temas"
+    },
+    "Propuesta-4-minimal.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "title": "Propuesta 4 · Minimal monocromo",
+      "w": 1440,
+      "x": 0,
+      "y": 2620,
+      "page": "temas"
+    },
+    "Propuesta-5-washi.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "title": "Propuesta 5 · Washi · Ai-iro",
+      "w": 1440,
+      "x": 1520,
+      "y": 2620,
+      "page": "temas"
+    },
+    "Propuesta-6-noche.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "title": "Propuesta 6 · Nocturno",
+      "w": 1440,
+      "x": 3040,
+      "y": 2620,
+      "page": "temas"
     }
   },
   "createdOnFiles": {
@@ -68,11 +132,27 @@
   "notes": {
     "t1": {
       "kind": "title1",
-      "maxW": 9040,
+      "maxW": 8000,
       "text": "Módulo 1 · Gestión de clientes — rediseño del sistema legacy",
       "w": 240,
       "x": -1520,
       "y": -300
+    },
+    "t2": {
+      "kind": "title1",
+      "maxW": 4480,
+      "text": "Personalizador de tema — pulsa Play y usa el panel derecho",
+      "x": 0,
+      "y": -300,
+      "page": "temas"
+    },
+    "t3": {
+      "kind": "title1",
+      "maxW": 4480,
+      "text": "6 propuestas de diseño para presentar al cliente",
+      "x": 0,
+      "y": 1200,
+      "page": "temas"
     }
   },
   "order": [
@@ -81,8 +161,18 @@
     "Clientes-Resumen.dc.html",
     "Clientes-Buscar.dc.html",
     "Clientes-Estadisticas.dc.html",
-    "Clientes-Campos.dc.html"
+    "Clientes-Campos.dc.html",
+    "Tema-Personalizador.dc.html",
+    "Propuesta-1-coral.dc.html",
+    "Propuesta-2-tabler.dc.html",
+    "Propuesta-3-filament.dc.html",
+    "Propuesta-4-minimal.dc.html",
+    "Propuesta-5-washi.dc.html",
+    "Propuesta-6-noche.dc.html"
   ],
-  "pages": [],
+  "pages": [
+    { "id": "clientes", "name": "Módulo clientes" },
+    { "id": "temas", "name": "Temas y propuestas" }
+  ],
   "title": "CRM · Gestión de Clientes"
 }
