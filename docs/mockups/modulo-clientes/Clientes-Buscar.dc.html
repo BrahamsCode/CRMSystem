@@ -18,7 +18,7 @@ body{margin:0}
 @media (max-width:720px){.rail{display:none !important}.hide-sm{display:none !important}.mpad{padding:20px 16px !important}.g2,.g3{grid-template-columns:1fr !important}}
 </style>
 </helmet>
-<div style="min-height: 100vh; display: flex; flex-direction: {{T.dir}}; background: {{T.bg}}; color: {{T.text}}; font-family: {{T.font}}; font-size: {{T.fs}}px">
+<div style="min-height: 100vh; display: flex; flex-direction: {{T.dir}}; background: {{T.bg}}; color: {{T.text}}; font-family: {{T.font}}; font-size: {{T.fs}}px; overflow-x: clip">
 <sc-if value="{{isDouble}}" hint-placeholder-val="{{ true }}">
 <nav class="rail" aria-label="Módulos" style="width: 72px; flex-shrink: 0; background: {{N.bg}}; border-right: 1px solid {{N.border}}; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 16px 0; box-sizing: border-box; position: sticky; top: 0; height: 100vh">
 <a href="Main.dc.html" aria-label="Inicio" style="width: 40px; height: 40px; border-radius: {{T.r}}px; background: {{N.brandBg}}; color: {{N.brandFg}}; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; text-decoration: none; margin-bottom: 16px">CRM</a>
@@ -58,7 +58,7 @@ body{margin:0}
 <a href="Login.dc.html" aria-label="Cerrar sesión" title="Cerrar sesión" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: {{N.fg}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path></svg></a>
 </div>
 </header>
-<nav aria-label="Menú de clientes" style="background: {{T.surface}}; border-bottom: 1px solid {{T.border}}; display: flex; gap: 4px; padding: 0 24px; overflow-x: auto">
+<nav aria-label="Menú de clientes" style="background: {{T.surface}}; border-bottom: 1px solid {{T.border}}; display: flex; flex-wrap: wrap; gap: 0 4px; padding: 0 24px">
 <sc-for list="{{sh.tabs}}" as="t" hint-placeholder-count="11"><a href="{{t.href}}" style="{{t.style}}">{{t.label}}</a></sc-for>
 </nav>
 </sc-if>
@@ -77,7 +77,7 @@ body{margin:0}
 <a href="Login.dc.html" aria-label="Cerrar sesión" title="Cerrar sesión" style="{{T.iconBtn}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path></svg></a>
 </header>
 </sc-if>
-<main class="mpad" style="padding: {{T.pad}}px; box-sizing: border-box; width: 100%; max-width: 1600px; display: flex; flex-direction: column; gap: {{T.gap}}px">
+<main class="mpad" style="padding: {{T.pad}}px; box-sizing: border-box; width: 100%; max-width: 1600px; margin: 0 auto; display: flex; flex-direction: column; gap: {{T.gap}}px">
 <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap">
 <div>
 <h1 style="margin: 0; font-size: 26px; font-weight: 800; font-family: {{T.head}}">Buscar clientes</h1>
@@ -86,7 +86,7 @@ body{margin:0}
 <button type="button" style="{{T.btn}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>Búsquedas guardadas</button>
 </div>
 
-<div class="split" style="display: grid; grid-template-columns: 400px minmax(0, 1fr); gap: {{T.gap}}px; align-items: start">
+<div class="split" style="display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: {{T.gap}}px; align-items: start">
 
 <form aria-label="Filtros de búsqueda" style="{{T.card}}; overflow: hidden; display: flex; flex-direction: column">
 <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 20px">
@@ -94,8 +94,8 @@ body{margin:0}
 <a href="#" style="font-size: 13px; font-weight: 700; color: {{T.link}}">Limpiar todo</a>
 </div>
 <div style="padding: 4px 20px 18px; display: flex; flex-direction: column; gap: 14px">
-<label><span class="sr">Búsqueda rápida</span><input type="search" placeholder="Nombre, nº de cliente, teléfono o email" style="{{T.input}}"></label>
-<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<label><span class="sr">Búsqueda rápida</span><input type="search" placeholder="Nombre, nº, teléfono o email" style="{{T.input}}"></label>
+<div style="display: flex; flex-direction: column; gap: 12px">
 <fieldset style="{{fs}}"><legend style="{{T.label}}">Lógica de búsqueda</legend><div style="display: flex; gap: 6px"><button type="button" onClick="{{setAnd}}" aria-pressed="{{isAnd}}" style="{{andStyle}}; flex: 1">Y (AND)</button><button type="button" onClick="{{setOr}}" aria-pressed="{{isOr}}" style="{{orStyle}}; flex: 1">O (OR)</button></div></fieldset>
 <fieldset style="{{fs}}"><legend style="{{T.label}}">Resultado</legend><div style="display: flex; gap: 6px"><button type="button" onClick="{{setIn}}" aria-pressed="{{isIn}}" style="{{inStyle}}; flex: 1">Coinciden</button><button type="button" onClick="{{setEx}}" aria-pressed="{{isEx}}" style="{{exStyle}}; flex: 1">No coinciden</button></div></fieldset>
 </div>
@@ -211,20 +211,20 @@ body{margin:0}
 </div>
 </sc-if>
 <div style="{{T.card}}; overflow: hidden">
-<div style="overflow-x: auto">
-<div role="table" aria-label="Clientes encontrados" style="min-width: 820px">
+<div style="overflow-x: auto; position: relative">
+<div role="table" aria-label="Clientes encontrados" style="min-width: 664px">
 <div role="row" style="{{rowGrid}}">
 <div role="columnheader" style="{{th}}; padding-left: 16px"><input type="checkbox" aria-label="Seleccionar todos" checked="{{allSel}}" onChange="{{toggleAll}}" style="accent-color: {{T.accent}}; width: 18px; height: 18px; margin: 0"></div>
-<div role="columnheader" style="{{th}}">Nº de socio</div><div role="columnheader" style="{{th}}">Nº de gestión</div><div role="columnheader" style="{{th}}">Nombre</div><div role="columnheader" style="{{th}}">Registro de terminal</div><div role="columnheader" style="{{th}}">Visitas</div><div role="columnheader" style="{{th}}"><span class="sr">Acciones</span></div>
+<div role="columnheader" style="{{th}}">Nº de socio</div><div role="columnheader" style="{{th}}">Nº gestión</div><div role="columnheader" style="{{th}}">Nombre</div><div role="columnheader" style="{{th}}">Terminal</div><div role="columnheader" style="{{th}}">Visitas</div><div role="columnheader" style="{{th}}"><span class="sr">Acciones</span></div>
 </div>
 <sc-for list="{{rows}}" as="rw" hint-placeholder-count="10">
-<div role="row" style="{{rowGrid}}; background: {{rw.bg}}">
+<div role="row" style="{{rowGrid}}; background: {{rw.bg}};">
 <div role="cell" style="{{td}}; padding-left: 16px"><input type="checkbox" aria-label="Seleccionar {{rw.name}}" checked="{{rw.sel}}" onChange="{{rw.toggle}}" style="accent-color: {{T.accent}}; width: 18px; height: 18px; margin: 0"></div>
 <div role="cell" style="{{td}}; font-variant-numeric: tabular-nums">{{rw.id}}</div>
-<div role="cell" style="{{td}}; color: {{T.faint}}">—</div>
+<div role="cell" style="{{td}}; color: {{T.faint}};">—</div>
 <div role="cell" style="{{td}}; gap: 12px"><span style="width: 34px; height: 34px; flex-shrink: 0; border-radius: 50%; background: {{T.surface2}}; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800">{{rw.ini}}</span><a href="Clientes-Ficha.dc.html" style="color: {{T.text}}; font-weight: 700; text-decoration: none">{{rw.name}}</a></div>
-<div role="cell" style="{{td}}"><span style="padding: 2px 10px; border-radius: 999px; background: {{T.surface2}}; color: {{T.muted}}; font-size: 12px; font-weight: 700">Sin terminal</span></div>
-<div role="cell" style="{{td}}; font-weight: 700">{{rw.visits}}</div>
+<div role="cell" style="{{td}}"><span style="padding: 2px 10px; border-radius: 999px; background: {{T.surface2}}; color: {{T.muted}}; font-size: 12px; font-weight: 700; white-space: nowrap">Sin terminal</span></div>
+<div role="cell" style="{{td}}; font-weight: 700; white-space: nowrap">{{rw.visits}}</div>
 <div role="cell" style="{{td}}; justify-content: flex-end"><a href="Clientes-Ficha.dc.html" style="{{T.btn}}; height: 34px; padding: 0 12px">Ver ficha</a></div>
 </div>
 </sc-for>
@@ -394,7 +394,7 @@ function crmThemeKit() {
       label: 'display: block; font-size: 12px; font-weight: 700; color: ' + P.muted + '; margin-bottom: 6px',
       btn: btnBase + 'border: 1px solid ' + P.border + '; background: ' + P.surface + '; color: ' + P.text,
       btnP: btnBase + 'border: 1px solid ' + accent + '; background: ' + accent + '; color: ' + onAccent,
-      iconBtn: 'width: 44px; height: 44px; border-radius: ' + R[1] + 'px; border: 0; background: transparent; color: ' + P.muted + '; display: inline-flex; align-items: center; justify-content: center; cursor: pointer'
+      iconBtn: 'font-size: 18px; width: 44px; height: 44px; border-radius: ' + R[1] + 'px; border: 0; background: transparent; color: ' + P.muted + '; display: inline-flex; align-items: center; justify-content: center; cursor: pointer'
     };
     let N;
     if (s.nav === 'dark') N = { bg: dark ? '#090B0F' : '#12151C', fg: '#9AA3B2', title: '#FFFFFF', label: '#8B93A3', activeBg: '#2A303D', activeFg: '#FFFFFF', brandBg: accent, brandFg: onAccent, border: dark ? P.border : 'transparent', btnBorder: 'rgba(255,255,255,.22)' };
@@ -403,7 +403,7 @@ function crmThemeKit() {
     N.btn = 'display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: ' + R[1] + 'px; border: 1px solid ' + N.btnBorder + '; background: transparent; color: ' + N.title + '; font: inherit; font-weight: 700; cursor: pointer';
     const isDouble = s.layout === 'double', isSimple = s.layout === 'side', isTop = s.layout === 'top';
     const SN = isDouble
-      ? { w: 236, bg: P.surface, fg: P.muted, title: P.text, label: P.faint, activeBg: T.accentSoft, activeFg: T.accentSoftFg, border: P.border }
+      ? { w: 252, bg: P.surface, fg: P.muted, title: P.text, label: P.faint, activeBg: T.accentSoft, activeFg: T.accentSoftFg, border: P.border }
       : { w: 260, bg: N.bg, fg: N.fg, title: N.title, label: N.label, activeBg: N.activeBg, activeFg: N.activeFg, border: N.border };
     return { T, N, SN, isDouble, isSimple, isTop, isSide: !isTop };
   };
@@ -525,8 +525,8 @@ class Component extends DCLogic {
       h2: 'margin: 0; font-size: 17px; font-weight: 700; font-family: ' + T.head,
       th: 'padding: 10px 14px; font-size: 12px; font-weight: 700; color: ' + T.muted + '; background: ' + T.surface2 + '; text-align: left',
       td: 'padding: 0 14px; min-height: ' + T.rowH + 'px; display: flex; align-items: center; border-top: 1px solid ' + T.border,
-      chipOff: 'min-width: 44px; min-height: 38px; padding: 0 10px; border-radius: ' + T.r + 'px; border: 1px solid ' + T.border + '; background: ' + T.inputBg + '; color: ' + T.text + '; font: inherit; font-weight: 600; cursor: pointer',
-      chipOn: 'min-width: 44px; min-height: 38px; padding: 0 10px; border-radius: ' + T.r + 'px; border: 1px solid ' + T.accent + '; background: ' + T.accent + '; color: ' + T.onAccent + '; font: inherit; font-weight: 700; cursor: pointer',
+      chipOff: 'white-space: nowrap; min-width: 44px; min-height: 38px; padding: 0 10px; border-radius: ' + T.r + 'px; border: 1px solid ' + T.border + '; background: ' + T.inputBg + '; color: ' + T.text + '; font: inherit; font-weight: 600; cursor: pointer',
+      chipOn: 'white-space: nowrap; min-width: 44px; min-height: 38px; padding: 0 10px; border-radius: ' + T.r + 'px; border: 1px solid ' + T.accent + '; background: ' + T.accent + '; color: ' + T.onAccent + '; font: inherit; font-weight: 700; cursor: pointer',
       empty: 'display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding: 40px 16px; color: ' + T.muted
     };
     const page = (() => {
@@ -553,7 +553,7 @@ class Component extends DCLogic {
         range: 'display: flex; align-items: center; gap: 6px; color: ' + T.faint,
         fs: 'border: 0; margin: 0; padding: 0; min-width: 0',
         countBadge: 'padding: 2px 8px; border-radius: 999px; background: ' + T.accentSoft + '; color: ' + T.accentSoftFg + '; font-size: 12px; font-weight: 700',
-        rowGrid: 'display: grid; grid-template-columns: 48px 110px 110px minmax(200px, 1fr) 160px 90px 120px',
+        rowGrid: 'display: grid; grid-template-columns: 44px 92px 80px minmax(140px, 1fr) 116px 88px 100px',
         selBtn: 'height: 36px; padding: 0 12px; border-radius: ' + T.r + 'px; border: 1px solid currentColor; background: transparent; color: inherit; font: inherit; font-weight: 700; cursor: pointer'
       };
     })();

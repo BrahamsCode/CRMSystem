@@ -24,7 +24,7 @@
 <sc-for list="{{items}}" as="row" hint-placeholder-count="1">
 <div role="row" style="display: grid; grid-template-columns: minmax(0, 1fr) 190px 130px">
 <div role="cell" style="{{td}}; font-weight: 700">{{row.name}}</div>
-<div role="cell" style="{{td}}; gap: 6px"><button type="button" style="{{T.btn}}; height: 34px; padding: 0 12px">Editar</button><button type="button" onClick="{{row.del}}" style="{{T.btn}}; height: 34px; padding: 0 12px; color: {{T.req}}">Eliminar</button></div>
+<div role="cell" style="{{td}}; gap: 6px"><button type="button" style="{{T.btn}}; height: 34px; padding: 0 12px">Editar</button><button type="button" onClick="{{row.del}}" style="{{T.btn}}; height: 34px; padding: 0 12px; color: {{T.req}};">Eliminar</button></div>
 <div role="cell" style="{{td}}; gap: 4px"><span style="min-width: 22px; color: {{T.muted}}">{{row.n}}</span><button type="button" onClick="{{row.up}}" aria-label="Subir {{row.name}}" style="{{T.iconBtn}}; width: 36px; height: 36px">↑</button><button type="button" onClick="{{row.down}}" aria-label="Bajar {{row.name}}" style="{{T.iconBtn}}; width: 36px; height: 36px">↓</button></div>
 </div>
 </sc-for>

@@ -11,7 +11,7 @@
 <div style="padding: 20px 22px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; justify-content: space-between">
 <fieldset style="border: 0; margin: 0; padding: 0; min-width: 0"><legend class="sr">Rango visible en Mi página</legend><div style="display: flex; gap: 8px; flex-wrap: wrap">
 <sc-for list="{{showOpts}}" as="so" hint-placeholder-count="4">
-<label style="{{choice}}; border-color: {{so.ring}}"><input type="radio" name="show" checked="{{so.on}}" onChange="{{so.pick}}" style="accent-color: {{T.accent}}; margin: 0">{{so.label}}</label>
+<label style="{{choice}}; border-color: {{so.ring}};"><input type="radio" name="show" checked="{{so.on}}" onChange="{{so.pick}}" style="accent-color: {{T.accent}}; margin: 0">{{so.label}}</label>
 </sc-for>
 </div></fieldset>
 <button type="button" style="{{T.btnP}}">Guardar</button>

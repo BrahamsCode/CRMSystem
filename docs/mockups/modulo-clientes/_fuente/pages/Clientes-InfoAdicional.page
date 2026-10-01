@@ -11,14 +11,14 @@
 
 <section aria-labelledby="cats" style="{{T.card}}; overflow: hidden">
 <div style="{{sectionHead}}; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap"><h2 id="cats" style="{{h2}}">Categorías</h2><span style="font-size: 13px; color: {{T.muted}}">{{count}}</span></div>
-<div style="overflow-x: auto">
+<div style="overflow-x: auto; position: relative">
 <div role="table" aria-label="Categorías de información adicional" style="min-width: 760px">
 <div role="row" style="display: grid; grid-template-columns: 56px minmax(160px, 1fr) 150px 160px 110px 110px 120px">
-<div role="columnheader" style="{{th}}">#</div><div role="columnheader" style="{{th}}">Categoría</div><div role="columnheader" style="{{th}}">Campos</div><div role="columnheader" style="{{th}}">Categoría</div><div role="columnheader" style="{{th}}">Búsqueda</div><div role="columnheader" style="{{th}}">Mostrar</div><div role="columnheader" style="{{th}}">Orden</div>
+<div role="columnheader" style="{{th}}">#</div><div role="columnheader" style="{{th}}">Categoría</div><div role="columnheader" style="{{th}}">Campos</div><div role="columnheader" style="{{th}}">Ajustes</div><div role="columnheader" style="{{th}}">Búsqueda</div><div role="columnheader" style="{{th}}">Mostrar</div><div role="columnheader" style="{{th}}">Orden</div>
 </div>
 <sc-for list="{{cats}}" as="cat" hint-placeholder-count="5">
 <div role="row" style="display: grid; grid-template-columns: 56px minmax(160px, 1fr) 150px 160px 110px 110px 120px">
-<div role="cell" style="{{td}}; color: {{T.muted}}">{{cat.n}}</div>
+<div role="cell" style="{{td}}; color: {{T.muted}};">{{cat.n}}</div>
 <div role="cell" style="{{td}}; font-weight: 700">{{cat.name}}</div>
 <div role="cell" style="{{td}}"><a href="Clientes-InfoAdicional-Campos.dc.html" style="{{T.btn}}; height: 34px; padding: 0 12px">Editar campos</a></div>
 <div role="cell" style="{{td}}"><button type="button" onClick="{{cat.edit}}" style="{{T.btn}}; height: 34px; padding: 0 12px">Configurar</button></div>
@@ -31,7 +31,7 @@
 </div>
 <div style="padding: 14px 22px; border-top: 1px solid {{T.border}}; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap">
 <span style="font-size: 13px; color: {{T.muted}}">«Búsqueda» muestra la categoría como filtro en Buscar clientes. «Mostrar» la activa en la ficha y el registro.</span>
-<button type="button" onClick="{{saveAll}}" style="{{T.btnP}}">{{saveLabel}}</button>
+<button type="button" onClick="{{saveAll}}" disabled="{{notDirty}}" style="{{saveStyle}}">{{saveLabel}}</button>
 </div>
 </section>
 ---OVERLAY---
@@ -65,6 +65,7 @@
           up: () => move(i, -1), down: () => move(i, 1),
           edit: () => set({ drawer: { idx: i, name: c[0], cols: c[0] === 'Mascota' ? 3 : 1 } }) })),
         saveLabel: s.dirty ? 'Guardar cambios' : 'Sin cambios', saveAll: () => set({ dirty: false }),
+        notDirty: !s.dirty, saveStyle: s.dirty ? T.btnP : T.btn + '; opacity: .6; cursor: default',
         newCat: () => set({ drawer: { idx: -1, name: '', cols: 1 } }),
         drawerOpen: !!d, isEdit: !!d && d.idx >= 0,
         dTitle: d && d.idx >= 0 ? 'Configurar «' + d.name + '»' : 'Nueva categoría',

@@ -18,7 +18,7 @@ body{margin:0}
 @media (max-width:720px){.rail{display:none !important}.hide-sm{display:none !important}.mpad{padding:20px 16px !important}.g2,.g3{grid-template-columns:1fr !important}}
 </style>
 </helmet>
-<div style="min-height: 100vh; display: flex; flex-direction: {{T.dir}}; background: {{T.bg}}; color: {{T.text}}; font-family: {{T.font}}; font-size: {{T.fs}}px">
+<div style="min-height: 100vh; display: flex; flex-direction: {{T.dir}}; background: {{T.bg}}; color: {{T.text}}; font-family: {{T.font}}; font-size: {{T.fs}}px; overflow-x: clip">
 <sc-if value="{{isDouble}}" hint-placeholder-val="{{ true }}">
 <nav class="rail" aria-label="Módulos" style="width: 72px; flex-shrink: 0; background: {{N.bg}}; border-right: 1px solid {{N.border}}; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 16px 0; box-sizing: border-box; position: sticky; top: 0; height: 100vh">
 <a href="Main.dc.html" aria-label="Inicio" style="width: 40px; height: 40px; border-radius: {{T.r}}px; background: {{N.brandBg}}; color: {{N.brandFg}}; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; text-decoration: none; margin-bottom: 16px">CRM</a>
@@ -58,7 +58,7 @@ body{margin:0}
 <a href="Login.dc.html" aria-label="Cerrar sesión" title="Cerrar sesión" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: {{N.fg}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path></svg></a>
 </div>
 </header>
-<nav aria-label="Menú de clientes" style="background: {{T.surface}}; border-bottom: 1px solid {{T.border}}; display: flex; gap: 4px; padding: 0 24px; overflow-x: auto">
+<nav aria-label="Menú de clientes" style="background: {{T.surface}}; border-bottom: 1px solid {{T.border}}; display: flex; flex-wrap: wrap; gap: 0 4px; padding: 0 24px">
 <sc-for list="{{sh.tabs}}" as="t" hint-placeholder-count="11"><a href="{{t.href}}" style="{{t.style}}">{{t.label}}</a></sc-for>
 </nav>
 </sc-if>
@@ -77,7 +77,7 @@ body{margin:0}
 <a href="Login.dc.html" aria-label="Cerrar sesión" title="Cerrar sesión" style="{{T.iconBtn}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path></svg></a>
 </header>
 </sc-if>
-<main class="mpad" style="padding: {{T.pad}}px; box-sizing: border-box; width: 100%; max-width: 1200px; display: flex; flex-direction: column; gap: {{T.gap}}px">
+<main class="mpad" style="padding: {{T.pad}}px; box-sizing: border-box; width: 100%; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: {{T.gap}}px">
 <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap">
 <div>
 <h1 style="margin: 0; font-size: 26px; font-weight: 800; font-family: {{T.head}}">Información adicional</h1>
@@ -88,14 +88,14 @@ body{margin:0}
 
 <section aria-labelledby="cats" style="{{T.card}}; overflow: hidden">
 <div style="{{sectionHead}}; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap"><h2 id="cats" style="{{h2}}">Categorías</h2><span style="font-size: 13px; color: {{T.muted}}">{{count}}</span></div>
-<div style="overflow-x: auto">
+<div style="overflow-x: auto; position: relative">
 <div role="table" aria-label="Categorías de información adicional" style="min-width: 760px">
 <div role="row" style="display: grid; grid-template-columns: 56px minmax(160px, 1fr) 150px 160px 110px 110px 120px">
-<div role="columnheader" style="{{th}}">#</div><div role="columnheader" style="{{th}}">Categoría</div><div role="columnheader" style="{{th}}">Campos</div><div role="columnheader" style="{{th}}">Categoría</div><div role="columnheader" style="{{th}}">Búsqueda</div><div role="columnheader" style="{{th}}">Mostrar</div><div role="columnheader" style="{{th}}">Orden</div>
+<div role="columnheader" style="{{th}}">#</div><div role="columnheader" style="{{th}}">Categoría</div><div role="columnheader" style="{{th}}">Campos</div><div role="columnheader" style="{{th}}">Ajustes</div><div role="columnheader" style="{{th}}">Búsqueda</div><div role="columnheader" style="{{th}}">Mostrar</div><div role="columnheader" style="{{th}}">Orden</div>
 </div>
 <sc-for list="{{cats}}" as="cat" hint-placeholder-count="5">
 <div role="row" style="display: grid; grid-template-columns: 56px minmax(160px, 1fr) 150px 160px 110px 110px 120px">
-<div role="cell" style="{{td}}; color: {{T.muted}}">{{cat.n}}</div>
+<div role="cell" style="{{td}}; color: {{T.muted}};">{{cat.n}}</div>
 <div role="cell" style="{{td}}; font-weight: 700">{{cat.name}}</div>
 <div role="cell" style="{{td}}"><a href="Clientes-InfoAdicional-Campos.dc.html" style="{{T.btn}}; height: 34px; padding: 0 12px">Editar campos</a></div>
 <div role="cell" style="{{td}}"><button type="button" onClick="{{cat.edit}}" style="{{T.btn}}; height: 34px; padding: 0 12px">Configurar</button></div>
@@ -108,7 +108,7 @@ body{margin:0}
 </div>
 <div style="padding: 14px 22px; border-top: 1px solid {{T.border}}; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap">
 <span style="font-size: 13px; color: {{T.muted}}">«Búsqueda» muestra la categoría como filtro en Buscar clientes. «Mostrar» la activa en la ficha y el registro.</span>
-<button type="button" onClick="{{saveAll}}" style="{{T.btnP}}">{{saveLabel}}</button>
+<button type="button" onClick="{{saveAll}}" disabled="{{notDirty}}" style="{{saveStyle}}">{{saveLabel}}</button>
 </div>
 </section>
 </main>
@@ -285,7 +285,7 @@ function crmThemeKit() {
       label: 'display: block; font-size: 12px; font-weight: 700; color: ' + P.muted + '; margin-bottom: 6px',
       btn: btnBase + 'border: 1px solid ' + P.border + '; background: ' + P.surface + '; color: ' + P.text,
       btnP: btnBase + 'border: 1px solid ' + accent + '; background: ' + accent + '; color: ' + onAccent,
-      iconBtn: 'width: 44px; height: 44px; border-radius: ' + R[1] + 'px; border: 0; background: transparent; color: ' + P.muted + '; display: inline-flex; align-items: center; justify-content: center; cursor: pointer'
+      iconBtn: 'font-size: 18px; width: 44px; height: 44px; border-radius: ' + R[1] + 'px; border: 0; background: transparent; color: ' + P.muted + '; display: inline-flex; align-items: center; justify-content: center; cursor: pointer'
     };
     let N;
     if (s.nav === 'dark') N = { bg: dark ? '#090B0F' : '#12151C', fg: '#9AA3B2', title: '#FFFFFF', label: '#8B93A3', activeBg: '#2A303D', activeFg: '#FFFFFF', brandBg: accent, brandFg: onAccent, border: dark ? P.border : 'transparent', btnBorder: 'rgba(255,255,255,.22)' };
@@ -294,7 +294,7 @@ function crmThemeKit() {
     N.btn = 'display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: ' + R[1] + 'px; border: 1px solid ' + N.btnBorder + '; background: transparent; color: ' + N.title + '; font: inherit; font-weight: 700; cursor: pointer';
     const isDouble = s.layout === 'double', isSimple = s.layout === 'side', isTop = s.layout === 'top';
     const SN = isDouble
-      ? { w: 236, bg: P.surface, fg: P.muted, title: P.text, label: P.faint, activeBg: T.accentSoft, activeFg: T.accentSoftFg, border: P.border }
+      ? { w: 252, bg: P.surface, fg: P.muted, title: P.text, label: P.faint, activeBg: T.accentSoft, activeFg: T.accentSoftFg, border: P.border }
       : { w: 260, bg: N.bg, fg: N.fg, title: N.title, label: N.label, activeBg: N.activeBg, activeFg: N.activeFg, border: N.border };
     return { T, N, SN, isDouble, isSimple, isTop, isSide: !isTop };
   };
@@ -416,8 +416,8 @@ class Component extends DCLogic {
       h2: 'margin: 0; font-size: 17px; font-weight: 700; font-family: ' + T.head,
       th: 'padding: 10px 14px; font-size: 12px; font-weight: 700; color: ' + T.muted + '; background: ' + T.surface2 + '; text-align: left',
       td: 'padding: 0 14px; min-height: ' + T.rowH + 'px; display: flex; align-items: center; border-top: 1px solid ' + T.border,
-      chipOff: 'min-width: 44px; min-height: 38px; padding: 0 10px; border-radius: ' + T.r + 'px; border: 1px solid ' + T.border + '; background: ' + T.inputBg + '; color: ' + T.text + '; font: inherit; font-weight: 600; cursor: pointer',
-      chipOn: 'min-width: 44px; min-height: 38px; padding: 0 10px; border-radius: ' + T.r + 'px; border: 1px solid ' + T.accent + '; background: ' + T.accent + '; color: ' + T.onAccent + '; font: inherit; font-weight: 700; cursor: pointer',
+      chipOff: 'white-space: nowrap; min-width: 44px; min-height: 38px; padding: 0 10px; border-radius: ' + T.r + 'px; border: 1px solid ' + T.border + '; background: ' + T.inputBg + '; color: ' + T.text + '; font: inherit; font-weight: 600; cursor: pointer',
+      chipOn: 'white-space: nowrap; min-width: 44px; min-height: 38px; padding: 0 10px; border-radius: ' + T.r + 'px; border: 1px solid ' + T.accent + '; background: ' + T.accent + '; color: ' + T.onAccent + '; font: inherit; font-weight: 700; cursor: pointer',
       empty: 'display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding: 40px 16px; color: ' + T.muted
     };
     const page = (() => {
@@ -432,6 +432,7 @@ class Component extends DCLogic {
           up: () => move(i, -1), down: () => move(i, 1),
           edit: () => set({ drawer: { idx: i, name: c[0], cols: c[0] === 'Mascota' ? 3 : 1 } }) })),
         saveLabel: s.dirty ? 'Guardar cambios' : 'Sin cambios', saveAll: () => set({ dirty: false }),
+        notDirty: !s.dirty, saveStyle: s.dirty ? T.btnP : T.btn + '; opacity: .6; cursor: default',
         newCat: () => set({ drawer: { idx: -1, name: '', cols: 1 } }),
         drawerOpen: !!d, isEdit: !!d && d.idx >= 0,
         dTitle: d && d.idx >= 0 ? 'Configurar «' + d.name + '»' : 'Nueva categoría',

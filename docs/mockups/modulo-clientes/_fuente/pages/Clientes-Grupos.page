@@ -25,7 +25,7 @@
 <sc-for list="{{items}}" as="row" hint-placeholder-count="2">
 <div role="row" style="display: grid; grid-template-columns: minmax(0, 1fr) 190px 110px">
 <div role="cell" style="{{td}}; gap: 10px; font-weight: 700">{{row.name}}<sc-if value="{{row.def}}" hint-placeholder-val="{{ false }}"><span style="padding: 2px 8px; border-radius: 999px; background: {{T.accentSoft}}; color: {{T.accentSoftFg}}; font-size: 12px">Valor inicial</span></sc-if></div>
-<div role="cell" style="{{td}}; gap: 6px"><button type="button" style="{{T.btn}}; height: 34px; padding: 0 12px">Editar</button><button type="button" onClick="{{row.del}}" style="{{T.btn}}; height: 34px; padding: 0 12px; color: {{T.req}}">Eliminar</button></div>
+<div role="cell" style="{{td}}; gap: 6px"><button type="button" style="{{T.btn}}; height: 34px; padding: 0 12px">Editar</button><button type="button" onClick="{{row.del}}" style="{{T.btn}}; height: 34px; padding: 0 12px; color: {{T.req}};">Eliminar</button></div>
 <div role="cell" style="{{td}}; gap: 4px"><button type="button" onClick="{{row.up}}" aria-label="Subir {{row.name}}" style="{{T.iconBtn}}; width: 36px; height: 36px">↑</button><button type="button" onClick="{{row.down}}" aria-label="Bajar {{row.name}}" style="{{T.iconBtn}}; width: 36px; height: 36px">↓</button></div>
 </div>
 </sc-for>

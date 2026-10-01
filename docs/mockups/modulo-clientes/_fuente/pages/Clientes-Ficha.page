@@ -4,7 +4,7 @@
 <a href="Clientes-Buscar.dc.html" style="font-size: 13px; font-weight: 700; color: {{T.link}}; text-decoration: none">← Volver a los resultados</a>
 
 <section aria-label="Cliente" style="{{T.card}}; padding: 22px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap">
-<span style="width: 64px; height: 64px; border-radius: 50%; background: {{T.accentSoft}}; color: {{T.accentSoftFg}}; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; flex-shrink: 0">十</span>
+<span style="width: 64px; height: 64px; border-radius: 50%; background: {{T.accentSoft}}; color: {{T.accentSoftFg}}; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; flex-shrink: 0">十倉</span>
 <div style="flex-grow: 1; min-width: 220px">
 <div style="font-size: 12px; color: {{T.faint}}">トクラテスト トクラテスト</div>
 <h1 style="margin: 2px 0 0; font-size: 26px; font-weight: 800; font-family: {{T.head}}">十倉テスト 十倉テスト</h1>
@@ -16,7 +16,7 @@
 </div>
 </div>
 <div style="display: flex; gap: 8px; flex-wrap: wrap">
-<button type="button" onClick="{{askDel}}" style="{{T.btn}}; color: {{T.req}}">Eliminar cliente</button>
+<button type="button" onClick="{{askDel}}" style="{{T.btn}}; color: {{T.req}};">Eliminar cliente</button>
 <a href="Clientes-Nuevo.dc.html" style="{{T.btnP}}">Editar cliente</a>
 </div>
 </section>
@@ -29,7 +29,7 @@
 </div>
 </sc-if>
 
-<div role="tablist" aria-label="Secciones de la ficha" style="display: flex; gap: 2px; overflow-x: auto; border-bottom: 1px solid {{T.border}}">
+<div role="tablist" aria-label="Secciones de la ficha" style="display: flex; flex-wrap: wrap; gap: 2px; border-bottom: 1px solid {{T.border}}">
 <sc-for list="{{tabs}}" as="tb" hint-placeholder-count="12"><button type="button" role="tab" aria-selected="{{tb.on}}" onClick="{{tb.pick}}" style="{{tb.style}}">{{tb.label}}</button></sc-for>
 </div>
 

@@ -19,14 +19,14 @@
 <div style="{{empty}}"><strong style="color: {{T.text}}">Esta categoría todavía no tiene campos</strong><span>Añade el primero con «Nuevo campo».</span></div>
 </sc-if>
 <sc-if value="{{hasFields}}" hint-placeholder-val="{{ true }}">
-<div style="overflow-x: auto">
-<div role="table" aria-label="Campos de la categoría" style="min-width: 1040px">
-<div role="row" style="display: grid; grid-template-columns: 48px minmax(140px, 1fr) 130px 240px 100px 100px 110px 190px 100px">
+<div style="overflow-x: auto; position: relative">
+<div role="table" aria-label="Campos de la categoría" style="min-width: 1000px">
+<div role="row" style="display: grid; grid-template-columns: 44px minmax(120px, 1fr) 124px 200px 100px 96px 104px 160px 96px">
 <div role="columnheader" style="{{th}}">#</div><div role="columnheader" style="{{th}}">Campo</div><div role="columnheader" style="{{th}}">Tipo</div><div role="columnheader" style="{{th}}">Vista previa</div><div role="columnheader" style="{{th}}">Obligatorio</div><div role="columnheader" style="{{th}}">Búsqueda</div><div role="columnheader" style="{{th}}">Newsletter</div><div role="columnheader" style="{{th}}">Mostrar en</div><div role="columnheader" style="{{th}}"><span class="sr">Acciones</span></div>
 </div>
 <sc-for list="{{fields}}" as="f" hint-placeholder-count="3">
-<div role="row" style="display: grid; grid-template-columns: 48px minmax(140px, 1fr) 130px 240px 100px 100px 110px 190px 100px">
-<div role="cell" style="{{td}}; color: {{T.muted}}">{{f.n}}</div>
+<div role="row" style="display: grid; grid-template-columns: 44px minmax(120px, 1fr) 124px 200px 100px 96px 104px 160px 96px">
+<div role="cell" style="{{td}}; color: {{T.muted}};">{{f.n}}</div>
 <div role="cell" style="{{td}}; font-weight: 700">{{f.name}}</div>
 <div role="cell" style="{{td}}"><span style="padding: 2px 10px; border-radius: 999px; background: {{T.surface2}}; color: {{T.muted}}; font-size: 12px; font-weight: 700">{{f.type}}</span></div>
 <div role="cell" style="{{td}}; padding: 8px 14px">
@@ -39,7 +39,7 @@
 <div role="cell" style="{{td}}"><input type="checkbox" checked="{{f.req}}" aria-label="{{f.name}}: obligatorio" style="accent-color: {{T.accent}}; width: 20px; height: 20px; margin: 0"></div>
 <div role="cell" style="{{td}}"><input type="checkbox" checked="{{f.search}}" aria-label="{{f.name}}: filtro de búsqueda" style="accent-color: {{T.accent}}; width: 20px; height: 20px; margin: 0"></div>
 <div role="cell" style="{{td}}"><input type="checkbox" aria-label="{{f.name}}: usar como variable en newsletter" style="accent-color: {{T.accent}}; width: 20px; height: 20px; margin: 0"></div>
-<div role="cell" style="{{td}}"><select aria-label="Mostrar {{f.name}} en" style="{{T.input}}; height: 34px; font-size: 13px"><option selected="{{f.both}}">Administración y móvil</option><option selected="{{f.admin}}">Solo administración</option><option>Solo móvil</option></select></div>
+<div role="cell" style="{{td}}"><select aria-label="Mostrar {{f.name}} en" style="{{T.input}}; height: 34px; font-size: 13px"><option selected="{{f.both}}">Admin y móvil</option><option selected="{{f.admin}}">Solo admin</option><option>Solo móvil</option></select></div>
 <div role="cell" style="{{td}}"><button type="button" onClick="{{f.edit}}" style="{{T.btn}}; height: 34px; padding: 0 12px">Editar</button></div>
 </div>
 </sc-for>

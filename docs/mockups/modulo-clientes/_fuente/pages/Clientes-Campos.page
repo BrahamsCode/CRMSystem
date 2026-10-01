@@ -16,7 +16,7 @@
 <a href="#basica" style="{{T.btn}}">Información básica</a>
 <a href="#familia" style="{{T.btn}}">Información familiar</a>
 <a href="#mascota" style="{{T.btn}}">Mascota</a>
-<a href="Clientes-InfoAdicional.dc.html" style="{{T.btn}}; color: {{T.link}}">+ Nuevo formulario personalizado</a>
+<a href="Clientes-InfoAdicional.dc.html" style="{{T.btn}}; color: {{T.link}};">+ Nuevo formulario personalizado</a>
 </nav>
 <div style="flex-grow: 1"></div>
 <label style="display: block; width: 260px"><span class="sr">Filtrar campos</span><input type="search" placeholder="Filtrar campos" style="{{T.input}}"></label>
@@ -24,9 +24,9 @@
 
 <section id="basica" aria-labelledby="h-basica" style="{{T.card}}; overflow: hidden; scroll-margin-top: 80px">
 <div style="{{sectionHead}}"><h2 id="h-basica" style="{{h2}}">Información básica</h2><p style="margin: 4px 0 0; font-size: 13px; color: {{T.muted}}">Las dos primeras columnas aplican al registro desde el móvil del cliente. «—» indica que la opción no aplica a ese campo.</p></div>
-<div style="overflow-x: auto">
+<div style="overflow-x: auto; position: relative">
 <div role="table" aria-label="Campos de información básica" style="min-width: 880px">
-<div role="row" style="{{rowGrid}}; background: {{T.surface2}}; border-bottom: 1px solid {{T.border}}">
+<div role="row" style="{{rowGrid}}; background: {{T.surface2}}; border-bottom: 1px solid {{T.border}};">
 <div role="columnheader" style="padding: 14px 20px; display: flex; align-items: flex-end; font-size: 12px; font-weight: 700; color: {{T.muted}}">Campo</div>
 <sc-for list="{{colsBasic}}" as="cb" hint-placeholder-count="4">
 <div role="columnheader" style="padding: 14px 8px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; text-align: center"><span style="font-size: 13px; font-weight: 800">{{cb.t}}</span><span style="font-size: 11px; color: {{T.faint}}; margin-top: 2px">{{cb.s}}</span><span style="display: inline-block; margin-top: 6px; padding: 1px 8px; border-radius: 999px; background: {{T.bg}}; font-size: 11px; font-weight: 700; color: {{T.muted}}">{{cb.n}}</span></div>
@@ -59,9 +59,9 @@
 <div><div style="display: flex; align-items: center; gap: 10px"><h2 style="{{h2}}">{{sec.title}}</h2><sc-if value="{{sec.custom}}" hint-placeholder-val="{{ false }}"><span style="padding: 2px 8px; border-radius: 999px; background: {{T.accentSoft}}; color: {{T.accentSoftFg}}; font-size: 12px; font-weight: 700">Formulario personalizado</span></sc-if></div><p style="margin: 4px 0 0; font-size: 13px; color: {{T.muted}}">{{sec.desc}}</p></div>
 <sc-if value="{{sec.custom}}" hint-placeholder-val="{{ false }}"><a href="Clientes-InfoAdicional-Campos.dc.html" style="{{T.btn}}">Editar campos del formulario</a></sc-if>
 </div>
-<div style="overflow-x: auto">
+<div style="overflow-x: auto; position: relative">
 <div role="table" aria-label="Campos de {{sec.title}}" style="min-width: 880px">
-<div role="row" style="{{rowGrid}}; background: {{T.surface2}}; border-bottom: 1px solid {{T.border}}">
+<div role="row" style="{{xGrid}}; background: {{T.surface2}}; border-bottom: 1px solid {{T.border}};">
 <div role="columnheader" style="padding: 14px 20px; font-size: 12px; font-weight: 700; color: {{T.muted}}">Campo</div>
 <div role="columnheader" style="padding: 14px 8px; text-align: center; font-size: 13px; font-weight: 800">Mostrar en</div>
 <div role="columnheader" style="padding: 14px 8px; text-align: center; font-size: 13px; font-weight: 800">Obligatorio</div>
@@ -69,7 +69,7 @@
 <div role="columnheader" style="padding: 14px 8px; text-align: center; font-size: 13px; font-weight: 800">Exportar CSV</div>
 </div>
 <sc-for list="{{sec.rows}}" as="xr" hint-placeholder-count="3">
-<div role="row" style="{{rowGrid}}">
+<div role="row" style="{{xGrid}}">
 <div role="rowheader" style="min-height: 48px; padding: 0 20px; display: flex; align-items: center; font-weight: 600; border-top: 1px solid {{T.border}}">{{xr.label}}</div>
 <div role="cell" style="min-height: 48px; padding: 0 10px; display: flex; align-items: center; border-top: 1px solid {{T.border}}"><select aria-label="Mostrar {{xr.label}} en" style="{{T.input}}; height: 34px; font-size: 13px"><option selected="{{xr.adminOnly}}">Solo administración</option><option selected="{{xr.both}}">Administración y móvil</option></select></div>
 <sc-for list="{{xr.cells}}" as="xc" hint-placeholder-count="3">
@@ -128,6 +128,7 @@
         basic, extra,
         colsBasic: [['Visible en registro', 'Formulario móvil'], ['Obligatorio', 'Formulario móvil'], ['Filtro de búsqueda', 'En Buscar clientes'], ['Exportar CSV', 'Columna del archivo']].map(([t, sub], i) => ({ t, s: sub, n: counts[i] + ' activos' })),
         rowGrid: 'display: grid; grid-template-columns: minmax(240px, 1fr) repeat(4, 160px)',
+        xGrid: 'display: grid; grid-template-columns: minmax(240px, 1fr) 220px repeat(3, 140px)',
         warnBg: T.dark ? '#3A2A0B' : '#FFF8EB', warnFg: T.dark ? '#F7D79B' : '#7A4A00',
         dirtyLabel: dirty === 0 ? 'Sin cambios pendientes' : (dirty === 1 ? '1 cambio sin guardar' : dirty + ' cambios sin guardar'),
         resetCh: () => set({ ch: {} })

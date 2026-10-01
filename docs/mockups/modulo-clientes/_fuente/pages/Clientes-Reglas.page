@@ -42,8 +42,8 @@
 </sc-if>
 
 <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap"><span style="{{T.label}}; margin: 0">Hora de ejecución</span>
-<select aria-label="Hora" style="{{T.input}}; width: 90px"><option>00 h</option><option>03 h</option><option>06 h</option><option>12 h</option><option>18 h</option><option>23 h</option></select>
-<select aria-label="Minutos" style="{{T.input}}; width: 90px"><option>00 min</option><option>15 min</option><option>30 min</option><option>45 min</option></select>
+<select aria-label="Hora" style="{{T.input}}; width: 110px"><option>00 h</option><option>03 h</option><option>06 h</option><option>12 h</option><option>18 h</option><option>23 h</option></select>
+<select aria-label="Minutos" style="{{T.input}}; width: 120px"><option>00 min</option><option>15 min</option><option>30 min</option><option>45 min</option></select>
 </div>
 </div>
 <div style="padding: 14px 22px; border-top: 1px solid {{T.border}}; display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap">
@@ -57,8 +57,8 @@
       const pill = (on) => on ? { state: 'ACTIVADA', pillBg: T.dark ? '#14532D' : '#DCFCE7', pillFg: T.dark ? '#DCFCE7' : '#166534', dot: '#16A34A' } : { state: 'DESACTIVADA', pillBg: T.dark ? '#3A1D20' : '#FDECEC', pillFg: T.dark ? '#FFD7D9' : '#8F1D14', dot: '#DC2626' };
       const tabs = ['importe', 'visitas'].map((k) => { const on = s.tab === k; const p = pill(s.cfg[k].on); return { label: k === 'importe' ? 'Por importe' : 'Por visitas', on, fw: on ? 700 : 500, fg: on ? T.text : T.muted, line: on ? T.accent : 'transparent', pick: () => set({ tab: k }), state: p.state === 'ACTIVADA' ? 'ON' : 'OFF', pillBg: p.pillBg, pillFg: p.pillFg }; });
       const key = s.tab, cf = s.cfg[key];
-      const chips = (field, list) => list.map(([v, label]) => { const on = !!cf[field][v]; return { label, on, style: on ? base.chipOn : base.chipOff, pick: () => upd(key, { [field]: { ...this.state.cfg[key][field], [v]: !on } }) }; });
-      const months = chips('months', Array.from({ length: 12 }, (_, i) => [i + 1, (i + 1) + ' m']));
+      const chips = (field, list) => list.map(([v, label]) => { const on = !!cf[field][v]; return { label, on, style: (on ? base.chipOn : base.chipOff) + (v === 'fin' ? '; grid-column: span 2' : ''), pick: () => upd(key, { [field]: { ...this.state.cfg[key][field], [v]: !on } }) }; });
+      const months = chips('months', ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'].map((m, i) => [i + 1, m]));
       const days = chips('days', Array.from({ length: 31 }, (_, i) => [i + 1, String(i + 1)]).concat([['fin', 'Fin de mes']]));
       const week = chips('week', [['l', 'Lunes'], ['m', 'Martes'], ['x', 'Miércoles'], ['j', 'Jueves'], ['v', 'Viernes'], ['s', 'Sábado'], ['d', 'Domingo']]);
       const modes = [['fecha', 'Meses y días concretos', 'Se ejecuta en los meses y días que elijas.'], ['semana', 'Días de la semana', 'Se ejecuta cada semana en los días que elijas.']]
