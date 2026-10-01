@@ -1,0 +1,39 @@
+---META---
+{"title": "Rangos de clientes", "h": 1200, "maxw": 1100, "ctx": "{ module: 'clientes', active: 'rangos', crumbs: [{ label: 'Inicio', href: 'Main.dc.html' }, { label: 'Clientes', href: 'Clientes-Resumen.dc.html' }, { label: 'Rangos de clientes' }] }", "state": "{ show: 'visitas' }"}
+---CONTENT---
+<div>
+<h1 style="margin: 0; font-size: 26px; font-weight: 800; font-family: {{T.head}}">Rangos de clientes</h1>
+<p style="margin: 6px 0 0; color: {{T.muted}}">Define los rangos por importe de compra y por número de visitas. La asignación automática se configura en <a href="Clientes-Reglas.dc.html" style="color: {{T.link}}; font-weight: 700">Asignación de rangos</a>.</p>
+</div>
+
+<section aria-labelledby="mp" style="{{T.card}}">
+<div style="{{sectionHead}}"><h2 id="mp" style="{{h2}}">Rango visible en Mi página</h2><p style="margin: 4px 0 0; font-size: 13px; color: {{T.muted}}">Elige qué rango actual ve el cliente en su Mi página.</p></div>
+<div style="padding: 20px 22px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; justify-content: space-between">
+<fieldset style="border: 0; margin: 0; padding: 0; min-width: 0"><legend class="sr">Rango visible en Mi página</legend><div style="display: flex; gap: 8px; flex-wrap: wrap">
+<sc-for list="{{showOpts}}" as="so" hint-placeholder-count="4">
+<label style="{{choice}}; border-color: {{so.ring}};"><input type="radio" name="show" checked="{{so.on}}" onChange="{{so.pick}}" style="accent-color: {{T.accent}}; margin: 0">{{so.label}}</label>
+</sc-for>
+</div></fieldset>
+<button type="button" style="{{T.btnP}}">Guardar</button>
+</div>
+</section>
+
+<sc-for list="{{blocks}}" as="b" hint-placeholder-count="2">
+<section aria-label="{{b.title}}" style="{{T.card}}">
+<div style="{{sectionHead}}; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap">
+<div><h2 style="{{h2}}">{{b.title}}</h2><p style="margin: 4px 0 0; font-size: 13px; color: {{T.muted}}">Arrastra para cambiar el orden. Si las condiciones se solapan, gana el rango que esté más arriba.</p></div>
+<button type="button" style="{{T.btnP}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>{{b.add}}</button>
+</div>
+<div style="{{empty}}"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12zM15.5 13 17 22l-5-3-5 3 1.5-9"></path></svg><strong style="color: {{T.text}}">No hay rangos registrados</strong><span>Añade el primer rango para empezar a clasificar clientes.</span></div>
+</section>
+</sc-for>
+---VALS---
+      const showOpts = [['ambos', 'Mostrar ambos'], ['importe', 'Rango por importe'], ['visitas', 'Rango por visitas'], ['ninguno', 'No mostrar rangos']]
+        .map(([v, label]) => ({ label, on: s.show === v, ring: s.show === v ? T.accent : T.border, pick: () => set({ show: v }) }));
+      return {
+        showOpts,
+        blocks: [
+          { title: 'Rangos por importe de compra', add: 'Añadir rango por importe' },
+          { title: 'Rangos por número de visitas', add: 'Añadir rango por visitas' }
+        ]
+      };

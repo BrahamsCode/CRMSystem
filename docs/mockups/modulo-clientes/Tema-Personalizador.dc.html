@@ -243,6 +243,8 @@ function crmThemeKit() {
     stats: 'M12 20V10M18 20V4M6 20v-4',
     layers: 'M12 2l10 5-10 5L2 7zM2 17l10 5 10-5M2 12l10 5 10-5',
     award: 'M12 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12zM15.5 13 17 22l-5-3-5 3 1.5-9',
+    target: 'M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zM12 6a6 6 0 1 1 0 12 6 6 0 0 1 0-12zM12 10a2 2 0 1 1 0 4 2 2 0 0 1 0-4z',
+    shuffle: 'M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5',
     plusBox: 'M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM12 8v8M8 12h8'
   };
   const MODS = [
@@ -260,13 +262,15 @@ function crmThemeKit() {
     { key: 'resumen', label: 'Resumen', d: I.dash, href: 'Clientes-Resumen.dc.html' },
     { key: 'nuevo', label: 'Nuevo cliente', d: I.userPlus, href: 'Clientes-Nuevo.dc.html' },
     { key: 'buscar', label: 'Buscar clientes', d: I.search, href: 'Clientes-Buscar.dc.html' },
-    { key: 'visita', label: 'Registrar visita', d: I.visit, href: '#' },
+    { key: 'visita', label: 'Registrar visita', d: I.visit, href: 'Clientes-Visita.dc.html' },
     { key: 'stats', label: 'Estadísticas', d: I.stats, href: 'Clientes-Estadisticas.dc.html' },
     { head: true, label: 'Configuración' },
     { key: 'campos', label: 'Campos y CSV', d: I.sliders, href: 'Clientes-Campos.dc.html' },
-    { key: 'grupos', label: 'Grupos de clientes', d: I.layers, href: '#' },
-    { key: 'rangos', label: 'Rangos de clientes', d: I.award, href: '#' },
-    { key: 'info', label: 'Información adicional', d: I.plusBox, href: '#' }
+    { key: 'grupos', label: 'Grupos de clientes', d: I.layers, href: 'Clientes-Grupos.dc.html' },
+    { key: 'motivos', label: 'Motivos de 1ª visita', d: I.target, href: 'Clientes-Motivos.dc.html' },
+    { key: 'rangos', label: 'Rangos de clientes', d: I.award, href: 'Clientes-Rangos.dc.html' },
+    { key: 'reglas', label: 'Asignación de rangos', d: I.shuffle, href: 'Clientes-Reglas.dc.html' },
+    { key: 'info', label: 'Información adicional', d: I.plusBox, href: 'Clientes-InfoAdicional.dc.html' }
   ];
 
   const pick = (s) => { const o = {}; KEYS.forEach((k) => { o[k] = s[k]; }); return o; };
@@ -305,7 +309,7 @@ function crmThemeKit() {
       label: 'display: block; font-size: 12px; font-weight: 700; color: ' + P.muted + '; margin-bottom: 6px',
       btn: btnBase + 'border: 1px solid ' + P.border + '; background: ' + P.surface + '; color: ' + P.text,
       btnP: btnBase + 'border: 1px solid ' + accent + '; background: ' + accent + '; color: ' + onAccent,
-      iconBtn: 'width: 44px; height: 44px; border-radius: ' + R[1] + 'px; border: 0; background: transparent; color: ' + P.muted + '; display: inline-flex; align-items: center; justify-content: center; cursor: pointer'
+      iconBtn: 'font-size: 18px; width: 44px; height: 44px; border-radius: ' + R[1] + 'px; border: 0; background: transparent; color: ' + P.muted + '; display: inline-flex; align-items: center; justify-content: center; cursor: pointer'
     };
     let N;
     if (s.nav === 'dark') N = { bg: dark ? '#090B0F' : '#12151C', fg: '#9AA3B2', title: '#FFFFFF', label: '#8B93A3', activeBg: '#2A303D', activeFg: '#FFFFFF', brandBg: accent, brandFg: onAccent, border: dark ? P.border : 'transparent', btnBorder: 'rgba(255,255,255,.22)' };
@@ -314,7 +318,7 @@ function crmThemeKit() {
     N.btn = 'display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: ' + R[1] + 'px; border: 1px solid ' + N.btnBorder + '; background: transparent; color: ' + N.title + '; font: inherit; font-weight: 700; cursor: pointer';
     const isDouble = s.layout === 'double', isSimple = s.layout === 'side', isTop = s.layout === 'top';
     const SN = isDouble
-      ? { w: 236, bg: P.surface, fg: P.muted, title: P.text, label: P.faint, activeBg: T.accentSoft, activeFg: T.accentSoftFg, border: P.border }
+      ? { w: 252, bg: P.surface, fg: P.muted, title: P.text, label: P.faint, activeBg: T.accentSoft, activeFg: T.accentSoftFg, border: P.border }
       : { w: 260, bg: N.bg, fg: N.fg, title: N.title, label: N.label, activeBg: N.activeBg, activeFg: N.activeFg, border: N.border };
     return { T, N, SN, isDouble, isSimple, isTop, isSide: !isTop };
   };

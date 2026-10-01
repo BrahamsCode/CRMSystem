@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>Iniciar sesión · CRM</title>
+<title>Campos de información adicional · CRM</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -12,67 +12,159 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Geist:wght@400;500;600;700;800&amp;family=Noto+Sans+JP:wght@400;500;700;800&amp;family=Noto+Serif+JP:wght@600;700&amp;family=Source+Sans+3:wght@400;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
 <style>
 body{margin:0}
-@media (max-width:900px){.brand{display:none !important}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (max-width:1100px){.idx{display:none !important}.split{grid-template-columns:1fr !important}}
+@media (max-width:900px){.side{display:none !important}}
+@media (max-width:720px){.rail{display:none !important}.hide-sm{display:none !important}.mpad{padding:20px 16px !important}.g2,.g3{grid-template-columns:1fr !important}}
 </style>
 </helmet>
-<div style="min-height: 100vh; display: flex; background: {{T.bg}}; color: {{T.text}}; font-family: {{T.font}}; font-size: {{T.fs}}px">
-<aside class="brand" style="flex: 1 1 50%; background: {{N.bg}}; color: {{N.title}}; border-right: 1px solid {{N.border}}; display: flex; flex-direction: column; justify-content: space-between; padding: 48px 56px; box-sizing: border-box">
-<div style="display: flex; align-items: center; gap: 12px">
-<span style="width: 44px; height: 44px; border-radius: {{T.r}}px; background: {{N.brandBg}}; color: {{N.brandFg}}; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px">CRM</span>
-<span style="display: flex; flex-direction: column"><span style="font-size: 17px; font-weight: 800; font-family: {{T.head}}">CRM system</span><span style="font-size: 13px; color: {{N.fg}}">Sistema integral de gestión</span></span>
+<div style="min-height: 100vh; display: flex; flex-direction: {{T.dir}}; background: {{T.bg}}; color: {{T.text}}; font-family: {{T.font}}; font-size: {{T.fs}}px; overflow-x: clip">
+<sc-if value="{{isDouble}}" hint-placeholder-val="{{ true }}">
+<nav class="rail" aria-label="Módulos" style="width: 72px; flex-shrink: 0; background: {{N.bg}}; border-right: 1px solid {{N.border}}; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 16px 0; box-sizing: border-box; position: sticky; top: 0; height: 100vh">
+<a href="Main.dc.html" aria-label="Inicio" style="width: 40px; height: 40px; border-radius: {{T.r}}px; background: {{N.brandBg}}; color: {{N.brandFg}}; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; text-decoration: none; margin-bottom: 16px">CRM</a>
+<sc-for list="{{sh.rail}}" as="m" hint-placeholder-count="8">
+<a href="{{m.href}}" aria-label="{{m.label}}" title="{{m.label}}" style="{{m.style}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{m.d}}"></path></svg></a>
+</sc-for>
+</nav>
+</sc-if>
+<sc-if value="{{sh.sideOn}}" hint-placeholder-val="{{ true }}">
+<aside class="side" aria-label="Menú de clientes" style="width: {{SN.w}}px; flex-shrink: 0; background: {{SN.bg}}; border-right: 1px solid {{SN.border}}; padding: 20px 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px; position: sticky; top: 0; height: 100vh; overflow-y: auto">
+<sc-if value="{{sh.sideBrand}}" hint-placeholder-val="{{ false }}">
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 0 8px 14px; text-decoration: none">
+<span style="width: 36px; height: 36px; border-radius: {{T.r}}px; background: {{N.brandBg}}; color: {{N.brandFg}}; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 11px">CRM</span>
+<span style="display: flex; flex-direction: column"><span style="font-weight: 800; font-size: 15px; color: {{SN.title}}; font-family: {{T.head}}">CRM system</span><span style="font-size: 12px; color: {{SN.fg}}">Sistema integral de gestión</span></span>
+</a>
+</sc-if>
+<sc-if value="{{sh.sideTitle}}" hint-placeholder-val="{{ true }}">
+<div style="padding: 0 12px 4px"><div style="font-weight: 800; font-size: 15px; font-family: {{T.head}}; color: {{SN.title}}">Clientes</div><div style="font-size: 12px; color: {{SN.label}}">Gestión de clientes</div></div>
+</sc-if>
+<sc-for list="{{sh.sideItems}}" as="it" hint-placeholder-count="13">
+<sc-if value="{{it.head}}" hint-placeholder-val="{{ false }}"><div style="{{it.style}}">{{it.label}}</div></sc-if>
+<sc-if value="{{it.link}}" hint-placeholder-val="{{ true }}"><a href="{{it.href}}" style="{{it.style}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{it.d}}"></path></svg>{{it.label}}</a></sc-if>
+</sc-for>
+</aside>
+</sc-if>
+<div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column">
+<sc-if value="{{isTop}}" hint-placeholder-val="{{ false }}">
+<header style="background: {{N.bg}}; border-bottom: 1px solid {{N.border}}">
+<div style="min-height: 60px; display: flex; align-items: center; gap: 16px; padding: 0 24px">
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none"><span style="width: 34px; height: 34px; border-radius: {{T.r}}px; background: {{N.brandBg}}; color: {{N.brandFg}}; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 11px">CRM</span><span class="hide-sm" style="font-weight: 800; color: {{N.title}}; font-family: {{T.head}}; white-space: nowrap">CRM system</span></a>
+<nav aria-label="Módulos" class="hide-sm" style="display: flex; gap: 2px; flex-grow: 1; overflow-x: auto">
+<sc-for list="{{sh.topItems}}" as="m" hint-placeholder-count="8"><a href="{{m.href}}" style="{{m.style}}">{{m.label}}</a></sc-for>
+</nav>
+<div style="flex-grow: 1"></div>
+<button type="button" onClick="{{openPanel}}" aria-haspopup="dialog" style="{{N.btn}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a10 10 0 0 0 0 20c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16a6 6 0 0 0 6-6c0-4.9-4.5-8.6-10-8.6z"></path><circle cx="7.5" cy="11.5" r="1"></circle><circle cx="10.5" cy="7.5" r="1"></circle><circle cx="15.5" cy="8.5" r="1"></circle></svg>Tema</button>
+<span style="width: 32px; height: 32px; flex-shrink: 0; border-radius: 50%; background: {{N.brandBg}}; color: {{N.brandFg}}; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700">AD</span>
+<a href="Login.dc.html" aria-label="Cerrar sesión" title="Cerrar sesión" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: {{N.fg}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path></svg></a>
 </div>
-<div style="max-width: 460px">
-<h1 style="margin: 0; font-size: 40px; line-height: 1.15; font-weight: 800; letter-spacing: -0.02em; font-family: {{T.head}}">Clientes, ventas y reservas en un solo lugar.</h1>
-<p style="margin: 16px 0 0; font-size: 16px; line-height: 1.6; color: {{N.fg}}">Accede al panel de administración para gestionar tus tiendas y a tus clientes.</p>
-<div style="margin-top: 36px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
-<sc-for list="{{highlights}}" as="h" hint-placeholder-count="3">
-<div style="padding: 14px; border-radius: {{T.R}}px; background: {{N.activeBg}}; display: flex; flex-direction: column; gap: 10px">
-<span style="width: 32px; height: 32px; border-radius: {{T.r}}px; background: {{N.brandBg}}; color: {{N.brandFg}}; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{h.d}}"></path></svg></span>
-<span style="font-size: 13px; font-weight: 700; color: {{N.activeFg}}">{{h.label}}</span>
+</header>
+<nav aria-label="Menú de clientes" style="background: {{T.surface}}; border-bottom: 1px solid {{T.border}}; display: flex; flex-wrap: wrap; gap: 0 4px; padding: 0 24px">
+<sc-for list="{{sh.tabs}}" as="t" hint-placeholder-count="11"><a href="{{t.href}}" style="{{t.style}}">{{t.label}}</a></sc-for>
+</nav>
+</sc-if>
+<sc-if value="{{isSide}}" hint-placeholder-val="{{ true }}">
+<header style="height: 64px; background: {{T.surface}}; border-bottom: 1px solid {{T.border}}; display: flex; align-items: center; gap: 10px; padding: 0 24px; position: sticky; top: 0; z-index: 5">
+<nav aria-label="Ruta" style="display: flex; align-items: center; font-size: 14px; color: {{T.faint}}; white-space: nowrap; min-width: 0; overflow: hidden">
+<sc-for list="{{sh.crumbs}}" as="c" hint-placeholder-count="3">
+<sc-if value="{{c.notLast}}" hint-placeholder-val="{{ true }}"><a href="{{c.href}}" style="color: {{T.faint}}; text-decoration: none">{{c.label}}</a><span aria-hidden="true" style="margin: 0 8px">/</span></sc-if>
+<sc-if value="{{c.last}}" hint-placeholder-val="{{ false }}"><span style="color: {{T.text}}; font-weight: 700">{{c.label}}</span></sc-if>
+</sc-for>
+</nav>
+<div style="flex-grow: 1"></div>
+<label class="hide-sm" style="display: block; width: 260px"><span class="sr">Buscar en el sistema</span><input type="search" placeholder="Buscar cliente…" style="{{T.input}}"></label>
+<button type="button" onClick="{{openPanel}}" aria-haspopup="dialog" style="{{T.btn}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a10 10 0 0 0 0 20c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16a6 6 0 0 0 6-6c0-4.9-4.5-8.6-10-8.6z"></path><circle cx="7.5" cy="11.5" r="1"></circle><circle cx="10.5" cy="7.5" r="1"></circle><circle cx="15.5" cy="8.5" r="1"></circle></svg>Tema</button>
+<span style="width: 32px; height: 32px; flex-shrink: 0; border-radius: 50%; background: {{T.text}}; color: {{T.bg}}; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700">AD</span>
+<a href="Login.dc.html" aria-label="Cerrar sesión" title="Cerrar sesión" style="{{T.iconBtn}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path></svg></a>
+</header>
+</sc-if>
+<main class="mpad" style="padding: {{T.pad}}px; box-sizing: border-box; width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: {{T.gap}}px">
+<div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+<div>
+<a href="Clientes-InfoAdicional.dc.html" style="font-size: 13px; font-weight: 700; color: {{T.link}}; text-decoration: none">← Volver a categorías</a>
+<h1 style="margin: 6px 0 0; font-size: 26px; font-weight: 800; font-family: {{T.head}}">Campos de «{{cat}}»</h1>
+<p style="margin: 6px 0 0; color: {{T.muted}}">Los campos se muestran en el registro y la ficha del cliente en este orden.</p>
+</div>
+<button type="button" onClick="{{newField}}" style="{{T.btnP}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Nuevo campo</button>
+</div>
+
+<div role="tablist" aria-label="Categoría" style="display: flex; gap: 6px; flex-wrap: wrap">
+<sc-for list="{{catTabs}}" as="ct" hint-placeholder-count="5"><button type="button" role="tab" aria-selected="{{ct.on}}" onClick="{{ct.pick}}" style="{{ct.style}}">{{ct.label}}</button></sc-for>
+</div>
+
+<section aria-label="Campos" style="{{T.card}}; overflow: hidden">
+<sc-if value="{{noFields}}" hint-placeholder-val="{{ false }}">
+<div style="{{empty}}"><strong style="color: {{T.text}}">Esta categoría todavía no tiene campos</strong><span>Añade el primero con «Nuevo campo».</span></div>
+</sc-if>
+<sc-if value="{{hasFields}}" hint-placeholder-val="{{ true }}">
+<div style="overflow-x: auto; position: relative">
+<div role="table" aria-label="Campos de la categoría" style="min-width: 1000px">
+<div role="row" style="display: grid; grid-template-columns: 44px minmax(120px, 1fr) 124px 200px 100px 96px 104px 160px 96px">
+<div role="columnheader" style="{{th}}">#</div><div role="columnheader" style="{{th}}">Campo</div><div role="columnheader" style="{{th}}">Tipo</div><div role="columnheader" style="{{th}}">Vista previa</div><div role="columnheader" style="{{th}}">Obligatorio</div><div role="columnheader" style="{{th}}">Búsqueda</div><div role="columnheader" style="{{th}}">Newsletter</div><div role="columnheader" style="{{th}}">Mostrar en</div><div role="columnheader" style="{{th}}"><span class="sr">Acciones</span></div>
+</div>
+<sc-for list="{{fields}}" as="f" hint-placeholder-count="3">
+<div role="row" style="display: grid; grid-template-columns: 44px minmax(120px, 1fr) 124px 200px 100px 96px 104px 160px 96px">
+<div role="cell" style="{{td}}; color: {{T.muted}};">{{f.n}}</div>
+<div role="cell" style="{{td}}; font-weight: 700">{{f.name}}</div>
+<div role="cell" style="{{td}}"><span style="padding: 2px 10px; border-radius: 999px; background: {{T.surface2}}; color: {{T.muted}}; font-size: 12px; font-weight: 700">{{f.type}}</span></div>
+<div role="cell" style="{{td}}; padding: 8px 14px">
+<sc-if value="{{f.isText}}" hint-placeholder-val="{{ true }}"><input type="text" aria-label="Vista previa de {{f.name}}" style="{{T.input}}; height: 34px"></sc-if>
+<sc-if value="{{f.isArea}}" hint-placeholder-val="{{ false }}"><textarea rows="2" aria-label="Vista previa de {{f.name}}" style="{{T.input}}; height: 48px; padding: 6px 10px; resize: none"></textarea></sc-if>
+<sc-if value="{{f.isSelect}}" hint-placeholder-val="{{ false }}"><select aria-label="Vista previa de {{f.name}}" style="{{T.input}}; height: 34px"><option>Selecciona…</option></select></sc-if>
+<sc-if value="{{f.isNum}}" hint-placeholder-val="{{ false }}"><span style="display: flex; align-items: center; gap: 8px; width: 100%"><input type="number" aria-label="Vista previa de {{f.name}}" style="{{T.input}}; height: 34px; width: 110px"><span>{{f.unit}}</span></span></sc-if>
+<sc-if value="{{f.isDate}}" hint-placeholder-val="{{ false }}"><input type="date" aria-label="Vista previa de {{f.name}}" style="{{T.input}}; height: 34px"></sc-if>
+</div>
+<div role="cell" style="{{td}}"><input type="checkbox" checked="{{f.req}}" aria-label="{{f.name}}: obligatorio" style="accent-color: {{T.accent}}; width: 20px; height: 20px; margin: 0"></div>
+<div role="cell" style="{{td}}"><input type="checkbox" checked="{{f.search}}" aria-label="{{f.name}}: filtro de búsqueda" style="accent-color: {{T.accent}}; width: 20px; height: 20px; margin: 0"></div>
+<div role="cell" style="{{td}}"><input type="checkbox" aria-label="{{f.name}}: usar como variable en newsletter" style="accent-color: {{T.accent}}; width: 20px; height: 20px; margin: 0"></div>
+<div role="cell" style="{{td}}"><select aria-label="Mostrar {{f.name}} en" style="{{T.input}}; height: 34px; font-size: 13px"><option selected="{{f.both}}">Admin y móvil</option><option selected="{{f.admin}}">Solo admin</option><option>Solo móvil</option></select></div>
+<div role="cell" style="{{td}}"><button type="button" onClick="{{f.edit}}" style="{{T.btn}}; height: 34px; padding: 0 12px">Editar</button></div>
 </div>
 </sc-for>
 </div>
 </div>
-<div style="font-size: 13px; color: {{N.fg}}">© [AÑO] [EMPRESA] · CRM system</div>
-</aside>
-
-<main style="flex: 1 1 50%; position: relative; display: flex; align-items: center; justify-content: center; padding: 72px 24px 48px; box-sizing: border-box">
-<button type="button" onClick="{{openPanel}}" aria-haspopup="dialog" style="{{T.btn}}; position: absolute; top: 20px; right: 20px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a10 10 0 0 0 0 20c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16a6 6 0 0 0 6-6c0-4.9-4.5-8.6-10-8.6z"></path><circle cx="7.5" cy="11.5" r="1"></circle><circle cx="10.5" cy="7.5" r="1"></circle><circle cx="15.5" cy="8.5" r="1"></circle></svg>Tema</button>
-<div style="width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 28px">
-<div>
-<h2 style="margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; font-family: {{T.head}}">Iniciar sesión</h2>
-<p style="margin: 8px 0 0; font-size: 15px; color: {{T.muted}}">Introduce tus datos de acceso de administrador.</p>
-</div>
-<sc-if value="{{showError}}" hint-placeholder-val="{{ false }}">
-<div role="alert" style="display: flex; gap: 10px; padding: 12px 14px; border-radius: {{T.r}}px; background: {{errBg}}; color: {{errFg}}; font-size: 14px; line-height: 1.5">
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zM12 8v4M12 16h.01"></path></svg>
-<span>El usuario o la contraseña no son correctos. Revísalos e inténtalo de nuevo.</span>
+<div style="padding: 14px 22px; border-top: 1px solid {{T.border}}; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap">
+<span style="font-size: 13px; color: {{T.muted}}">«Newsletter» permite insertar el valor del campo en los correos (reemplazo de variables).</span>
+<button type="button" style="{{T.btnP}}">Guardar cambios</button>
 </div>
 </sc-if>
-<form style="display: flex; flex-direction: column; gap: 18px">
-<label><span style="{{T.label}}">Usuario</span><input type="text" name="login" autocomplete="username" placeholder="Tu ID de usuario" style="{{T.input}}; height: 48px"></label>
-<div>
-<div style="display: flex; justify-content: space-between; align-items: baseline"><label for="pw" style="{{T.label}}">Contraseña</label><a href="#" style="font-size: 13px; font-weight: 700; color: {{T.link}}">¿Olvidaste tu contraseña?</a></div>
-<div style="position: relative">
-<input id="pw" type="{{pwType}}" name="password" autocomplete="current-password" placeholder="••••••••" style="{{T.input}}; height: 48px; padding-right: 52px">
-<button type="button" onClick="{{togglePw}}" aria-label="{{eyeLabel}}" aria-pressed="{{pwVisible}}" style="position: absolute; right: 2px; top: 2px; width: 44px; height: 44px; border: 0; border-radius: {{T.r}}px; background: transparent; color: {{T.muted}}; display: flex; align-items: center; justify-content: center; cursor: pointer">
-<sc-if value="{{pwVisible}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.9 17.9A10 10 0 0 1 12 20c-7 0-10-8-10-8a18 18 0 0 1 4.1-5.9M9.9 4.2A9 9 0 0 1 12 4c7 0 10 8 10 8a18 18 0 0 1-2.2 3.2M14.1 14.1a3 3 0 1 1-4.2-4.2M2 2l20 20"></path></svg></sc-if>
-<sc-if value="{{pwHidden}}" hint-placeholder-val="{{ true }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-8 10-8 10 8 10 8-3 8-10 8-10-8-10-8zM12 9a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"></path></svg></sc-if>
-</button>
-</div>
-</div>
-<label style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: {{T.muted}}; min-height: 44px"><input type="checkbox" name="remember" style="accent-color: {{T.accent}}; width: 18px; height: 18px; margin: 0">Mantener la sesión iniciada</label>
-<a href="Main.dc.html" style="{{T.btnP}}; height: 48px; width: 100%">Iniciar sesión</a>
-</form>
-<div style="padding-top: 20px; border-top: 1px solid {{T.border}}; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 13px; color: {{T.muted}}">
-<span>¿Problemas para acceder?</span>
-<span style="display: flex; gap: 16px"><a href="#" style="font-weight: 700; color: {{T.link}}">Contacto</a><a href="#" style="font-weight: 700; color: {{T.link}}">Soporte</a></span>
-</div>
-</div>
+</section>
 </main>
-
+</div>
+<sc-if value="{{drawerOpen}}" hint-placeholder-val="{{ false }}">
+<div style="position: fixed; inset: 0; z-index: 40; background: rgba(10,12,16,.45); display: flex; justify-content: flex-end">
+<aside role="dialog" aria-labelledby="dt" style="width: 520px; max-width: 100%; height: 100%; background: {{T.surface}}; color: {{T.text}}; display: flex; flex-direction: column; box-shadow: -12px 0 40px rgba(0,0,0,.2)">
+<div style="{{sectionHead}}; display: flex; justify-content: space-between; align-items: center"><h2 id="dt" style="{{h2}}">{{dTitle}}</h2><button type="button" onClick="{{closeDrawer}}" aria-label="Cerrar" style="{{T.iconBtn}}">✕</button></div>
+<div style="padding: 22px; display: flex; flex-direction: column; gap: 16px; flex-grow: 1; overflow-y: auto">
+<label><span style="{{T.label}}">Título del campo <span style="color: {{T.req}}">*</span></span><input type="text" value="{{dName}}" onChange="{{onDName}}" style="{{T.input}}"></label>
+<div class="g2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+<label><span style="{{T.label}}">Tipo de campo</span><select onChange="{{onType}}" style="{{T.input}}">
+<option value="text" selected="{{tSel.text}}">Texto</option><option value="area" selected="{{tSel.area}}">Área de texto</option><option value="num" selected="{{tSel.num}}">Número</option><option value="select" selected="{{tSel.select}}">Selección</option><option value="radio" selected="{{tSel.radio}}">Botones de opción</option><option value="check" selected="{{tSel.check}}">Casillas</option><option value="date" selected="{{tSel.date}}">Fecha</option>
+</select></label>
+<label><span style="{{T.label}}">Unidad</span><input type="text" value="{{dUnit}}" placeholder="Ej. Kg" style="{{T.input}}"></label>
+</div>
+<label><span style="{{T.label}}">Comentario</span><textarea rows="2" placeholder="Texto de ayuda para quien rellena el campo" style="{{T.input}}; height: auto; padding: 10px 12px; resize: vertical"></textarea></label>
+<sc-if value="{{hasOptions}}" hint-placeholder-val="{{ false }}">
+<fieldset style="border: 1px solid {{T.border}}; border-radius: {{T.R}}px; margin: 0; padding: 14px; min-width: 0; display: flex; flex-direction: column; gap: 10px">
+<legend style="{{T.label}}; padding: 0 6px; margin: 0">Opciones</legend>
+<div class="g2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; font-size: 12px; font-weight: 700; color: {{T.muted}}"><span>Texto que se muestra</span><span>Valor que se guarda</span></div>
+<sc-for list="{{opts}}" as="op" hint-placeholder-count="2">
+<div class="g2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px"><input type="text" aria-label="Texto de la opción {{op.n}}" placeholder="[OPCIÓN {{op.n}}]" style="{{T.input}}"><input type="text" aria-label="Valor de la opción {{op.n}}" placeholder="[VALOR {{op.n}}]" style="{{T.input}}"></div>
+</sc-for>
+<button type="button" onClick="{{addOpt}}" style="{{T.btn}}; align-self: flex-start">+ Añadir opción</button>
+</fieldset>
+</sc-if>
+<label><span style="{{T.label}}">Tamaño del campo</span><select style="{{T.input}}"><option>Unos 24 caracteres</option><option>[OTROS TAMAÑOS]</option></select></label>
+</div>
+<div style="padding: 14px 22px; border-top: 1px solid {{T.border}}; display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap">
+<sc-if value="{{isEdit}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{closeDrawer}}" style="{{T.btn}}; color: {{T.req}}; margin-right: auto">Eliminar</button></sc-if>
+<button type="button" onClick="{{closeDrawer}}" style="{{T.btn}}">Cancelar</button>
+<button type="button" onClick="{{closeDrawer}}" style="{{T.btnP}}">{{dSave}}</button>
+</div>
+</aside>
+</div>
+</sc-if>
 <sc-if value="{{panelOpen}}" hint-placeholder-val="{{ false }}">
-<aside role="dialog" aria-label="Personalizar tema" style="position: fixed; top: 16px; right: 16px; bottom: 16px; width: 340px; max-width: calc(100vw - 32px); z-index: 50; background: #FFFFFF; color: #14171F; border: 1px solid #E4E7EC; border-radius: 16px; box-shadow: 0 20px 48px rgba(20,23,31,.22); display: flex; flex-direction: column; font-family: 'Manrope', system-ui, sans-serif; font-size: 14px; overflow: hidden">
+<aside role="dialog" aria-label="Personalizar tema" style="position: fixed; top: 16px; right: 16px; bottom: 16px; width: 340px; max-width: calc(100vw - 32px); z-index: 60; background: #FFFFFF; color: #14171F; border: 1px solid #E4E7EC; border-radius: 16px; box-shadow: 0 20px 48px rgba(20,23,31,.22); display: flex; flex-direction: column; font-family: 'Manrope', system-ui, sans-serif; font-size: 14px; overflow: hidden">
 <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 16px 12px 20px; border-bottom: 1px solid #EEF0F3">
 <div><div style="font-size: 16px; font-weight: 800">Personalizar tema</div><div style="font-size: 12px; color: #4A5162">Se guarda y se aplica en todas las pantallas</div></div>
 <button type="button" onClick="{{closePanel}}" aria-label="Cerrar panel" style="width: 44px; height: 44px; border: 0; border-radius: 10px; background: transparent; color: #4A5162; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg></button>
@@ -121,7 +213,7 @@ body{margin:0}
 </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"showError":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1100}}'>
 function crmThemeKit() {
   const ACC = { coral: '#C8343A', azul: '#206BC4', indigo: '#264C73', ambar: '#B45309', verde: '#15803D', violeta: '#6D28D9', negro: '#18181B' };
   const ACC_DARK = { coral: '#F06A6F', azul: '#6AA5F0', indigo: '#8DB1DB', ambar: '#F0A54A', verde: '#4ADE80', violeta: '#B39BFA', negro: '#F4F4F5' };
@@ -329,7 +421,7 @@ function crmThemeKit() {
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { ...crmThemeKit().initial('coral'), panel: false, copied: false, pw: false };
+    this.state = { ...crmThemeKit().initial('coral'), panel: false, copied: false, ...({ cat: 'Mascota', drawer: null }) };
   }
   componentDidMount() {
     const v = crmThemeKit().load();
@@ -343,20 +435,58 @@ class Component extends DCLogic {
     const K = crmThemeKit();
     const s = this.state;
     const tk = K.tokens(s);
+    const T = tk.T;
     const pn = K.panel(s, (p) => this.setTheme({ ...p, preset: 'custom' }), (k) => this.setTheme(K.initial(k)));
-    const v = s.pw;
-    return {
-      ...tk, ...pn,
+    const set = (patch) => this.setState(patch);
+    const base = {
+      ...tk, ...pn, sh: K.shell(s, tk, { module: 'clientes', active: 'info', crumbs: [{ label: 'Inicio', href: 'Main.dc.html' }, { label: 'Información adicional', href: 'Clientes-InfoAdicional.dc.html' }, { label: 'Campos' }] }),
       panelOpen: s.panel, openPanel: () => this.setState({ panel: true }), closePanel: () => this.setState({ panel: false }),
       reset: () => this.setTheme(K.initial('coral')), copyLabel: s.copied ? 'Copiado' : 'Copiar',
       copyCss: () => { try { navigator.clipboard.writeText(pn.css); } catch (e) {} this.setState({ copied: true }); },
-      highlights: [{ label: 'Clientes', d: K.I.users }, { label: 'Promociones', d: K.I.mega }, { label: 'Reservas', d: K.I.cal }],
-      showError: this.props.showError ?? false,
-      errBg: tk.T.dark ? '#3A1D20' : '#FDECEC', errFg: tk.T.dark ? '#FFD7D9' : '#8F1D14',
-      pwVisible: v, pwHidden: !v, pwType: v ? 'text' : 'password',
-      eyeLabel: v ? 'Ocultar contraseña' : 'Mostrar contraseña',
-      togglePw: () => this.setState({ pw: !this.state.pw })
+      choice: 'display: inline-flex; align-items: center; gap: 8px; min-height: ' + T.ctrlH + 'px; padding: 0 14px; border: 1px solid ' + T.border + '; border-radius: ' + T.r + 'px; background: ' + T.inputBg + '; font-weight: 600; cursor: pointer',
+      sectionHead: 'padding: 18px 22px; border-bottom: 1px solid ' + T.border,
+      h2: 'margin: 0; font-size: 17px; font-weight: 700; font-family: ' + T.head,
+      th: 'padding: 10px 14px; font-size: 12px; font-weight: 700; color: ' + T.muted + '; background: ' + T.surface2 + '; text-align: left',
+      td: 'padding: 0 14px; min-height: ' + T.rowH + 'px; display: flex; align-items: center; border-top: 1px solid ' + T.border,
+      chipOff: 'white-space: nowrap; min-width: 44px; min-height: 38px; padding: 0 10px; border-radius: ' + T.r + 'px; border: 1px solid ' + T.border + '; background: ' + T.inputBg + '; color: ' + T.text + '; font: inherit; font-weight: 600; cursor: pointer',
+      chipOn: 'white-space: nowrap; min-width: 44px; min-height: 38px; padding: 0 10px; border-radius: ' + T.r + 'px; border: 1px solid ' + T.accent + '; background: ' + T.accent + '; color: ' + T.onAccent + '; font: inherit; font-weight: 700; cursor: pointer',
+      empty: 'display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding: 40px 16px; color: ' + T.muted
     };
+    const page = (() => {
+      const TYPE = { text: 'Texto', area: 'Área de texto', num: 'Número', select: 'Selección', radio: 'Botones de opción', check: 'Casillas', date: 'Fecha' };
+      const DATA = {
+        sampleform: [['remarks', 'area', false, true], ['remarks2', 'area', false, true]],
+        'カルテ': [['メッセージ内容', 'text', false, true], ['スタッフ名', 'text', false, true]],
+        '家族情報': [['配偶者', 'select', true, true, 'admin'], ['結婚記念日', 'date', true, true, 'admin']],
+        Mascota: [['Nombre', 'text', false, true], ['Tipo', 'select', false, true], ['Peso', 'num', false, true, 'both', 'Kg']],
+        Ropa: []
+      };
+      const list = DATA[s.cat] || [];
+      const d = s.drawer;
+      const tSel = {}; Object.keys(TYPE).forEach((k) => { tSel[k] = !!d && d.type === k; });
+      return {
+        cat: s.cat,
+        catTabs: Object.keys(DATA).map((k) => ({ label: k, on: s.cat === k, style: s.cat === k ? base.chipOn : base.chipOff, pick: () => set({ cat: k, drawer: null }) })),
+        noFields: list.length === 0, hasFields: list.length > 0,
+        fields: list.map(([name, type, req, search, show, unit], i) => ({
+          n: i + 1, name, type: TYPE[type], req, search, unit: unit || '', both: show !== 'admin', admin: show === 'admin',
+          isText: type === 'text', isArea: type === 'area', isSelect: type === 'select' || type === 'radio' || type === 'check', isNum: type === 'num', isDate: type === 'date',
+          edit: () => set({ drawer: { edit: true, name, type, unit: unit || '', opts: 2 } })
+        })),
+        newField: () => set({ drawer: { edit: false, name: '', type: 'text', unit: '', opts: 2 } }),
+        drawerOpen: !!d, isEdit: !!d && d.edit,
+        dTitle: d && d.edit ? 'Editar campo «' + d.name + '»' : 'Nuevo campo en «' + s.cat + '»',
+        dSave: d && d.edit ? 'Guardar campo' : 'Crear campo',
+        dName: d ? d.name : '', dUnit: d ? d.unit : '', tSel,
+        onDName: (e) => set({ drawer: { ...this.state.drawer, name: e.target.value } }),
+        onType: (e) => set({ drawer: { ...this.state.drawer, type: e.target.value } }),
+        hasOptions: !!d && (d.type === 'select' || d.type === 'radio' || d.type === 'check'),
+        opts: d ? Array.from({ length: d.opts }, (_, i) => ({ n: i + 1 })) : [],
+        addOpt: () => set({ drawer: { ...this.state.drawer, opts: this.state.drawer.opts + 1 } }),
+        closeDrawer: () => set({ drawer: null })
+      };
+    })();
+    return { ...base, ...page };
   }
 }
 </script>

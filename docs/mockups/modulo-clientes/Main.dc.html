@@ -18,7 +18,7 @@ body{margin:0}
 @media (max-width:720px){.rail{display:none !important}.hide-sm{display:none !important}.mpad{padding:20px 16px !important}}
 </style>
 </helmet>
-<div style="min-height: 100vh; display: flex; flex-direction: {{T.dir}}; background: {{T.bg}}; color: {{T.text}}; font-family: {{T.font}}; font-size: {{T.fs}}px">
+<div style="min-height: 100vh; display: flex; flex-direction: {{T.dir}}; background: {{T.bg}}; color: {{T.text}}; font-family: {{T.font}}; font-size: {{T.fs}}px; overflow-x: clip">
 <sc-if value="{{isDouble}}" hint-placeholder-val="{{ true }}">
 <nav class="rail" aria-label="Módulos" style="width: 72px; flex-shrink: 0; background: {{N.bg}}; border-right: 1px solid {{N.border}}; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 16px 0; box-sizing: border-box; position: sticky; top: 0; height: 100vh">
 <a href="Main.dc.html" aria-label="Inicio" style="width: 40px; height: 40px; border-radius: {{T.r}}px; background: {{N.brandBg}}; color: {{N.brandFg}}; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; text-decoration: none; margin-bottom: 16px">CRM</a>
@@ -60,14 +60,14 @@ body{margin:0}
 <header style="height: 64px; background: {{T.surface}}; border-bottom: 1px solid {{T.border}}; display: flex; align-items: center; gap: 10px; padding: 0 24px; position: sticky; top: 0; z-index: 5">
 <div style="font-size: 15px; font-weight: 700">Inicio</div>
 <div style="flex-grow: 1"></div>
-<label class="hide-sm" style="display: block; width: 280px"><span class="sr">Buscar en el sistema</span><input type="search" placeholder="Buscar cliente por nombre, nº o teléfono" style="{{T.input}}"></label>
+<label class="hide-sm" style="display: block; width: 280px"><span class="sr">Buscar en el sistema</span><input type="search" placeholder="Buscar cliente…" style="{{T.input}}"></label>
 <button type="button" onClick="{{openPanel}}" aria-haspopup="dialog" style="{{T.btn}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a10 10 0 0 0 0 20c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16a6 6 0 0 0 6-6c0-4.9-4.5-8.6-10-8.6z"></path><circle cx="7.5" cy="11.5" r="1"></circle><circle cx="10.5" cy="7.5" r="1"></circle><circle cx="15.5" cy="8.5" r="1"></circle></svg>Tema</button>
 <span style="width: 32px; height: 32px; flex-shrink: 0; border-radius: 50%; background: {{T.text}}; color: {{T.bg}}; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700">AD</span>
 <a href="Login.dc.html" aria-label="Cerrar sesión" title="Cerrar sesión" style="{{T.iconBtn}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path></svg></a>
 </header>
 </sc-if>
 
-<main class="mpad" style="padding: {{T.pad}}px; box-sizing: border-box; width: 100%; max-width: 1360px; display: flex; flex-direction: column; gap: {{T.gap}}px">
+<main class="mpad" style="padding: {{T.pad}}px; box-sizing: border-box; width: 100%; max-width: 1360px; margin: 0 auto; display: flex; flex-direction: column; gap: {{T.gap}}px">
 <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap">
 <div>
 <h1 style="margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; font-family: {{T.head}}">Hola, Administrador</h1>
@@ -83,7 +83,7 @@ body{margin:0}
 <h2 id="mods" style="margin: 0 0 14px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: {{T.faint}}">Módulos</h2>
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: {{T.gap}}px">
 <sc-for list="{{cards}}" as="m" hint-placeholder-count="9">
-<a href="{{m.href}}" style="{{T.card}}; padding: 20px; display: flex; flex-direction: column; gap: 14px; text-decoration: none; color: {{T.text}}">
+<a href="{{m.href}}" style="{{T.card}}; padding: 20px; display: flex; flex-direction: column; gap: 14px; text-decoration: none; color: {{T.text}};">
 <span style="{{m.tile}}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{m.d}}"></path></svg></span>
 <span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 16px; font-weight: 700; font-family: {{T.head}}">{{m.label}}</span><span style="font-size: 13px; line-height: 1.5; color: {{T.muted}}">{{m.desc}}</span></span>
 </a>
@@ -195,6 +195,8 @@ function crmThemeKit() {
     stats: 'M12 20V10M18 20V4M6 20v-4',
     layers: 'M12 2l10 5-10 5L2 7zM2 17l10 5 10-5M2 12l10 5 10-5',
     award: 'M12 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12zM15.5 13 17 22l-5-3-5 3 1.5-9',
+    target: 'M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zM12 6a6 6 0 1 1 0 12 6 6 0 0 1 0-12zM12 10a2 2 0 1 1 0 4 2 2 0 0 1 0-4z',
+    shuffle: 'M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5',
     plusBox: 'M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM12 8v8M8 12h8'
   };
   const MODS = [
@@ -212,13 +214,15 @@ function crmThemeKit() {
     { key: 'resumen', label: 'Resumen', d: I.dash, href: 'Clientes-Resumen.dc.html' },
     { key: 'nuevo', label: 'Nuevo cliente', d: I.userPlus, href: 'Clientes-Nuevo.dc.html' },
     { key: 'buscar', label: 'Buscar clientes', d: I.search, href: 'Clientes-Buscar.dc.html' },
-    { key: 'visita', label: 'Registrar visita', d: I.visit, href: '#' },
+    { key: 'visita', label: 'Registrar visita', d: I.visit, href: 'Clientes-Visita.dc.html' },
     { key: 'stats', label: 'Estadísticas', d: I.stats, href: 'Clientes-Estadisticas.dc.html' },
     { head: true, label: 'Configuración' },
     { key: 'campos', label: 'Campos y CSV', d: I.sliders, href: 'Clientes-Campos.dc.html' },
-    { key: 'grupos', label: 'Grupos de clientes', d: I.layers, href: '#' },
-    { key: 'rangos', label: 'Rangos de clientes', d: I.award, href: '#' },
-    { key: 'info', label: 'Información adicional', d: I.plusBox, href: '#' }
+    { key: 'grupos', label: 'Grupos de clientes', d: I.layers, href: 'Clientes-Grupos.dc.html' },
+    { key: 'motivos', label: 'Motivos de 1ª visita', d: I.target, href: 'Clientes-Motivos.dc.html' },
+    { key: 'rangos', label: 'Rangos de clientes', d: I.award, href: 'Clientes-Rangos.dc.html' },
+    { key: 'reglas', label: 'Asignación de rangos', d: I.shuffle, href: 'Clientes-Reglas.dc.html' },
+    { key: 'info', label: 'Información adicional', d: I.plusBox, href: 'Clientes-InfoAdicional.dc.html' }
   ];
 
   const pick = (s) => { const o = {}; KEYS.forEach((k) => { o[k] = s[k]; }); return o; };
@@ -257,7 +261,7 @@ function crmThemeKit() {
       label: 'display: block; font-size: 12px; font-weight: 700; color: ' + P.muted + '; margin-bottom: 6px',
       btn: btnBase + 'border: 1px solid ' + P.border + '; background: ' + P.surface + '; color: ' + P.text,
       btnP: btnBase + 'border: 1px solid ' + accent + '; background: ' + accent + '; color: ' + onAccent,
-      iconBtn: 'width: 44px; height: 44px; border-radius: ' + R[1] + 'px; border: 0; background: transparent; color: ' + P.muted + '; display: inline-flex; align-items: center; justify-content: center; cursor: pointer'
+      iconBtn: 'font-size: 18px; width: 44px; height: 44px; border-radius: ' + R[1] + 'px; border: 0; background: transparent; color: ' + P.muted + '; display: inline-flex; align-items: center; justify-content: center; cursor: pointer'
     };
     let N;
     if (s.nav === 'dark') N = { bg: dark ? '#090B0F' : '#12151C', fg: '#9AA3B2', title: '#FFFFFF', label: '#8B93A3', activeBg: '#2A303D', activeFg: '#FFFFFF', brandBg: accent, brandFg: onAccent, border: dark ? P.border : 'transparent', btnBorder: 'rgba(255,255,255,.22)' };
@@ -266,7 +270,7 @@ function crmThemeKit() {
     N.btn = 'display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: ' + R[1] + 'px; border: 1px solid ' + N.btnBorder + '; background: transparent; color: ' + N.title + '; font: inherit; font-weight: 700; cursor: pointer';
     const isDouble = s.layout === 'double', isSimple = s.layout === 'side', isTop = s.layout === 'top';
     const SN = isDouble
-      ? { w: 236, bg: P.surface, fg: P.muted, title: P.text, label: P.faint, activeBg: T.accentSoft, activeFg: T.accentSoftFg, border: P.border }
+      ? { w: 252, bg: P.surface, fg: P.muted, title: P.text, label: P.faint, activeBg: T.accentSoft, activeFg: T.accentSoftFg, border: P.border }
       : { w: 260, bg: N.bg, fg: N.fg, title: N.title, label: N.label, activeBg: N.activeBg, activeFg: N.activeFg, border: N.border };
     return { T, N, SN, isDouble, isSimple, isTop, isSide: !isTop };
   };
