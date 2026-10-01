@@ -1,0 +1,120 @@
+---META---
+{"title": "Campos de información adicional", "h": 1100, "maxw": 1280, "ctx": "{ module: 'clientes', active: 'info', crumbs: [{ label: 'Inicio', href: 'Main.dc.html' }, { label: 'Información adicional', href: 'Clientes-InfoAdicional.dc.html' }, { label: 'Campos' }] }", "state": "{ cat: 'Mascota', drawer: null }"}
+---CONTENT---
+<div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+<div>
+<a href="Clientes-InfoAdicional.dc.html" style="font-size: 13px; font-weight: 700; color: {{T.link}}; text-decoration: none">← Volver a categorías</a>
+<h1 style="margin: 6px 0 0; font-size: 26px; font-weight: 800; font-family: {{T.head}}">Campos de «{{cat}}»</h1>
+<p style="margin: 6px 0 0; color: {{T.muted}}">Los campos se muestran en el registro y la ficha del cliente en este orden.</p>
+</div>
+<button type="button" onClick="{{newField}}" style="{{T.btnP}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Nuevo campo</button>
+</div>
+
+<div role="tablist" aria-label="Categoría" style="display: flex; gap: 6px; flex-wrap: wrap">
+<sc-for list="{{catTabs}}" as="ct" hint-placeholder-count="5"><button type="button" role="tab" aria-selected="{{ct.on}}" onClick="{{ct.pick}}" style="{{ct.style}}">{{ct.label}}</button></sc-for>
+</div>
+
+<section aria-label="Campos" style="{{T.card}}; overflow: hidden">
+<sc-if value="{{noFields}}" hint-placeholder-val="{{ false }}">
+<div style="{{empty}}"><strong style="color: {{T.text}}">Esta categoría todavía no tiene campos</strong><span>Añade el primero con «Nuevo campo».</span></div>
+</sc-if>
+<sc-if value="{{hasFields}}" hint-placeholder-val="{{ true }}">
+<div style="overflow-x: auto">
+<div role="table" aria-label="Campos de la categoría" style="min-width: 1040px">
+<div role="row" style="display: grid; grid-template-columns: 48px minmax(140px, 1fr) 130px 240px 100px 100px 110px 190px 100px">
+<div role="columnheader" style="{{th}}">#</div><div role="columnheader" style="{{th}}">Campo</div><div role="columnheader" style="{{th}}">Tipo</div><div role="columnheader" style="{{th}}">Vista previa</div><div role="columnheader" style="{{th}}">Obligatorio</div><div role="columnheader" style="{{th}}">Búsqueda</div><div role="columnheader" style="{{th}}">Newsletter</div><div role="columnheader" style="{{th}}">Mostrar en</div><div role="columnheader" style="{{th}}"><span class="sr">Acciones</span></div>
+</div>
+<sc-for list="{{fields}}" as="f" hint-placeholder-count="3">
+<div role="row" style="display: grid; grid-template-columns: 48px minmax(140px, 1fr) 130px 240px 100px 100px 110px 190px 100px">
+<div role="cell" style="{{td}}; color: {{T.muted}}">{{f.n}}</div>
+<div role="cell" style="{{td}}; font-weight: 700">{{f.name}}</div>
+<div role="cell" style="{{td}}"><span style="padding: 2px 10px; border-radius: 999px; background: {{T.surface2}}; color: {{T.muted}}; font-size: 12px; font-weight: 700">{{f.type}}</span></div>
+<div role="cell" style="{{td}}; padding: 8px 14px">
+<sc-if value="{{f.isText}}" hint-placeholder-val="{{ true }}"><input type="text" aria-label="Vista previa de {{f.name}}" style="{{T.input}}; height: 34px"></sc-if>
+<sc-if value="{{f.isArea}}" hint-placeholder-val="{{ false }}"><textarea rows="2" aria-label="Vista previa de {{f.name}}" style="{{T.input}}; height: 48px; padding: 6px 10px; resize: none"></textarea></sc-if>
+<sc-if value="{{f.isSelect}}" hint-placeholder-val="{{ false }}"><select aria-label="Vista previa de {{f.name}}" style="{{T.input}}; height: 34px"><option>Selecciona…</option></select></sc-if>
+<sc-if value="{{f.isNum}}" hint-placeholder-val="{{ false }}"><span style="display: flex; align-items: center; gap: 8px; width: 100%"><input type="number" aria-label="Vista previa de {{f.name}}" style="{{T.input}}; height: 34px; width: 110px"><span>{{f.unit}}</span></span></sc-if>
+<sc-if value="{{f.isDate}}" hint-placeholder-val="{{ false }}"><input type="date" aria-label="Vista previa de {{f.name}}" style="{{T.input}}; height: 34px"></sc-if>
+</div>
+<div role="cell" style="{{td}}"><input type="checkbox" checked="{{f.req}}" aria-label="{{f.name}}: obligatorio" style="accent-color: {{T.accent}}; width: 20px; height: 20px; margin: 0"></div>
+<div role="cell" style="{{td}}"><input type="checkbox" checked="{{f.search}}" aria-label="{{f.name}}: filtro de búsqueda" style="accent-color: {{T.accent}}; width: 20px; height: 20px; margin: 0"></div>
+<div role="cell" style="{{td}}"><input type="checkbox" aria-label="{{f.name}}: usar como variable en newsletter" style="accent-color: {{T.accent}}; width: 20px; height: 20px; margin: 0"></div>
+<div role="cell" style="{{td}}"><select aria-label="Mostrar {{f.name}} en" style="{{T.input}}; height: 34px; font-size: 13px"><option selected="{{f.both}}">Administración y móvil</option><option selected="{{f.admin}}">Solo administración</option><option>Solo móvil</option></select></div>
+<div role="cell" style="{{td}}"><button type="button" onClick="{{f.edit}}" style="{{T.btn}}; height: 34px; padding: 0 12px">Editar</button></div>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="padding: 14px 22px; border-top: 1px solid {{T.border}}; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap">
+<span style="font-size: 13px; color: {{T.muted}}">«Newsletter» permite insertar el valor del campo en los correos (reemplazo de variables).</span>
+<button type="button" style="{{T.btnP}}">Guardar cambios</button>
+</div>
+</sc-if>
+</section>
+---OVERLAY---
+<sc-if value="{{drawerOpen}}" hint-placeholder-val="{{ false }}">
+<div style="position: fixed; inset: 0; z-index: 40; background: rgba(10,12,16,.45); display: flex; justify-content: flex-end">
+<aside role="dialog" aria-labelledby="dt" style="width: 520px; max-width: 100%; height: 100%; background: {{T.surface}}; color: {{T.text}}; display: flex; flex-direction: column; box-shadow: -12px 0 40px rgba(0,0,0,.2)">
+<div style="{{sectionHead}}; display: flex; justify-content: space-between; align-items: center"><h2 id="dt" style="{{h2}}">{{dTitle}}</h2><button type="button" onClick="{{closeDrawer}}" aria-label="Cerrar" style="{{T.iconBtn}}">✕</button></div>
+<div style="padding: 22px; display: flex; flex-direction: column; gap: 16px; flex-grow: 1; overflow-y: auto">
+<label><span style="{{T.label}}">Título del campo <span style="color: {{T.req}}">*</span></span><input type="text" value="{{dName}}" onChange="{{onDName}}" style="{{T.input}}"></label>
+<div class="g2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+<label><span style="{{T.label}}">Tipo de campo</span><select onChange="{{onType}}" style="{{T.input}}">
+<option value="text" selected="{{tSel.text}}">Texto</option><option value="area" selected="{{tSel.area}}">Área de texto</option><option value="num" selected="{{tSel.num}}">Número</option><option value="select" selected="{{tSel.select}}">Selección</option><option value="radio" selected="{{tSel.radio}}">Botones de opción</option><option value="check" selected="{{tSel.check}}">Casillas</option><option value="date" selected="{{tSel.date}}">Fecha</option>
+</select></label>
+<label><span style="{{T.label}}">Unidad</span><input type="text" value="{{dUnit}}" placeholder="Ej. Kg" style="{{T.input}}"></label>
+</div>
+<label><span style="{{T.label}}">Comentario</span><textarea rows="2" placeholder="Texto de ayuda para quien rellena el campo" style="{{T.input}}; height: auto; padding: 10px 12px; resize: vertical"></textarea></label>
+<sc-if value="{{hasOptions}}" hint-placeholder-val="{{ false }}">
+<fieldset style="border: 1px solid {{T.border}}; border-radius: {{T.R}}px; margin: 0; padding: 14px; min-width: 0; display: flex; flex-direction: column; gap: 10px">
+<legend style="{{T.label}}; padding: 0 6px; margin: 0">Opciones</legend>
+<div class="g2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; font-size: 12px; font-weight: 700; color: {{T.muted}}"><span>Texto que se muestra</span><span>Valor que se guarda</span></div>
+<sc-for list="{{opts}}" as="op" hint-placeholder-count="2">
+<div class="g2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px"><input type="text" aria-label="Texto de la opción {{op.n}}" placeholder="[OPCIÓN {{op.n}}]" style="{{T.input}}"><input type="text" aria-label="Valor de la opción {{op.n}}" placeholder="[VALOR {{op.n}}]" style="{{T.input}}"></div>
+</sc-for>
+<button type="button" onClick="{{addOpt}}" style="{{T.btn}}; align-self: flex-start">+ Añadir opción</button>
+</fieldset>
+</sc-if>
+<label><span style="{{T.label}}">Tamaño del campo</span><select style="{{T.input}}"><option>Unos 24 caracteres</option><option>[OTROS TAMAÑOS]</option></select></label>
+</div>
+<div style="padding: 14px 22px; border-top: 1px solid {{T.border}}; display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap">
+<sc-if value="{{isEdit}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{closeDrawer}}" style="{{T.btn}}; color: {{T.req}}; margin-right: auto">Eliminar</button></sc-if>
+<button type="button" onClick="{{closeDrawer}}" style="{{T.btn}}">Cancelar</button>
+<button type="button" onClick="{{closeDrawer}}" style="{{T.btnP}}">{{dSave}}</button>
+</div>
+</aside>
+</div>
+</sc-if>
+---VALS---
+      const TYPE = { text: 'Texto', area: 'Área de texto', num: 'Número', select: 'Selección', radio: 'Botones de opción', check: 'Casillas', date: 'Fecha' };
+      const DATA = {
+        sampleform: [['remarks', 'area', false, true], ['remarks2', 'area', false, true]],
+        'カルテ': [['メッセージ内容', 'text', false, true], ['スタッフ名', 'text', false, true]],
+        '家族情報': [['配偶者', 'select', true, true, 'admin'], ['結婚記念日', 'date', true, true, 'admin']],
+        Mascota: [['Nombre', 'text', false, true], ['Tipo', 'select', false, true], ['Peso', 'num', false, true, 'both', 'Kg']],
+        Ropa: []
+      };
+      const list = DATA[s.cat] || [];
+      const d = s.drawer;
+      const tSel = {}; Object.keys(TYPE).forEach((k) => { tSel[k] = !!d && d.type === k; });
+      return {
+        cat: s.cat,
+        catTabs: Object.keys(DATA).map((k) => ({ label: k, on: s.cat === k, style: s.cat === k ? base.chipOn : base.chipOff, pick: () => set({ cat: k, drawer: null }) })),
+        noFields: list.length === 0, hasFields: list.length > 0,
+        fields: list.map(([name, type, req, search, show, unit], i) => ({
+          n: i + 1, name, type: TYPE[type], req, search, unit: unit || '', both: show !== 'admin', admin: show === 'admin',
+          isText: type === 'text', isArea: type === 'area', isSelect: type === 'select' || type === 'radio' || type === 'check', isNum: type === 'num', isDate: type === 'date',
+          edit: () => set({ drawer: { edit: true, name, type, unit: unit || '', opts: 2 } })
+        })),
+        newField: () => set({ drawer: { edit: false, name: '', type: 'text', unit: '', opts: 2 } }),
+        drawerOpen: !!d, isEdit: !!d && d.edit,
+        dTitle: d && d.edit ? 'Editar campo «' + d.name + '»' : 'Nuevo campo en «' + s.cat + '»',
+        dSave: d && d.edit ? 'Guardar campo' : 'Crear campo',
+        dName: d ? d.name : '', dUnit: d ? d.unit : '', tSel,
+        onDName: (e) => set({ drawer: { ...this.state.drawer, name: e.target.value } }),
+        onType: (e) => set({ drawer: { ...this.state.drawer, type: e.target.value } }),
+        hasOptions: !!d && (d.type === 'select' || d.type === 'radio' || d.type === 'check'),
+        opts: d ? Array.from({ length: d.opts }, (_, i) => ({ n: i + 1 })) : [],
+        addOpt: () => set({ drawer: { ...this.state.drawer, opts: this.state.drawer.opts + 1 } }),
+        closeDrawer: () => set({ drawer: null })
+      };

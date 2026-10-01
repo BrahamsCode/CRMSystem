@@ -13,9 +13,9 @@
 <style>
 body{margin:0}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-@media (max-width:1100px){.idx{display:none !important}.formgrid{grid-template-columns:1fr !important}}
+@media (max-width:1100px){.idx{display:none !important}.split{grid-template-columns:1fr !important}}
 @media (max-width:900px){.side{display:none !important}}
-@media (max-width:720px){.rail{display:none !important}.hide-sm{display:none !important}.mpad{padding:20px 16px !important}.g2{grid-template-columns:1fr !important}}
+@media (max-width:720px){.rail{display:none !important}.hide-sm{display:none !important}.mpad{padding:20px 16px !important}.g2,.g3{grid-template-columns:1fr !important}}
 </style>
 </helmet>
 <div style="min-height: 100vh; display: flex; flex-direction: {{T.dir}}; background: {{T.bg}}; color: {{T.text}}; font-family: {{T.font}}; font-size: {{T.fs}}px">
@@ -38,7 +38,7 @@ body{margin:0}
 <sc-if value="{{sh.sideTitle}}" hint-placeholder-val="{{ true }}">
 <div style="padding: 0 12px 4px"><div style="font-weight: 800; font-size: 15px; font-family: {{T.head}}; color: {{SN.title}}">Clientes</div><div style="font-size: 12px; color: {{SN.label}}">Gestión de clientes</div></div>
 </sc-if>
-<sc-for list="{{sh.sideItems}}" as="it" hint-placeholder-count="11">
+<sc-for list="{{sh.sideItems}}" as="it" hint-placeholder-count="13">
 <sc-if value="{{it.head}}" hint-placeholder-val="{{ false }}"><div style="{{it.style}}">{{it.label}}</div></sc-if>
 <sc-if value="{{it.link}}" hint-placeholder-val="{{ true }}"><a href="{{it.href}}" style="{{it.style}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{it.d}}"></path></svg>{{it.label}}</a></sc-if>
 </sc-for>
@@ -59,15 +59,16 @@ body{margin:0}
 </div>
 </header>
 <nav aria-label="Menú de clientes" style="background: {{T.surface}}; border-bottom: 1px solid {{T.border}}; display: flex; gap: 4px; padding: 0 24px; overflow-x: auto">
-<sc-for list="{{sh.tabs}}" as="t" hint-placeholder-count="9"><a href="{{t.href}}" style="{{t.style}}">{{t.label}}</a></sc-for>
+<sc-for list="{{sh.tabs}}" as="t" hint-placeholder-count="11"><a href="{{t.href}}" style="{{t.style}}">{{t.label}}</a></sc-for>
 </nav>
 </sc-if>
 <sc-if value="{{isSide}}" hint-placeholder-val="{{ true }}">
 <header style="height: 64px; background: {{T.surface}}; border-bottom: 1px solid {{T.border}}; display: flex; align-items: center; gap: 10px; padding: 0 24px; position: sticky; top: 0; z-index: 5">
-<nav aria-label="Ruta" style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: {{T.faint}}; white-space: nowrap; min-width: 0">
-<a href="Main.dc.html" style="color: {{T.faint}}; text-decoration: none">Inicio</a><span aria-hidden="true">/</span>
-<a href="Clientes-Resumen.dc.html" class="hide-sm" style="color: {{T.faint}}; text-decoration: none">Clientes</a><span class="hide-sm" aria-hidden="true">/</span>
-<span style="color: {{T.text}}; font-weight: 700">Nuevo cliente</span>
+<nav aria-label="Ruta" style="display: flex; align-items: center; font-size: 14px; color: {{T.faint}}; white-space: nowrap; min-width: 0; overflow: hidden">
+<sc-for list="{{sh.crumbs}}" as="c" hint-placeholder-count="3">
+<sc-if value="{{c.notLast}}" hint-placeholder-val="{{ true }}"><a href="{{c.href}}" style="color: {{T.faint}}; text-decoration: none">{{c.label}}</a><span aria-hidden="true" style="margin: 0 8px">/</span></sc-if>
+<sc-if value="{{c.last}}" hint-placeholder-val="{{ false }}"><span style="color: {{T.text}}; font-weight: 700">{{c.label}}</span></sc-if>
+</sc-for>
 </nav>
 <div style="flex-grow: 1"></div>
 <label class="hide-sm" style="display: block; width: 260px"><span class="sr">Buscar en el sistema</span><input type="search" placeholder="Buscar cliente…" style="{{T.input}}"></label>
@@ -76,151 +77,155 @@ body{margin:0}
 <a href="Login.dc.html" aria-label="Cerrar sesión" title="Cerrar sesión" style="{{T.iconBtn}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path></svg></a>
 </header>
 </sc-if>
-
 <main class="mpad" style="padding: {{T.pad}}px; box-sizing: border-box; width: 100%; max-width: 1280px; display: flex; flex-direction: column; gap: {{T.gap}}px">
 <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap">
 <div>
-<h1 style="margin: 0; font-size: 26px; font-weight: 800; letter-spacing: -0.01em; font-family: {{T.head}}">Nuevo cliente</h1>
-<p style="margin: 6px 0 0; color: {{T.muted}}">Registra un nuevo miembro. Los campos con <span style="color: {{T.req}}; font-weight: 700">*</span> son obligatorios.</p>
+<h1 style="margin: 0; font-size: 26px; font-weight: 800; font-family: {{T.head}}">Nuevo cliente</h1>
+<p style="margin: 6px 0 0; color: {{T.muted}}">Los campos marcados con <span style="color: {{T.req}}; font-weight: 700">*</span> son obligatorios.</p>
 </div>
-<a href="Clientes-Resumen.dc.html" style="{{T.btn}}">Cancelar</a>
+<ol aria-label="Pasos" style="list-style: none; margin: 0; padding: 0; display: flex; gap: 6px; flex-wrap: wrap">
+<sc-for list="{{steps}}" as="st" hint-placeholder-count="3">
+<li style="display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 6px; border-radius: 999px; background: {{st.bg}}; color: {{st.fg}}; font-size: 13px; font-weight: 700"><span style="width: 24px; height: 24px; border-radius: 50%; background: {{st.dotBg}}; color: {{st.dotFg}}; display: flex; align-items: center; justify-content: center; font-size: 12px">{{st.n}}</span>{{st.label}}</li>
+</sc-for>
+</ol>
 </div>
 
-<sc-if value="{{saved}}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{isConfirm}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="padding: 14px 18px; border-radius: {{T.R}}px; background: {{T.accentSoft}}; color: {{T.text}}"><strong>Revisa los datos.</strong> Si todo está correcto, pulsa «Confirmar registro». Para cambiar algo, vuelve a editar.</div>
+</sc-if>
+<sc-if value="{{isDone}}" hint-placeholder-val="{{ false }}">
 <div role="status" style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 14px 18px; border-radius: {{T.R}}px; background: {{T.accentSoft}}; color: {{T.text}}">
 <span style="width: 36px; height: 36px; border-radius: 50%; background: {{T.accent}}; color: {{T.onAccent}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></span>
-<span style="flex-grow: 1"><strong>Cliente registrado.</strong> Nº de socio asignado: <strong>[Nº DE SOCIO]</strong></span>
-<a href="#" style="{{T.btn}}">Ver ficha</a>
+<span style="flex-grow: 1"><strong>Cliente registrado.</strong> Nº de socio 1100029.</span>
+<a href="Clientes-Ficha.dc.html" style="{{T.btn}}">Ver ficha</a>
 <button type="button" onClick="{{again}}" style="{{T.btnP}}">Registrar otro</button>
 </div>
 </sc-if>
 
-<div class="formgrid" style="display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: {{T.gap}}px; align-items: start">
+<div class="split" style="display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: {{T.gap}}px; align-items: start">
 <nav class="idx" aria-label="Secciones del formulario" style="position: sticky; top: 88px; display: flex; flex-direction: column; gap: 2px">
-<sc-for list="{{idx}}" as="x" hint-placeholder-count="7">
-<a href="{{x.href}}" style="display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 0 10px; border-radius: {{T.r}}px; text-decoration: none; color: {{T.muted}}; font-weight: 600">
-<span style="width: 24px; height: 24px; border-radius: 50%; background: {{T.surface2}}; color: {{T.text}}; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800">{{x.n}}</span>{{x.label}}</a>
+<sc-for list="{{idx}}" as="x" hint-placeholder-count="6">
+<a href="{{x.href}}" style="display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 0 10px; border-radius: {{T.r}}px; text-decoration: none; color: {{T.muted}}; font-weight: 600"><span style="width: 24px; height: 24px; border-radius: 50%; background: {{T.surface2}}; color: {{T.text}}; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800">{{x.n}}</span>{{x.label}}</a>
 </sc-for>
 </nav>
 
 <form aria-label="Datos del nuevo cliente" style="display: flex; flex-direction: column; gap: {{T.gap}}px; min-width: 0">
+<fieldset disabled="{{locked}}" style="border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-direction: column; gap: {{T.gap}}px">
 
-<section id="membresia" aria-labelledby="h-membresia" style="{{T.card}}; scroll-margin-top: 80px">
-<div style="padding: 18px 22px; border-bottom: 1px solid {{T.border}}"><h2 id="h-membresia" style="margin: 0; font-size: 17px; font-weight: 700; font-family: {{T.head}}">1. Membresía</h2><p style="margin: 4px 0 0; font-size: 13px; color: {{T.muted}}">Tienda, estado del registro y acceso a Mi página.</p></div>
+<section id="cliente" aria-labelledby="h1s" style="{{T.card}}; scroll-margin-top: 80px">
+<div style="{{sectionHead}}"><h2 id="h1s" style="{{h2}}">1. Datos del cliente</h2></div>
 <div class="g2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 20px; padding: 20px 22px">
-<div><span style="{{T.label}}">Nº de socio</span><div style="{{T.input}}; display: flex; align-items: center; background: {{T.surface2}}; color: {{T.muted}}">Se asigna automáticamente</div></div>
-<label><span style="{{T.label}}">Nº de gestión</span><input type="text" placeholder="Opcional" style="{{T.input}}"></label>
-<label><span style="{{T.label}}">Tienda de registro <span style="color: {{T.req}}">*</span></span><select required style="{{T.input}}"><option>Selecciona…</option><option>テスト2</option><option>Polos</option><option>Pantalones</option><option>shop</option></select></label>
-<fieldset style="border: 0; margin: 0; padding: 0; min-width: 0"><legend style="{{T.label}}">Persona / empresa</legend><div style="display: flex; gap: 8px; flex-wrap: wrap">
+<div><span style="{{T.label}}">Nº de socio</span><div style="{{T.input}}; display: flex; align-items: center; background: {{T.surface2}}; font-weight: 700">1100029</div></div>
+<label><span style="{{T.label}}">Nº de gestión</span><input type="text" style="{{T.input}}"></label>
+<fieldset style="border: 0; margin: 0; padding: 0; min-width: 0; grid-column: 1 / -1"><legend style="{{T.label}}">Persona / empresa <span style="color: {{T.req}}">*</span></legend><div style="display: flex; gap: 8px; flex-wrap: wrap">
 <label style="{{choice}}"><input type="radio" name="ptype" checked="{{isPersona}}" onChange="{{setPersona}}" style="accent-color: {{T.accent}}; margin: 0">Persona</label>
 <label style="{{choice}}"><input type="radio" name="ptype" checked="{{isEmpresa}}" onChange="{{setEmpresa}}" style="accent-color: {{T.accent}}; margin: 0">Empresa</label>
 </div></fieldset>
-<label><span style="{{T.label}}">Estado de registro</span><select style="{{T.input}}"><option>Registrado</option><option>Dado de baja</option></select></label>
-<fieldset style="border: 0; margin: 0; padding: 0; min-width: 0"><legend style="{{T.label}}">Newsletter <span style="color: {{T.req}}">*</span></legend><div style="display: flex; gap: 8px; flex-wrap: wrap">
-<label style="{{choice}}"><input type="radio" name="news" checked style="accent-color: {{T.accent}}; margin: 0">Suscrito</label>
-<label style="{{choice}}"><input type="radio" name="news" style="accent-color: {{T.accent}}; margin: 0">No suscrito</label>
-</div></fieldset>
-<label><span style="{{T.label}}">Grupo de cliente</span><select style="{{T.input}}"><option>Sin grupo</option><option>[GRUPOS DE CLIENTES]</option></select></label>
-<label><span style="{{T.label}}">Personal asignado</span><select style="{{T.input}}"><option>Sin asignar</option><option>[PERSONAL]</option></select></label>
-<label><span style="{{T.label}}">Motivo de primera visita</span><select style="{{T.input}}"><option>Selecciona…</option><option>[MOTIVOS DE PRIMERA VISITA]</option></select></label>
-<label><span style="{{T.label}}">Contraseña de Mi página</span><input type="password" autocomplete="new-password" placeholder="Para que el cliente acceda a Mi página" style="{{T.input}}"></label>
+<label><span style="{{T.label}}">Apellido (fonético)</span><input type="text" style="{{T.input}}"></label>
+<label><span style="{{T.label}}">Nombre (fonético)</span><input type="text" style="{{T.input}}"></label>
+<label><span style="{{T.label}}">Apellido</span><input type="text" autocomplete="family-name" style="{{T.input}}"></label>
+<label><span style="{{T.label}}">Nombre</span><input type="text" autocomplete="given-name" style="{{T.input}}"></label>
+
+<div style="grid-column: 1 / -1; padding-top: 6px; font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: {{T.faint}}">Dirección</div>
+<label><span style="{{T.label}}">Código postal</span><span style="display: flex; gap: 8px"><input type="text" inputmode="numeric" autocomplete="postal-code" style="{{T.input}}"><button type="button" style="{{T.btn}}; height: {{T.ctrlH}}px">Buscar dirección</button></span></label>
+<label><span style="{{T.label}}">Prefectura</span><select style="{{T.input}}"><option>Selecciona…</option><option>[PREFECTURAS]</option></select></label>
+<label><span style="{{T.label}}">Ciudad / distrito (fonético)</span><input type="text" style="{{T.input}}"></label>
+<label><span style="{{T.label}}">Ciudad / distrito</span><input type="text" style="{{T.input}}"></label>
+<label style="grid-column: 1 / -1"><span style="{{T.label}}">Calle y número</span><input type="text" autocomplete="street-address" style="{{T.input}}"></label>
+<label><span style="{{T.label}}">Edificio / depto. (fonético)</span><input type="text" style="{{T.input}}"></label>
+<label><span style="{{T.label}}">Edificio / depto.</span><input type="text" style="{{T.input}}"></label>
+
+<div style="grid-column: 1 / -1; padding-top: 6px; font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: {{T.faint}}">Contacto</div>
+<label><span style="{{T.label}}">Teléfono</span><input type="tel" autocomplete="tel" style="{{T.input}}"></label>
+<label><span style="{{T.label}}">Fax</span><input type="tel" style="{{T.input}}"></label>
+<label><span style="{{T.label}}">Email 1</span><input type="email" autocomplete="email" style="{{T.input}}"></label>
+<label><span style="{{T.label}}">Email 2</span><input type="email" style="{{T.input}}"></label>
+<label><span style="{{T.label}}">Personal asignado</span><select style="{{T.input}}"><option>Selecciona…</option><option>[PERSONAL]</option></select></label>
+<div><span style="{{T.label}}">Referido por</span><button type="button" style="{{T.btn}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4a7 7 0 1 1 0 14 7 7 0 0 1 0-14zM21 21l-4.3-4.3"></path></svg>Buscar socio</button></div>
 </div>
 </section>
 
-<section id="personal" aria-labelledby="h-personal" style="{{T.card}}; scroll-margin-top: 80px">
-<div style="padding: 18px 22px; border-bottom: 1px solid {{T.border}}"><h2 id="h-personal" style="margin: 0; font-size: 17px; font-weight: 700; font-family: {{T.head}}">2. Datos personales</h2></div>
+<section id="personal" aria-labelledby="h2s" style="{{T.card}}; scroll-margin-top: 80px">
+<div style="{{sectionHead}}"><h2 id="h2s" style="{{h2}}">2. Datos personales</h2></div>
 <div class="g2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 20px; padding: 20px 22px">
-<label><span style="{{T.label}}">Nombre <span style="color: {{T.req}}">*</span></span><input type="text" required autocomplete="name" placeholder="Apellido Nombre" style="{{T.input}}"><span style="display: block; margin-top: 6px; font-size: 12px; color: {{T.faint}}">Separa apellido y nombre con un espacio.</span></label>
-<label><span style="{{T.label}}">Nombre (fonético)</span><input type="text" placeholder="Lectura en kana" style="{{T.input}}"></label>
-<label><span style="{{T.label}}">Fecha de nacimiento</span><input type="date" style="{{T.input}}"></label>
+<fieldset style="border: 0; margin: 0; padding: 0; min-width: 0"><legend style="{{T.label}}">Fecha de nacimiento</legend><div style="display: flex; gap: 8px; align-items: center"><input type="number" aria-label="Año" placeholder="Año" style="{{T.input}}; width: 100px"><input type="number" aria-label="Mes" placeholder="Mes" style="{{T.input}}; width: 76px"><input type="number" aria-label="Día" placeholder="Día" style="{{T.input}}; width: 76px"></div></fieldset>
 <fieldset style="border: 0; margin: 0; padding: 0; min-width: 0"><legend style="{{T.label}}">Sexo</legend><div style="display: flex; gap: 8px; flex-wrap: wrap">
-<label style="{{choice}}"><input type="radio" name="sex" style="accent-color: {{T.accent}}; margin: 0">Mujer</label>
 <label style="{{choice}}"><input type="radio" name="sex" style="accent-color: {{T.accent}}; margin: 0">Hombre</label>
-<label style="{{choice}}"><input type="radio" name="sex" style="accent-color: {{T.accent}}; margin: 0">Sin especificar</label>
+<label style="{{choice}}"><input type="radio" name="sex" style="accent-color: {{T.accent}}; margin: 0">Mujer</label>
 </div></fieldset>
 <label><span style="{{T.label}}">Grupo sanguíneo</span><select style="{{T.input}}"><option>—</option><option>A</option><option>B</option><option>O</option><option>AB</option></select></label>
-<label><span style="{{T.label}}">Ocupación</span><select style="{{T.input}}"><option>Selecciona…</option><option>[OCUPACIONES]</option></select></label>
-</div>
-</section>
-
-<section id="contacto" aria-labelledby="h-contacto" style="{{T.card}}; scroll-margin-top: 80px">
-<div style="padding: 18px 22px; border-bottom: 1px solid {{T.border}}"><h2 id="h-contacto" style="margin: 0; font-size: 17px; font-weight: 700; font-family: {{T.head}}">3. Contacto</h2></div>
-<div class="g2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 20px; padding: 20px 22px">
-<label><span style="{{T.label}}">Email 1</span><input type="email" autocomplete="email" placeholder="nombre@dominio.com" style="{{T.input}}"></label>
-<label><span style="{{T.label}}">Email 2</span><input type="email" style="{{T.input}}"></label>
-<label><span style="{{T.label}}">Email personal</span><input type="email" style="{{T.input}}"></label>
-<label><span style="{{T.label}}">Teléfono</span><input type="tel" autocomplete="tel" style="{{T.input}}"></label>
 <label><span style="{{T.label}}">Teléfono móvil</span><input type="tel" style="{{T.input}}"></label>
+<label><span style="{{T.label}}">Email personal</span><input type="email" style="{{T.input}}"></label>
+<label><span style="{{T.label}}">Ocupación</span><select style="{{T.input}}"><option>Selecciona…</option><option>[OCUPACIONES]</option></select></label>
+<div style="grid-column: 1 / -1; padding-top: 6px; font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: {{T.faint}}">Lugar de trabajo</div>
+<label><span style="{{T.label}}">Nombre (fonético)</span><input type="text" style="{{T.input}}"></label>
+<label><span style="{{T.label}}">Nombre</span><input type="text" autocomplete="organization" style="{{T.input}}"></label>
+<label><span style="{{T.label}}">Rubro</span><select style="{{T.input}}"><option>Selecciona…</option><option>[RUBROS]</option></select></label>
+<div></div>
+<label><span style="{{T.label}}">Teléfono</span><input type="tel" style="{{T.input}}"></label>
 <label><span style="{{T.label}}">Fax</span><input type="tel" style="{{T.input}}"></label>
 </div>
 </section>
 
-<section id="direccion" aria-labelledby="h-direccion" style="{{T.card}}; scroll-margin-top: 80px">
-<div style="padding: 18px 22px; border-bottom: 1px solid {{T.border}}"><h2 id="h-direccion" style="margin: 0; font-size: 17px; font-weight: 700; font-family: {{T.head}}">4. Dirección</h2></div>
+<section id="promo" aria-labelledby="h3s" style="{{T.card}}; scroll-margin-top: 80px">
+<div style="{{sectionHead}}"><h2 id="h3s" style="{{h2}}">3. Información de promoción</h2></div>
 <div class="g2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 20px; padding: 20px 22px">
-<label><span style="{{T.label}}">Código postal</span><span style="display: flex; gap: 8px"><input type="text" inputmode="numeric" autocomplete="postal-code" style="{{T.input}}"><button type="button" style="{{T.btn}}; height: {{T.ctrlH}}px">Buscar dirección</button></span></label>
-<label><span style="{{T.label}}">Región / provincia</span><select style="{{T.input}}"><option>Selecciona…</option><option>[REGIONES]</option></select></label>
-<label><span style="{{T.label}}">Ciudad / distrito</span><input type="text" style="{{T.input}}"></label>
-<label><span style="{{T.label}}">Ciudad (fonético)</span><input type="text" style="{{T.input}}"></label>
-<label style="grid-column: 1 / -1"><span style="{{T.label}}">Calle y número</span><input type="text" autocomplete="street-address" style="{{T.input}}"></label>
-<label><span style="{{T.label}}">Edificio / depto.</span><input type="text" style="{{T.input}}"></label>
-<label><span style="{{T.label}}">Edificio (fonético)</span><input type="text" style="{{T.input}}"></label>
-</div>
-</section>
-
-<section id="empresa" aria-labelledby="h-empresa" style="{{T.card}}; scroll-margin-top: 80px">
-<button type="button" onClick="{{toggleEmpresa}}" aria-expanded="{{empresaOpen}}" style="width: 100%; display: flex; align-items: center; gap: 12px; padding: 18px 22px; border: 0; background: transparent; color: {{T.text}}; font: inherit; text-align: left; cursor: pointer">
-<span style="flex-grow: 1"><span id="h-empresa" style="display: block; font-size: 17px; font-weight: 700; font-family: {{T.head}}">5. Trabajo y empresa</span><span style="display: block; margin-top: 4px; font-size: 13px; color: {{T.muted}}">Lugar de trabajo, representante y persona de contacto. Se abre al elegir «Empresa».</span></span>
-<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: rotate({{empresaRot}}deg); transition: transform .15s"><path d="m6 9 6 6 6-6"></path></svg>
-</button>
-<sc-if value="{{empresaOpen}}" hint-placeholder-val="{{ false }}">
-<div class="g2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 20px; padding: 20px 22px; border-top: 1px solid {{T.border}}">
-<label><span style="{{T.label}}">Lugar de trabajo</span><input type="text" autocomplete="organization" style="{{T.input}}"></label>
-<label><span style="{{T.label}}">Lugar de trabajo (fonético)</span><input type="text" style="{{T.input}}"></label>
-<label><span style="{{T.label}}">Rubro del lugar de trabajo</span><input type="text" style="{{T.input}}"></label>
-<label><span style="{{T.label}}">Departamento</span><input type="text" style="{{T.input}}"></label>
-<label><span style="{{T.label}}">Teléfono del trabajo</span><input type="tel" style="{{T.input}}"></label>
-<label><span style="{{T.label}}">Fax del trabajo</span><input type="tel" style="{{T.input}}"></label>
-<label><span style="{{T.label}}">Fecha de fundación</span><input type="date" style="{{T.input}}"></label>
-<label><span style="{{T.label}}">Capital social</span><input type="number" style="{{T.input}}"></label>
-<label style="grid-column: 1 / -1"><span style="{{T.label}}">Rubro</span><input type="text" style="{{T.input}}"></label>
-<div style="grid-column: 1 / -1; padding-top: 6px; font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: {{T.faint}}">Representante</div>
-<label><span style="{{T.label}}">Nombre</span><input type="text" style="{{T.input}}"></label>
-<label><span style="{{T.label}}">Nombre (fonético)</span><input type="text" style="{{T.input}}"></label>
-<label><span style="{{T.label}}">Fecha de nacimiento</span><input type="date" style="{{T.input}}"></label>
+<fieldset style="border: 0; margin: 0; padding: 0; min-width: 0"><legend style="{{T.label}}">Newsletter</legend><div style="display: flex; gap: 8px; flex-wrap: wrap">
+<label style="{{choice}}"><input type="radio" name="news" checked style="accent-color: {{T.accent}}; margin: 0">Enviar</label>
+<label style="{{choice}}"><input type="radio" name="news" style="accent-color: {{T.accent}}; margin: 0">No enviar</label>
+<label style="{{choice}}"><input type="radio" name="news" style="accent-color: {{T.accent}}; margin: 0">No entregable</label>
+</div></fieldset>
+<label><span style="{{T.label}}">Tipo de dirección</span><select style="{{T.input}}"><option>—</option><option>[TIPOS DE DIRECCIÓN]</option></select></label>
+<fieldset style="border: 0; margin: 0; padding: 0; min-width: 0"><legend style="{{T.label}}">Recordatorio de reservas por email</legend><div style="display: flex; gap: 8px; flex-wrap: wrap">
+<label style="{{choice}}"><input type="radio" name="remind" checked style="accent-color: {{T.accent}}; margin: 0">Enviar</label>
+<label style="{{choice}}"><input type="radio" name="remind" style="accent-color: {{T.accent}}; margin: 0">No enviar</label>
+</div></fieldset>
+<label><span style="{{T.label}}">Grupo de cliente</span><select style="{{T.input}}"><option>Sin grupo</option><option>[GRUPOS]</option></select></label>
+<label><span style="{{T.label}}">Motivo de primera visita</span><select style="{{T.input}}"><option>Selecciona…</option><option>たまたまきた</option></select></label>
 <div></div>
-<div style="grid-column: 1 / -1; padding-top: 6px; font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: {{T.faint}}">Persona de contacto</div>
-<label><span style="{{T.label}}">Nombre</span><input type="text" style="{{T.input}}"></label>
-<label><span style="{{T.label}}">Nombre (fonético)</span><input type="text" style="{{T.input}}"></label>
-<label><span style="{{T.label}}">Teléfono</span><input type="tel" style="{{T.input}}"></label>
-<label><span style="{{T.label}}">Email</span><input type="email" style="{{T.input}}"></label>
+<label style="grid-column: 1 / -1"><span style="{{T.label}}">Notas</span><textarea rows="3" style="{{T.input}}; height: auto; padding: 10px 12px; resize: vertical"></textarea></label>
 </div>
-</sc-if>
 </section>
 
-<section id="familia" aria-labelledby="h-familia" style="{{T.card}}; scroll-margin-top: 80px">
-<div style="padding: 18px 22px; border-bottom: 1px solid {{T.border}}"><h2 id="h-familia" style="margin: 0; font-size: 17px; font-weight: 700; font-family: {{T.head}}">6. Información familiar</h2></div>
+<section id="familia" aria-labelledby="h4s" style="{{T.card}}; scroll-margin-top: 80px">
+<div style="{{sectionHead}}"><h2 id="h4s" style="{{h2}}">4. Información familiar</h2></div>
 <div class="g2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 20px; padding: 20px 22px">
-<label><span style="{{T.label}}">Cónyuge <span style="color: {{T.req}}">*</span></span><select required style="{{T.input}}"><option>Selecciona…</option><option>Con cónyuge</option><option>Sin cónyuge</option></select></label>
-<label><span style="{{T.label}}">Aniversario de boda <span style="color: {{T.req}}">*</span></span><input type="date" style="{{T.input}}"></label>
+<label><span style="{{T.label}}">Cónyuge <span style="color: {{T.req}}">*</span></span><select required style="{{T.input}}"><option>Selecciona…</option><option>[OPCIONES]</option></select></label>
+<fieldset style="border: 0; margin: 0; padding: 0; min-width: 0"><legend style="{{T.label}}">Aniversario de boda <span style="color: {{T.req}}">*</span></legend><div style="display: flex; gap: 8px; align-items: center"><input type="number" aria-label="Año" placeholder="Año" style="{{T.input}}; width: 100px"><input type="number" aria-label="Mes" placeholder="Mes" style="{{T.input}}; width: 76px"><input type="number" aria-label="Día" placeholder="Día" style="{{T.input}}; width: 76px"></div></fieldset>
 </div>
 </section>
 
-<section id="mascota" aria-labelledby="h-mascota" style="{{T.card}}; scroll-margin-top: 80px">
-<div style="padding: 18px 22px; border-bottom: 1px solid {{T.border}}; display: flex; align-items: center; gap: 10px; flex-wrap: wrap"><h2 id="h-mascota" style="margin: 0; font-size: 17px; font-weight: 700; font-family: {{T.head}}">7. Mascota</h2><span style="padding: 2px 10px; border-radius: 999px; background: {{T.accentSoft}}; color: {{T.accentSoftFg}}; font-size: 12px; font-weight: 700">Formulario personalizado</span></div>
-<div class="g2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 20px; padding: 20px 22px">
+<section id="mascota" aria-labelledby="h5s" style="{{T.card}}; scroll-margin-top: 80px">
+<div style="{{sectionHead}}; display: flex; align-items: center; gap: 10px; flex-wrap: wrap"><h2 id="h5s" style="{{h2}}">5. Mascota</h2><span style="padding: 2px 10px; border-radius: 999px; background: {{T.accentSoft}}; color: {{T.accentSoftFg}}; font-size: 12px; font-weight: 700">Formulario personalizado</span></div>
+<div class="g3" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px 20px; padding: 20px 22px">
 <label><span style="{{T.label}}">Nombre</span><input type="text" style="{{T.input}}"></label>
-<label><span style="{{T.label}}">Tipo</span><input type="text" style="{{T.input}}"></label>
-<label><span style="{{T.label}}">Peso</span><input type="text" style="{{T.input}}"></label>
+<label><span style="{{T.label}}">Tipo</span><select style="{{T.input}}"><option>Selecciona…</option><option>[OPCIONES]</option></select></label>
+<label><span style="{{T.label}}">Peso</span><span style="display: flex; align-items: center; gap: 8px"><input type="number" style="{{T.input}}"><span>Kg</span></span></label>
 </div>
 </section>
 
-<p style="margin: 0; padding: 14px 18px; border-radius: {{T.R}}px; background: {{T.surface2}}; color: {{T.muted}}; font-size: 13px; line-height: 1.55">El sistema calcula solo: Nº de socio, fecha de alta, fecha de modificación, edad, puntos, sellos, rangos y datos de terminal.</p>
+<section id="acceso" aria-labelledby="h6s" style="{{T.card}}; scroll-margin-top: 80px">
+<div style="{{sectionHead}}"><h2 id="h6s" style="{{h2}}">6. Acceso a Mi página</h2><p style="margin: 4px 0 0; font-size: 13px; color: {{T.muted}}">Datos con los que el cliente entra en su Mi página.</p></div>
+<div class="g2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 20px; padding: 20px 22px">
+<div><span style="{{T.label}}">ID de acceso</span><div style="{{T.input}}; display: flex; align-items: center; background: {{T.surface2}}; font-weight: 700">1100029</div></div>
+<label><span style="{{T.label}}">Contraseña <span style="color: {{T.req}}">*</span></span><span style="display: flex; gap: 8px"><input type="text" value="2545" style="{{T.input}}"><button type="button" style="{{T.btn}}; height: {{T.ctrlH}}px">Generar otra</button></span></label>
+</div>
+</section>
+</fieldset>
 
 <div style="position: sticky; bottom: 16px; z-index: 4; display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: wrap; padding: 12px; {{T.card}}; box-shadow: 0 10px 28px rgba(16,24,40,.14)">
+<sc-if value="{{isForm}}" hint-placeholder-val="{{ true }}">
 <a href="Clientes-Resumen.dc.html" style="{{T.btn}}">Cancelar</a>
-<button type="button" onClick="{{save}}" style="{{T.btn}}">Guardar y registrar otro</button>
-<button type="button" onClick="{{save}}" style="{{T.btnP}}">Registrar cliente</button>
+<button type="button" onClick="{{toConfirm}}" style="{{T.btnP}}">Revisar y confirmar</button>
+</sc-if>
+<sc-if value="{{isConfirm}}" hint-placeholder-val="{{ false }}">
+<button type="button" onClick="{{toForm}}" style="{{T.btn}}">Volver a editar</button>
+<button type="button" onClick="{{toDone}}" style="{{T.btnP}}">Confirmar registro</button>
+</sc-if>
+<sc-if value="{{isDone}}" hint-placeholder-val="{{ false }}">
+<a href="Clientes-Ficha.dc.html" style="{{T.btn}}">Ver ficha</a>
+<button type="button" onClick="{{again}}" style="{{T.btnP}}">Registrar otro cliente</button>
+</sc-if>
 </div>
 </form>
 </div>
@@ -228,7 +233,7 @@ body{margin:0}
 </div>
 
 <sc-if value="{{panelOpen}}" hint-placeholder-val="{{ false }}">
-<aside role="dialog" aria-label="Personalizar tema" style="position: fixed; top: 16px; right: 16px; bottom: 16px; width: 340px; max-width: calc(100vw - 32px); z-index: 50; background: #FFFFFF; color: #14171F; border: 1px solid #E4E7EC; border-radius: 16px; box-shadow: 0 20px 48px rgba(20,23,31,.22); display: flex; flex-direction: column; font-family: 'Manrope', system-ui, sans-serif; font-size: 14px; overflow: hidden">
+<aside role="dialog" aria-label="Personalizar tema" style="position: fixed; top: 16px; right: 16px; bottom: 16px; width: 340px; max-width: calc(100vw - 32px); z-index: 60; background: #FFFFFF; color: #14171F; border: 1px solid #E4E7EC; border-radius: 16px; box-shadow: 0 20px 48px rgba(20,23,31,.22); display: flex; flex-direction: column; font-family: 'Manrope', system-ui, sans-serif; font-size: 14px; overflow: hidden">
 <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 16px 12px 20px; border-bottom: 1px solid #EEF0F3">
 <div><div style="font-size: 16px; font-weight: 800">Personalizar tema</div><div style="font-size: 12px; color: #4A5162">Se guarda y se aplica en todas las pantallas</div></div>
 <button type="button" onClick="{{closePanel}}" aria-label="Cerrar panel" style="width: 44px; height: 44px; border: 0; border-radius: 10px; background: transparent; color: #4A5162; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg></button>
@@ -277,7 +282,7 @@ body{margin:0}
 </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":3000}}'>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":3100}}'>
 function crmThemeKit() {
   const ACC = { coral: '#C8343A', azul: '#206BC4', indigo: '#264C73', ambar: '#B45309', verde: '#15803D', violeta: '#6D28D9', negro: '#18181B' };
   const ACC_DARK = { coral: '#F06A6F', azul: '#6AA5F0', indigo: '#8DB1DB', ambar: '#F0A54A', verde: '#4ADE80', violeta: '#B39BFA', negro: '#F4F4F5' };
@@ -315,6 +320,8 @@ function crmThemeKit() {
     stats: 'M12 20V10M18 20V4M6 20v-4',
     layers: 'M12 2l10 5-10 5L2 7zM2 17l10 5 10-5M2 12l10 5 10-5',
     award: 'M12 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12zM15.5 13 17 22l-5-3-5 3 1.5-9',
+    target: 'M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zM12 6a6 6 0 1 1 0 12 6 6 0 0 1 0-12zM12 10a2 2 0 1 1 0 4 2 2 0 0 1 0-4z',
+    shuffle: 'M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5',
     plusBox: 'M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM12 8v8M8 12h8'
   };
   const MODS = [
@@ -332,13 +339,15 @@ function crmThemeKit() {
     { key: 'resumen', label: 'Resumen', d: I.dash, href: 'Clientes-Resumen.dc.html' },
     { key: 'nuevo', label: 'Nuevo cliente', d: I.userPlus, href: 'Clientes-Nuevo.dc.html' },
     { key: 'buscar', label: 'Buscar clientes', d: I.search, href: 'Clientes-Buscar.dc.html' },
-    { key: 'visita', label: 'Registrar visita', d: I.visit, href: '#' },
+    { key: 'visita', label: 'Registrar visita', d: I.visit, href: 'Clientes-Visita.dc.html' },
     { key: 'stats', label: 'Estadísticas', d: I.stats, href: 'Clientes-Estadisticas.dc.html' },
     { head: true, label: 'Configuración' },
     { key: 'campos', label: 'Campos y CSV', d: I.sliders, href: 'Clientes-Campos.dc.html' },
-    { key: 'grupos', label: 'Grupos de clientes', d: I.layers, href: '#' },
-    { key: 'rangos', label: 'Rangos de clientes', d: I.award, href: '#' },
-    { key: 'info', label: 'Información adicional', d: I.plusBox, href: '#' }
+    { key: 'grupos', label: 'Grupos de clientes', d: I.layers, href: 'Clientes-Grupos.dc.html' },
+    { key: 'motivos', label: 'Motivos de 1ª visita', d: I.target, href: 'Clientes-Motivos.dc.html' },
+    { key: 'rangos', label: 'Rangos de clientes', d: I.award, href: 'Clientes-Rangos.dc.html' },
+    { key: 'reglas', label: 'Asignación de rangos', d: I.shuffle, href: 'Clientes-Reglas.dc.html' },
+    { key: 'info', label: 'Información adicional', d: I.plusBox, href: 'Clientes-InfoAdicional.dc.html' }
   ];
 
   const pick = (s) => { const o = {}; KEYS.forEach((k) => { o[k] = s[k]; }); return o; };
@@ -481,7 +490,7 @@ function crmThemeKit() {
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { ...crmThemeKit().initial('coral'), panel: false, copied: false, ptype: 'persona', empresa: false, saved: false };
+    this.state = { ...crmThemeKit().initial('coral'), panel: false, copied: false, ...({ step: 'form', ptype: 'persona' }) };
   }
   componentDidMount() {
     const v = crmThemeKit().load();
@@ -497,22 +506,39 @@ class Component extends DCLogic {
     const tk = K.tokens(s);
     const T = tk.T;
     const pn = K.panel(s, (p) => this.setTheme({ ...p, preset: 'custom' }), (k) => this.setTheme(K.initial(k)));
-    const empresaOpen = s.empresa || s.ptype === 'empresa';
-    return {
-      ...tk, ...pn, sh: K.shell(s, tk, { module: 'clientes', active: 'nuevo' }),
+    const set = (patch) => this.setState(patch);
+    const base = {
+      ...tk, ...pn, sh: K.shell(s, tk, { module: 'clientes', active: 'nuevo', crumbs: [{ label: 'Inicio', href: 'Main.dc.html' }, { label: 'Clientes', href: 'Clientes-Resumen.dc.html' }, { label: 'Nuevo cliente' }] }),
       panelOpen: s.panel, openPanel: () => this.setState({ panel: true }), closePanel: () => this.setState({ panel: false }),
       reset: () => this.setTheme(K.initial('coral')), copyLabel: s.copied ? 'Copiado' : 'Copiar',
       copyCss: () => { try { navigator.clipboard.writeText(pn.css); } catch (e) {} this.setState({ copied: true }); },
       choice: 'display: inline-flex; align-items: center; gap: 8px; min-height: ' + T.ctrlH + 'px; padding: 0 14px; border: 1px solid ' + T.border + '; border-radius: ' + T.r + 'px; background: ' + T.inputBg + '; font-weight: 600; cursor: pointer',
-      idx: [['membresia', 'Membresía'], ['personal', 'Datos personales'], ['contacto', 'Contacto'], ['direccion', 'Dirección'], ['empresa', 'Trabajo y empresa'], ['familia', 'Información familiar'], ['mascota', 'Mascota']]
-        .map(([id, label], i) => ({ href: '#' + id, label, n: i + 1 })),
-      isPersona: s.ptype === 'persona', isEmpresa: s.ptype === 'empresa',
-      setPersona: () => this.setState({ ptype: 'persona' }), setEmpresa: () => this.setState({ ptype: 'empresa', empresa: true }),
-      empresaOpen, empresaRot: empresaOpen ? 180 : 0, toggleEmpresa: () => this.setState({ empresa: !empresaOpen, ptype: empresaOpen ? 'persona' : this.state.ptype }),
-      saved: s.saved,
-      save: () => { this.setState({ saved: true }); try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) {} },
-      again: () => this.setState({ saved: false })
+      sectionHead: 'padding: 18px 22px; border-bottom: 1px solid ' + T.border,
+      h2: 'margin: 0; font-size: 17px; font-weight: 700; font-family: ' + T.head,
+      th: 'padding: 10px 14px; font-size: 12px; font-weight: 700; color: ' + T.muted + '; background: ' + T.surface2 + '; text-align: left',
+      td: 'padding: 0 14px; min-height: ' + T.rowH + 'px; display: flex; align-items: center; border-top: 1px solid ' + T.border,
+      chipOff: 'min-width: 44px; min-height: 38px; padding: 0 10px; border-radius: ' + T.r + 'px; border: 1px solid ' + T.border + '; background: ' + T.inputBg + '; color: ' + T.text + '; font: inherit; font-weight: 600; cursor: pointer',
+      chipOn: 'min-width: 44px; min-height: 38px; padding: 0 10px; border-radius: ' + T.r + 'px; border: 1px solid ' + T.accent + '; background: ' + T.accent + '; color: ' + T.onAccent + '; font: inherit; font-weight: 700; cursor: pointer',
+      empty: 'display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding: 40px 16px; color: ' + T.muted
     };
+    const page = (() => {
+      const top = () => { try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) {} };
+      const ORDER = ['form', 'confirm', 'done'];
+      const cur = ORDER.indexOf(s.step);
+      return {
+        steps: [['Datos', 0], ['Confirmación', 1], ['Registrado', 2]].map(([label, i]) => {
+          const on = i === cur, past = i < cur;
+          return { label, n: past ? '✓' : i + 1, bg: on ? T.accentSoft : 'transparent', fg: on ? T.accentSoftFg : T.muted, dotBg: on || past ? T.accent : T.surface2, dotFg: on || past ? T.onAccent : T.muted };
+        }),
+        idx: [['cliente', 'Datos del cliente'], ['personal', 'Datos personales'], ['promo', 'Promoción'], ['familia', 'Familia'], ['mascota', 'Mascota'], ['acceso', 'Acceso a Mi página']].map(([id, label], i) => ({ href: '#' + id, label, n: i + 1 })),
+        isForm: s.step === 'form', isConfirm: s.step === 'confirm', isDone: s.step === 'done', locked: s.step !== 'form',
+        isPersona: s.ptype === 'persona', isEmpresa: s.ptype === 'empresa',
+        setPersona: () => set({ ptype: 'persona' }), setEmpresa: () => set({ ptype: 'empresa' }),
+        toConfirm: () => { set({ step: 'confirm' }); top(); }, toForm: () => set({ step: 'form' }),
+        toDone: () => { set({ step: 'done' }); top(); }, again: () => { set({ step: 'form' }); top(); }
+      };
+    })();
+    return { ...base, ...page };
   }
 }
 </script>

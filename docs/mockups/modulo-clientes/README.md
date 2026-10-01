@@ -6,15 +6,23 @@ Lienzo interactivo (Claude Design): https://claude.ai/artifact/H85itqausayWcS3rn
 
 ## Pantallas
 
-| Archivo | Pantalla | Equivalente legacy |
-|---|---|---|
-| `Login.dc.html` | Iniciar sesión | (pantalla de acceso) |
-| `Main.dc.html` | Inicio · panel de módulos y avisos | 総合トップ |
-| `Clientes-Resumen.dc.html` | Resumen del módulo (altas y bajas) | 顧客管理 (portada) |
-| `Clientes-Nuevo.dc.html` | Nuevo cliente (formulario con los campos de la BD) | 顧客新規登録 |
-| `Clientes-Buscar.dc.html` | Buscar clientes (filtros + resultados) | 顧客検索 |
-| `Clientes-Estadisticas.dc.html` | Estadísticas · altas de miembros | 顧客情報集計 |
-| `Clientes-Campos.dc.html` | Campos de registro, búsqueda y CSV | 登録・検索項目設定 |
+| Archivo | Pantalla | Legacy | Captura |
+|---|---|---|---|
+| `Login.dc.html` | Iniciar sesión | ログイン | `legacy/test-login-page.png` |
+| `Main.dc.html` | Inicio · módulos y avisos | 総合トップ | `legacy/01-portal-inicio.png` |
+| `Clientes-Resumen.dc.html` | Resumen del módulo (altas y bajas) | 顧客管理 | `legacy/03-dashboard-clientes.png` |
+| `Clientes-Nuevo.dc.html` | Nuevo cliente (con paso de confirmación) | 顧客新規登録 | `legacy/07-nuevo-cliente.png` |
+| `Clientes-Buscar.dc.html` | Buscar clientes y resultados | 顧客検索 | `legacy/04`, `legacy/14` |
+| `Clientes-Ficha.dc.html` | Ficha del cliente (12 pestañas) | 顧客詳細 | `legacy/15-detalle-cliente.png` |
+| `Clientes-Visita.dc.html` | Registrar visita | 来店処理 | `legacy/08-procesamiento-visita.png` |
+| `Clientes-Estadisticas.dc.html` | Estadísticas · altas de miembros | 顧客情報集計 | `legacy/05-estadisticas-clientes.png` |
+| `Clientes-Campos.dc.html` | Campos de registro, búsqueda y CSV | 登録・検索項目設定 | `legacy/06-configuracion-campos.png` |
+| `Clientes-Grupos.dc.html` | Grupos de clientes | 顧客グループ設定 | `legacy/09`, `legacy/16` |
+| `Clientes-Motivos.dc.html` | Motivos de primera visita | 初回来店動機項目設定 | `legacy/10-motivos-visita.png` |
+| `Clientes-Rangos.dc.html` | Rangos de clientes | 顧客ランク設定 | `legacy/11-rangos-clientes.png` |
+| `Clientes-Reglas.dc.html` | Asignación automática de rangos | 顧客ランク振り分け設定 | `legacy/12-distribucion-rangos.png` |
+| `Clientes-InfoAdicional.dc.html` | Categorías de información adicional | 顧客追加情報設定 | `legacy/13`, `17`, `18`, `23` |
+| `Clientes-InfoAdicional-Campos.dc.html` | Campos de cada categoría | 検索フォーム部品設定 | `legacy/19`–`22` |
 
 `canvas.json` es el índice del lienzo (posición y tamaño de cada pantalla).
 
@@ -48,4 +56,13 @@ En Laravel el tema se guarda como ajustes (por empresa o usuario) y se aplica co
 
 ### Tema compartido
 
-Inicio, Login, Nuevo cliente y el Personalizador tienen un botón **Tema** en la barra superior. El tema elegido se guarda en el navegador (`localStorage`, clave `crm-theme-v1`) y lo aplican todas esas pantallas. Resumen, Buscar, Estadísticas y Campos siguen con el diseño Coral hasta elegir la propuesta final.
+Inicio, Login, el Personalizador y las pantallas nuevas del módulo (Nuevo cliente, Ficha, Registrar visita y toda la configuración) tienen un botón **Tema** en la barra superior. El tema elegido se guarda en el navegador (`localStorage`, clave `crm-theme-v1`) y lo aplican todas esas pantallas. Resumen, Buscar, Estadísticas y Campos siguen con el diseño Coral hasta elegir la propuesta final.
+
+## Código fuente de las pantallas (`_fuente/`)
+
+Las pantallas nuevas se generan desde una plantilla común para que todas compartan menú, barra superior y panel de tema:
+
+- `shell.html`: plantilla (menú según disposición, barra superior con botón Tema, panel de personalización).
+- `kit.js`: lógica del tema (propuestas, variables, menú del módulo).
+- `pages/*.page`: contenido y lógica de cada pantalla.
+- `build.py`: genera los `.dc.html` (`python3 _fuente/build.py`).

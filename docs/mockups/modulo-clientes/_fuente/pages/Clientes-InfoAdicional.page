@@ -1,0 +1,82 @@
+---META---
+{"title": "Información adicional", "h": 1000, "maxw": 1200, "ctx": "{ module: 'clientes', active: 'info', crumbs: [{ label: 'Inicio', href: 'Main.dc.html' }, { label: 'Clientes', href: 'Clientes-Resumen.dc.html' }, { label: 'Información adicional' }] }", "state": "{ cats: [['sampleform', true, true, 3], ['カルテ', true, true, 4], ['家族情報', true, true, 5], ['Mascota', false, true, 8], ['Ropa', false, false, 9]], drawer: null, dirty: false }"}
+---CONTENT---
+<div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+<div>
+<h1 style="margin: 0; font-size: 26px; font-weight: 800; font-family: {{T.head}}">Información adicional</h1>
+<p style="margin: 6px 0 0; color: {{T.muted}}; max-width: 720px; line-height: 1.55">Formularios personalizados que se añaden a la ficha del cliente (por ejemplo, Mascota). Cada categoría tiene sus propios campos.</p>
+</div>
+<button type="button" onClick="{{newCat}}" style="{{T.btnP}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Nueva categoría</button>
+</div>
+
+<section aria-labelledby="cats" style="{{T.card}}; overflow: hidden">
+<div style="{{sectionHead}}; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap"><h2 id="cats" style="{{h2}}">Categorías</h2><span style="font-size: 13px; color: {{T.muted}}">{{count}}</span></div>
+<div style="overflow-x: auto">
+<div role="table" aria-label="Categorías de información adicional" style="min-width: 760px">
+<div role="row" style="display: grid; grid-template-columns: 56px minmax(160px, 1fr) 150px 160px 110px 110px 120px">
+<div role="columnheader" style="{{th}}">#</div><div role="columnheader" style="{{th}}">Categoría</div><div role="columnheader" style="{{th}}">Campos</div><div role="columnheader" style="{{th}}">Categoría</div><div role="columnheader" style="{{th}}">Búsqueda</div><div role="columnheader" style="{{th}}">Mostrar</div><div role="columnheader" style="{{th}}">Orden</div>
+</div>
+<sc-for list="{{cats}}" as="cat" hint-placeholder-count="5">
+<div role="row" style="display: grid; grid-template-columns: 56px minmax(160px, 1fr) 150px 160px 110px 110px 120px">
+<div role="cell" style="{{td}}; color: {{T.muted}}">{{cat.n}}</div>
+<div role="cell" style="{{td}}; font-weight: 700">{{cat.name}}</div>
+<div role="cell" style="{{td}}"><a href="Clientes-InfoAdicional-Campos.dc.html" style="{{T.btn}}; height: 34px; padding: 0 12px">Editar campos</a></div>
+<div role="cell" style="{{td}}"><button type="button" onClick="{{cat.edit}}" style="{{T.btn}}; height: 34px; padding: 0 12px">Configurar</button></div>
+<div role="cell" style="{{td}}"><input type="checkbox" checked="{{cat.search}}" onChange="{{cat.tSearch}}" aria-label="{{cat.name}}: usar en búsqueda" style="accent-color: {{T.accent}}; width: 20px; height: 20px; margin: 0"></div>
+<div role="cell" style="{{td}}"><input type="checkbox" checked="{{cat.show}}" onChange="{{cat.tShow}}" aria-label="{{cat.name}}: mostrar" style="accent-color: {{T.accent}}; width: 20px; height: 20px; margin: 0"></div>
+<div role="cell" style="{{td}}; gap: 2px"><button type="button" onClick="{{cat.up}}" aria-label="Subir {{cat.name}}" style="{{T.iconBtn}}; width: 36px; height: 36px">↑</button><button type="button" onClick="{{cat.down}}" aria-label="Bajar {{cat.name}}" style="{{T.iconBtn}}; width: 36px; height: 36px">↓</button></div>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="padding: 14px 22px; border-top: 1px solid {{T.border}}; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap">
+<span style="font-size: 13px; color: {{T.muted}}">«Búsqueda» muestra la categoría como filtro en Buscar clientes. «Mostrar» la activa en la ficha y el registro.</span>
+<button type="button" onClick="{{saveAll}}" style="{{T.btnP}}">{{saveLabel}}</button>
+</div>
+</section>
+---OVERLAY---
+<sc-if value="{{drawerOpen}}" hint-placeholder-val="{{ false }}">
+<div style="position: fixed; inset: 0; z-index: 40; background: rgba(10,12,16,.45); display: flex; justify-content: flex-end">
+<aside role="dialog" aria-labelledby="dt" style="width: 480px; max-width: 100%; height: 100%; background: {{T.surface}}; color: {{T.text}}; display: flex; flex-direction: column; box-shadow: -12px 0 40px rgba(0,0,0,.2)">
+<div style="{{sectionHead}}; display: flex; justify-content: space-between; align-items: center"><h2 id="dt" style="{{h2}}">{{dTitle}}</h2><button type="button" onClick="{{closeDrawer}}" aria-label="Cerrar" style="{{T.iconBtn}}">✕</button></div>
+<div style="padding: 22px; display: flex; flex-direction: column; gap: 16px; flex-grow: 1; overflow-y: auto">
+<label><span style="{{T.label}}">Nombre de la categoría <span style="color: {{T.req}}">*</span></span><input type="text" value="{{dName}}" onChange="{{onDName}}" style="{{T.input}}"></label>
+<label><span style="{{T.label}}">Comentario</span><textarea rows="3" style="{{T.input}}; height: auto; padding: 10px 12px; resize: vertical"></textarea></label>
+<label><span style="{{T.label}}">Columnas al mostrar</span><select style="{{T.input}}; width: 140px"><option selected="{{c1}}">1 columna</option><option selected="{{c2}}">2 columnas</option><option selected="{{c3}}">3 columnas</option></select></label>
+<label><span style="{{T.label}}">Tipo de registro</span><select style="{{T.input}}"><option>Normal</option><option>[OTROS TIPOS]</option></select></label>
+</div>
+<div style="padding: 14px 22px; border-top: 1px solid {{T.border}}; display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap">
+<sc-if value="{{isEdit}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{delCat}}" style="{{T.btn}}; color: {{T.req}}; margin-right: auto">Eliminar</button></sc-if>
+<button type="button" onClick="{{closeDrawer}}" style="{{T.btn}}">Cancelar</button>
+<button type="button" onClick="{{saveCat}}" style="{{T.btnP}}">{{dSave}}</button>
+</div>
+</aside>
+</div>
+</sc-if>
+---VALS---
+      const cats = s.cats;
+      const upCat = (i, patch) => { const a = this.state.cats.map((c) => c.slice()); patch(a[i]); set({ cats: a, dirty: true }); };
+      const move = (i, d) => { const a = this.state.cats.slice(); const j = i + d; if (j < 0 || j >= a.length) return; const t = a[i]; a[i] = a[j]; a[j] = t; set({ cats: a, dirty: true }); };
+      const d = s.drawer;
+      return {
+        count: cats.length + ' categorías',
+        cats: cats.map((c, i) => ({ n: i + 1, name: c[0], search: c[1], show: c[2],
+          tSearch: () => upCat(i, (x) => { x[1] = !x[1]; }), tShow: () => upCat(i, (x) => { x[2] = !x[2]; }),
+          up: () => move(i, -1), down: () => move(i, 1),
+          edit: () => set({ drawer: { idx: i, name: c[0], cols: c[0] === 'Mascota' ? 3 : 1 } }) })),
+        saveLabel: s.dirty ? 'Guardar cambios' : 'Sin cambios', saveAll: () => set({ dirty: false }),
+        newCat: () => set({ drawer: { idx: -1, name: '', cols: 1 } }),
+        drawerOpen: !!d, isEdit: !!d && d.idx >= 0,
+        dTitle: d && d.idx >= 0 ? 'Configurar «' + d.name + '»' : 'Nueva categoría',
+        dSave: d && d.idx >= 0 ? 'Guardar' : 'Crear categoría',
+        dName: d ? d.name : '', onDName: (e) => set({ drawer: { ...this.state.drawer, name: e.target.value } }),
+        c1: !!d && d.cols === 1, c2: !!d && d.cols === 2, c3: !!d && d.cols === 3,
+        closeDrawer: () => set({ drawer: null }),
+        saveCat: () => {
+          const dr = this.state.drawer; const n = (dr.name || '').trim(); if (!n) return;
+          const a = this.state.cats.map((c) => c.slice());
+          if (dr.idx >= 0) a[dr.idx][0] = n; else a.push([n, false, true, a.length + 5]);
+          set({ cats: a, drawer: null });
+        },
+        delCat: () => set({ cats: this.state.cats.filter((_, k) => k !== this.state.drawer.idx), drawer: null })
+      };

@@ -1,0 +1,44 @@
+---META---
+{"title": "Motivos de primera visita", "h": 1000, "maxw": 1200, "ctx": "{ module: 'clientes', active: 'motivos', crumbs: [{ label: 'Inicio', href: 'Main.dc.html' }, { label: 'Clientes', href: 'Clientes-Resumen.dc.html' }, { label: 'Motivos de 1ª visita' }] }", "state": "{ name: '', items: ['たまたまきた'] }"}
+---CONTENT---
+<div>
+<h1 style="margin: 0; font-size: 26px; font-weight: 800; font-family: {{T.head}}">Motivos de primera visita</h1>
+<p style="margin: 6px 0 0; color: {{T.muted}}">Opciones que se eligen en «Motivo de primera visita» al registrar un cliente.</p>
+</div>
+<div class="split" style="display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: {{T.gap}}px; align-items: start">
+<section aria-labelledby="nuevo" style="{{T.card}}">
+<div style="{{sectionHead}}"><h2 id="nuevo" style="{{h2}}">Nuevo motivo</h2></div>
+<form onSubmit="{{add}}" style="padding: 20px 22px; display: flex; flex-direction: column; gap: 16px">
+<label><span style="{{T.label}}">Nombre del motivo</span><input type="text" value="{{name}}" onChange="{{onName}}" placeholder="Ej. Recomendación de un amigo" style="{{T.input}}"></label>
+<button type="submit" style="{{T.btnP}}">Registrar motivo</button>
+</form>
+</section>
+<section aria-labelledby="lista" style="{{T.card}}; overflow: hidden">
+<div style="{{sectionHead}}; display: flex; justify-content: space-between; align-items: center"><h2 id="lista" style="{{h2}}">Motivos registrados</h2><span style="font-size: 13px; color: {{T.muted}}">{{count}}</span></div>
+<sc-if value="{{isEmpty}}" hint-placeholder-val="{{ false }}">
+<div style="{{empty}}"><strong style="color: {{T.text}}">No hay motivos registrados</strong></div>
+</sc-if>
+<sc-if value="{{hasItems}}" hint-placeholder-val="{{ true }}">
+<div role="table" aria-label="Motivos registrados">
+<div role="row" style="display: grid; grid-template-columns: minmax(0, 1fr) 190px 130px"><div role="columnheader" style="{{th}}">Motivo</div><div role="columnheader" style="{{th}}">Acciones</div><div role="columnheader" style="{{th}}">Orden</div></div>
+<sc-for list="{{items}}" as="row" hint-placeholder-count="1">
+<div role="row" style="display: grid; grid-template-columns: minmax(0, 1fr) 190px 130px">
+<div role="cell" style="{{td}}; font-weight: 700">{{row.name}}</div>
+<div role="cell" style="{{td}}; gap: 6px"><button type="button" style="{{T.btn}}; height: 34px; padding: 0 12px">Editar</button><button type="button" onClick="{{row.del}}" style="{{T.btn}}; height: 34px; padding: 0 12px; color: {{T.req}}">Eliminar</button></div>
+<div role="cell" style="{{td}}; gap: 4px"><span style="min-width: 22px; color: {{T.muted}}">{{row.n}}</span><button type="button" onClick="{{row.up}}" aria-label="Subir {{row.name}}" style="{{T.iconBtn}}; width: 36px; height: 36px">↑</button><button type="button" onClick="{{row.down}}" aria-label="Bajar {{row.name}}" style="{{T.iconBtn}}; width: 36px; height: 36px">↓</button></div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+</section>
+</div>
+---VALS---
+      const items = s.items;
+      const move = (i, d) => { const a = this.state.items.slice(); const j = i + d; if (j < 0 || j >= a.length) return; const t = a[i]; a[i] = a[j]; a[j] = t; set({ items: a }); };
+      return {
+        name: s.name, onName: (e) => set({ name: e.target.value }),
+        add: (e) => { if (e && e.preventDefault) e.preventDefault(); const n = (this.state.name || '').trim(); if (!n) return; set({ items: this.state.items.concat([n]), name: '' }); },
+        items: items.map((name, i) => ({ name, n: i + 1, del: () => set({ items: this.state.items.filter((_, k) => k !== i) }), up: () => move(i, -1), down: () => move(i, 1) })),
+        isEmpty: items.length === 0, hasItems: items.length > 0,
+        count: items.length === 1 ? '1 resultado' : items.length + ' resultados'
+      };

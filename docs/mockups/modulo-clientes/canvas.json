@@ -122,12 +122,84 @@
     },
     "Clientes-Nuevo.dc.html": {
       "expand": "fill",
-      "h": 3000,
+      "h": 3100,
       "is_interactive": true,
-      "title": "Clientes · Nuevo cliente (con tema)",
+      "title": "Clientes · Nuevo cliente",
       "w": 1440,
       "x": 1520,
       "y": 1120
+    },
+    "Clientes-Visita.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "title": "Clientes · Registrar visita",
+      "w": 1440,
+      "x": 4560,
+      "y": 1420
+    },
+    "Clientes-Ficha.dc.html": {
+      "expand": "fill",
+      "h": 1900,
+      "is_interactive": true,
+      "title": "Clientes · Ficha del cliente",
+      "w": 1440,
+      "x": 7600,
+      "y": 0
+    },
+    "Clientes-Grupos.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "title": "Config · Grupos de clientes",
+      "w": 1440,
+      "x": 0,
+      "y": 4600
+    },
+    "Clientes-Motivos.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "title": "Config · Motivos de 1ª visita",
+      "w": 1440,
+      "x": 1520,
+      "y": 4600
+    },
+    "Clientes-Rangos.dc.html": {
+      "expand": "fill",
+      "h": 1200,
+      "is_interactive": true,
+      "title": "Config · Rangos de clientes",
+      "w": 1440,
+      "x": 3040,
+      "y": 4600
+    },
+    "Clientes-Reglas.dc.html": {
+      "expand": "fill",
+      "h": 1500,
+      "is_interactive": true,
+      "title": "Config · Asignación de rangos",
+      "w": 1440,
+      "x": 4560,
+      "y": 4600
+    },
+    "Clientes-InfoAdicional.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "title": "Config · Información adicional",
+      "w": 1440,
+      "x": 6080,
+      "y": 4600
+    },
+    "Clientes-InfoAdicional-Campos.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "is_interactive": true,
+      "title": "Config · Campos de información adicional",
+      "w": 1440,
+      "x": 7600,
+      "y": 4600
     }
   },
   "createdOnFiles": {
@@ -141,7 +213,7 @@
   "notes": {
     "t1": {
       "kind": "title1",
-      "maxW": 8000,
+      "maxW": 10560,
       "text": "Módulo 1 · Gestión de clientes — rediseño del sistema legacy",
       "w": 240,
       "x": -1520,
@@ -164,6 +236,13 @@
       "w": 240,
       "x": 0,
       "y": 1200
+    },
+    "t4": {
+      "kind": "title1",
+      "maxW": 9040,
+      "text": "Configuración del módulo",
+      "x": 0,
+      "y": 4300
     }
   },
   "order": [
@@ -174,6 +253,14 @@
     "Clientes-Buscar.dc.html",
     "Clientes-Estadisticas.dc.html",
     "Clientes-Campos.dc.html",
+    "Clientes-Visita.dc.html",
+    "Clientes-Ficha.dc.html",
+    "Clientes-Grupos.dc.html",
+    "Clientes-Motivos.dc.html",
+    "Clientes-Rangos.dc.html",
+    "Clientes-Reglas.dc.html",
+    "Clientes-InfoAdicional.dc.html",
+    "Clientes-InfoAdicional-Campos.dc.html",
     "Tema-Personalizador.dc.html",
     "Propuesta-1-coral.dc.html",
     "Propuesta-2-tabler.dc.html",

@@ -340,7 +340,7 @@ input[type=checkbox]{accent-color:#C8343A;width:18px;height:18px;margin:0;cursor
 <div role="columnheader" class="th">Nº de socio</div>
 <div role="columnheader" class="th">Nº de gestión</div>
 <div role="columnheader" class="th">Nombre</div>
-<div role="columnheader" class="th">Registro de dispositivo</div>
+<div role="columnheader" class="th">Registro de terminal</div>
 <div role="columnheader" class="th" style="justify-content: flex-end">Visitas</div>
 <div role="columnheader" class="th"><span class="sr">Acciones</span></div>
 </div>
@@ -355,7 +355,7 @@ input[type=checkbox]{accent-color:#C8343A;width:18px;height:18px;margin:0;cursor
 </div>
 <div role="cell" class="tc"><span style="padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; background: #F1F2F5; color: #4A5162">{{r.device}}</span></div>
 <div role="cell" class="tc" style="justify-content: flex-end; font-weight: 700">{{r.visits}}</div>
-<div role="cell" class="tc" style="justify-content: flex-end"><a href="#" class="btn" style="height: 36px; padding: 0 12px; font-size: 13px">Ver ficha</a></div>
+<div role="cell" class="tc" style="justify-content: flex-end"><a href="Clientes-Ficha.dc.html" class="btn" style="height: 36px; padding: 0 12px; font-size: 13px">Ver ficha</a></div>
 </div>
 </sc-for>
 </div>
@@ -399,17 +399,17 @@ class Component extends DCLogic {
     }));
     // Datos de la captura del entorno de desarrollo (página 1 de 2)
     const data = [
-      ['1100028', 'Prueba de Tokura Prueba de Tokura', 0], ['1100027', 'Kawamoto Kyohei', 0],
-      ['1100026', 'Prueba de Iwamoto', 0], ['1100025', 'Prueba 48002', 0],
-      ['1100022', 'Ayaka Sakamoto', 0], ['1100011', 'Prueba de Kiyomori', 0],
-      ['1100010', 'Prueba elevada', 0], ['1100009', 'Entrega recibida', 0],
-      ['1100008', 'Mizutani Tomohiro', 2], ['1100007', 'invitado', 0]
+      ['1100028', '十倉テスト 十倉テスト', 0], ['1100027', '川本 享永', 0],
+      ['1100026', '岩本 テスト', 0], ['1100025', '48002 テスト', 0],
+      ['1100022', '坂本 綾花', 0], ['1100011', '清森 てすと', 0],
+      ['1100010', 'テスト 高[?]', 0], ['1100009', '配信 受け取り', 0],
+      ['1100008', '水谷 友洋', 2], ['1100007', 'ゲスト', 0]
     ];
     const rows = data.map(([id, name, visits]) => {
       const sel = !!s.sel[id];
-      const ini = name.split(' ').slice(0, 2).map((w) => w[0].toUpperCase()).join('');
+      const ini = name.charAt(0);
       return {
-        id, name, ini, sel, mgmt: '—', device: 'No requerido',
+        id, name, ini, sel, mgmt: '—', device: 'Sin terminal',
         visits: visits ? visits + ' veces' : '—',
         bg: sel ? '#FFF7F7' : '#fff',
         toggle: () => this.setState({ sel: { ...this.state.sel, [id]: !this.state.sel[id] } })
