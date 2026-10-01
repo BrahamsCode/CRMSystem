@@ -20,3 +20,7 @@ Lienzo interactivo (Claude Design): https://claude.ai/artifact/H85itqausayWcS3rn
 - Los archivos `.dc.html` usan el formato de Claude Design y cargan `support.js` del propio lienzo, así que se visualizan desde el enlace de arriba, no abriéndolos directamente en el navegador. Sirven como referencia de estructura, campos y estilos para pasarlos a Blade.
 - Las cifras, clientes de ejemplo y avisos son datos de prueba; los valores reales aparecen como marcadores (`[FECHA]`, `[TOTAL]`).
 - Estilo base: tipografía Manrope, fondo `#F5F6F8`, acento del módulo `#C8343A`, texto `#14171F`.
+
+## Capturas del sistema legacy
+
+Referencia de las pantallas originales en `legacy/`: `inicio.webp`, `buscar-clientes.webp`, `estadisticas.png`, `campos-csv.png`.
