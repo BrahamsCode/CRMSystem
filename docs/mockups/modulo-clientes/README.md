@@ -10,6 +10,7 @@ Lienzo interactivo (Claude Design): https://claude.ai/artifact/H85itqausayWcS3rn
 |---|---|---|
 | `Login.dc.html` | Iniciar sesión | (pantalla de acceso) |
 | `Main.dc.html` | Inicio · panel de módulos y avisos | 総合トップ |
+| `Clientes-Resumen.dc.html` | Resumen del módulo (altas y bajas) | 顧客管理 (portada) |
 | `Clientes-Buscar.dc.html` | Buscar clientes (filtros + resultados) | 顧客検索 |
 | `Clientes-Estadisticas.dc.html` | Estadísticas · altas de miembros | 顧客情報集計 |
 | `Clientes-Campos.dc.html` | Campos de registro, búsqueda y CSV | 登録・検索項目設定 |
@@ -24,4 +25,4 @@ Lienzo interactivo (Claude Design): https://claude.ai/artifact/H85itqausayWcS3rn
 
 ## Capturas del sistema legacy
 
-Referencia de las pantallas originales en `legacy/`: `inicio.webp`, `buscar-clientes.webp`, `estadisticas.png`, `campos-csv.png`.
+Referencia de las pantallas originales en `legacy/`: `inicio.webp`, `buscar-clientes.webp`, `resumen-clientes.png`, `estadisticas.png`, `campos-csv.png`.

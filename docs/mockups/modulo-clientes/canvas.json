@@ -11,13 +11,22 @@
       "x": -1520,
       "y": 0
     },
+    "Clientes-Resumen.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "title": "Clientes · Resumen del módulo",
+      "w": 1440,
+      "x": 1520,
+      "y": 0
+    },
     "Clientes-Buscar.dc.html": {
       "expand": "fill",
       "h": 2500,
       "is_interactive": true,
       "title": "Clientes · Buscar clientes",
       "w": 1440,
-      "x": 1520,
+      "x": 3040,
       "y": 0
     },
     "Clientes-Campos.dc.html": {
@@ -26,7 +35,7 @@
       "is_interactive": true,
       "title": "Clientes · Campos de registro, búsqueda y CSV",
       "w": 1440,
-      "x": 4560,
+      "x": 6080,
       "y": 0
     },
     "Clientes-Estadisticas.dc.html": {
@@ -35,7 +44,7 @@
       "is_interactive": true,
       "title": "Clientes · Estadísticas",
       "w": 1440,
-      "x": 3040,
+      "x": 4560,
       "y": 0
     },
     "Main.dc.html": {
@@ -59,7 +68,7 @@
   "notes": {
     "t1": {
       "kind": "title1",
-      "maxW": 7520,
+      "maxW": 9040,
       "text": "Módulo 1 · Gestión de clientes — rediseño del sistema legacy",
       "w": 240,
       "x": -1520,
@@ -69,6 +78,7 @@
   "order": [
     "Login.dc.html",
     "Main.dc.html",
+    "Clientes-Resumen.dc.html",
     "Clientes-Buscar.dc.html",
     "Clientes-Estadisticas.dc.html",
     "Clientes-Campos.dc.html"
