@@ -116,6 +116,7 @@ input[type=checkbox]{accent-color:#C8343A;width:20px;height:20px;margin:0;cursor
 <a href="#basica" class="tab">Información básica</a>
 <a href="#familia" class="tab">Información familiar</a>
 <a href="#mascota" class="tab">Mascota</a>
+<a href="#" class="tab" style="color: #B42318">+ Nuevo formulario personalizado</a>
 </nav>
 <div style="flex-grow: 1"></div>
 <label style="position: relative; width: 280px; display: block">
@@ -158,7 +159,14 @@ input[type=checkbox]{accent-color:#C8343A;width:20px;height:20px;margin:0;cursor
 
 <sc-for list="{{extra}}" as="sec" hint-placeholder-count="2">
 <section id="{{sec.id}}" class="card" aria-labelledby="h-{{sec.id}}">
-<div style="padding: 18px 20px 4px"><h2 id="h-{{sec.id}}" style="margin: 0; font-size: 17px; font-weight: 800">{{sec.title}}</h2><p style="margin: 4px 0 12px; font-size: 13px; color: #4A5162">{{sec.desc}}</p></div>
+<div style="padding: 18px 20px 4px; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap">
+<div>
+<div style="display: flex; align-items: center; gap: 10px"><h2 id="h-{{sec.id}}" style="margin: 0; font-size: 17px; font-weight: 800">{{sec.title}}</h2>
+<sc-if value="{{sec.custom}}" hint-placeholder-val="{{ false }}"><span style="padding: 2px 8px; border-radius: 999px; background: #EDE9FE; color: #5B21B6; font-size: 12px; font-weight: 700">Formulario personalizado</span></sc-if></div>
+<p style="margin: 4px 0 12px; font-size: 13px; color: #4A5162">{{sec.desc}}</p>
+</div>
+<sc-if value="{{sec.custom}}" hint-placeholder-val="{{ false }}"><a href="#" class="btn" style="height: 40px">Editar campos del formulario</a></sc-if>
+</div>
 <div style="overflow-x: auto">
 <div role="table" aria-label="Campos de {{sec.title}}" class="mx">
 <div role="row" class="mr hd">
@@ -266,7 +274,7 @@ class Component extends DCLogic {
     ].map(([t, s], i) => ({ t, s, n: counts[i] + ' activos' }));
     const X = [
       { id: 'familia', title: 'Información familiar', desc: 'Datos del cónyuge y fechas familiares.', rows: [['spouse', 'Cónyuge', 'a', '110'], ['wedding', 'Aniversario de boda', 'a', '110']] },
-      { id: 'mascota', title: 'Mascota', desc: 'Formulario de información adicional creado por tu empresa.', rows: [['pname', 'Nombre', 'b', '010'], ['ptype2', 'Tipo', 'b', '010'], ['pweight', 'Peso', 'b', '010']] }
+      { id: 'mascota', custom: true, title: 'Mascota', desc: 'Creado por el administrador en «Información adicional». Sus campos (nombre, tipo, peso…) se definen allí.', rows: [['pname', 'Nombre', 'b', '010'], ['ptype2', 'Tipo', 'b', '010'], ['pweight', 'Peso', 'b', '010']] }
     ];
     const LBL = ['Obligatorio', 'Filtro de búsqueda', 'Exportar CSV'];
     const extra = X.map((sec) => ({
