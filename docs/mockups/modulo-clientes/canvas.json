@@ -1,1 +1,78 @@
-{"v":3,"createdOnFiles":{"v":1,"at":"2026-10-01T19:30:00Z"},"title":"CRM · Gestión de Clientes","launch":{"view":"canvas"},"pages":[],"boards":{"Main.dc.html":{"x":0,"y":0,"w":1440,"h":1100,"title":"Inicio · Panel de módulos","expand":"fill","is_interactive":true},"Clientes-Buscar.dc.html":{"x":1520,"y":0,"w":1440,"h":2500,"title":"Clientes · Buscar clientes","expand":"fill","is_interactive":true},"Clientes-Estadisticas.dc.html":{"x":3040,"y":0,"w":1440,"h":1300,"title":"Clientes · Estadísticas","expand":"fill","is_interactive":true},"Clientes-Campos.dc.html":{"x":4560,"y":0,"w":1440,"h":3900,"title":"Clientes · Campos de registro, búsqueda y CSV","expand":"fill","is_interactive":true}},"order":["Main.dc.html","Clientes-Buscar.dc.html","Clientes-Estadisticas.dc.html","Clientes-Campos.dc.html"],"notes":{"t1":{"x":0,"y":-300,"text":"Módulo 1 · Gestión de clientes — rediseño del sistema legacy","kind":"title1","maxW":6000}},"designSystems":[]}
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Login.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "is_interactive": true,
+      "title": "Acceso · Iniciar sesión",
+      "w": 1440,
+      "x": -1520,
+      "y": 0
+    },
+    "Clientes-Buscar.dc.html": {
+      "expand": "fill",
+      "h": 2500,
+      "is_interactive": true,
+      "title": "Clientes · Buscar clientes",
+      "w": 1440,
+      "x": 1520,
+      "y": 0
+    },
+    "Clientes-Campos.dc.html": {
+      "expand": "fill",
+      "h": 3900,
+      "is_interactive": true,
+      "title": "Clientes · Campos de registro, búsqueda y CSV",
+      "w": 1440,
+      "x": 4560,
+      "y": 0
+    },
+    "Clientes-Estadisticas.dc.html": {
+      "expand": "fill",
+      "h": 1300,
+      "is_interactive": true,
+      "title": "Clientes · Estadísticas",
+      "w": 1440,
+      "x": 3040,
+      "y": 0
+    },
+    "Main.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "is_interactive": true,
+      "title": "Inicio · Panel de módulos",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-10-01T19:30:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "t1": {
+      "kind": "title1",
+      "maxW": 7520,
+      "text": "Módulo 1 · Gestión de clientes — rediseño del sistema legacy",
+      "w": 240,
+      "x": -1520,
+      "y": -300
+    }
+  },
+  "order": [
+    "Login.dc.html",
+    "Main.dc.html",
+    "Clientes-Buscar.dc.html",
+    "Clientes-Estadisticas.dc.html",
+    "Clientes-Campos.dc.html"
+  ],
+  "pages": [],
+  "title": "CRM · Gestión de Clientes"
+}

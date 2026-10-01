@@ -8,6 +8,7 @@ Lienzo interactivo (Claude Design): https://claude.ai/artifact/H85itqausayWcS3rn
 
 | Archivo | Pantalla | Equivalente legacy |
 |---|---|---|
+| `Login.dc.html` | Iniciar sesión | (pantalla de acceso) |
 | `Main.dc.html` | Inicio · panel de módulos y avisos | 総合トップ |
 | `Clientes-Buscar.dc.html` | Buscar clientes (filtros + resultados) | 顧客検索 |
 | `Clientes-Estadisticas.dc.html` | Estadísticas · altas de miembros | 顧客情報集計 |
