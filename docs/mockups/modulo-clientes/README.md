@@ -25,4 +25,4 @@ Lienzo interactivo (Claude Design): https://claude.ai/artifact/H85itqausayWcS3rn
 
 ## Capturas del sistema legacy
 
-Referencia de las pantallas originales en `legacy/`: `inicio.webp`, `buscar-clientes.webp`, `resumen-clientes.png`, `estadisticas.png`, `campos-csv.png`.
+Referencia de las pantallas originales en `legacy/`: `inicio.webp`, `buscar-clientes.webp`, `resumen-clientes.png`, `lista-clientes.webp`, `estadisticas.png`, `campos-csv.png`.

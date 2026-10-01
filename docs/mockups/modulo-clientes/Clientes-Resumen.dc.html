@@ -106,11 +106,13 @@ a{color:#B42318}a:hover{color:#8F1D14}
 <a href="Clientes-Buscar.dc.html" class="stat" aria-label="{{p.title}}: {{p.alta}} altas, ver lista">
 <span style="font-size: 12px; font-weight: 700; color: #4A5162">Altas</span>
 <span style="font-size: 36px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1">{{p.alta}}</span>
+<span style="font-size: 12px; color: #6B7280">{{p.altaF}}</span>
 <span style="font-size: 12px; font-weight: 700; color: #B42318">Ver lista →</span>
 </a>
 <a href="Clientes-Buscar.dc.html" class="stat" aria-label="{{p.title}}: {{p.baja}} bajas, ver lista">
 <span style="font-size: 12px; font-weight: 700; color: #4A5162">Bajas</span>
 <span style="font-size: 36px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1">{{p.baja}}</span>
+<span style="font-size: 12px; color: #6B7280">{{p.bajaF}}</span>
 <span style="font-size: 12px; font-weight: 700; color: #B42318">Ver lista →</span>
 </a>
 </div>
@@ -151,9 +153,10 @@ class Component extends DCLogic {
   renderVals() {
     return {
       periods: [
-        { title: 'Total registrado', hint: 'Histórico', alta: 16, baja: 0 },
-        { title: 'Este mes', hint: 'Octubre', alta: 0, baja: 0 },
-        { title: 'Hoy', hint: '2 de octubre', alta: 0, baja: 0 }
+        // Cada cifra abre Buscar clientes con el mismo filtro que el legacy (disp_flg + touroku_date_1 / update_date_1)
+        { title: 'Total registrado', hint: 'Histórico', alta: 16, baja: 0, altaF: 'Estado: registrado', bajaF: 'Estado: dado de baja' },
+        { title: 'Este mes', hint: 'Octubre', alta: 0, baja: 0, altaF: 'Alta desde 01/10', bajaF: 'Baja desde 01/10' },
+        { title: 'Hoy', hint: '2 de octubre', alta: 0, baja: 0, altaF: 'Alta desde 02/10', bajaF: 'Baja desde 02/10' }
       ]
     };
   }
