@@ -39,7 +39,7 @@ a{color:#B42318}a:hover{color:#8F1D14}
 .seg.on{background:#fff;color:#14171F;box-shadow:0 1px 3px rgba(20,23,31,.14)}
 .acc{width:100%;display:flex;align-items:center;gap:12px;padding:14px 20px;border:0;border-top:1px solid #EEF0F3;background:#fff;font:inherit;text-align:left;cursor:pointer;color:#14171F}
 .acc:hover{background:#FAFAFB}
-.tr{display:grid;grid-template-columns:48px minmax(240px,2.2fr) 80px 110px 120px 56px 110px 64px 90px 56px;align-items:stretch}
+.tr{display:grid;grid-template-columns:48px 120px 120px minmax(220px,1fr) 200px 90px 120px;align-items:stretch}
 .tc{padding:0 10px;min-height:60px;border-top:1px solid #EEF0F3;font-size:14px;white-space:nowrap;display:flex;align-items:center;overflow:hidden}
 .th{padding:0 10px;height:44px;font-size:12px;font-weight:700;color:#4A5162;white-space:nowrap;display:flex;align-items:center}
 .pg{min-width:40px;height:40px;border-radius:8px;border:1px solid transparent;background:transparent;font:inherit;font-size:14px;font-weight:600;color:#4A5162;cursor:pointer}
@@ -53,7 +53,7 @@ input[type=checkbox]{accent-color:#C8343A;width:18px;height:18px;margin:0;cursor
 <div style="min-height: 100vh; display: flex; background: #F5F6F8; font-family: 'Manrope', system-ui, sans-serif; color: #14171F">
 <nav class="rail" aria-label="Módulos" style="width: 72px; flex-shrink: 0; background: #12151C; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 16px 0; position: sticky; top: 0; height: 100vh; box-sizing: border-box">
 <a href="Main.dc.html" aria-label="Inicio" style="width: 40px; height: 40px; border-radius: 10px; background: #C8343A; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; text-decoration: none; margin-bottom: 16px">CRM</a>
-<a href="Clientes-Buscar.dc.html" class="rl on" aria-label="Gestión de clientes" title="Gestión de clientes"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path></svg></a>
+<a href="Clientes-Resumen.dc.html" class="rl on" aria-label="Gestión de clientes" title="Gestión de clientes"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path></svg></a>
 <a href="#" class="rl" aria-label="Promociones" title="Promociones"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11v2a1 1 0 0 0 1 1h3l5 4V6L7 10H4a1 1 0 0 0-1 1z"></path><path d="M16 8a5 5 0 0 1 0 8M19 5a9 9 0 0 1 0 14"></path></svg></a>
 <a href="#" class="rl" aria-label="Mi página" title="Mi página"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"></path></svg></a>
 <a href="#" class="rl" aria-label="Sitio web" title="Sitio web"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"></path></svg></a>
@@ -69,8 +69,9 @@ input[type=checkbox]{accent-color:#C8343A;width:18px;height:18px;margin:0;cursor
 <span style="width: 36px; height: 36px; border-radius: 10px; background: #FDECEC; color: #C8343A; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span>
 <div><div style="font-weight: 800; font-size: 15px">Clientes</div><div style="font-size: 12px; color: #6B7280">Gestión de clientes</div></div>
 </div>
-<a href="#" class="btn btn-p" style="justify-content: center; margin: 0 4px 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Nuevo cliente</a>
+<a href="Clientes-Nuevo.dc.html" class="btn btn-p" style="justify-content: center; margin: 0 4px 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Nuevo cliente</a>
 <div class="sh">Operación</div>
+<a href="Clientes-Resumen.dc.html" class="sn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1"></rect><rect x="14" y="3" width="7" height="5" rx="1"></rect><rect x="14" y="12" width="7" height="9" rx="1"></rect><rect x="3" y="16" width="7" height="5" rx="1"></rect></svg>Resumen</a>
 <a href="Clientes-Buscar.dc.html" class="sn on" aria-current="page"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path></svg>Buscar clientes</a>
 <a href="#" class="sn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"></path></svg>Registrar visita</a>
 <a href="Clientes-Estadisticas.dc.html" class="sn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20V10M18 20V4M6 20v-4"></path></svg>Estadísticas</a>
@@ -87,7 +88,7 @@ input[type=checkbox]{accent-color:#C8343A;width:18px;height:18px;margin:0;cursor
 <nav aria-label="Ruta" style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: #6B7280; min-width: 0; white-space: nowrap">
 <a href="Main.dc.html" style="color: #6B7280; text-decoration: none">Inicio</a>
 <span aria-hidden="true">/</span>
-<span class="hide-sm">Clientes</span>
+<a class="hide-sm" href="Clientes-Resumen.dc.html" style="color: #6B7280; text-decoration: none">Clientes</a>
 <span class="hide-sm" aria-hidden="true">/</span>
 <span style="color: #14171F; font-weight: 700">Buscar clientes</span>
 </nav>
@@ -99,7 +100,7 @@ input[type=checkbox]{accent-color:#C8343A;width:18px;height:18px;margin:0;cursor
 <span style="width: 32px; height: 32px; border-radius: 50%; background: #14171F; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700">AD</span>
 <span class="hide-sm">Administrador</span>
 </button>
-<a href="#" class="ib" aria-label="Cerrar sesión" title="Cerrar sesión"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path></svg></a>
+<a href="Login.dc.html" class="ib" aria-label="Cerrar sesión" title="Cerrar sesión"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path></svg></a>
 </header>
 <main class="mpad" style="padding: 28px 32px 56px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
 <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap">
@@ -117,7 +118,7 @@ input[type=checkbox]{accent-color:#C8343A;width:18px;height:18px;margin:0;cursor
 
 <form class="fpanel" aria-label="Filtros de búsqueda" style="background: #fff; border: 1px solid #E4E7EC; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column">
 <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 20px">
-<div style="display: flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 3H2l8 9.46V19l4 2v-8.54z"></path></svg><span style="font-size: 16px; font-weight: 800">Filtros</span><span style="padding: 2px 8px; border-radius: 999px; background: #14171F; color: #fff; font-size: 12px; font-weight: 700">4</span></div>
+<div style="display: flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 3H2l8 9.46V19l4 2v-8.54z"></path></svg><span style="font-size: 16px; font-weight: 800">Filtros</span><span style="padding: 2px 8px; border-radius: 999px; background: #14171F; color: #fff; font-size: 12px; font-weight: 700">1</span></div>
 <a href="#" style="font-size: 13px; font-weight: 700">Limpiar todo</a>
 </div>
 
@@ -150,7 +151,7 @@ input[type=checkbox]{accent-color:#C8343A;width:18px;height:18px;margin:0;cursor
 <button type="button" class="acc" onClick="{{tg.cliente}}" aria-expanded="{{open.cliente}}">
 <span style="width: 32px; height: 32px; border-radius: 8px; background: #F1F2F5; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span>
 <span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 700">Datos del cliente</span><span style="font-size: 12px; color: #6B7280">Perfil, contacto, registro y edad</span></span>
-<span style="padding: 2px 8px; border-radius: 999px; background: #FDECEC; color: #B42318; font-size: 12px; font-weight: 700">2</span>
+<span style="padding: 2px 8px; border-radius: 999px; background: #FDECEC; color: #B42318; font-size: 12px; font-weight: 700">1</span>
 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: rotate({{rot.cliente}}deg); transition: transform .15s"><path d="m6 9 6 6 6-6"></path></svg>
 </button>
 <sc-if value="{{open.cliente}}" hint-placeholder-val="{{ true }}">
@@ -177,12 +178,12 @@ input[type=checkbox]{accent-color:#C8343A;width:18px;height:18px;margin:0;cursor
 </div>
 </fieldset>
 <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
-<label><span class="fl">Sexo</span><select class="f-in"><option>Cualquiera</option><option selected>Mujer</option><option>Hombre</option><option>Otro</option></select></label>
+<label><span class="fl">Sexo</span><select class="f-in"><option>Cualquiera</option><option>Mujer</option><option>Hombre</option><option>Otro</option></select></label>
 <fieldset class="fs"><legend class="fl">Edad</legend><div style="display: flex; align-items: center; gap: 6px"><input class="f-in" type="number" aria-label="Edad mínima" placeholder="De"><span style="color: #6B7280">–</span><input class="f-in" type="number" aria-label="Edad máxima" placeholder="A"></div></fieldset>
 </div>
 <fieldset class="fs"><legend class="fl">Fecha de alta</legend><div style="display: flex; align-items: center; gap: 6px"><input class="f-in" type="date" aria-label="Alta desde"><span style="color: #6B7280">–</span><input class="f-in" type="date" aria-label="Alta hasta"></div></fieldset>
 <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
-<label><span class="fl">Estado de registro</span><select class="f-in"><option>Registrado</option><option>Provisional</option><option>Baja</option></select></label>
+<label><span class="fl">Estado de registro</span><select class="f-in"><option>Registrado</option><option>Dado de baja</option><option>Todos</option></select></label>
 <label><span class="fl">Newsletter</span><select class="f-in"><option>Cualquiera</option><option>Suscrito</option><option>No suscrito</option></select></label>
 <label><span class="fl">Ocupación</span><select class="f-in"><option>Cualquiera</option><option>[OCUPACIONES]</option></select></label>
 <label><span class="fl">ID de terminal</span><select class="f-in"><option>Cualquiera</option><option>[TERMINALES]</option></select></label>
@@ -248,7 +249,6 @@ input[type=checkbox]{accent-color:#C8343A;width:18px;height:18px;margin:0;cursor
 <button type="button" class="acc" onClick="{{tg.visitas}}" aria-expanded="{{open.visitas}}">
 <span style="width: 32px; height: 32px; border-radius: 8px; background: #F1F2F5; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"></path></svg></span>
 <span style="flex-grow: 1; display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 700">Historial de visitas</span><span style="font-size: 12px; color: #6B7280">Frecuencia, ciclo y próxima visita</span></span>
-<span style="padding: 2px 8px; border-radius: 999px; background: #FDECEC; color: #B42318; font-size: 12px; font-weight: 700">2</span>
 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: rotate({{rot.visitas}}deg); transition: transform .15s"><path d="m6 9 6 6 6-6"></path></svg>
 </button>
 <sc-if value="{{open.visitas}}" hint-placeholder-val="{{ true }}">
@@ -263,7 +263,7 @@ input[type=checkbox]{accent-color:#C8343A;width:18px;height:18px;margin:0;cursor
 <label><span class="fl">Día del mes</span><select class="f-in"><option>Cualquiera</option><option>25</option></select></label>
 <label><span class="fl">Día de la semana</span><select class="f-in"><option>Cualquiera</option><option>Jueves</option></select></label>
 </div>
-<fieldset class="fs"><legend class="fl">Nº de visitas <span style="color: #B42318">*</span></legend><div style="display: flex; align-items: center; gap: 6px"><input class="f-in" type="number" aria-label="Mínimo" value="3"><span style="color: #6B7280">–</span><input class="f-in" type="number" aria-label="Máximo" value="10"><span style="font-size: 13px; color: #4A5162">veces</span></div></fieldset>
+<fieldset class="fs"><legend class="fl">Nº de visitas <span style="color: #B42318">*</span></legend><div style="display: flex; align-items: center; gap: 6px"><input class="f-in" type="number" aria-label="Mínimo" placeholder="Mín."><span style="color: #6B7280">–</span><input class="f-in" type="number" aria-label="Máximo" placeholder="Máx."><span style="font-size: 13px; color: #4A5162">veces</span></div></fieldset>
 <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
 <label><span class="fl">Días desde última visita</span><input class="f-in" type="number" placeholder="Ej. 30"></label>
 <fieldset class="fs"><legend class="fl">Ciclo medio (días)</legend><div style="display: flex; align-items: center; gap: 6px"><input class="f-in" type="number" aria-label="Mínimo"><span style="color: #6B7280">–</span><input class="f-in" type="number" aria-label="Máximo"></div></fieldset>
@@ -295,13 +295,22 @@ input[type=checkbox]{accent-color:#C8343A;width:18px;height:18px;margin:0;cursor
 <section aria-labelledby="res" style="display: flex; flex-direction: column; gap: 14px; min-width: 0">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap">
 <div>
-<h2 id="res" style="margin: 0; font-size: 18px; font-weight: 800">Resultados</h2>
-<p style="margin: 2px 0 0; font-size: 13px; color: #4A5162">Mostrando 1–8 de <strong>[TOTAL]</strong> clientes</p>
+<h2 id="res" style="margin: 0; font-size: 18px; font-weight: 800">16 clientes encontrados</h2>
+<p style="margin: 2px 0 0; font-size: 13px; color: #4A5162">Mostrando 1–10 de 16</p>
 </div>
-<div style="display: flex; gap: 8px">
-<label style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #4A5162">Ordenar por<select class="f-in" style="width: auto"><option>Última visita</option><option>Nº de cliente</option><option>Nombre</option><option>Fecha de alta</option></select></label>
-<button class="ib" aria-label="Columnas visibles" title="Columnas visibles" style="border: 1px solid #D5D9E0; background: #fff"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M9 3v18M15 3v18"></path></svg></button>
+<div style="display: flex; gap: 8px; flex-wrap: wrap">
+<button class="btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"></path><path d="M22 2 11 13"></path></svg>Enviar mensaje a estos clientes</button>
+<button class="btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path></svg>Exportar CSV</button>
+<button class="btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-10 6L2 7"></path></svg>CSV para correo directo</button>
 </div>
+</div>
+<div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 12px; color: #4A5162">
+<span style="font-weight: 700">Por tipo de email:</span>
+<span style="padding: 2px 8px; border-radius: 999px; background: #fff; border: 1px solid #E4E7EC">PC 0</span>
+<span style="padding: 2px 8px; border-radius: 999px; background: #fff; border: 1px solid #E4E7EC">DoCoMo 0</span>
+<span style="padding: 2px 8px; border-radius: 999px; background: #fff; border: 1px solid #E4E7EC">au 0</span>
+<span style="padding: 2px 8px; border-radius: 999px; background: #fff; border: 1px solid #E4E7EC">SoftBank 0</span>
+<span style="padding: 2px 8px; border-radius: 999px; background: #fff; border: 1px solid #E4E7EC">Sin identificar 16</span>
 </div>
 
 <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
@@ -328,44 +337,35 @@ input[type=checkbox]{accent-color:#C8343A;width:18px;height:18px;margin:0;cursor
 <div role="table" aria-label="Clientes encontrados" style="min-width: 960px">
 <div role="row" class="tr" style="background: #FAFAFB">
 <div role="columnheader" class="th" style="padding-left: 16px"><input type="checkbox" aria-label="Seleccionar todos" checked="{{allSel}}" onChange="{{toggleAll}}"></div>
-<div role="columnheader" class="th">Cliente</div>
-<div role="columnheader" class="th">Nº</div>
-<div role="columnheader" class="th">Tienda</div>
-<div role="columnheader" class="th">Teléfono</div>
-<div role="columnheader" class="th">Edad</div>
-<div role="columnheader" class="th">Última visita</div>
+<div role="columnheader" class="th">Nº de socio</div>
+<div role="columnheader" class="th">Nº de gestión</div>
+<div role="columnheader" class="th">Nombre</div>
+<div role="columnheader" class="th">Registro de dispositivo</div>
 <div role="columnheader" class="th" style="justify-content: flex-end">Visitas</div>
-<div role="columnheader" class="th">Rango</div>
 <div role="columnheader" class="th"><span class="sr">Acciones</span></div>
 </div>
-<sc-for list="{{rows}}" as="r" hint-placeholder-count="8">
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="10">
 <div role="row" class="tr" style="background: {{r.bg}}">
 <div role="cell" class="tc" style="padding-left: 16px"><input type="checkbox" aria-label="Seleccionar {{r.name}}" checked="{{r.sel}}" onChange="{{r.toggle}}"></div>
+<div role="cell" class="tc" style="font-family: 'JetBrains Mono', monospace; font-size: 13px">{{r.id}}</div>
+<div role="cell" class="tc" style="color: #6B7280">{{r.mgmt}}</div>
 <div role="cell" class="tc" style="gap: 12px">
 <span style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 50%; background: #F1F2F5; color: #4A5162; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800">{{r.ini}}</span>
-<span style="display: flex; flex-direction: column; min-width: 0"><a href="#" style="color: #14171F; font-weight: 700; text-decoration: none">{{r.name}}</a><span style="font-size: 12px; color: #6B7280">{{r.email}}</span></span>
+<a href="#" style="color: #14171F; font-weight: 700; text-decoration: none; overflow: hidden; text-overflow: ellipsis">{{r.name}}</a>
 </div>
-<div role="cell" class="tc" style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #4A5162">{{r.id}}</div>
-<div role="cell" class="tc">{{r.store}}</div>
-<div role="cell" class="tc" style="color: #4A5162">{{r.tel}}</div>
-<div role="cell" class="tc">{{r.age}}</div>
-<div role="cell" class="tc" style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #4A5162">{{r.last}}</div>
+<div role="cell" class="tc"><span style="padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; background: #F1F2F5; color: #4A5162">{{r.device}}</span></div>
 <div role="cell" class="tc" style="justify-content: flex-end; font-weight: 700">{{r.visits}}</div>
-<div role="cell" class="tc"><span style="padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; background: {{r.rbg}}; color: {{r.rfg}}">{{r.rank}}</span></div>
-<div role="cell" class="tc"><button class="ib" aria-label="Más acciones para {{r.name}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="5" r="1.6"></circle><circle cx="12" cy="12" r="1.6"></circle><circle cx="12" cy="19" r="1.6"></circle></svg></button></div>
+<div role="cell" class="tc" style="justify-content: flex-end"><a href="#" class="btn" style="height: 36px; padding: 0 12px; font-size: 13px">Ver ficha</a></div>
 </div>
 </sc-for>
 </div>
 </div>
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 12px 16px; border-top: 1px solid #EEF0F3">
-<label style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #4A5162">Filas por página<select class="f-in" style="width: auto"><option>25</option><option>50</option><option>100</option></select></label>
+<label style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #4A5162">Filas por página<select class="f-in" style="width: auto"><option>10</option><option>25</option><option>50</option><option>100</option></select></label>
 <nav aria-label="Paginación" style="display: flex; align-items: center; gap: 4px">
 <button class="pg" aria-label="Página anterior">‹</button>
 <button class="pg on" aria-current="page">1</button>
 <button class="pg">2</button>
-<button class="pg">3</button>
-<span style="padding: 0 6px; color: #6B7280">…</span>
-<button class="pg">[N]</button>
 <button class="pg" aria-label="Página siguiente">›</button>
 </nav>
 </div>
@@ -382,7 +382,7 @@ class Component extends DCLogic {
     super(props);
     this.state = {
       open: { cliente: true, ubic: false, form: false, ficha: false, fam: false, visitas: true, ventas: false },
-      stores: { 'テスト2': false, 'Polos': true, 'Pantalones': false, 'shop': false },
+      stores: { 'テスト2': false, 'Polos': false, 'Pantalones': false, 'shop': false },
       and: true, match: true, sel: {}
     };
   }
@@ -397,29 +397,27 @@ class Component extends DCLogic {
       name, on: s.stores[name], cls: s.stores[name] ? 'on' : '',
       pick: () => this.setState({ stores: { ...this.state.stores, [name]: !this.state.stores[name] } })
     }));
-    const RANK = { Oro: ['#FEF3C7', '#92400E'], Plata: ['#EEF0F3', '#374151'], Bronce: ['#FBEAE0', '#9A3412'] };
+    // Datos de la captura del entorno de desarrollo (página 1 de 2)
     const data = [
-      ['100231', 'María Fernández Quispe', 'maria.fq@example.com', 'Polos', '987 654 321', 34, '2026/09/28', 12, 'Oro'],
-      ['100198', 'Lucía Ramos Torres', 'lucia.rt@example.com', 'Polos', '986 120 447', 27, '2026/09/25', 8, 'Plata'],
-      ['100174', 'Carmen Díaz Huamán', 'carmen.dh@example.com', 'Polos', '965 330 218', 41, '2026/09/22', 10, 'Oro'],
-      ['100152', 'Valeria Castro León', 'valeria.cl@example.com', 'Polos', '954 781 002', 22, '2026/09/19', 3, 'Bronce'],
-      ['100133', 'Rosa Mendoza Silva', 'rosa.ms@example.com', 'Polos', '944 208 315', 38, '2026/09/15', 6, 'Plata'],
-      ['100120', 'Ana Gutiérrez Paz', 'ana.gp@example.com', 'Polos', '933 671 590', 30, '2026/09/11', 4, 'Bronce'],
-      ['100097', 'Sofía Vargas Rojas', 'sofia.vr@example.com', 'Polos', '921 455 873', 45, '2026/09/08', 9, 'Oro'],
-      ['100085', 'Daniela Flores Chávez', 'daniela.fc@example.com', 'Polos', '912 004 636', 29, '2026/09/02', 5, 'Plata']
+      ['1100028', 'Prueba de Tokura Prueba de Tokura', 0], ['1100027', 'Kawamoto Kyohei', 0],
+      ['1100026', 'Prueba de Iwamoto', 0], ['1100025', 'Prueba 48002', 0],
+      ['1100022', 'Ayaka Sakamoto', 0], ['1100011', 'Prueba de Kiyomori', 0],
+      ['1100010', 'Prueba elevada', 0], ['1100009', 'Entrega recibida', 0],
+      ['1100008', 'Mizutani Tomohiro', 2], ['1100007', 'invitado', 0]
     ];
-    const rows = data.map(([id, name, email, store, tel, age, last, visits, rank]) => {
+    const rows = data.map(([id, name, visits]) => {
       const sel = !!s.sel[id];
-      const ini = name.split(' ').slice(0, 2).map((w) => w[0]).join('');
+      const ini = name.split(' ').slice(0, 2).map((w) => w[0].toUpperCase()).join('');
       return {
-        id, name, email, store, tel, age, last, visits, rank, ini, sel,
-        bg: sel ? '#FFF7F7' : '#fff', rbg: RANK[rank][0], rfg: RANK[rank][1],
+        id, name, ini, sel, mgmt: '—', device: 'No requerido',
+        visits: visits ? visits + ' veces' : '—',
+        bg: sel ? '#FFF7F7' : '#fff',
         toggle: () => this.setState({ sel: { ...this.state.sel, [id]: !this.state.sel[id] } })
       };
     });
     const selCount = rows.filter((r) => r.sel).length;
     const allSel = selCount === rows.length;
-    const storesOn = Object.keys(s.stores).filter((k) => s.stores[k]).join(', ') || 'Todas';
+    const storesOn = Object.keys(s.stores).filter((k) => s.stores[k]).join(', ');
     return {
       open: s.open, tg, rot, stores, rows, selCount, allSel, hasSel: selCount > 0,
       toggleAll: () => {
@@ -431,12 +429,7 @@ class Component extends DCLogic {
       setAnd: () => this.setState({ and: true }), setOr: () => this.setState({ and: false }),
       isIn: s.match, isEx: !s.match, inCls: s.match ? 'on' : '', exCls: s.match ? '' : 'on',
       setIn: () => this.setState({ match: true }), setEx: () => this.setState({ match: false }),
-      active: [
-        { k: 'Tienda', v: storesOn },
-        { k: 'Sexo', v: 'Mujer' },
-        { k: 'Periodo', v: 'Últimos 3 meses' },
-        { k: 'Visitas', v: '3–10' }
-      ]
+      active: [{ k: 'Estado de registro', v: 'Registrado' }].concat(storesOn ? [{ k: 'Tienda', v: storesOn }] : [])
     };
   }
 }

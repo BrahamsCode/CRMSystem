@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Gestión de clientes · CRM</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F5F6F8}
+a{color:#B42318}a:hover{color:#8F1D14}
+.rl{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#8B93A3;text-decoration:none}
+.rl:hover{background:#1F2430;color:#fff}
+.rl.on{background:#2A303D;color:#fff}
+.sn{display:flex;align-items:center;gap:10px;min-height:40px;padding:0 12px;border-radius:8px;color:#4A5162;text-decoration:none;font-size:14px;font-weight:500}
+.sn:hover{background:#F1F2F5;color:#14171F}
+.sn.on{background:#FDECEC;color:#B42318;font-weight:700}
+.sh{padding:16px 12px 6px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#6B7280}
+.ib{width:44px;height:44px;border-radius:8px;border:0;background:transparent;color:#4A5162;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.ib:hover{background:#F1F2F5;color:#14171F}
+.btn{height:44px;padding:0 16px;border-radius:8px;border:1px solid #D5D9E0;background:#fff;color:#14171F;font:inherit;font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:8px;cursor:pointer;text-decoration:none;box-sizing:border-box;white-space:nowrap}
+.btn:hover{background:#F5F6F8;color:#14171F}
+.btn-p{background:#C8343A;border-color:#C8343A;color:#fff}
+.btn-p:hover{background:#A82A30;color:#fff}
+.card{background:#fff;border:1px solid #E4E7EC;border-radius:14px}
+.stat{display:flex;flex-direction:column;gap:2px;padding:16px 20px;text-decoration:none;color:#14171F;border-radius:10px}
+.stat:hover{background:#FAFAFB;color:#14171F}
+.qa{display:flex;align-items:center;gap:14px;padding:16px;border:1px solid #E4E7EC;border-radius:12px;background:#fff;text-decoration:none;color:#14171F}
+.qa:hover{border-color:#CBD0D8;box-shadow:0 4px 14px rgba(20,23,31,.06);color:#14171F}
+@media (max-width:1200px){.subnav{display:none !important}}
+@media (max-width:1000px){.split{grid-template-columns:1fr !important}}
+@media (max-width:720px){.rail{display:none !important}.hide-sm{display:none !important}.mpad{padding:20px 16px !important}}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; background: #F5F6F8; font-family: 'Manrope', system-ui, sans-serif; color: #14171F">
+<nav class="rail" aria-label="Módulos" style="width: 72px; flex-shrink: 0; background: #12151C; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 16px 0; position: sticky; top: 0; height: 100vh; box-sizing: border-box">
+<a href="Main.dc.html" aria-label="Inicio" style="width: 40px; height: 40px; border-radius: 10px; background: #C8343A; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; text-decoration: none; margin-bottom: 16px">CRM</a>
+<a href="Clientes-Resumen.dc.html" class="rl on" aria-label="Gestión de clientes" title="Gestión de clientes"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path></svg></a>
+<a href="#" class="rl" aria-label="Promociones" title="Promociones"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11v2a1 1 0 0 0 1 1h3l5 4V6L7 10H4a1 1 0 0 0-1 1z"></path><path d="M16 8a5 5 0 0 1 0 8M19 5a9 9 0 0 1 0 14"></path></svg></a>
+<a href="#" class="rl" aria-label="Mi página" title="Mi página"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"></path></svg></a>
+<a href="#" class="rl" aria-label="Sitio web" title="Sitio web"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"></path></svg></a>
+<a href="#" class="rl" aria-label="Soporte operativo" title="Soporte operativo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg></a>
+<a href="#" class="rl" aria-label="Terminales" title="Terminales"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"></rect><path d="M12 18h.01"></path></svg></a>
+<a href="#" class="rl" aria-label="Reservas" title="Reservas"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg></a>
+<a href="#" class="rl" aria-label="Configuración" title="Configuración"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"></path></svg></a>
+<div style="flex-grow: 1"></div>
+<a href="#" class="rl" aria-label="Ayuda" title="Ayuda"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"></path></svg></a>
+</nav>
+<aside class="subnav" aria-label="Menú de clientes" style="width: 256px; flex-shrink: 0; background: #fff; border-right: 1px solid #E4E7EC; padding: 20px 12px; box-sizing: border-box; position: sticky; top: 0; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; gap: 2px">
+<div style="display: flex; align-items: center; gap: 10px; padding: 0 12px 16px">
+<span style="width: 36px; height: 36px; border-radius: 10px; background: #FDECEC; color: #C8343A; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span>
+<div><div style="font-weight: 800; font-size: 15px">Clientes</div><div style="font-size: 12px; color: #6B7280">Gestión de clientes</div></div>
+</div>
+<a href="Clientes-Nuevo.dc.html" class="btn btn-p" style="justify-content: center; margin: 0 4px 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Nuevo cliente</a>
+<div class="sh">Operación</div>
+<a href="Clientes-Resumen.dc.html" class="sn on" aria-current="page"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1"></rect><rect x="14" y="3" width="7" height="5" rx="1"></rect><rect x="14" y="12" width="7" height="9" rx="1"></rect><rect x="3" y="16" width="7" height="5" rx="1"></rect></svg>Resumen</a>
+<a href="Clientes-Buscar.dc.html" class="sn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path></svg>Buscar clientes</a>
+<a href="#" class="sn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"></path></svg>Registrar visita</a>
+<a href="Clientes-Estadisticas.dc.html" class="sn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20V10M18 20V4M6 20v-4"></path></svg>Estadísticas</a>
+<div class="sh">Configuración</div>
+<a href="Clientes-Campos.dc.html" class="sn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"></path></svg>Campos y CSV</a>
+<a href="#" class="sn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 10 5-10 5L2 7z"></path><path d="m2 17 10 5 10-5M2 12l10 5 10-5"></path></svg>Grupos de clientes</a>
+<a href="#" class="sn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>Motivos de 1ª visita</a>
+<a href="#" class="sn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="6"></circle><path d="M15.5 13 17 22l-5-3-5 3 1.5-9"></path></svg>Rangos de clientes</a>
+<a href="#" class="sn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"></path></svg>Reglas de rango</a>
+<a href="#" class="sn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M12 8v8M8 12h8"></path></svg>Información adicional</a>
+</aside>
+<div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column">
+<header style="height: 64px; background: #fff; border-bottom: 1px solid #E4E7EC; display: flex; align-items: center; gap: 12px; padding: 0 24px; position: sticky; top: 0; z-index: 5">
+<nav aria-label="Ruta" style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: #6B7280; min-width: 0; white-space: nowrap">
+<a href="Main.dc.html" style="color: #6B7280; text-decoration: none">Inicio</a>
+<span aria-hidden="true">/</span>
+<span style="color: #14171F; font-weight: 700">Clientes</span>
+</nav>
+<div style="flex-grow: 1"></div>
+<a href="#" class="ib" aria-label="Contacto" title="Contacto"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-10 6L2 7"></path></svg></a>
+<a href="#" class="ib" aria-label="Soporte" title="Soporte"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"></path></svg></a>
+<div style="width: 1px; height: 28px; background: #E4E7EC"></div>
+<button class="btn" style="border: 0; padding: 0 8px; gap: 10px">
+<span style="width: 32px; height: 32px; border-radius: 50%; background: #14171F; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700">AD</span>
+<span class="hide-sm">Administrador</span>
+</button>
+<a href="Login.dc.html" class="ib" aria-label="Cerrar sesión" title="Cerrar sesión"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path></svg></a>
+</header>
+<main class="mpad" style="padding: 28px 32px 56px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px; max-width: 1280px; width: 100%">
+<div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+<div>
+<h1 style="margin: 0; font-size: 26px; font-weight: 800; letter-spacing: -0.02em">Gestión de clientes</h1>
+<p style="margin: 6px 0 0; font-size: 14px; color: #4A5162">Resumen de altas y bajas de miembros. Pulsa una cifra para ver la lista de clientes.</p>
+</div>
+<span style="display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 14px; border-radius: 999px; background: #fff; border: 1px solid #E4E7EC; font-size: 13px; font-weight: 600; color: #4A5162"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg>Hoy: 2 de octubre</span>
+</div>
+
+<section aria-label="Altas y bajas" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px">
+<sc-for list="{{periods}}" as="p" hint-placeholder-count="3">
+<div class="card" style="padding: 8px">
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 12px 4px">
+<h2 style="margin: 0; font-size: 14px; font-weight: 800">{{p.title}}</h2>
+<span style="font-size: 12px; font-weight: 600; color: #6B7280">{{p.hint}}</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px">
+<a href="Clientes-Buscar.dc.html" class="stat" aria-label="{{p.title}}: {{p.alta}} altas, ver lista">
+<span style="font-size: 12px; font-weight: 700; color: #4A5162">Altas</span>
+<span style="font-size: 36px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1">{{p.alta}}</span>
+<span style="font-size: 12px; color: #6B7280">{{p.altaF}}</span>
+<span style="font-size: 12px; font-weight: 700; color: #B42318">Ver lista →</span>
+</a>
+<a href="Clientes-Buscar.dc.html" class="stat" aria-label="{{p.title}}: {{p.baja}} bajas, ver lista">
+<span style="font-size: 12px; font-weight: 700; color: #4A5162">Bajas</span>
+<span style="font-size: 36px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1">{{p.baja}}</span>
+<span style="font-size: 12px; color: #6B7280">{{p.bajaF}}</span>
+<span style="font-size: 12px; font-weight: 700; color: #B42318">Ver lista →</span>
+</a>
+</div>
+</div>
+</sc-for>
+</section>
+
+<div class="split" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start">
+<section aria-labelledby="qa">
+<h2 id="qa" style="margin: 0 0 12px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #6B7280">Accesos rápidos</h2>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<a href="Clientes-Nuevo.dc.html" class="qa"><span style="width: 40px; height: 40px; border-radius: 10px; background: #FDECEC; color: #C8343A; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M19 8v6M22 11h-6"></path></svg></span><span style="display: flex; flex-direction: column"><span style="font-weight: 700">Nuevo cliente</span><span style="font-size: 12px; color: #4A5162">Registrar un miembro</span></span></a>
+<a href="Clientes-Buscar.dc.html" class="qa"><span style="width: 40px; height: 40px; border-radius: 10px; background: #F1F2F5; color: #14171F; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path></svg></span><span style="display: flex; flex-direction: column"><span style="font-weight: 700">Buscar clientes</span><span style="font-size: 12px; color: #4A5162">Filtrar y segmentar</span></span></a>
+<a href="#" class="qa"><span style="width: 40px; height: 40px; border-radius: 10px; background: #F1F2F5; color: #14171F; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"></path></svg></span><span style="display: flex; flex-direction: column"><span style="font-weight: 700">Registrar visita</span><span style="font-size: 12px; color: #4A5162">Check-in en tienda</span></span></a>
+<a href="Clientes-Estadisticas.dc.html" class="qa"><span style="width: 40px; height: 40px; border-radius: 10px; background: #F1F2F5; color: #14171F; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20V10M18 20V4M6 20v-4"></path></svg></span><span style="display: flex; flex-direction: column"><span style="font-weight: 700">Estadísticas</span><span style="font-size: 12px; color: #4A5162">Altas por periodo</span></span></a>
+</div>
+</section>
+
+<section class="card" aria-labelledby="hoy" style="padding: 20px">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+<h2 id="hoy" style="margin: 0; font-size: 16px; font-weight: 800">Altas de hoy</h2>
+<a href="Clientes-Buscar.dc.html" style="font-size: 13px; font-weight: 700">Ver todos los clientes</a>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; padding: 36px 16px 20px">
+<span style="width: 52px; height: 52px; border-radius: 50%; background: #F1F2F5; color: #6B7280; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M19 8v6M22 11h-6"></path></svg></span>
+<span style="font-size: 15px; font-weight: 700">Todavía no hay altas hoy</span>
+<span style="font-size: 13px; color: #4A5162; max-width: 320px; line-height: 1.5">Los clientes que se registren hoy, en tienda o desde el móvil, aparecerán aquí.</span>
+<a href="Clientes-Nuevo.dc.html" class="btn" style="margin-top: 6px">Registrar nuevo cliente</a>
+</div>
+</section>
+</div>
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      periods: [
+        // Cada cifra abre Buscar clientes con el mismo filtro que el legacy (disp_flg + touroku_date_1 / update_date_1)
+        { title: 'Total registrado', hint: 'Histórico', alta: 16, baja: 0, altaF: 'Estado: registrado', bajaF: 'Estado: dado de baja' },
+        { title: 'Este mes', hint: 'Octubre', alta: 0, baja: 0, altaF: 'Alta desde 01/10', bajaF: 'Baja desde 01/10' },
+        { title: 'Hoy', hint: '2 de octubre', alta: 0, baja: 0, altaF: 'Alta desde 02/10', bajaF: 'Baja desde 02/10' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>Inicio · CRM</title>
+<title>Iniciar sesión · CRM</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -12,100 +12,64 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Geist:wght@400;500;600;700;800&amp;family=Noto+Sans+JP:wght@400;500;700;800&amp;family=Noto+Serif+JP:wght@600;700&amp;family=Source+Sans+3:wght@400;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
 <style>
 body{margin:0}
-.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-@media (max-width:1100px){.split2{grid-template-columns:1fr !important}}
-@media (max-width:900px){.side{display:none !important}}
-@media (max-width:720px){.rail{display:none !important}.hide-sm{display:none !important}.mpad{padding:20px 16px !important}}
+@media (max-width:900px){.brand{display:none !important}}
 </style>
 </helmet>
-<div style="min-height: 100vh; display: flex; flex-direction: {{T.dir}}; background: {{T.bg}}; color: {{T.text}}; font-family: {{T.font}}; font-size: {{T.fs}}px">
-<sc-if value="{{isDouble}}" hint-placeholder-val="{{ true }}">
-<nav class="rail" aria-label="Módulos" style="width: 72px; flex-shrink: 0; background: {{N.bg}}; border-right: 1px solid {{N.border}}; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 16px 0; box-sizing: border-box; position: sticky; top: 0; height: 100vh">
-<a href="Main.dc.html" aria-label="Inicio" style="width: 40px; height: 40px; border-radius: {{T.r}}px; background: {{N.brandBg}}; color: {{N.brandFg}}; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; text-decoration: none; margin-bottom: 16px">CRM</a>
-<sc-for list="{{sh.rail}}" as="m" hint-placeholder-count="8">
-<a href="{{m.href}}" aria-label="{{m.label}}" title="{{m.label}}" style="{{m.style}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{m.d}}"></path></svg></a>
+<div style="min-height: 100vh; display: flex; background: {{T.bg}}; color: {{T.text}}; font-family: {{T.font}}; font-size: {{T.fs}}px">
+<aside class="brand" style="flex: 1 1 50%; background: {{N.bg}}; color: {{N.title}}; border-right: 1px solid {{N.border}}; display: flex; flex-direction: column; justify-content: space-between; padding: 48px 56px; box-sizing: border-box">
+<div style="display: flex; align-items: center; gap: 12px">
+<span style="width: 44px; height: 44px; border-radius: {{T.r}}px; background: {{N.brandBg}}; color: {{N.brandFg}}; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px">CRM</span>
+<span style="display: flex; flex-direction: column"><span style="font-size: 17px; font-weight: 800; font-family: {{T.head}}">CRM system</span><span style="font-size: 13px; color: {{N.fg}}">Sistema integral de gestión</span></span>
+</div>
+<div style="max-width: 460px">
+<h1 style="margin: 0; font-size: 40px; line-height: 1.15; font-weight: 800; letter-spacing: -0.02em; font-family: {{T.head}}">Clientes, ventas y reservas en un solo lugar.</h1>
+<p style="margin: 16px 0 0; font-size: 16px; line-height: 1.6; color: {{N.fg}}">Accede al panel de administración para gestionar tus tiendas y a tus clientes.</p>
+<div style="margin-top: 36px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+<sc-for list="{{highlights}}" as="h" hint-placeholder-count="3">
+<div style="padding: 14px; border-radius: {{T.R}}px; background: {{N.activeBg}}; display: flex; flex-direction: column; gap: 10px">
+<span style="width: 32px; height: 32px; border-radius: {{T.r}}px; background: {{N.brandBg}}; color: {{N.brandFg}}; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{h.d}}"></path></svg></span>
+<span style="font-size: 13px; font-weight: 700; color: {{N.activeFg}}">{{h.label}}</span>
+</div>
 </sc-for>
-</nav>
-</sc-if>
-<sc-if value="{{sh.sideOn}}" hint-placeholder-val="{{ false }}">
-<aside class="side" aria-label="Menú" style="width: {{SN.w}}px; flex-shrink: 0; background: {{SN.bg}}; border-right: 1px solid {{SN.border}}; padding: 20px 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px; position: sticky; top: 0; height: 100vh; overflow-y: auto">
-<sc-if value="{{sh.sideBrand}}" hint-placeholder-val="{{ true }}">
-<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 0 8px 14px; text-decoration: none">
-<span style="width: 36px; height: 36px; border-radius: {{T.r}}px; background: {{N.brandBg}}; color: {{N.brandFg}}; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 11px">CRM</span>
-<span style="display: flex; flex-direction: column"><span style="font-weight: 800; font-size: 15px; color: {{SN.title}}; font-family: {{T.head}}">CRM system</span><span style="font-size: 12px; color: {{SN.fg}}">Sistema integral de gestión</span></span>
-</a>
-</sc-if>
-<sc-for list="{{sh.sideItems}}" as="it" hint-placeholder-count="9">
-<sc-if value="{{it.head}}" hint-placeholder-val="{{ false }}"><div style="{{it.style}}">{{it.label}}</div></sc-if>
-<sc-if value="{{it.link}}" hint-placeholder-val="{{ true }}"><a href="{{it.href}}" style="{{it.style}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{it.d}}"></path></svg>{{it.label}}</a></sc-if>
-</sc-for>
+</div>
+</div>
+<div style="font-size: 13px; color: {{N.fg}}">© [AÑO] [EMPRESA] · CRM system</div>
 </aside>
-</sc-if>
-<div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column">
-<sc-if value="{{isTop}}" hint-placeholder-val="{{ false }}">
-<header style="background: {{N.bg}}; border-bottom: 1px solid {{N.border}}">
-<div style="min-height: 60px; display: flex; align-items: center; gap: 16px; padding: 0 24px">
-<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none"><span style="width: 34px; height: 34px; border-radius: {{T.r}}px; background: {{N.brandBg}}; color: {{N.brandFg}}; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 11px">CRM</span><span class="hide-sm" style="font-weight: 800; color: {{N.title}}; font-family: {{T.head}}; white-space: nowrap">CRM system</span></a>
-<nav aria-label="Módulos" class="hide-sm" style="display: flex; gap: 2px; flex-grow: 1; overflow-x: auto">
-<sc-for list="{{sh.topItems}}" as="m" hint-placeholder-count="8"><a href="{{m.href}}" style="{{m.style}}">{{m.label}}</a></sc-for>
-</nav>
-<div style="flex-grow: 1"></div>
-<button type="button" onClick="{{openPanel}}" aria-haspopup="dialog" style="{{N.btn}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a10 10 0 0 0 0 20c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16a6 6 0 0 0 6-6c0-4.9-4.5-8.6-10-8.6z"></path><circle cx="7.5" cy="11.5" r="1"></circle><circle cx="10.5" cy="7.5" r="1"></circle><circle cx="15.5" cy="8.5" r="1"></circle></svg>Tema</button>
-<span style="width: 32px; height: 32px; flex-shrink: 0; border-radius: 50%; background: {{N.brandBg}}; color: {{N.brandFg}}; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700">AD</span>
-<a href="Login.dc.html" aria-label="Cerrar sesión" title="Cerrar sesión" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: {{N.fg}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path></svg></a>
-</div>
-</header>
-</sc-if>
-<sc-if value="{{isSide}}" hint-placeholder-val="{{ true }}">
-<header style="height: 64px; background: {{T.surface}}; border-bottom: 1px solid {{T.border}}; display: flex; align-items: center; gap: 10px; padding: 0 24px; position: sticky; top: 0; z-index: 5">
-<div style="font-size: 15px; font-weight: 700">Inicio</div>
-<div style="flex-grow: 1"></div>
-<label class="hide-sm" style="display: block; width: 280px"><span class="sr">Buscar en el sistema</span><input type="search" placeholder="Buscar cliente por nombre, nº o teléfono" style="{{T.input}}"></label>
-<button type="button" onClick="{{openPanel}}" aria-haspopup="dialog" style="{{T.btn}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a10 10 0 0 0 0 20c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16a6 6 0 0 0 6-6c0-4.9-4.5-8.6-10-8.6z"></path><circle cx="7.5" cy="11.5" r="1"></circle><circle cx="10.5" cy="7.5" r="1"></circle><circle cx="15.5" cy="8.5" r="1"></circle></svg>Tema</button>
-<span style="width: 32px; height: 32px; flex-shrink: 0; border-radius: 50%; background: {{T.text}}; color: {{T.bg}}; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700">AD</span>
-<a href="Login.dc.html" aria-label="Cerrar sesión" title="Cerrar sesión" style="{{T.iconBtn}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path></svg></a>
-</header>
-</sc-if>
 
-<main class="mpad" style="padding: {{T.pad}}px; box-sizing: border-box; width: 100%; max-width: 1360px; display: flex; flex-direction: column; gap: {{T.gap}}px">
-<div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+<main style="flex: 1 1 50%; position: relative; display: flex; align-items: center; justify-content: center; padding: 72px 24px 48px; box-sizing: border-box">
+<button type="button" onClick="{{openPanel}}" aria-haspopup="dialog" style="{{T.btn}}; position: absolute; top: 20px; right: 20px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a10 10 0 0 0 0 20c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16a6 6 0 0 0 6-6c0-4.9-4.5-8.6-10-8.6z"></path><circle cx="7.5" cy="11.5" r="1"></circle><circle cx="10.5" cy="7.5" r="1"></circle><circle cx="15.5" cy="8.5" r="1"></circle></svg>Tema</button>
+<div style="width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 28px">
 <div>
-<h1 style="margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; font-family: {{T.head}}">Hola, Administrador</h1>
-<p style="margin: 6px 0 0; font-size: 15px; color: {{T.muted}}">Selecciona el módulo con el que quieres trabajar.</p>
+<h2 style="margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; font-family: {{T.head}}">Iniciar sesión</h2>
+<p style="margin: 8px 0 0; font-size: 15px; color: {{T.muted}}">Introduce tus datos de acceso de administrador.</p>
 </div>
-<div style="display: flex; gap: 8px; flex-wrap: wrap">
-<a href="#" style="{{T.btn}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"></path></svg>Registrar visita</a>
-<a href="Clientes-Nuevo.dc.html" style="{{T.btnP}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Nuevo cliente</a>
+<sc-if value="{{showError}}" hint-placeholder-val="{{ false }}">
+<div role="alert" style="display: flex; gap: 10px; padding: 12px 14px; border-radius: {{T.r}}px; background: {{errBg}}; color: {{errFg}}; font-size: 14px; line-height: 1.5">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zM12 8v4M12 16h.01"></path></svg>
+<span>El usuario o la contraseña no son correctos. Revísalos e inténtalo de nuevo.</span>
+</div>
+</sc-if>
+<form style="display: flex; flex-direction: column; gap: 18px">
+<label><span style="{{T.label}}">Usuario</span><input type="text" name="login" autocomplete="username" placeholder="Tu ID de usuario" style="{{T.input}}; height: 48px"></label>
+<div>
+<div style="display: flex; justify-content: space-between; align-items: baseline"><label for="pw" style="{{T.label}}">Contraseña</label><a href="#" style="font-size: 13px; font-weight: 700; color: {{T.link}}">¿Olvidaste tu contraseña?</a></div>
+<div style="position: relative">
+<input id="pw" type="{{pwType}}" name="password" autocomplete="current-password" placeholder="••••••••" style="{{T.input}}; height: 48px; padding-right: 52px">
+<button type="button" onClick="{{togglePw}}" aria-label="{{eyeLabel}}" aria-pressed="{{pwVisible}}" style="position: absolute; right: 2px; top: 2px; width: 44px; height: 44px; border: 0; border-radius: {{T.r}}px; background: transparent; color: {{T.muted}}; display: flex; align-items: center; justify-content: center; cursor: pointer">
+<sc-if value="{{pwVisible}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.9 17.9A10 10 0 0 1 12 20c-7 0-10-8-10-8a18 18 0 0 1 4.1-5.9M9.9 4.2A9 9 0 0 1 12 4c7 0 10 8 10 8a18 18 0 0 1-2.2 3.2M14.1 14.1a3 3 0 1 1-4.2-4.2M2 2l20 20"></path></svg></sc-if>
+<sc-if value="{{pwHidden}}" hint-placeholder-val="{{ true }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-8 10-8 10 8 10 8-3 8-10 8-10-8-10-8zM12 9a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"></path></svg></sc-if>
+</button>
 </div>
 </div>
-<div class="split2" style="display: grid; grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr); gap: {{T.gap}}px; align-items: start">
-<section aria-labelledby="mods">
-<h2 id="mods" style="margin: 0 0 14px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: {{T.faint}}">Módulos</h2>
-<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: {{T.gap}}px">
-<sc-for list="{{cards}}" as="m" hint-placeholder-count="9">
-<a href="{{m.href}}" style="{{T.card}}; padding: 20px; display: flex; flex-direction: column; gap: 14px; text-decoration: none; color: {{T.text}}">
-<span style="{{m.tile}}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{m.d}}"></path></svg></span>
-<span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 16px; font-weight: 700; font-family: {{T.head}}">{{m.label}}</span><span style="font-size: 13px; line-height: 1.5; color: {{T.muted}}">{{m.desc}}</span></span>
-</a>
-</sc-for>
+<label style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: {{T.muted}}; min-height: 44px"><input type="checkbox" name="remember" style="accent-color: {{T.accent}}; width: 18px; height: 18px; margin: 0">Mantener la sesión iniciada</label>
+<a href="Main.dc.html" style="{{T.btnP}}; height: 48px; width: 100%">Iniciar sesión</a>
+</form>
+<div style="padding-top: 20px; border-top: 1px solid {{T.border}}; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 13px; color: {{T.muted}}">
+<span>¿Problemas para acceder?</span>
+<span style="display: flex; gap: 16px"><a href="#" style="font-weight: 700; color: {{T.link}}">Contacto</a><a href="#" style="font-weight: 700; color: {{T.link}}">Soporte</a></span>
 </div>
-</section>
-<section aria-labelledby="avisos" style="{{T.card}}; overflow: hidden">
-<div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 20px">
-<h2 id="avisos" style="margin: 0; font-size: 16px; font-weight: 700; font-family: {{T.head}}">Avisos del sistema</h2>
-<a href="#" style="font-size: 13px; font-weight: 700; color: {{T.link}}">Ver todos</a>
-</div>
-<sc-for list="{{notices}}" as="n" hint-placeholder-count="6">
-<a href="#" style="display: flex; flex-direction: column; gap: 6px; padding: 16px 20px; border-top: 1px solid {{T.border}}; text-decoration: none; color: {{T.text}}">
-<span style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: {{T.faint}}"><span>{{n.date}}</span><span style="{{n.tagStyle}}">{{n.tag}}</span></span>
-<span style="font-size: 14px; font-weight: 700; line-height: 1.4">{{n.title}}</span>
-<span style="font-size: 13px; line-height: 1.5; color: {{T.muted}}">{{n.text}}</span>
-</a>
-</sc-for>
-</section>
 </div>
 </main>
-</div>
 
 <sc-if value="{{panelOpen}}" hint-placeholder-val="{{ false }}">
 <aside role="dialog" aria-label="Personalizar tema" style="position: fixed; top: 16px; right: 16px; bottom: 16px; width: 340px; max-width: calc(100vw - 32px); z-index: 50; background: #FFFFFF; color: #14171F; border: 1px solid #E4E7EC; border-radius: 16px; box-shadow: 0 20px 48px rgba(20,23,31,.22); display: flex; flex-direction: column; font-family: 'Manrope', system-ui, sans-serif; font-size: 14px; overflow: hidden">
@@ -157,7 +121,7 @@ body{margin:0}
 </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1100}}'>
+<script type="text/x-dc" data-dc-script data-props='{"showError":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":900}}'>
 function crmThemeKit() {
   const ACC = { coral: '#C8343A', azul: '#206BC4', indigo: '#264C73', ambar: '#B45309', verde: '#15803D', violeta: '#6D28D9', negro: '#18181B' };
   const ACC_DARK = { coral: '#F06A6F', azul: '#6AA5F0', indigo: '#8DB1DB', ambar: '#F0A54A', verde: '#4ADE80', violeta: '#B39BFA', negro: '#F4F4F5' };
@@ -361,7 +325,7 @@ function crmThemeKit() {
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { ...crmThemeKit().initial('coral'), panel: false, copied: false };
+    this.state = { ...crmThemeKit().initial('coral'), panel: false, copied: false, pw: false };
   }
   componentDidMount() {
     const v = crmThemeKit().load();
@@ -371,35 +335,24 @@ class Component extends DCLogic {
   }
   componentWillUnmount() { try { window.removeEventListener('storage', this.onStore); } catch (e) {} }
   setTheme(patch) { this.setState({ ...patch, copied: false }, () => crmThemeKit().save(this.state)); }
-  themeVals(ctx) {
+  renderVals() {
     const K = crmThemeKit();
     const s = this.state;
     const tk = K.tokens(s);
     const pn = K.panel(s, (p) => this.setTheme({ ...p, preset: 'custom' }), (k) => this.setTheme(K.initial(k)));
+    const v = s.pw;
     return {
-      ...tk, ...pn, sh: K.shell(s, tk, ctx),
+      ...tk, ...pn,
       panelOpen: s.panel, openPanel: () => this.setState({ panel: true }), closePanel: () => this.setState({ panel: false }),
       reset: () => this.setTheme(K.initial('coral')), copyLabel: s.copied ? 'Copiado' : 'Copiar',
-      copyCss: () => { try { navigator.clipboard.writeText(pn.css); } catch (e) {} this.setState({ copied: true }); }
+      copyCss: () => { try { navigator.clipboard.writeText(pn.css); } catch (e) {} this.setState({ copied: true }); },
+      highlights: [{ label: 'Clientes', d: K.I.users }, { label: 'Promociones', d: K.I.mega }, { label: 'Reservas', d: K.I.cal }],
+      showError: this.props.showError ?? false,
+      errBg: tk.T.dark ? '#3A1D20' : '#FDECEC', errFg: tk.T.dark ? '#FFD7D9' : '#8F1D14',
+      pwVisible: v, pwHidden: !v, pwType: v ? 'text' : 'password',
+      eyeLabel: v ? 'Ocultar contraseña' : 'Mostrar contraseña',
+      togglePw: () => this.setState({ pw: !this.state.pw })
     };
-  }
-  renderVals() {
-    const K = crmThemeKit();
-    const v = this.themeVals({ module: null, crumbs: [{ label: 'Inicio' }] });
-    const dark = v.T.dark;
-    const tile = (c) => 'width: 44px; height: 44px; border-radius: ' + v.T.r + 'px; display: flex; align-items: center; justify-content: center; background: ' + c + (dark ? '33' : '1A') + '; color: ' + (dark ? '#E8EAEE' : c);
-    const cards = K.MODS.concat([{ key: 'ayuda', label: 'Ayuda y soporte', d: K.I.help, href: '#', color: '#15803D', desc: 'Manuales, preguntas frecuentes y contacto.' }])
-      .map((m) => ({ ...m, tile: tile(m.color) }));
-    const TAG = { Soporte: '#2563EB', Mantenimiento: '#B45309', 'Actualización': '#15803D' };
-    const tagStyle = (t) => 'padding: 2px 8px; border-radius: 999px; font-weight: 700; background: ' + TAG[t] + (dark ? '33' : '1A') + '; color: ' + (dark ? '#E8EAEE' : TAG[t]);
-    const notices = [
-      ['Soporte', 'Horario de soporte en feriados de fin de año', 'El soporte telefónico y por correo atenderá en horario reducido durante los feriados.'],
-      ['Mantenimiento', 'Mantenimiento programado del servidor', 'El sistema no estará disponible durante la ventana de mantenimiento indicada.'],
-      ['Actualización', 'Compatibilidad con la nueva versión de iOS', 'Verificamos el funcionamiento de la app de miembros en la última versión de iOS.'],
-      ['Actualización', 'Actualización de la app para Android', 'Nueva versión con mejoras en la tarjeta de miembro y notificaciones.'],
-      ['Soporte', 'Atención de soporte en vacaciones', 'Consulta los días de atención y cómo enviar consultas urgentes.']
-    ].map(([tag, title, text]) => ({ date: '[FECHA]', tag, title, text, tagStyle: tagStyle(tag) }));
-    return { ...v, cards, notices };
   }
 }
 </script>
