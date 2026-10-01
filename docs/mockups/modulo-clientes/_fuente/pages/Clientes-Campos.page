@@ -1,0 +1,134 @@
+---META---
+{"title": "Campos de registro, búsqueda y CSV", "h": 3900, "maxw": 1280, "ctx": "{ module: 'clientes', active: 'campos', crumbs: [{ label: 'Inicio', href: 'Main.dc.html' }, { label: 'Clientes', href: 'Clientes-Resumen.dc.html' }, { label: 'Campos y CSV' }] }", "state": "{ ch: {} }"}
+---CONTENT---
+<div>
+<h1 style="margin: 0; font-size: 26px; font-weight: 800; font-family: {{T.head}}">Campos de registro, búsqueda y CSV</h1>
+<p style="margin: 6px 0 0; color: {{T.muted}}; max-width: 760px; line-height: 1.55">Decide qué datos pide el formulario de registro, cuáles son obligatorios, cuáles aparecen como filtro en «Buscar clientes» y cuáles se incluyen al exportar a CSV.</p>
+</div>
+
+<div role="note" style="display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border-radius: {{T.r}}px; background: {{warnBg}}; color: {{warnFg}}; font-size: 13px; line-height: 1.55">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-top: 1px; flex-shrink: 0"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"></path></svg>
+<span>Mostrar muchos campos en el registro móvil puede desajustar la pantalla en algunos teléfonos. Recomendamos mantenerlo en lo esencial.</span>
+</div>
+
+<div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
+<nav aria-label="Secciones" style="display: flex; gap: 6px; flex-wrap: wrap">
+<a href="#basica" style="{{T.btn}}">Información básica</a>
+<a href="#familia" style="{{T.btn}}">Información familiar</a>
+<a href="#mascota" style="{{T.btn}}">Mascota</a>
+<a href="Clientes-InfoAdicional.dc.html" style="{{T.btn}}; color: {{T.link}}">+ Nuevo formulario personalizado</a>
+</nav>
+<div style="flex-grow: 1"></div>
+<label style="display: block; width: 260px"><span class="sr">Filtrar campos</span><input type="search" placeholder="Filtrar campos" style="{{T.input}}"></label>
+</div>
+
+<section id="basica" aria-labelledby="h-basica" style="{{T.card}}; overflow: hidden; scroll-margin-top: 80px">
+<div style="{{sectionHead}}"><h2 id="h-basica" style="{{h2}}">Información básica</h2><p style="margin: 4px 0 0; font-size: 13px; color: {{T.muted}}">Las dos primeras columnas aplican al registro desde el móvil del cliente. «—» indica que la opción no aplica a ese campo.</p></div>
+<div style="overflow-x: auto">
+<div role="table" aria-label="Campos de información básica" style="min-width: 880px">
+<div role="row" style="{{rowGrid}}; background: {{T.surface2}}; border-bottom: 1px solid {{T.border}}">
+<div role="columnheader" style="padding: 14px 20px; display: flex; align-items: flex-end; font-size: 12px; font-weight: 700; color: {{T.muted}}">Campo</div>
+<sc-for list="{{colsBasic}}" as="cb" hint-placeholder-count="4">
+<div role="columnheader" style="padding: 14px 8px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; text-align: center"><span style="font-size: 13px; font-weight: 800">{{cb.t}}</span><span style="font-size: 11px; color: {{T.faint}}; margin-top: 2px">{{cb.s}}</span><span style="display: inline-block; margin-top: 6px; padding: 1px 8px; border-radius: 999px; background: {{T.bg}}; font-size: 11px; font-weight: 700; color: {{T.muted}}">{{cb.n}}</span></div>
+</sc-for>
+</div>
+<sc-for list="{{basic}}" as="gr" hint-placeholder-count="7">
+<div role="rowgroup">
+<div role="row"><div role="columnheader" style="padding: 18px 20px 8px; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: {{T.faint}}">{{gr.title}}</div></div>
+<sc-for list="{{gr.rows}}" as="fr" hint-placeholder-count="6">
+<div role="row" style="{{rowGrid}}">
+<div role="rowheader" style="min-height: 48px; padding: 0 20px; display: flex; align-items: center; font-weight: 600; border-top: 1px solid {{T.border}}">{{fr.label}}</div>
+<sc-for list="{{fr.cells}}" as="ce" hint-placeholder-count="4">
+<div role="cell" style="min-height: 48px; display: flex; align-items: center; justify-content: center; border-top: 1px solid {{T.border}}">
+<sc-if value="{{ce.isCb}}" hint-placeholder-val="{{ true }}"><input type="checkbox" aria-label="{{ce.aria}}" checked="{{ce.on}}" onChange="{{ce.toggle}}" style="accent-color: {{T.accent}}; width: 20px; height: 20px; margin: 0; cursor: pointer"></sc-if>
+<sc-if value="{{ce.isNa}}" hint-placeholder-val="{{ false }}"><span title="No aplica" style="color: {{T.faint}}; font-weight: 700">—</span><span class="sr">No aplica</span></sc-if>
+<sc-if value="{{ce.isFixed}}" hint-placeholder-val="{{ false }}"><span style="padding: 3px 10px; border-radius: 999px; background: {{T.text}}; color: {{T.bg}}; font-size: 12px; font-weight: 700">Siempre</span></sc-if>
+</div>
+</sc-for>
+</div>
+</sc-for>
+</div>
+</sc-for>
+</div>
+</div>
+</section>
+
+<sc-for list="{{extra}}" as="sec" hint-placeholder-count="2">
+<section id="{{sec.id}}" aria-label="{{sec.title}}" style="{{T.card}}; overflow: hidden; scroll-margin-top: 80px">
+<div style="{{sectionHead}}; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap">
+<div><div style="display: flex; align-items: center; gap: 10px"><h2 style="{{h2}}">{{sec.title}}</h2><sc-if value="{{sec.custom}}" hint-placeholder-val="{{ false }}"><span style="padding: 2px 8px; border-radius: 999px; background: {{T.accentSoft}}; color: {{T.accentSoftFg}}; font-size: 12px; font-weight: 700">Formulario personalizado</span></sc-if></div><p style="margin: 4px 0 0; font-size: 13px; color: {{T.muted}}">{{sec.desc}}</p></div>
+<sc-if value="{{sec.custom}}" hint-placeholder-val="{{ false }}"><a href="Clientes-InfoAdicional-Campos.dc.html" style="{{T.btn}}">Editar campos del formulario</a></sc-if>
+</div>
+<div style="overflow-x: auto">
+<div role="table" aria-label="Campos de {{sec.title}}" style="min-width: 880px">
+<div role="row" style="{{rowGrid}}; background: {{T.surface2}}; border-bottom: 1px solid {{T.border}}">
+<div role="columnheader" style="padding: 14px 20px; font-size: 12px; font-weight: 700; color: {{T.muted}}">Campo</div>
+<div role="columnheader" style="padding: 14px 8px; text-align: center; font-size: 13px; font-weight: 800">Mostrar en</div>
+<div role="columnheader" style="padding: 14px 8px; text-align: center; font-size: 13px; font-weight: 800">Obligatorio</div>
+<div role="columnheader" style="padding: 14px 8px; text-align: center; font-size: 13px; font-weight: 800">Filtro de búsqueda</div>
+<div role="columnheader" style="padding: 14px 8px; text-align: center; font-size: 13px; font-weight: 800">Exportar CSV</div>
+</div>
+<sc-for list="{{sec.rows}}" as="xr" hint-placeholder-count="3">
+<div role="row" style="{{rowGrid}}">
+<div role="rowheader" style="min-height: 48px; padding: 0 20px; display: flex; align-items: center; font-weight: 600; border-top: 1px solid {{T.border}}">{{xr.label}}</div>
+<div role="cell" style="min-height: 48px; padding: 0 10px; display: flex; align-items: center; border-top: 1px solid {{T.border}}"><select aria-label="Mostrar {{xr.label}} en" style="{{T.input}}; height: 34px; font-size: 13px"><option selected="{{xr.adminOnly}}">Solo administración</option><option selected="{{xr.both}}">Administración y móvil</option></select></div>
+<sc-for list="{{xr.cells}}" as="xc" hint-placeholder-count="3">
+<div role="cell" style="min-height: 48px; display: flex; align-items: center; justify-content: center; border-top: 1px solid {{T.border}}"><input type="checkbox" aria-label="{{xc.aria}}" checked="{{xc.on}}" onChange="{{xc.toggle}}" style="accent-color: {{T.accent}}; width: 20px; height: 20px; margin: 0; cursor: pointer"></div>
+</sc-for>
+</div>
+</sc-for>
+</div>
+</div>
+</section>
+</sc-for>
+
+<div style="position: sticky; bottom: 16px; z-index: 4; align-self: center; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 10px 10px 10px 18px; {{T.card}}; box-shadow: 0 12px 32px rgba(16,24,40,.18)">
+<span style="font-weight: 700">{{dirtyLabel}}</span>
+<button type="button" onClick="{{resetCh}}" style="{{T.btn}}">Descartar</button>
+<button type="button" style="{{T.btnP}}">Guardar cambios</button>
+</div>
+---VALS---
+      const ch = s.ch;
+      const COLS = ['Visible en registro', 'Obligatorio', 'Filtro de búsqueda', 'Exportar CSV'];
+      const flip = (key, def) => set({ ch: { ...this.state.ch, [key]: !(key in this.state.ch ? this.state.ch[key] : def) } });
+      const val = (key, def) => (key in ch ? ch[key] : def);
+      const counts = [0, 0, 0, 0];
+      // códigos: 1 = activo, 0 = inactivo, x = no aplica, R = obligatorio fijo
+      const G = [
+        ['Identificación y membresía', [['num', 'Nº de cliente', 'xx10'], ['mgmt', 'Nº de gestión', '0000'], ['store', 'Tienda de registro', 'xx11'], ['ptype', 'Persona / empresa', '0000'], ['joined', 'Fecha de alta', 'xx11'], ['status', 'Estado de registro', 'xx11'], ['news', 'Newsletter', '0Rx0'], ['updated', 'Fecha de modificación', 'xx00'], ['group', 'Grupo de cliente', 'xx00'], ['pass', 'Contraseña', '0000']]],
+        ['Datos personales', [['name', 'Nombre', '1111'], ['namek', 'Nombre (fonético)', '0000'], ['birth', 'Fecha de nacimiento', '1111'], ['age', 'Edad', 'xx11'], ['sex', 'Sexo', '1111'], ['blood', 'Grupo sanguíneo', '0000'], ['job', 'Ocupación', '1111']]],
+        ['Contacto', [['tel', 'Teléfono', '0010'], ['mobile', 'Teléfono móvil', '0000'], ['fax', 'Fax', '0000'], ['mail1', 'Email 1', '1111'], ['mail2', 'Email 2', '0000'], ['pmail', 'Email personal', '0000']]],
+        ['Dirección', [['zip', 'Código postal', '0000'], ['pref', 'Región / provincia', '0000'], ['city', 'Ciudad / distrito', '0000'], ['cityk', 'Ciudad (fonético)', '0000'], ['street', 'Calle y número', '0000'], ['bldg', 'Edificio / depto.', '0000'], ['bldgk', 'Edificio (fonético)', '0000']]],
+        ['Trabajo y empresa', [['wname', 'Lugar de trabajo', '0000'], ['wnamek', 'Lugar de trabajo (fonético)', '0000'], ['wind', 'Rubro del lugar de trabajo', '0000'], ['wtel', 'Teléfono del trabajo', '0000'], ['wfax', 'Fax del trabajo', '0000'], ['founded', 'Fecha de fundación', '0000'], ['capital', 'Capital social', '0000'], ['industry', 'Rubro', '0000'], ['dept', 'Departamento', '0000']]],
+        ['Representante y persona de contacto', [['rep', 'Representante: nombre', '0000'], ['repk', 'Representante: nombre (fonético)', '0000'], ['repb', 'Representante: fecha de nacimiento', '0000'], ['cname', 'Contacto: nombre', '0000'], ['cnamek', 'Contacto: nombre (fonético)', '0000'], ['ctel', 'Contacto: teléfono', '0000'], ['cmail', 'Contacto: email', '0000']]],
+        ['Fidelización y terminal', [['treg', 'Registro de terminal', 'xx00'], ['tid', 'ID de terminal', 'xx11'], ['bounce', 'Correos no entregados', 'xx11'], ['stamps', 'Sellos', 'xx00'], ['points', 'Puntos', 'xx00'], ['staff', 'Personal asignado', '0000'], ['motive', 'Motivo de primera visita', '0000'], ['arn', 'Rango por importe (actual)', 'xx00'], ['arp', 'Rango por importe (anterior)', 'xx00'], ['vrn', 'Rango por visitas (actual)', 'xx00'], ['vrp', 'Rango por visitas (anterior)', 'xx00']]]
+      ];
+      let dirty = 0;
+      const basic = G.map(([title, rows]) => ({
+        title,
+        rows: rows.map(([id, label, code]) => ({
+          label,
+          cells: code.split('').map((k, i) => {
+            const key = id + ':' + i, def = k === '1', on = val(key, def);
+            if (k === '0' || k === '1') { if (on) counts[i]++; if (on !== def) dirty++; }
+            return { isCb: k === '0' || k === '1', isNa: k === 'x', isFixed: k === 'R', on, aria: label + ': ' + COLS[i], toggle: () => flip(key, def) };
+          })
+        }))
+      }));
+      const LBL = ['Obligatorio', 'Filtro de búsqueda', 'Exportar CSV'];
+      const X = [
+        { id: 'familia', custom: false, title: 'Información familiar', desc: 'Datos del cónyuge y fechas familiares.', rows: [['spouse', 'Cónyuge', 'a', '110'], ['wedding', 'Aniversario de boda', 'a', '110']] },
+        { id: 'mascota', custom: true, title: 'Mascota', desc: 'Creado por el administrador en «Información adicional». Sus campos (nombre, tipo, peso…) se definen allí.', rows: [['pname', 'Nombre', 'b', '010'], ['ptype2', 'Tipo', 'b', '010'], ['pweight', 'Peso', 'b', '010']] }
+      ];
+      const extra = X.map((sec) => ({ ...sec, rows: sec.rows.map(([id, label, vis, code]) => ({
+        label, adminOnly: vis === 'a', both: vis === 'b',
+        cells: code.split('').map((k, i) => { const key = id + ':' + i, def = k === '1', on = val(key, def); if (on !== def) dirty++; return { on, aria: label + ': ' + LBL[i], toggle: () => flip(key, def) }; })
+      })) }));
+      return {
+        basic, extra,
+        colsBasic: [['Visible en registro', 'Formulario móvil'], ['Obligatorio', 'Formulario móvil'], ['Filtro de búsqueda', 'En Buscar clientes'], ['Exportar CSV', 'Columna del archivo']].map(([t, sub], i) => ({ t, s: sub, n: counts[i] + ' activos' })),
+        rowGrid: 'display: grid; grid-template-columns: minmax(240px, 1fr) repeat(4, 160px)',
+        warnBg: T.dark ? '#3A2A0B' : '#FFF8EB', warnFg: T.dark ? '#F7D79B' : '#7A4A00',
+        dirtyLabel: dirty === 0 ? 'Sin cambios pendientes' : (dirty === 1 ? '1 cambio sin guardar' : dirty + ' cambios sin guardar'),
+        resetCh: () => set({ ch: {} })
+      };

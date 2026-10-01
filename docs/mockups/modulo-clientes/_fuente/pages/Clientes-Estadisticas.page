@@ -1,0 +1,95 @@
+---META---
+{"title": "Estadísticas de clientes", "h": 1300, "maxw": 1280, "ctx": "{ module: 'clientes', active: 'stats', crumbs: [{ label: 'Inicio', href: 'Main.dc.html' }, { label: 'Clientes', href: 'Clientes-Resumen.dc.html' }, { label: 'Estadísticas' }] }", "state": "{ group: 'Mes', view: 'chart', hover: -1 }"}
+---CONTENT---
+<div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+<div>
+<h1 style="margin: 0; font-size: 26px; font-weight: 800; font-family: {{T.head}}">Estadísticas de clientes</h1>
+<p style="margin: 6px 0 0; color: {{T.muted}}">Elige una herramienta de análisis, define el periodo y genera el informe.</p>
+</div>
+<button type="button" style="{{T.btn}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path></svg>Exportar CSV</button>
+</div>
+
+<fieldset style="border: 0; margin: 0; padding: 0; min-width: 0">
+<legend style="{{T.label}}; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px">Herramienta</legend>
+<label style="display: flex; gap: 14px; align-items: flex-start; padding: 16px; max-width: 360px; border-radius: {{T.R}}px; border: 2px solid {{T.accent}}; background: {{T.surface}}; cursor: pointer">
+<input type="radio" name="tool" checked style="accent-color: {{T.accent}}; width: 18px; height: 18px; margin: 2px 0 0">
+<span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 15px; font-weight: 800">Altas de miembros</span><span style="font-size: 13px; color: {{T.muted}}; line-height: 1.5">Análisis a partir de los datos de registro de miembros.</span></span>
+</label>
+</fieldset>
+
+<section aria-label="Parámetros del informe" style="{{T.card}}; padding: 18px 20px; display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap">
+<fieldset style="border: 0; margin: 0; padding: 0; min-width: 0; flex: 2 1 320px"><legend style="{{T.label}}">Periodo</legend><div style="display: flex; align-items: center; gap: 6px"><input type="date" aria-label="Desde" value="2025-10-01" style="{{T.input}}"><span style="color: {{T.faint}}">–</span><input type="date" aria-label="Hasta" value="2026-09-30" style="{{T.input}}"></div></fieldset>
+<fieldset style="border: 0; margin: 0; padding: 0; min-width: 0; flex: 1 1 220px"><legend style="{{T.label}}">Agrupar por</legend><div style="display: flex; gap: 6px">
+<sc-for list="{{groupsBy}}" as="gb" hint-placeholder-count="3"><button type="button" aria-pressed="{{gb.on}}" onClick="{{gb.pick}}" style="{{gb.style}}; flex: 1">{{gb.label}}</button></sc-for>
+</div></fieldset>
+<label style="flex: 1 1 200px"><span style="{{T.label}}">Desglosar por</span><select style="{{T.input}}"><option>Tienda de registro</option><option>Sexo</option><option>Rango de edad</option><option>Ocupación</option></select></label>
+<label style="flex: 1 1 180px"><span style="{{T.label}}">Tienda</span><select style="{{T.input}}"><option>Todas</option><option>テスト2</option><option>Polos</option><option>Pantalones</option><option>shop</option></select></label>
+<button type="button" style="{{T.btnP}}">Generar informe</button>
+</section>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px">
+<sc-for list="{{kpis}}" as="kp" hint-placeholder-count="4">
+<div style="{{T.card}}; padding: 18px 20px"><div style="font-size: 13px; font-weight: 600; color: {{T.muted}}">{{kp.label}}</div><div style="margin-top: 6px; font-size: 32px; font-weight: 800; font-family: {{T.head}}">{{kp.value}}</div><div style="font-size: 13px; color: {{T.muted}}">{{kp.sub}}</div></div>
+</sc-for>
+</div>
+
+<div class="split" style="display: grid; grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr); gap: {{T.gap}}px; align-items: start">
+<section aria-labelledby="ch" style="{{T.card}}; padding: 20px">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 18px">
+<div style="display: flex; align-items: center; gap: 10px"><h2 id="ch" style="{{h2}}; font-size: 16px">Altas por mes</h2><span style="padding: 2px 8px; border-radius: 999px; background: {{T.surface2}}; color: {{T.muted}}; font-size: 12px; font-weight: 700">Datos de ejemplo</span></div>
+<div style="display: flex; gap: 6px"><button type="button" aria-pressed="{{isChart}}" onClick="{{showChart}}" style="{{chartBtn}}">Gráfico</button><button type="button" aria-pressed="{{isTable}}" onClick="{{showTable}}" style="{{tableBtn}}">Tabla</button></div>
+</div>
+<sc-if value="{{isChart}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; gap: 10px">
+<div aria-hidden="true" style="display: flex; flex-direction: column; justify-content: space-between; height: 260px; font-size: 11px; color: {{T.faint}}; text-align: right; width: 28px"><span>180</span><span>120</span><span>60</span><span>0</span></div>
+<div style="flex-grow: 1; min-width: 0">
+<div role="img" aria-label="Altas mensuales de octubre 2025 a septiembre 2026; pico en marzo 2026 con 162" style="position: relative; height: 260px; display: flex; gap: 8px; align-items: flex-end; border-bottom: 1px solid {{T.border}}">
+<div aria-hidden="true" style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none"><div style="border-top: 1px dashed {{T.border}}"></div><div style="border-top: 1px dashed {{T.border}}"></div><div style="border-top: 1px dashed {{T.border}}"></div><div></div></div>
+<sc-for list="{{bars}}" as="br" hint-placeholder-count="12">
+<div onMouseEnter="{{br.enter}}" onMouseLeave="{{leave}}" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; position: relative">
+<sc-if value="{{br.showLabel}}" hint-placeholder-val="{{ false }}"><div style="margin-bottom: 6px; padding: 4px 8px; border-radius: 6px; background: {{br.tipBg}}; color: {{br.tipFg}}; font-size: 12px; font-weight: 700; white-space: nowrap">{{br.v}}</div></sc-if>
+<div style="width: 100%; max-width: 40px; height: {{br.h}}px; background: {{br.fill}}; border-radius: 4px 4px 0 0"></div>
+</div>
+</sc-for>
+</div>
+<div style="display: flex; gap: 8px; margin-top: 8px"><sc-for list="{{bars}}" as="bl" hint-placeholder-count="12"><div style="flex: 1; text-align: center; font-size: 11px; color: {{T.faint}}">{{bl.m}}</div></sc-for></div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{isTable}}" hint-placeholder-val="{{ false }}">
+<div role="table" aria-label="Altas por mes">
+<div role="row" style="display: grid; grid-template-columns: 1fr 120px"><div role="columnheader" style="{{th}}">Mes</div><div role="columnheader" style="{{th}}; text-align: right">Altas</div></div>
+<sc-for list="{{bars}}" as="bt" hint-placeholder-count="12"><div role="row" style="display: grid; grid-template-columns: 1fr 120px"><div role="cell" style="{{td}}; min-height: 40px">{{bt.full}}</div><div role="cell" style="{{td}}; min-height: 40px; justify-content: flex-end; font-weight: 700">{{bt.v}}</div></div></sc-for>
+</div>
+</sc-if>
+</section>
+
+<section aria-labelledby="bs" style="{{T.card}}; padding: 20px">
+<h2 id="bs" style="{{h2}}; font-size: 16px">Por tienda de registro</h2>
+<p style="margin: 4px 0 16px; font-size: 13px; color: {{T.muted}}">Total del periodo: 1.284 altas</p>
+<div style="display: flex; flex-direction: column; gap: 14px">
+<sc-for list="{{storesData}}" as="sd" hint-placeholder-count="4">
+<div><div style="display: flex; justify-content: space-between; margin-bottom: 6px"><span style="font-weight: 700">{{sd.name}}</span><span><strong>{{sd.v}}</strong> <span style="color: {{T.faint}}">· {{sd.pct}} %</span></span></div>
+<div style="height: 8px; border-radius: 999px; background: {{T.surface2}}; overflow: hidden"><div style="height: 100%; width: {{sd.pct}}%; background: {{T.accent}}; border-radius: 999px"></div></div></div>
+</sc-for>
+</div>
+</section>
+</div>
+---VALS---
+      const months = [['Oct', 'Octubre 2025', 84], ['Nov', 'Noviembre 2025', 92], ['Dic', 'Diciembre 2025', 118], ['Ene', 'Enero 2026', 76], ['Feb', 'Febrero 2026', 98], ['Mar', 'Marzo 2026', 162], ['Abr', 'Abril 2026', 121], ['May', 'Mayo 2026', 110], ['Jun', 'Junio 2026', 95], ['Jul', 'Julio 2026', 104], ['Ago', 'Agosto 2026', 113], ['Sep', 'Septiembre 2026', 111]];
+      const bars = months.map(([m, full, v], i) => {
+        const hov = s.hover === i;
+        return { m, full, v, h: Math.round((v / 180) * 260), fill: hov ? T.text : T.accent, showLabel: hov || (s.hover < 0 && i === 5), tipBg: hov ? T.text : 'transparent', tipFg: hov ? T.bg : T.text, enter: () => set({ hover: i }) };
+      });
+      const isChart = s.view === 'chart';
+      return {
+        bars, isChart, isTable: !isChart,
+        chartBtn: isChart ? base.chipOn : base.chipOff, tableBtn: isChart ? base.chipOff : base.chipOn,
+        showChart: () => set({ view: 'chart' }), showTable: () => set({ view: 'table' }), leave: () => set({ hover: -1 }),
+        groupsBy: ['Día', 'Semana', 'Mes'].map((label) => ({ label, on: s.group === label, style: s.group === label ? base.chipOn : base.chipOff, pick: () => set({ group: label }) })),
+        kpis: [
+          { label: 'Altas en el periodo', value: '1.284', sub: 'Datos de ejemplo' }, { label: 'Media mensual', value: '107', sub: 'altas por mes' },
+          { label: 'Mes con más altas', value: 'Mar 2026', sub: '162 altas' }, { label: 'Tienda principal', value: 'Polos', sub: '46 % de las altas' }
+        ],
+        storesData: [['Polos', 591], ['Pantalones', 372], ['テスト2', 205], ['shop', 116]].map(([name, v]) => ({ name, v, pct: Math.round((v / 1284) * 100) }))
+      };

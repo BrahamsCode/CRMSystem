@@ -56,11 +56,11 @@ En Laravel el tema se guarda como ajustes (por empresa o usuario) y se aplica co
 
 ### Tema compartido
 
-Inicio, Login, el Personalizador y las pantallas nuevas del módulo (Nuevo cliente, Ficha, Registrar visita y toda la configuración) tienen un botón **Tema** en la barra superior. El tema elegido se guarda en el navegador (`localStorage`, clave `crm-theme-v1`) y lo aplican todas esas pantallas. Resumen, Buscar, Estadísticas y Campos siguen con el diseño Coral hasta elegir la propuesta final.
+Todas las pantallas (Login, Inicio y las 14 del módulo de clientes) tienen un botón **Tema** en la barra superior y usan la misma lógica de tema (`_fuente/kit.js`). El tema elegido se guarda en el navegador (`localStorage`, clave `crm-theme-v1`) y se aplica en todas: colores, modo claro/oscuro, disposición del menú (doble, lateral o superior), tarjetas, esquinas, densidad y tipografía. Las 6 propuestas de la página «Temas y propuestas» son vistas fijas para presentar.
 
 ## Código fuente de las pantallas (`_fuente/`)
 
-Las pantallas nuevas se generan desde una plantilla común para que todas compartan menú, barra superior y panel de tema:
+Las pantallas del módulo se generan desde una plantilla común para que todas compartan menú, barra superior y panel de tema:
 
 - `shell.html`: plantilla (menú según disposición, barra superior con botón Tema, panel de personalización).
 - `kit.js`: lógica del tema (propuestas, variables, menú del módulo).
