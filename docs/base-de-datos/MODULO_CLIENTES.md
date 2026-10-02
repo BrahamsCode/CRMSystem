@@ -6,14 +6,14 @@ Tablas que necesitan las pantallas del módulo (`docs/mockups/modulo-clientes/`)
 
 | Regla | Columnas |
 |---|---|
-| Personas | `last_name`, `first_name`, `last_name_kana`, `first_name_kana`, `birth_date` (date), `sex` smallint (ISO 5218: 1 masculino, 2 femenino) |
+| Personas | `last_name`, `first_name`, `last_name_kana`, `first_name_kana`, `birth_date` (date), `sex` smallint (ISO 5218: 0 no conocido, 1 masculino, 2 femenino, 9 no aplica) |
 | Cosas | `name`, `name_kana` |
 | Dirección | `zip`, `pref`, `city`, `street_address` |
 | Contacto | `tel` / `tel1`, `tel2`, `tel3` · `mail` / `mail1`, `mail2`, `mail3` |
 | Comunes (todas las tablas) | `status` smallint default 1 (0 inactivo, 1 activo), `created_at`, `updated_at`, `deleted_at` → `$table->timestamps()` y `$table->softDeletes()` |
 | Identificador público | `uid` generado con `getUid()` (solo en las tablas que lo indican) |
 
-Para no repetir, las columnas comunes (`status`, `created_at`, `updated_at`, `deleted_at`) no se listan en cada tabla, pero **todas las llevan**. Las columnas marcadas **(ext.)** no están en el estándar; vienen del legacy y quedan pendientes de confirmar (ver «Decisiones pendientes»).
+Para no repetir, las columnas comunes (`status`, `created_at`, `updated_at`, `deleted_at`) no se listan en cada tabla, pero **todas las llevan**. No se añaden columnas fuera del estándar para dirección ni teléfonos: el edificio va dentro de `street_address` y el fax en `tel3`.
 
 ---
 
@@ -40,7 +40,7 @@ Para no repetir, las columnas comunes (`status`, `created_at`, `updated_at`, `de
 | Tabla | Pantalla de origen |
 |---|---|
 | `customers` | Nuevo cliente, Buscar, Ficha, Estadísticas |
-| `customer_companies` | Nuevo cliente / Campos: lugar de trabajo y datos de empresa |
+| `companies` | Nuevo cliente / Campos: lugar de trabajo y datos de empresa |
 | `customer_groups` | Grupos de clientes |
 | `first_visit_motives` | Motivos de primera visita |
 | `occupations` | Desplegable «Ocupación» |
@@ -74,25 +74,23 @@ Fuera de este módulo, pero las pide la ficha del cliente: **personal** (`staffs
 | `member_no` | varchar | | Nº de socio, único (ej. 1100029) | Nº de cliente |
 | `management_no` | varchar | sí | Nº de gestión | Nº de gestión |
 | `type` | smallint | | 1 persona, 2 empresa. Default 1 | Persona / empresa |
+| `company_id` | bigint | sí | FK `companies`. Empresa del cliente (tipo 2) o su lugar de trabajo (tipo 1) | Lugar de trabajo, datos de empresa |
+| `department` | varchar | sí | Departamento del cliente dentro de la empresa | Departamento |
 | `last_name` | varchar | | Apellido | Nombre |
 | `first_name` | varchar | sí | Nombre | Nombre |
 | `last_name_kana` | varchar | sí | Apellido (fonético) | Nombre (fonético) |
 | `first_name_kana` | varchar | sí | Nombre (fonético) | Nombre (fonético) |
 | `birth_date` | date | sí | Fecha de nacimiento. La edad se calcula, no se guarda | Fecha de nacimiento, Edad |
-| `sex` | smallint | sí | 1 masculino, 2 femenino. Null = sin especificar | Sexo |
+| `sex` | smallint | | ISO 5218: 0 no conocido, 1 masculino, 2 femenino, 9 no aplica (empresas). Default 0 | Sexo |
 | `blood_type` | smallint | sí | 1 A, 2 B, 3 O, 4 AB | Grupo sanguíneo |
 | `occupation_id` | bigint | sí | FK `occupations` | Ocupación |
 | `zip` | varchar | sí | Código postal | Código postal |
 | `pref` | varchar | sí | Prefectura / región | Prefectura |
 | `city` | varchar | sí | Ciudad / distrito | Ciudad |
-| `city_kana` | varchar | sí | **(ext.)** Ciudad (fonético) | Ciudad (fonético) |
-| `street_address` | varchar | sí | Calle y número | Calle y número |
-| `building` | varchar | sí | **(ext.)** Edificio / depto. | Edificio |
-| `building_kana` | varchar | sí | **(ext.)** Edificio (fonético) | Edificio (fonético) |
+| `street_address` | varchar | sí | Calle, número y edificio / depto. | Calle y número, Edificio |
 | `tel1` | varchar | sí | Teléfono | Teléfono |
 | `tel2` | varchar | sí | Teléfono móvil | Teléfono móvil |
-| `tel3` | varchar | sí | Otro teléfono (libre) | — |
-| `fax` | varchar | sí | **(ext.)** Fax | Fax |
+| `tel3` | varchar | sí | Fax | Fax |
 | `mail1` | varchar | sí | Email 1 (el que recibe la newsletter) | Email 1 |
 | `mail2` | varchar | sí | Email 2 | Email 2 |
 | `mail3` | varchar | sí | Email personal | Email personal |
@@ -117,18 +115,19 @@ Fuera de este módulo, pero las pide la ficha del cliente: **personal** (`staffs
 - `status` sigue el estándar (0 inactivo, 1 activo); la baja del cliente es `deleted_at`.
 - Índices: `uid` único, `member_no` único, `login_id` único; índices en `shop_id`, `last_name_kana`, `tel1`, `tel2`, `mail1`, `birth_date`.
 
-### customer_companies · Lugar de trabajo / datos de empresa (1:1 con customers)
+### companies · Empresas y lugares de trabajo
+
+Los clientes se relacionan con `customers.company_id`, así varios clientes pueden compartir la misma empresa (por ejemplo, empleados de una misma empresa) sin repetir sus datos.
 
 | Columna | Tipo | Nulo | Descripción | Legacy / pantalla |
 |---|---|---|---|---|
 | `id` | bigserial | | | |
-| `customer_id` | bigint | | FK `customers`, único | |
-| `name` | varchar | sí | Lugar de trabajo / razón social | Lugar de trabajo |
+| `name` | varchar | | Razón social / lugar de trabajo | Lugar de trabajo |
 | `name_kana` | varchar | sí | Fonético | Lugar de trabajo (fonético) |
 | `industry_id` | bigint | sí | FK `industries` | Rubro |
-| `tel` | varchar | sí | | Teléfono del trabajo |
-| `fax` | varchar | sí | **(ext.)** | Fax del trabajo |
-| `department` | varchar | sí | | Departamento |
+| `tel1` | varchar | sí | Teléfono | Teléfono del trabajo |
+| `tel2` | varchar | sí | Otro teléfono (libre) | — |
+| `tel3` | varchar | sí | Fax | Fax del trabajo |
 | `founded_on` | date | sí | | Fecha de fundación |
 | `capital` | bigint | sí | | Capital social |
 | `representative_last_name` | varchar | sí | | Representante: nombre |
@@ -143,7 +142,7 @@ Fuera de este módulo, pero las pide la ficha del cliente: **personal** (`staffs
 | `contact_tel` | varchar | sí | | Contacto: teléfono |
 | `contact_mail` | varchar | sí | | Contacto: email |
 
-Separada de `customers` porque solo se usa para empresas o cuando se rellena el lugar de trabajo.
+Para un cliente empresa (`type` = 2), `last_name` / `first_name` guardan a la persona registrada y la razón social sale de `companies.name`.
 
 ### customer_groups · Grupos de clientes
 
@@ -219,7 +218,7 @@ Una fila por tipo de rango (importe / visitas).
 | Columna | Tipo | Nulo | Descripción |
 |---|---|---|---|
 | `id` | bigserial | | |
-| `field_key` | varchar | | Columna de `customers` / `customer_companies` (ej. `birth_date`, `mail1`), único |
+| `field_key` | varchar | | Columna de `customers` / `companies` (ej. `birth_date`, `mail1`), único |
 | `register_flg` | smallint | | Visible en el formulario móvil |
 | `required_flg` | smallint | | Obligatorio en el formulario móvil |
 | `search_flg` | smallint | | Filtro en Buscar clientes |
@@ -334,7 +333,8 @@ Schema::create('customers', function (Blueprint $table) {
     $table->string('last_name_kana')->nullable();
     $table->string('first_name_kana')->nullable();
     $table->date('birth_date')->nullable();
-    $table->smallInteger('sex')->nullable();            // 1 masculino, 2 femenino
+    $table->smallInteger('sex')->default(0);            // ISO 5218: 0, 1, 2, 9
+    $table->foreignId('company_id')->nullable()->constrained();
     // … resto de columnas según la tabla de arriba
     $table->smallInteger('status')->default(1);         // 0 inactivo, 1 activo
     $table->timestamps();
@@ -353,11 +353,15 @@ protected static function booted(): void
 
 ---
 
-## 5. Decisiones pendientes
+## 5. Decisiones
 
-1. **Dirección:** el estándar tiene `zip`, `pref`, `city`, `street_address`. El legacy añade ciudad (fonético), edificio y edificio (fonético). ¿Se añaden como `city_kana`, `building` y `building_kana` o el edificio va dentro de `street_address`?
-2. **Fax:** ¿columna `fax` o se usa `tel3`?
-3. **Sexo sin especificar:** ¿`null` o `0` (ISO 5218 «no conocido»)?
-4. **Cliente empresa:** ¿la razón social va en `last_name` o en `customer_companies.name`?
-5. **Estado de registro** y **Tipo de dirección:** faltan los valores del legacy.
-6. **Rangos:** confirmar las condiciones del formulario «Añadir rango» (solo mínimo o mínimo y máximo).
+Tomadas:
+
+1. **Dirección:** solo las columnas del estándar. El edificio / depto. va dentro de `street_address`; la ciudad fonética del legacy se elimina.
+2. **Fax:** en `tel3` (clientes y empresas).
+3. **Sexo:** ISO 5218 completo (0 no conocido, 1 masculino, 2 femenino, 9 no aplica).
+4. **Empresa:** tabla `companies` relacionada con `customers.company_id`.
+
+Pendientes (por averiguar en el legacy):
+
+5. Valores de **Estado de registro** y **Tipo de dirección**, y las condiciones del formulario **Añadir rango**.

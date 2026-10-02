@@ -129,11 +129,8 @@ body{margin:0}
 <div style="grid-column: 1 / -1; padding-top: 6px; font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: {{T.faint}}">Dirección</div>
 <label><span style="{{T.label}}">Código postal</span><span style="display: flex; gap: 8px"><input type="text" inputmode="numeric" autocomplete="postal-code" style="{{T.input}}"><button type="button" style="{{T.btn}}; height: {{T.ctrlH}}px">Buscar dirección</button></span></label>
 <label><span style="{{T.label}}">Prefectura</span><select style="{{T.input}}"><option>Selecciona…</option><option>[PREFECTURAS]</option></select></label>
-<label><span style="{{T.label}}">Ciudad / distrito (fonético)</span><input type="text" style="{{T.input}}"></label>
 <label><span style="{{T.label}}">Ciudad / distrito</span><input type="text" style="{{T.input}}"></label>
-<label style="grid-column: 1 / -1"><span style="{{T.label}}">Calle y número</span><input type="text" autocomplete="street-address" style="{{T.input}}"></label>
-<label><span style="{{T.label}}">Edificio / depto. (fonético)</span><input type="text" style="{{T.input}}"></label>
-<label><span style="{{T.label}}">Edificio / depto.</span><input type="text" style="{{T.input}}"></label>
+<label style="grid-column: 1 / -1"><span style="{{T.label}}">Calle, número y edificio</span><input type="text" autocomplete="street-address" placeholder="Ej.: Av. Larco 345, Edificio Sol, dpto. 502" style="{{T.input}}"></label>
 
 <div style="grid-column: 1 / -1; padding-top: 6px; font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: {{T.faint}}">Contacto</div>
 <label><span style="{{T.label}}">Teléfono</span><input type="tel" autocomplete="tel" style="{{T.input}}"></label>
@@ -152,6 +149,7 @@ body{margin:0}
 <fieldset style="border: 0; margin: 0; padding: 0; min-width: 0"><legend style="{{T.label}}">Sexo</legend><div style="display: flex; gap: 8px; flex-wrap: wrap">
 <label style="{{choice}}"><input type="radio" name="sex" style="accent-color: {{T.accent}}; margin: 0">Hombre</label>
 <label style="{{choice}}"><input type="radio" name="sex" style="accent-color: {{T.accent}}; margin: 0">Mujer</label>
+<label style="{{choice}}"><input type="radio" name="sex" style="accent-color: {{T.accent}}; margin: 0">Sin especificar</label>
 </div></fieldset>
 <label><span style="{{T.label}}">Grupo sanguíneo</span><select style="{{T.input}}"><option>—</option><option>A</option><option>B</option><option>O</option><option>AB</option></select></label>
 <label><span style="{{T.label}}">Teléfono móvil</span><input type="tel" style="{{T.input}}"></label>
