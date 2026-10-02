@@ -5,7 +5,7 @@
 📅 **Fecha de documentación**: Octubre 2026  
 🏢 **Sistema**: CRM Legacy (development.crm-s.net)  
 📦 **Módulo**: 顧客管理 (Gestión de Clientes)  
-📊 **Vistas documentadas**: 23 capturas de pantalla
+📊 **Vistas documentadas**: 24 capturas de pantalla (00–25, sin 02 ni 16)
 
 > ⚠️ **Nota**: Este documento cubre el **sistema LEGACY**. Para los mockups del **nuevo sistema** ver [README.md](./README.md)
 
@@ -27,7 +27,7 @@ Esta documentación completa del módulo de gestión de clientes del sistema leg
 ### 1. **[INDICE_CAPTURAS.md](./INDICE_CAPTURAS.md)** 
 👉 **COMENZAR AQUÍ** - Índice visual rápido
 
-- Navegación rápida a todas las 23 capturas
+- Navegación rápida a todas las 24 capturas
 - Descripción breve de cada vista
 - Tamaños de archivo y referencias
 - Mapa de dependencias entre vistas
@@ -100,11 +100,11 @@ docs/mockups/modulo-clientes/
 ├── DOCUMENTACION_MODULO_CLIENTES.md       ← Documentación completa
 ├── FLUJOS_DETALLADOS.md                   ← Diagramas de flujo
 │
-└── legacy/                                ← 23 capturas + 5 legacy
+└── legacy/                                ← capturas numeradas 00–25 (sin 02 ni 16)
+    ├── 00-login.png
     ├── 01-portal-inicio.png
-    ├── 02-menu-principal-clientes.png
     ├── ...
-    └── 23-editar-categoria.png
+    └── 25-estadisticas-informe-filtro.png
 ```
 
 ---
@@ -150,7 +150,7 @@ La categoría **"Mascota"** es el ejemplo más completo de campo personalizado d
 
 ## 📊 Estadísticas
 
-- **23 vistas** documentadas con capturas
+- **24 capturas** documentadas
 - **4 flujos** principales diagramados
 - **10 secciones** del menú lateral
 - **5 categorías** personalizadas en sistema
