@@ -66,3 +66,7 @@ Las pantallas del módulo se generan desde una plantilla común para que todas c
 - `kit.js`: lógica del tema (propuestas, variables, menú del módulo).
 - `pages/*.page`: contenido y lógica de cada pantalla.
 - `build.py`: genera los `.dc.html` (`python3 _fuente/build.py`).
+
+## Base de datos
+
+Las tablas que necesitan estas pantallas, con los estándares de la empresa, están en [`docs/base-de-datos/MODULO_CLIENTES.md`](../../base-de-datos/MODULO_CLIENTES.md).

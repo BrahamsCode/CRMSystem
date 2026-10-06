@@ -36,7 +36,7 @@
 </div></fieldset>
 <fieldset style="{{fs}}"><legend style="{{T.label}}">Cumpleaños (mes / día)</legend><div style="{{g2}}"><select aria-label="Mes" style="{{T.input}}"><option>Mes</option><option>[1–12]</option></select><select aria-label="Día" style="{{T.input}}"><option>Día</option><option>[1–31]</option></select></div></fieldset>
 <div style="{{g2}}">
-<label><span style="{{T.label}}">Sexo</span><select style="{{T.input}}"><option>Cualquiera</option><option>Hombre</option><option>Mujer</option></select></label>
+<label><span style="{{T.label}}">Sexo</span><select style="{{T.input}}"><option>Cualquiera</option><option>Hombre</option><option>Mujer</option><option>Sin especificar</option></select></label>
 <fieldset style="{{fs}}"><legend style="{{T.label}}">Edad</legend><div style="{{range}}"><input type="number" aria-label="Edad mínima" placeholder="De" style="{{T.input}}"><span>–</span><input type="number" aria-label="Edad máxima" placeholder="A" style="{{T.input}}"></div></fieldset>
 </div>
 <fieldset style="{{fs}}"><legend style="{{T.label}}">Fecha de alta</legend><div style="{{range}}"><input type="date" aria-label="Alta desde" style="{{T.input}}"><span>–</span><input type="date" aria-label="Alta hasta" style="{{T.input}}"></div></fieldset>
