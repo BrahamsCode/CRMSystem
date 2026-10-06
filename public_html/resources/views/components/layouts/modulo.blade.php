@@ -35,7 +35,7 @@
     <nav aria-label="Módulos"
          class="fixed inset-y-0 left-0 z-40 flex w-18 shrink-0 -translate-x-full flex-col items-center gap-1 bg-nav py-4 transition-transform lg:sticky lg:top-0 lg:h-screen lg:translate-x-0"
          :class="nav && '!translate-x-0'">
-        <a href="{{ route('admin.customers.index') }}"
+        <a href="{{ route('admin.home') }}"
            class="mb-4 flex h-10 w-10 items-center justify-center rounded-ctl bg-accent text-xs font-extrabold text-on-accent">
             CRM
         </a>

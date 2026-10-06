@@ -24,6 +24,13 @@ it('abre todas las pantallas del módulo de clientes', function (string $route) 
     'admin.customers.custom-fields',
 ]);
 
+it('muestra los módulos en el inicio tras el login', function () {
+    $this->get(route('admin.home'))->assertOk()
+        ->assertSee(route('admin.customers.index'))
+        ->assertSee(route('admin.promotions.index'))
+        ->assertSee('Próximamente');
+});
+
 it('abre la ficha y los formularios de edición', function () {
     $customer = makeCustomer();
     $category = CustomCategory::first();

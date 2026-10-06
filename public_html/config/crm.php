@@ -23,15 +23,15 @@ return [
      */
     'modulos' => [
         ['key' => 'clientes', 'label' => 'Clientes', 'icon' => 'users', 'route' => 'admin.customers.index',
-            'menu' => 'customer_menu', 'lang' => 'customers'],
+            'menu' => 'customer_menu', 'lang' => 'customers', 'description' => 'Altas, búsqueda, visitas, rangos e información adicional'],
         ['key' => 'promo', 'label' => 'Promociones', 'icon' => 'mega', 'route' => 'admin.promotions.index',
-            'menu' => 'promotion_menu', 'lang' => 'promotions'],
-        ['key' => 'mipagina', 'label' => 'Mi página', 'icon' => 'heart', 'route' => null],
-        ['key' => 'web', 'label' => 'Sitio web', 'icon' => 'globe', 'route' => null],
-        ['key' => 'soporte', 'label' => 'Soporte operativo', 'icon' => 'brief', 'route' => null],
-        ['key' => 'terminales', 'label' => 'Terminales', 'icon' => 'tablet', 'route' => null],
-        ['key' => 'reservas', 'label' => 'Reservas', 'icon' => 'cal', 'route' => null],
-        ['key' => 'config', 'label' => 'Configuración', 'icon' => 'sliders', 'route' => null],
+            'menu' => 'promotion_menu', 'lang' => 'promotions', 'description' => 'Envíos, automatizaciones, cupones, sellos y puntos'],
+        ['key' => 'mipagina', 'label' => 'Mi página', 'icon' => 'heart', 'route' => null, 'description' => 'La web del socio: cupones, sellos y datos'],
+        ['key' => 'web', 'label' => 'Sitio web', 'icon' => 'globe', 'route' => null, 'description' => 'Páginas públicas de la tienda'],
+        ['key' => 'soporte', 'label' => 'Soporte operativo', 'icon' => 'brief', 'route' => null, 'description' => 'Tareas y herramientas del día a día'],
+        ['key' => 'terminales', 'label' => 'Terminales', 'icon' => 'tablet', 'route' => null, 'description' => 'Tablets y lectores de las tiendas'],
+        ['key' => 'reservas', 'label' => 'Reservas', 'icon' => 'cal', 'route' => null, 'description' => 'Agenda y reservas de clientes'],
+        ['key' => 'config', 'label' => 'Configuración', 'icon' => 'sliders', 'route' => null, 'description' => 'Tiendas, personal y datos generales'],
     ],
 
     /*
