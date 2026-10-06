@@ -3,7 +3,7 @@
 {{-- Tabla de tres interruptores por campo, para las secciones que no son la
      matriz principal: información familiar y categorías personalizadas.
      Depende del objeto Alpine «valores» de la pantalla de Campos y CSV. --}}
-<div class="overflow-x-auto">
+<div class="relative overflow-x-auto">
     <table class="w-full min-w-[880px] text-sm">
         <thead>
             <tr class="border-b border-line bg-surface2">

@@ -1,7 +1,14 @@
 @props([
     'title' => '',
     'crumbs' => [],
+    // Clave del módulo en config('crm.modulos'): decide el menú lateral y su archivo de idioma
+    'module' => 'clientes',
 ])
+
+@php
+    $current = collect(config('crm.modulos'))->firstWhere('key', $module);
+    $lang = $current['lang'];
+@endphp
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -34,7 +41,7 @@
         </a>
 
         @foreach (config('crm.modulos') as $mod)
-            @php $activo = $mod['key'] === ($modulo ?? 'clientes'); @endphp
+            @php $activo = $mod['key'] === $module; @endphp
             <a href="{{ $mod['route'] ? route($mod['route']) : '#' }}"
                title="{{ $mod['label'] }}" aria-label="{{ $mod['label'] }}"
                @class([
@@ -48,22 +55,23 @@
     </nav>
 
     {{-- Menú del módulo --}}
-    <aside aria-label="{{ __('customers.modulo_sub') }}"
+    <aside aria-label="{{ __($lang . '.modulo_sub') }}"
            {{-- Arranca en left-18 (tras la barra de módulos), así que debe desplazarse 72px + 252px para salir del todo --}}
            class="fixed inset-y-0 left-18 z-40 flex w-63 shrink-0 -translate-x-81 flex-col gap-0.5 overflow-y-auto border-r border-line bg-surface px-3 py-5 transition-transform lg:sticky lg:top-0 lg:h-screen lg:translate-x-0"
            :class="nav && '!translate-x-0'">
         <div class="px-3 pb-2">
-            <div class="text-[15px] font-extrabold">{{ __('customers.modulo') }}</div>
-            <div class="text-xs text-faint">{{ __('customers.modulo_sub') }}</div>
+            <div class="text-[15px] font-extrabold">{{ __($lang . '.modulo') }}</div>
+            <div class="text-xs text-faint">{{ __($lang . '.modulo_sub') }}</div>
         </div>
 
-        @foreach (config('crm.customer_menu') as $item)
+        @foreach (config('crm.' . $current['menu']) as $item)
             @if (isset($item['head']))
                 <div class="mt-4 px-3 pb-1 text-[11px] font-extrabold tracking-wider text-faint uppercase first:mt-0">
-                    {{ $item['head'] === 'modulo' ? __('customers.modulo') : __('customers.menu.' . $item['head']) }}
+                    {{ $item['head'] === 'modulo' ? __($lang . '.modulo') : __($lang . '.menu.' . $item['head']) }}
                 </div>
             @else
-                @php $activo = request()->routeIs($item['route']); @endphp
+                {{-- «active» permite marcar la entrada también en sus pantallas hijas (crear, editar, detalle) --}}
+                @php $activo = request()->routeIs($item['active'] ?? $item['route']); @endphp
                 <a href="{{ route($item['route']) }}"
                    @if ($activo) aria-current="page" @endif
                    @class([
@@ -72,7 +80,7 @@
                        'font-medium text-muted hover:bg-surface2 hover:text-ink' => ! $activo,
                    ])>
                     <x-icon :name="$item['icon']" />
-                    {{ __('customers.menu.' . $item['label']) }}
+                    {{ __($lang . '.menu.' . $item['label']) }}
                 </a>
             @endif
         @endforeach
@@ -102,11 +110,14 @@
 
             <div class="flex-1"></div>
 
-            <label class="hidden w-64 md:block">
-                <span class="sr-only">{{ __('customers.comun.buscar_cliente') }}</span>
-                <input type="search" placeholder="{{ __('customers.comun.buscar_cliente') }}"
-                       class="h-10 w-full rounded-ctl border border-line bg-surface px-3 text-sm placeholder:text-faint focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none">
-            </label>
+            <form method="GET" action="{{ route('admin.customers.search') }}" role="search" class="hidden w-64 md:block">
+                <label class="block">
+                    <span class="sr-only">{{ __('customers.comun.buscar_cliente') }}</span>
+                    <input type="search" name="q" value="{{ request()->routeIs('admin.customers.search') ? request('q') : '' }}"
+                           placeholder="{{ __('customers.comun.buscar_cliente') }}"
+                           class="h-10 w-full rounded-ctl border border-line bg-surface px-3 text-sm placeholder:text-faint focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none">
+                </label>
+            </form>
 
             <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ink text-xs font-bold text-paper">
                 {{ strtoupper(mb_substr(auth('admin')->user()->name ?? 'A', 0, 1)) }}

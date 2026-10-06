@@ -12,6 +12,7 @@ use App\Enums\Sex;
 use App\Models\Concerns\HasUid;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Customer extends BaseModel
 {
@@ -148,5 +149,49 @@ class Customer extends BaseModel
     public function customValues(): HasMany
     {
         return $this->hasMany(CustomValue::class)->orderBy('row_no');
+    }
+
+    // --- Módulo de promociones ---
+
+    public function coupons(): HasMany
+    {
+        return $this->hasMany(CouponCustomer::class)->latest('issued_at');
+    }
+
+    public function stamps(): HasMany
+    {
+        return $this->hasMany(CustomerStamp::class)->latest();
+    }
+
+    public function points(): HasMany
+    {
+        return $this->hasMany(CustomerPoint::class)->latest();
+    }
+
+    public function messages(): HasMany
+    {
+        return $this->hasMany(CustomerMessage::class)->latest();
+    }
+
+    public function devices(): HasMany
+    {
+        return $this->hasMany(CustomerDevice::class);
+    }
+
+    public function lastLocation(): HasOne
+    {
+        return $this->hasOne(CustomerLocation::class)->latestOfMany('recorded_at');
+    }
+
+    /** Nombre para los mensajes: «Tanaka Yui» o, si no hay, el Nº de socio */
+    public function greetingName(): string
+    {
+        return $this->full_name !== '' ? $this->full_name : (string) $this->code;
+    }
+
+    /** Edad cumplida hoy, o null sin fecha de nacimiento */
+    public function age(): ?int
+    {
+        return $this->birth_date?->age;
     }
 }

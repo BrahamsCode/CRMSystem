@@ -7,7 +7,8 @@
 > implementar. Se escribieron antes de incorporar los estándares de la empresa.
 >
 > Lo que hay que construir está en
-> [TABLAS_MODULO_CLIENTES.md](./TABLAS_MODULO_CLIENTES.md).
+> [TABLAS_MODULO_CLIENTES.md](./TABLAS_MODULO_CLIENTES.md) (módulo 1) y
+> [TABLAS_MODULO_PROMOCIONES.md](./TABLAS_MODULO_PROMOCIONES.md) (módulo 2).
 
 ## 🎯 Diseño de Base de Datos para PostgreSQL
 

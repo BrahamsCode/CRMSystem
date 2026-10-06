@@ -94,11 +94,19 @@ class CustomerSeeder extends Seeder
     private function visitas(Customer $cliente, int $cuantas, int $importeBase): void
     {
         for ($v = 0; $v < $cuantas; $v++) {
+            // En horario de tienda (11:00–20:00) y nunca en el futuro
+            $fecha = $cliente->created_at->copy()->startOfDay()->addDays(18 * ($v + 1))
+                ->setTime(11 + ($cliente->id + $v * 3) % 10, (($cliente->id * 7 + $v * 13) % 4) * 15);
+
+            if ($fecha->isFuture()) {
+                break;
+            }
+
             Visit::create([
                 'customer_id' => $cliente->id,
                 'shop_id' => $cliente->shop_id,
                 'visit_motive_id' => $cliente->visit_motive_id,
-                'visited_at' => $cliente->created_at->copy()->addDays(18 * ($v + 1)),
+                'visited_at' => $fecha,
                 'amount' => $importeBase + ($v * 600),
             ]);
         }

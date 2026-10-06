@@ -83,7 +83,7 @@
         @endforeach
     </div>
 
-    <div class="grid items-start gap-5 xl:grid-cols-[minmax(0,2fr)_minmax(300px,1fr)]">
+    <div class="grid grid-cols-1 items-start gap-5 xl:grid-cols-[minmax(0,2fr)_minmax(300px,1fr)]">
 
         {{-- Gráfico de altas por mes --}}
         <x-ui.card x-data="{ vista: 'grafico', sobre: null }">
@@ -139,17 +139,17 @@
                         @endforeach
                     </div>
 
-                    <div class="mt-2 flex gap-2">
+                    <div class="mt-2 flex gap-1 sm:gap-2">
                         @foreach ($months as $mes)
                             @php $abrev = $mes['short']; @endphp
-                            <div class="flex-1 text-center text-[11px] text-faint">{{ $abrev }}</div>
+                            <div class="min-w-0 flex-1 truncate text-center text-[11px] text-faint">{{ $abrev }}</div>
                         @endforeach
                     </div>
                 </div>
             </div>
 
             {{-- Vista de tabla equivalente --}}
-            <div x-show="vista === 'tabla'" x-cloak class="overflow-x-auto">
+            <div x-show="vista === 'tabla'" x-cloak class="relative overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead>
                         <tr class="bg-surface2 text-left text-xs font-bold text-muted">

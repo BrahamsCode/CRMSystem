@@ -171,6 +171,11 @@
 
         @foreach ($tabs as $clave => $texto)
             <div x-show="tab === '{{ $clave }}'" x-cloak class="flex flex-col gap-5">
+                @if (in_array($clave, ['cupones', 'puntos', 'sellos'], true))
+                    {{-- Datos del módulo de promociones --}}
+                    @include('admin.customers.partials.loyalty', ['tipo' => $clave])
+                    @continue
+                @endif
                 @forelse ($content[$clave] ?? [] as $seccion)
                     <x-ui.section :title="$seccion['titulo']">
                         <dl class="m-0 grid sm:grid-cols-2">

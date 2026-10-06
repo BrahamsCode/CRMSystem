@@ -82,7 +82,7 @@
                     @endif
                 </x-ui.empty>
             @else
-                <div class="overflow-x-auto">
+                <div class="relative overflow-x-auto">
                     <table class="w-full min-w-[1000px] text-sm">
                         <thead>
                             <tr class="bg-surface2 text-left text-xs font-bold whitespace-nowrap text-muted">

@@ -5,17 +5,22 @@
         [
             'titulo' => 'Total registrado', 'hint' => 'Histórico',
             'altas' => $totalSignups, 'bajas' => $totalWithdrawn,
+            'filtro_altas' => ['status' => '1'], 'filtro_bajas' => ['status' => '0'],
             'pie_altas' => 'Estado: registrado', 'pie_bajas' => 'Estado: baja',
         ],
         [
             'titulo' => 'Este mes', 'hint' => $today->translatedFormat('F'),
             'altas' => $monthSignups, 'bajas' => $monthWithdrawn,
+            'filtro_altas' => ['status' => 'all', 'joined_from' => $today->copy()->startOfMonth()->toDateString()],
+            'filtro_bajas' => ['status' => '0'],
             'pie_altas' => 'Alta desde ' . $today->copy()->startOfMonth()->format('d/m'),
             'pie_bajas' => 'Baja desde ' . $today->copy()->startOfMonth()->format('d/m'),
         ],
         [
             'titulo' => 'Hoy', 'hint' => $today->translatedFormat('j \d\e F'),
             'altas' => $todaySignups, 'bajas' => $todayWithdrawn,
+            'filtro_altas' => ['status' => 'all', 'joined_from' => $today->toDateString()],
+            'filtro_bajas' => ['status' => '0'],
             'pie_altas' => 'Alta desde ' . $today->format('d/m'),
             'pie_bajas' => 'Baja desde ' . $today->format('d/m'),
         ],
@@ -50,8 +55,8 @@
                 </div>
 
                 <div class="grid grid-cols-2 gap-1">
-                    @foreach ([['Altas', $p['altas'], $p['pie_altas']], ['Bajas', $p['bajas'], $p['pie_bajas']]] as [$label, $value, $pie])
-                        <a href="{{ route('admin.customers.search') }}"
+                    @foreach ([['Altas', $p['altas'], $p['pie_altas'], $p['filtro_altas']], ['Bajas', $p['bajas'], $p['pie_bajas'], $p['filtro_bajas']]] as [$label, $value, $pie, $filtro])
+                        <a href="{{ route('admin.customers.search', $filtro) }}"
                            aria-label="{{ $p['titulo'] }}: {{ $value }} {{ mb_strtolower($label) }}, ver lista"
                            class="group flex flex-col gap-0.5 rounded-ctl px-5 py-4 transition-colors hover:bg-surface2">
                             <span class="text-xs font-bold text-muted">{{ $label }}</span>
@@ -65,7 +70,7 @@
         @endforeach
     </section>
 
-    <div class="grid items-start gap-5 xl:grid-cols-2">
+    <div class="grid grid-cols-1 items-start gap-5 xl:grid-cols-2">
 
         <section aria-labelledby="accesos">
             <h2 id="accesos" class="mb-3 text-xs font-bold tracking-wider text-faint uppercase">Accesos rápidos</h2>

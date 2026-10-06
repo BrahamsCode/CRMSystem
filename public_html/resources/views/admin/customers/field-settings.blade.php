@@ -70,7 +70,7 @@
         {{-- Información básica --}}
         <x-ui.section id="basica" title="Información básica" class="scroll-mt-20"
                       description="Las dos primeras columnas aplican al registro desde el móvil del cliente. «—» indica que la opción no aplica a ese campo.">
-            <div class="overflow-x-auto">
+            <div class="relative overflow-x-auto">
                 <table class="w-full min-w-[880px] text-sm">
                     <thead>
                         <tr class="border-b border-line bg-surface2">

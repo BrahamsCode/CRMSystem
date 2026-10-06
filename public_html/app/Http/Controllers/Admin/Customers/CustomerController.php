@@ -7,8 +7,14 @@ use App\Models\Customer;
 use App\Models\CustomerGroup;
 use App\Models\Shop;
 use App\Models\VisitMotive;
+use App\Services\Customers\CustomerCsvExporter;
+use App\Services\Customers\CustomerSearch;
+use App\Services\Customers\FilterOptions;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CustomerController extends ModuleController
 {
@@ -56,20 +62,54 @@ class CustomerController extends ModuleController
             'customer' => $customer->load([
                 'shop', 'terminal', 'group', 'visitMotive',
                 'amountRank', 'visitRank', 'referrer',
+                'coupons' => fn ($q) => $q->with('coupon')->take(30),
+                'stamps' => fn ($q) => $q->take(30),
+                'points' => fn ($q) => $q->take(30),
             ]),
         ]);
     }
 
-    public function search(): View
+    public function search(Request $request, CustomerSearch $search): View
     {
+        $filters = $this->filters($request);
+        $perPage = in_array((int) $request->input('per_page'), [10, 25, 50, 100], true) ? (int) $request->input('per_page') : 25;
+
         return view('admin.customers.search', [
-            'shops' => Shop::active()->orderBy('name')->get(),
-            'customers' => Customer::with('shop')->orderByDesc('code')->paginate(10),
-            // Desglose por operador de correo, igual que el legacy
-            'byCarrier' => Customer::selectRaw("coalesce(address_type::text, '') as tipo, count(*) as total")
+            'filters' => $filters,
+            'summary' => $search->summary($filters),
+            'activeCount' => CustomerSearch::activeCount($filters),
+            'perPage' => $perPage,
+            'customers' => $search->query($filters)
+                ->with(['shop', 'terminal'])
+                ->orderByDesc('code')
+                ->paginate($perPage)
+                ->withQueryString(),
+            // Desglose por tipo de dirección (operador del email) de los resultados, igual que el legacy
+            'byCarrier' => $search->query($filters)
+                ->selectRaw("coalesce(address_type::text, '') as tipo, count(*) as total")
                 ->groupBy('tipo')
                 ->pluck('total', 'tipo'),
-        ]);
+        ] + FilterOptions::for($this->shop()?->id));
+    }
+
+    /** CSV de los resultados: normal (columnas de «Campos y CSV») o para correo postal */
+    public function export(Request $request, CustomerSearch $search, CustomerCsvExporter $exporter): StreamedResponse
+    {
+        $query = $search->query($this->filters($request));
+        $stamp = now()->format('Ymd_His');
+
+        return $request->input('format') === 'mailing'
+            ? $exporter->exportMailing($query, "clientes_correo_{$stamp}.csv")
+            : $exporter->export($query, $this->shop()?->id, "clientes_{$stamp}.csv");
+    }
+
+    /** Filtros de la URL, validados con las mismas reglas que usa promociones */
+    private function filters(Request $request): array
+    {
+        $validator = Validator::make($request->query(), CustomerSearch::rules());
+
+        // Un filtro mal escrito en la URL se descarta en vez de romper la página
+        return CustomerSearch::clean(array_intersect_key($request->query(), $validator->valid()));
     }
 
     /**

@@ -3,12 +3,29 @@
 return [
 
     /*
+     * Moneda de los importes, que se guardan como entero en la unidad mínima
+     * (yen: decimals 0; sol o dólar: decimals 2, en céntimos).
+     */
+    /* Dirección de Mi página (módulo 3): destino del QR de registro y de las notificaciones push */
+    'mypage_url' => env('CRM_MYPAGE_URL', env('APP_URL', 'http://localhost') . '/mypage'),
+
+    'currency' => [
+        'symbol' => env('CRM_CURRENCY_SYMBOL', '¥'),
+        'decimals' => (int) env('CRM_CURRENCY_DECIMALS', 0),
+        'decimal_point' => '.',
+        'thousands' => ',',
+    ],
+
+    /*
      * Barra de módulos (columna estrecha de la izquierda).
-     * Solo «clientes» está implementado; el resto queda listo para los módulos siguientes.
+     * «menu» es la clave de este archivo con el menú lateral del módulo y «lang»
+     * el archivo de idioma con sus etiquetas. Los módulos sin ruta aún no existen.
      */
     'modulos' => [
-        ['key' => 'clientes', 'label' => 'Clientes', 'icon' => 'users', 'route' => 'admin.customers.index'],
-        ['key' => 'promo', 'label' => 'Promociones', 'icon' => 'mega', 'route' => null],
+        ['key' => 'clientes', 'label' => 'Clientes', 'icon' => 'users', 'route' => 'admin.customers.index',
+            'menu' => 'customer_menu', 'lang' => 'customers'],
+        ['key' => 'promo', 'label' => 'Promociones', 'icon' => 'mega', 'route' => 'admin.promotions.index',
+            'menu' => 'promotion_menu', 'lang' => 'promotions'],
         ['key' => 'mipagina', 'label' => 'Mi página', 'icon' => 'heart', 'route' => null],
         ['key' => 'web', 'label' => 'Sitio web', 'icon' => 'globe', 'route' => null],
         ['key' => 'soporte', 'label' => 'Soporte operativo', 'icon' => 'brief', 'route' => null],
@@ -40,6 +57,33 @@ return [
         ['label' => 'reglas', 'icon' => 'shuffle', 'route' => 'admin.customers.rank-schedules'],
         ['label' => 'info', 'icon' => 'plus-box', 'route' => 'admin.customers.custom-categories'],
         ['label' => 'intervalo', 'icon' => 'cal', 'route' => 'admin.customers.visit-interval'],
+    ],
+
+    /*
+     * Menú del módulo de promociones (販売促進管理). Reúne las 11 secciones del
+     * legacy: newsletter, decomail y push son un solo «Envíos»; seguimiento,
+     * programados y recordatorios son «Automatizaciones».
+     */
+    'promotion_menu' => [
+        ['head' => 'modulo'],
+        ['label' => 'resumen', 'icon' => 'dash', 'route' => 'admin.promotions.index'],
+        ['label' => 'envios', 'icon' => 'send', 'route' => 'admin.promotions.messages.index', 'active' => 'admin.promotions.messages.*'],
+        ['label' => 'automatizaciones', 'icon' => 'zap', 'route' => 'admin.promotions.rules.index', 'active' => 'admin.promotions.rules.*'],
+        ['label' => 'cupones', 'icon' => 'ticket', 'route' => 'admin.promotions.coupons.index', 'active' => 'admin.promotions.coupons.*'],
+        ['label' => 'encuestas', 'icon' => 'clipboard', 'route' => 'admin.promotions.surveys.index', 'active' => 'admin.promotions.surveys.*'],
+
+        ['head' => 'fidelizacion'],
+        ['label' => 'sellos', 'icon' => 'star', 'route' => 'admin.promotions.stamps'],
+        ['label' => 'puntos', 'icon' => 'coin', 'route' => 'admin.promotions.points'],
+
+        ['head' => 'analisis'],
+        ['label' => 'rendimiento', 'icon' => 'stats', 'route' => 'admin.promotions.analytics'],
+        ['label' => 'historial', 'icon' => 'grid-clock', 'route' => 'admin.promotions.visit-history'],
+
+        ['head' => 'config'],
+        ['label' => 'plantillas', 'icon' => 'template', 'route' => 'admin.promotions.templates.index', 'active' => 'admin.promotions.templates.*'],
+        ['label' => 'pruebas', 'icon' => 'flask', 'route' => 'admin.promotions.test-addresses'],
+        ['label' => 'registro', 'icon' => 'qr', 'route' => 'admin.promotions.registration'],
     ],
 
     /*

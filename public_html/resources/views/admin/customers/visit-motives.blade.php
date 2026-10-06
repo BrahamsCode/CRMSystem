@@ -19,7 +19,7 @@
                  [this.motivos[i], this.motivos[j]] = [this.motivos[j], this.motivos[i]];
              },
          }"
-         class="grid items-start gap-5 xl:grid-cols-[380px_minmax(0,1fr)]">
+         class="grid grid-cols-1 items-start gap-5 xl:grid-cols-[380px_minmax(0,1fr)]">
 
         <x-ui.section title="Nuevo motivo">
             <form @submit.prevent="agregar()" class="flex flex-col gap-4 px-5 py-5">
@@ -44,7 +44,7 @@
                 </x-ui.empty>
             </div>
 
-            <div x-show="motivos.length" class="overflow-x-auto">
+            <div x-show="motivos.length" class="relative overflow-x-auto">
                 <table class="w-full min-w-120 text-sm">
                     <thead>
                         <tr class="bg-surface2 text-left text-xs font-bold whitespace-nowrap text-muted">

@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             CustomCategorySeeder::class,  // información adicional
             FieldSettingSeeder::class,    // configuración de campos y CSV
             CustomerSeeder::class,        // clientes de prueba
+            PromotionSeeder::class,       // envíos, cupones, sellos y puntos de prueba
         ]);
     }
 }

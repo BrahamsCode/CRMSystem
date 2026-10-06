@@ -65,3 +65,32 @@ function makeCustomer(array $attributes = []): \App\Models\Customer
         'mail1' => 'cliente' . random_int(1000, 999999) . '@example.com',
     ]);
 }
+
+/** Unos pocos clientes con visitas y el módulo de promociones sembrado encima */
+function seedPromotions(int $customers = 15): void
+{
+    $shop = \App\Models\Shop::where('name', 'shop')->firstOrFail();
+
+    for ($i = 0; $i < $customers; $i++) {
+        $customer = makeCustomer([
+            'shop_id' => $shop->id,
+            'last_name' => 'Cliente' . $i,
+            'first_name' => 'Demo',
+            'sex' => $i % 2 ? 2 : 1,
+            'birth_date' => now()->subYears(20 + $i)->subDays($i),
+            'occupation' => 1 + $i % 5,
+            'mail_magazine_flg' => 1,
+        ]);
+
+        for ($v = 0; $v < 1 + $i % 3; $v++) {
+            \App\Models\Visit::create([
+                'customer_id' => $customer->id,
+                'shop_id' => $shop->id,
+                'visited_at' => now()->subDays(10 + $v * 20 + $i),
+                'amount' => 2000 + $v * 500,
+            ]);
+        }
+    }
+
+    test()->seed(\Database\Seeders\PromotionSeeder::class);
+}

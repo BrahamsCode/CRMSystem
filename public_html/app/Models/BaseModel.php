@@ -18,6 +18,9 @@ abstract class BaseModel extends Model
 
     protected $guarded = ['id'];
 
+    /** El mismo valor por defecto que la columna: así un modelo recién creado ya está activo en memoria */
+    protected $attributes = ['status' => 1];
+
     protected function casts(): array
     {
         return ['status' => 'integer'];

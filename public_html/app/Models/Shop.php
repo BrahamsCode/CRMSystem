@@ -71,4 +71,26 @@ class Shop extends BaseModel
     {
         return $this->hasMany(CustomCategory::class)->orderBy('sort');
     }
+
+    // --- Módulo de promociones ---
+
+    public function stampSetting(): HasOne
+    {
+        return $this->hasOne(StampSetting::class);
+    }
+
+    public function pointSetting(): HasOne
+    {
+        return $this->hasOne(PointSetting::class);
+    }
+
+    public function stampRules(): HasMany
+    {
+        return $this->hasMany(StampRule::class)->orderBy('stamp_count');
+    }
+
+    public function testMailAddresses(): HasMany
+    {
+        return $this->hasMany(TestMailAddress::class);
+    }
 }

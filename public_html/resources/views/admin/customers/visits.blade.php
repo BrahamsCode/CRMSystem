@@ -56,7 +56,7 @@
 
             @forelse ($todayVisits as $visit)
                 @if ($loop->first)
-                    <div class="overflow-x-auto">
+                    <div class="relative overflow-x-auto">
                         <table class="w-full min-w-120 text-sm">
                             <thead>
                                 <tr class="bg-surface2 text-left text-xs font-bold whitespace-nowrap text-muted">

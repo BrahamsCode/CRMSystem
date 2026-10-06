@@ -21,7 +21,7 @@
 
             <x-ui.section title="Por tienda"
                           description="Cada tienda puede tener su propio intervalo.">
-                <div class="overflow-x-auto">
+                <div class="relative overflow-x-auto">
                     <table class="w-full min-w-120 text-sm">
                         <thead>
                             <tr class="bg-surface2 text-left text-xs font-bold whitespace-nowrap text-muted">
