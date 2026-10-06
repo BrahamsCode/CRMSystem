@@ -4,18 +4,18 @@
     $periods = [
         [
             'titulo' => 'Total registrado', 'hint' => 'Histórico',
-            'altas' => $totalAltas, 'bajas' => $bajasTotal,
+            'altas' => $totalSignups, 'bajas' => $totalWithdrawn,
             'pie_altas' => 'Estado: registrado', 'pie_bajas' => 'Estado: baja',
         ],
         [
             'titulo' => 'Este mes', 'hint' => $today->translatedFormat('F'),
-            'altas' => $altasMes, 'bajas' => $bajasMes,
+            'altas' => $monthSignups, 'bajas' => $monthWithdrawn,
             'pie_altas' => 'Alta desde ' . $today->copy()->startOfMonth()->format('d/m'),
             'pie_bajas' => 'Baja desde ' . $today->copy()->startOfMonth()->format('d/m'),
         ],
         [
             'titulo' => 'Hoy', 'hint' => $today->translatedFormat('j \d\e F'),
-            'altas' => $altasHoy, 'bajas' => $bajasHoy,
+            'altas' => $todaySignups, 'bajas' => $todayWithdrawn,
             'pie_altas' => 'Alta desde ' . $today->format('d/m'),
             'pie_bajas' => 'Baja desde ' . $today->format('d/m'),
         ],

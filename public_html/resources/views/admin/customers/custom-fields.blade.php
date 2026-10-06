@@ -99,7 +99,7 @@
                         </thead>
                         <tbody>
                             @foreach ($current->fields as $field)
-                                @php $preview = $preview($field->type); @endphp
+                                @php $control = $preview($field->type); @endphp
                                 <tr class="border-t border-line">
                                     <td class="px-3 py-3 text-muted">{{ $loop->iteration }}</td>
                                     <td class="px-3 py-3">
@@ -111,12 +111,12 @@
                                     </td>
 
                                     <td class="px-3 py-2">
-                                        @if ($preview === 'texto')
+                                        @if ($control === 'texto')
                                             <x-ui.input class="h-8.5!" disabled aria-label="Vista previa de {{ $field->name }}" />
-                                        @elseif ($preview === 'area')
+                                        @elseif ($control === 'area')
                                             <x-ui.textarea :rows="2" class="resize-none py-1.5" disabled
                                                            aria-label="Vista previa de {{ $field->name }}" />
-                                        @elseif ($preview === 'opciones')
+                                        @elseif ($control === 'opciones')
                                             <x-ui.select class="h-8.5!" disabled aria-label="Vista previa de {{ $field->name }}">
                                                 @forelse ($field->options as $option)
                                                     <option>{{ $option->label }}</option>
@@ -124,7 +124,7 @@
                                                     <option>Sin opciones</option>
                                                 @endforelse
                                             </x-ui.select>
-                                        @elseif ($preview === 'num')
+                                        @elseif ($control === 'num')
                                             <span class="flex w-full items-center gap-2">
                                                 <x-ui.input type="number" class="h-8.5! w-27!" disabled
                                                             aria-label="Vista previa de {{ $field->name }}" />

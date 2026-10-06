@@ -1,10 +1,11 @@
 @php
     // Todo viene calculado del controlador; aquí solo se escala el gráfico.
-    $maxValue = max(array_column($months, 'valor') ?: [0]);
-    $maxValue = $maxValue > 0 ? (int) (ceil($maxValue / 5) * 5) : 5;
+    $values = array_column($months, 'value');
+    $peakValue = $values ? max($values) : 0;
+    $maxValue = $peakValue > 0 ? (int) (ceil($peakValue / 5) * 5) : 5;
     $chartHeight = 260;
     // La etiqueta fija marca el mes con más altas, no una posición fija
-    $peakIndex = array_search($maxValue > 0 ? max(array_column($months, 'valor')) : 0, array_column($months, 'valor'), true);
+    $peakIndex = $peakValue > 0 ? array_search($peakValue, $values, true) : false;
 @endphp
 
 <x-layouts.modulo title="Estadísticas de clientes"

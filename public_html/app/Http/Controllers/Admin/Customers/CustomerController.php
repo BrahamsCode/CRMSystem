@@ -60,7 +60,7 @@ class CustomerController extends ModuleController
         ]);
     }
 
-    public function buscar(): View
+    public function search(): View
     {
         return view('admin.customers.search', [
             'shops' => Shop::active()->orderBy('name')->get(),

@@ -16,7 +16,7 @@ class StatisticController extends ModuleController
         $to = now()->endOfMonth();
 
         $months = $this->altasPorMes($from, $to);
-        $total = array_sum(array_column($months, 'valor'));
+        $total = array_sum(array_column($months, 'value'));
 
         return view('admin.customers.statistics', [
             'shops' => Shop::active()->orderBy('name')->get(),
@@ -66,7 +66,7 @@ class StatisticController extends ModuleController
 
     private function kpis(array $months, int $total): array
     {
-        $values = array_column($months, 'valor');
+        $values = array_column($months, 'value');
         $pico = $values ? max($values) : 0;
         $mesPico = $months[array_search($pico, $values, true)] ?? null;
 
