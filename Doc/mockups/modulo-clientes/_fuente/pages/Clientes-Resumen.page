@@ -1,0 +1,71 @@
+---META---
+{"title": "Gestión de clientes", "h": 1000, "maxw": 1280, "ctx": "{ module: 'clientes', active: 'resumen', crumbs: [{ label: 'Inicio', href: 'Main.dc.html' }, { label: 'Clientes' }] }", "state": "{}"}
+---CONTENT---
+<div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+<div>
+<h1 style="margin: 0; font-size: 26px; font-weight: 800; font-family: {{T.head}}">Gestión de clientes</h1>
+<p style="margin: 6px 0 0; color: {{T.muted}}">Resumen de altas y bajas de miembros. Pulsa una cifra para ver la lista de clientes.</p>
+</div>
+<span style="display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 14px; border-radius: 999px; background: {{T.surface}}; border: 1px solid {{T.border}}; font-size: 13px; font-weight: 600; color: {{T.muted}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM16 2v4M8 2v4M3 10h18"></path></svg>Hoy: 2 de octubre</span>
+</div>
+
+<section aria-label="Altas y bajas" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: {{T.gap}}px">
+<sc-for list="{{periods}}" as="pd" hint-placeholder-count="3">
+<div style="{{T.card}}; padding: 8px">
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 12px 4px"><h2 style="margin: 0; font-size: 14px; font-weight: 800; font-family: {{T.head}}">{{pd.title}}</h2><span style="font-size: 12px; font-weight: 600; color: {{T.faint}}">{{pd.hint}}</span></div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px">
+<a href="Clientes-Buscar.dc.html" aria-label="{{pd.title}}: {{pd.alta}} altas, ver lista" style="display: flex; flex-direction: column; gap: 2px; padding: 16px 20px; border-radius: {{T.r}}px; text-decoration: none; color: {{T.text}}">
+<span style="font-size: 12px; font-weight: 700; color: {{T.muted}}">Altas</span>
+<span style="font-size: 36px; font-weight: 800; line-height: 1.1; font-family: {{T.head}}">{{pd.alta}}</span>
+<span style="font-size: 12px; color: {{T.faint}}">{{pd.altaF}}</span>
+<span style="font-size: 12px; font-weight: 700; color: {{T.link}}">Ver lista →</span>
+</a>
+<a href="Clientes-Buscar.dc.html" aria-label="{{pd.title}}: {{pd.baja}} bajas, ver lista" style="display: flex; flex-direction: column; gap: 2px; padding: 16px 20px; border-radius: {{T.r}}px; text-decoration: none; color: {{T.text}}">
+<span style="font-size: 12px; font-weight: 700; color: {{T.muted}}">Bajas</span>
+<span style="font-size: 36px; font-weight: 800; line-height: 1.1; font-family: {{T.head}}">{{pd.baja}}</span>
+<span style="font-size: 12px; color: {{T.faint}}">{{pd.bajaF}}</span>
+<span style="font-size: 12px; font-weight: 700; color: {{T.link}}">Ver lista →</span>
+</a>
+</div>
+</div>
+</sc-for>
+</section>
+
+<div class="split" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: {{T.gap}}px; align-items: start">
+<section aria-labelledby="qa">
+<h2 id="qa" style="margin: 0 0 12px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: {{T.faint}}">Accesos rápidos</h2>
+<div class="g2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<sc-for list="{{quick}}" as="q" hint-placeholder-count="4">
+<a href="{{q.href}}" style="{{T.card}}; display: flex; align-items: center; gap: 14px; padding: 16px; text-decoration: none; color: {{T.text}};">
+<span style="{{q.tile}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{q.d}}"></path></svg></span>
+<span style="display: flex; flex-direction: column"><span style="font-weight: 700">{{q.label}}</span><span style="font-size: 12px; color: {{T.muted}}">{{q.sub}}</span></span>
+</a>
+</sc-for>
+</div>
+</section>
+<section aria-labelledby="hoy" style="{{T.card}}; padding: 20px">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px"><h2 id="hoy" style="{{h2}}; font-size: 16px">Altas de hoy</h2><a href="Clientes-Buscar.dc.html" style="font-size: 13px; font-weight: 700; color: {{T.link}}">Ver todos los clientes</a></div>
+<div style="{{empty}}">
+<span style="width: 52px; height: 52px; border-radius: 50%; background: {{T.surface2}}; color: {{T.faint}}; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 3a4 4 0 1 1 0 8 4 4 0 0 1 0-8zM19 8v6M22 11h-6"></path></svg></span>
+<strong style="color: {{T.text}}">Todavía no hay altas hoy</strong>
+<span style="max-width: 320px; line-height: 1.5">Los clientes que se registren hoy, en tienda o desde el móvil, aparecerán aquí.</span>
+<a href="Clientes-Nuevo.dc.html" style="{{T.btn}}; margin-top: 6px">Registrar nuevo cliente</a>
+</div>
+</section>
+</div>
+---VALS---
+      const tile = (on) => 'width: 40px; height: 40px; border-radius: ' + T.r + 'px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: ' + (on ? T.accentSoft : T.surface2) + '; color: ' + (on ? T.accentSoftFg : T.text);
+      return {
+        // Cada cifra abre Buscar clientes con el filtro del legacy (disp_flg + touroku_date_1 / update_date_1)
+        periods: [
+          { title: 'Total registrado', hint: 'Histórico', alta: 16, baja: 0, altaF: 'Estado: registrado', bajaF: 'Estado: baja' },
+          { title: 'Este mes', hint: 'Octubre', alta: 0, baja: 0, altaF: 'Alta desde 01/10', bajaF: 'Baja desde 01/10' },
+          { title: 'Hoy', hint: '2 de octubre', alta: 0, baja: 0, altaF: 'Alta desde 02/10', bajaF: 'Baja desde 02/10' }
+        ],
+        quick: [
+          { label: 'Nuevo cliente', sub: 'Registrar un miembro', href: 'Clientes-Nuevo.dc.html', d: K.I.userPlus, tile: tile(true) },
+          { label: 'Buscar clientes', sub: 'Filtrar y segmentar', href: 'Clientes-Buscar.dc.html', d: K.I.search, tile: tile(false) },
+          { label: 'Registrar visita', sub: 'Visita en tienda', href: 'Clientes-Visita.dc.html', d: K.I.visit, tile: tile(false) },
+          { label: 'Estadísticas', sub: 'Altas por periodo', href: 'Clientes-Estadisticas.dc.html', d: K.I.stats, tile: tile(false) }
+        ]
+      };

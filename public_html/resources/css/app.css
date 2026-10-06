@@ -1,0 +1,74 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+/*
+ * Tokens del tema. Los valores viven en :root como variables propias (--crm-*)
+ * y @theme inline los referencia, de modo que las utilidades compilan a
+ * var(--crm-*) y el tema se puede cambiar en caliente con un data-theme
+ * en <html> sin recompilar ni tocar las vistas.
+ */
+:root {
+    /* Propuesta «Coral»: base de los mockups */
+    --crm-paper: #f5f6f8;
+    --crm-surface: #ffffff;
+    --crm-surface-2: #f1f2f5;
+    --crm-line: #e4e7ec;
+    --crm-ink: #14171f;
+    --crm-muted: #4a5162;
+    --crm-faint: #6b7280;
+
+    --crm-accent: #c8343a;
+    --crm-accent-soft: #c8343a1a;
+    --crm-accent-soft-fg: #c8343a;
+    --crm-on-accent: #ffffff;
+    --crm-danger: #b42318;
+
+    /* Barra de módulos y menú lateral */
+    --crm-nav: #12151c;
+    --crm-nav-fg: #9aa3b2;
+    --crm-nav-label: #8b93a3;
+    --crm-nav-active: #2a303d;
+
+    --crm-radius-card: 12px;
+    --crm-radius-ctl: 8px;
+}
+
+@theme inline {
+    --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-paper: var(--crm-paper);
+    --color-surface: var(--crm-surface);
+    --color-surface2: var(--crm-surface-2);
+    --color-line: var(--crm-line);
+    --color-ink: var(--crm-ink);
+    --color-muted: var(--crm-muted);
+    --color-faint: var(--crm-faint);
+
+    --color-accent: var(--crm-accent);
+    --color-accent-soft: var(--crm-accent-soft);
+    --color-accent-fg: var(--crm-accent-soft-fg);
+    --color-on-accent: var(--crm-on-accent);
+    --color-danger: var(--crm-danger);
+
+    --color-nav: var(--crm-nav);
+    --color-nav-fg: var(--crm-nav-fg);
+    --color-nav-label: var(--crm-nav-label);
+    --color-nav-active: var(--crm-nav-active);
+
+    --radius-card: var(--crm-radius-card);
+    --radius-ctl: var(--crm-radius-ctl);
+}
+
+[x-cloak] {
+    display: none !important;
+}
+
+/* Cifras alineadas en tablas y métricas */
+.tnum {
+    font-variant-numeric: tabular-nums;
+}

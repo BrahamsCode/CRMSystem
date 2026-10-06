@@ -1,0 +1,74 @@
+---META---
+{"title": "Asignación de rangos", "h": 1500, "maxw": 1100, "ctx": "{ module: 'clientes', active: 'reglas', crumbs: [{ label: 'Inicio', href: 'Main.dc.html' }, { label: 'Clientes', href: 'Clientes-Resumen.dc.html' }, { label: 'Asignación de rangos' }] }", "state": "{ tab: 'importe', cfg: { importe: { on: false, mode: 'fecha', months: {}, days: {}, week: {}, period: '' }, visitas: { on: false, mode: 'fecha', months: {}, days: {}, week: {}, period: '' } } }"}
+---CONTENT---
+<div>
+<h1 style="margin: 0; font-size: 26px; font-weight: 800; font-family: {{T.head}}">Asignación automática de rangos</h1>
+<p style="margin: 6px 0 0; color: {{T.muted}}">Programa cuándo el sistema recalcula el rango de cada cliente. Los rangos se definen en <a href="Clientes-Rangos.dc.html" style="color: {{T.link}}; font-weight: 700">Rangos de clientes</a>.</p>
+</div>
+
+<div role="tablist" aria-label="Tipo de rango" style="display: flex; gap: 4px; border-bottom: 1px solid {{T.border}}">
+<sc-for list="{{tabs}}" as="tb" hint-placeholder-count="2">
+<button type="button" role="tab" aria-selected="{{tb.on}}" onClick="{{tb.pick}}" style="min-height: 46px; padding: 0 16px; border: 0; background: transparent; font: inherit; font-weight: {{tb.fw}}; color: {{tb.fg}}; box-shadow: inset 0 -2px 0 {{tb.line}}; cursor: pointer; display: flex; align-items: center; gap: 8px">{{tb.label}}<span style="padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 800; background: {{tb.pillBg}}; color: {{tb.pillFg}}">{{tb.state}}</span></button>
+</sc-for>
+</div>
+
+<section aria-label="{{cfg.title}}" style="{{T.card}}">
+<div style="{{sectionHead}}; display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
+<h2 style="{{h2}}; flex-grow: 1">{{cfg.title}}</h2>
+<span style="display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px; border-radius: 999px; font-weight: 800; background: {{cfg.pillBg}}; color: {{cfg.pillFg}}"><span style="width: 8px; height: 8px; border-radius: 50%; background: {{cfg.dot}}"></span>Asignación {{cfg.state}}</span>
+</div>
+<div style="padding: 22px; display: flex; flex-direction: column; gap: 22px">
+<label style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap"><span style="{{T.label}}; margin: 0">Periodo a evaluar</span><span>Últimos</span><input type="number" min="1" value="{{cfg.period}}" onChange="{{cfg.onPeriod}}" placeholder="90" style="{{T.input}}; width: 100px"><span>días</span><span style="width: 100%; font-size: 12px; color: {{T.faint}}">Días hacia atrás, contados desde el momento en que se ejecuta la asignación.</span></label>
+
+<fieldset style="border: 0; margin: 0; padding: 0; min-width: 0"><legend style="{{T.label}}">Cuándo se ejecuta</legend>
+<div class="g2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<sc-for list="{{cfg.modes}}" as="md" hint-placeholder-count="2">
+<label style="display: flex; gap: 10px; align-items: flex-start; padding: 14px; border-radius: {{T.r}}px; border: 2px solid {{md.ring}}; cursor: pointer"><input type="radio" name="{{cfg.key}}-mode" checked="{{md.on}}" onChange="{{md.pick}}" style="accent-color: {{T.accent}}; margin: 3px 0 0"><span><span style="display: block; font-weight: 700">{{md.label}}</span><span style="display: block; margin-top: 4px; font-size: 13px; color: {{T.muted}}">{{md.desc}}</span></span></label>
+</sc-for>
+</div></fieldset>
+
+<sc-if value="{{cfg.isFecha}}" hint-placeholder-val="{{ true }}">
+<fieldset style="border: 0; margin: 0; padding: 0; min-width: 0"><legend style="{{T.label}}">Meses</legend><div style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{cfg.months}}" as="ch" hint-placeholder-count="12"><button type="button" aria-pressed="{{ch.on}}" onClick="{{ch.pick}}" style="{{ch.style}}">{{ch.label}}</button></sc-for>
+</div></fieldset>
+<fieldset style="border: 0; margin: 0; padding: 0; min-width: 0"><legend style="{{T.label}}">Días</legend><div style="display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 6px; max-width: 560px">
+<sc-for list="{{cfg.days}}" as="ch" hint-placeholder-count="32"><button type="button" aria-pressed="{{ch.on}}" onClick="{{ch.pick}}" style="{{ch.style}}">{{ch.label}}</button></sc-for>
+</div></fieldset>
+</sc-if>
+<sc-if value="{{cfg.isSemana}}" hint-placeholder-val="{{ false }}">
+<fieldset style="border: 0; margin: 0; padding: 0; min-width: 0"><legend style="{{T.label}}">Días de la semana</legend><div style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{cfg.week}}" as="ch" hint-placeholder-count="7"><button type="button" aria-pressed="{{ch.on}}" onClick="{{ch.pick}}" style="{{ch.style}}">{{ch.label}}</button></sc-for>
+</div></fieldset>
+</sc-if>
+
+<div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap"><span style="{{T.label}}; margin: 0">Hora de ejecución</span>
+<select aria-label="Hora" style="{{T.input}}; width: 110px"><option>00 h</option><option>03 h</option><option>06 h</option><option>12 h</option><option>18 h</option><option>23 h</option></select>
+<select aria-label="Minutos" style="{{T.input}}; width: 120px"><option>00 min</option><option>15 min</option><option>30 min</option><option>45 min</option></select>
+</div>
+</div>
+<div style="padding: 14px 22px; border-top: 1px solid {{T.border}}; display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap">
+<button type="button" onClick="{{cfg.disable}}" style="{{T.btn}}">Desactivar asignación</button>
+<button type="button" onClick="{{cfg.enable}}" style="{{T.btnP}}">Guardar y activar</button>
+</div>
+</section>
+---VALS---
+      const LABEL = { importe: 'Rango por importe de compra', visitas: 'Rango por número de visitas' };
+      const upd = (key, patch) => set({ cfg: { ...this.state.cfg, [key]: { ...this.state.cfg[key], ...patch } } });
+      const pill = (on) => on ? { state: 'ACTIVADA', pillBg: T.dark ? '#14532D' : '#DCFCE7', pillFg: T.dark ? '#DCFCE7' : '#166534', dot: '#16A34A' } : { state: 'DESACTIVADA', pillBg: T.dark ? '#3A1D20' : '#FDECEC', pillFg: T.dark ? '#FFD7D9' : '#8F1D14', dot: '#DC2626' };
+      const tabs = ['importe', 'visitas'].map((k) => { const on = s.tab === k; const p = pill(s.cfg[k].on); return { label: k === 'importe' ? 'Por importe' : 'Por visitas', on, fw: on ? 700 : 500, fg: on ? T.text : T.muted, line: on ? T.accent : 'transparent', pick: () => set({ tab: k }), state: p.state === 'ACTIVADA' ? 'ON' : 'OFF', pillBg: p.pillBg, pillFg: p.pillFg }; });
+      const key = s.tab, cf = s.cfg[key];
+      const chips = (field, list) => list.map(([v, label]) => { const on = !!cf[field][v]; return { label, on, style: (on ? base.chipOn : base.chipOff) + (v === 'fin' ? '; grid-column: span 2' : ''), pick: () => upd(key, { [field]: { ...this.state.cfg[key][field], [v]: !on } }) }; });
+      const months = chips('months', ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'].map((m, i) => [i + 1, m]));
+      const days = chips('days', Array.from({ length: 31 }, (_, i) => [i + 1, String(i + 1)]).concat([['fin', 'Fin de mes']]));
+      const week = chips('week', [['l', 'Lunes'], ['m', 'Martes'], ['x', 'Miércoles'], ['j', 'Jueves'], ['v', 'Viernes'], ['s', 'Sábado'], ['d', 'Domingo']]);
+      const modes = [['fecha', 'Meses y días concretos', 'Se ejecuta en los meses y días que elijas.'], ['semana', 'Días de la semana', 'Se ejecuta cada semana en los días que elijas.']]
+        .map(([v, label, desc]) => ({ label, desc, on: cf.mode === v, ring: cf.mode === v ? T.accent : T.border, pick: () => upd(key, { mode: v }) }));
+      const p = pill(cf.on);
+      return {
+        tabs,
+        cfg: {
+          key, title: LABEL[key], ...p, state: p.state.toLowerCase(), period: cf.period, onPeriod: (e) => upd(key, { period: e.target.value }),
+          modes, isFecha: cf.mode === 'fecha', isSemana: cf.mode === 'semana', months, days, week,
+          enable: () => upd(key, { on: true }), disable: () => upd(key, { on: false })
+        }
+      };

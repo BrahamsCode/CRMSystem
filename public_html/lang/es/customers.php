@@ -1,0 +1,128 @@
+<?php
+
+/** Mismas claves que lang/ja/clientes.php: cambiar APP_LOCALE cambia el módulo entero. */
+return [
+
+    'modulo' => 'Clientes',
+    'modulo_sub' => 'Gestión de clientes',
+
+    'menu' => [
+        'config' => 'Configuración',
+        'resumen' => 'Resumen',
+        'nuevo' => 'Nuevo cliente',
+        'buscar' => 'Buscar clientes',
+        'visita' => 'Registrar visita',
+        'estadisticas' => 'Estadísticas',
+        'campos' => 'Campos y CSV',
+        'grupos' => 'Grupos de clientes',
+        'motivos' => 'Motivos de 1ª visita',
+        'rangos' => 'Rangos de clientes',
+        'reglas' => 'Asignación de rangos',
+        'info' => 'Información adicional',
+        'intervalo' => 'Intervalo entre visitas',
+    ],
+
+    'nuevo' => [
+        'titulo' => 'Nuevo cliente',
+        'obligatorios' => 'Los campos marcados con * son obligatorios.',
+        'paso_datos' => 'Datos',
+        'paso_confirmar' => 'Confirmación',
+        'revisar' => 'Revisa los datos. Si todo está correcto, pulsa «Confirmar registro».',
+        'errores' => 'Revisa los datos antes de continuar:',
+
+        'seccion_cliente' => 'Datos del cliente',
+        'seccion_personal' => 'Datos personales',
+        'seccion_promo' => 'Información de promoción',
+        'seccion_familia' => 'Información familiar',
+        'seccion_mascota' => 'Mascota',
+        'seccion_acceso' => 'Acceso a Mi página',
+        'acceso_desc' => 'Datos con los que el cliente entra en su Mi página.',
+
+        'sub_direccion' => 'Dirección',
+        'sub_contacto' => 'Contacto',
+        'sub_trabajo' => 'Lugar de trabajo',
+
+        'num_socio' => 'Nº de socio',
+        'num_socio_hint' => 'Se asigna al guardar.',
+        'num_gestion' => 'Nº de gestión',
+        'tienda' => 'Tienda de registro',
+        'tipo' => 'Persona / empresa',
+        'tipo_persona' => 'Persona',
+        'tipo_empresa' => 'Empresa',
+
+        'apellido_kana' => 'Apellido (fonético)',
+        'nombre_kana' => 'Nombre (fonético)',
+        'apellido' => 'Apellido',
+        'nombre' => 'Nombre',
+
+        'zip' => 'Código postal',
+        'zip_buscar' => 'Buscar dirección',
+        'zip_buscando' => 'Buscando…',
+        'zip_error' => 'No se encontró ninguna dirección con ese código postal.',
+        'pref' => 'Prefectura',
+        'ciudad_kana' => 'Ciudad / distrito (fonético)',
+        'ciudad' => 'Ciudad / distrito',
+        'calle' => 'Calle y número',
+        'edificio_kana' => 'Edificio / depto. (fonético)',
+        'edificio' => 'Edificio / depto.',
+
+        'tel' => 'Teléfono',
+        'fax' => 'Fax',
+        'mail1' => 'Email 1',
+        'mail2' => 'Email 2',
+        'referido' => 'Referido por',
+        'referido_buscar' => 'Buscar socio',
+
+        'nacimiento' => 'Fecha de nacimiento',
+        'sexo' => 'Sexo',
+        'sangre' => 'Grupo sanguíneo',
+        'movil' => 'Teléfono móvil',
+        'mail_personal' => 'Email personal',
+        'ocupacion' => 'Ocupación',
+        'trabajo_nombre_kana' => 'Nombre (fonético)',
+        'trabajo_nombre' => 'Nombre',
+        'rubro' => 'Rubro',
+        'trabajo_tel' => 'Teléfono',
+        'trabajo_fax' => 'Fax',
+
+        'newsletter' => 'Newsletter',
+        'tipo_direccion' => 'Tipo de dirección',
+        'tipo_direccion_hint' => 'Alimenta el desglose de los resultados de búsqueda.',
+        'recordatorio' => 'Recordatorio de reservas por email',
+        'grupo' => 'Grupo de cliente',
+        'motivo' => 'Motivo de primera visita',
+        'notas' => 'Notas',
+
+        'conyuge' => 'Cónyuge',
+        'aniversario' => 'Aniversario de boda',
+
+        'mascota_etiqueta' => 'Formulario personalizado',
+        'mascota_nombre' => 'Nombre',
+        'mascota_tipo' => 'Tipo',
+        'mascota_peso' => 'Peso',
+
+        'login_id' => 'ID de acceso',
+        'login_id_hint' => 'Es el propio Nº de socio.',
+        'password' => 'Contraseña',
+
+        'cancelar' => 'Cancelar',
+        'revisar_btn' => 'Revisar y confirmar',
+        'volver_editar' => 'Volver a editar',
+        'confirmar' => 'Confirmar registro',
+    ],
+
+    'comun' => [
+        'seleccionar' => 'Selecciona…',
+        'sin_grupo' => 'Sin grupo',
+        'enviar' => 'Enviar',
+        'no_enviar' => 'No enviar',
+        'no_entregable' => 'No entregable',
+        'si' => 'Sí',
+        'no' => 'No',
+        'buscar_cliente' => 'Buscar cliente…',
+        'cerrar_sesion' => 'Cerrar sesión',
+        'inicio' => 'Inicio',
+        'ruta' => 'Ruta',
+        'abrir_menu' => 'Abrir menú',
+    ],
+];

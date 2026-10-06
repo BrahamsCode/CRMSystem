@@ -1,0 +1,168 @@
+- generic [ref=f39e2]:
+  - generic [ref=f39e4]:
+    - generic [ref=f39e5]: Internal Server Error
+    - button "Copy as Markdown" [ref=f39e11] [cursor=pointer]
+  - generic [ref=f39e18]:
+    - generic [ref=f39e19]:
+      - heading "ErrorException" [level=1] [ref=f39e20]
+      - generic [ref=f39e21]: resources/views/admin/customers/index.blade.php:101
+      - paragraph [ref=f39e23]: Undefined variable $todayCustomers
+    - generic [ref=f39e24]:
+      - generic [ref=f39e25]:
+        - generic [ref=f39e26]:
+          - generic [ref=f39e27]: LARAVEL
+          - generic [ref=f39e28]: 12.69.3
+        - generic [ref=f39e29]:
+          - generic [ref=f39e30]: PHP
+          - generic [ref=f39e31]: 8.2.34
+      - generic [ref=f39e32]: UNHANDLED
+      - generic [ref=f39e36]: CODE 0
+    - generic [ref=f39e38]:
+      - generic [ref=f39e39]: "500"
+      - generic [ref=f39e43]: GET
+      - generic [ref=f39e47]: http://192.168.1.9/admin/customers
+      - button [ref=f39e48] [cursor=pointer]
+  - generic [ref=f39e53]:
+    - generic [ref=f39e54]:
+      - heading "Exception trace" [level=3] [ref=f39e60]
+      - generic [ref=f39e61]:
+        - generic [ref=f39e62]:
+          - generic [ref=f39e63] [cursor=pointer]:
+            - generic [ref=f39e66]:
+              - code [ref=f39e70]:
+                - generic [ref=f39e71]: "Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(integer, string, string, integer)"
+              - generic [ref=f39e72]: resources/views/admin/customers/index.blade.php:101
+            - button [ref=f39e75]
+          - code [ref=f39e84]:
+            - generic [ref=f39e85]: "96 <a href=\"{{ route('admin.customers.search') }}\" class=\"text-sm font-bold text-accent-fg hover:underline\">"
+            - generic [ref=f39e86]: 97 Ver todos los clientes
+            - generic [ref=f39e87]: 98 </a>
+            - generic [ref=f39e88]: 99 </div>
+            - generic [ref=f39e89]: "100"
+            - generic [ref=f39e90]: 101 @forelse ($todayCustomers as $customer)
+            - generic [ref=f39e91]: "102 <a href=\"{{ route('admin.customers.show', $customer) }}\""
+            - generic [ref=f39e92]: 103 class="-mx-2 flex items-center gap-3 rounded-ctl px-2 py-2.5 transition-colors first:mt-3 hover:bg-surface2">
+            - generic [ref=f39e93]: 104 <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface2 text-sm font-extrabold">
+            - generic [ref=f39e94]: "105 {{ mb_substr($customer->last_name, 0, 1) }}"
+            - generic [ref=f39e95]: 106 </span>
+            - generic [ref=f39e96]: 107 <span class="flex min-w-0 flex-1 flex-col">
+            - generic [ref=f39e97]: "108 <span class=\"truncate font-bold\">{{ $customer->full_name }}</span>"
+            - generic [ref=f39e98]: "109 <span class=\"text-xs text-muted\">Nº de socio {{ $customer->code }}</span>"
+            - generic [ref=f39e99]: 110 </span>
+            - generic [ref=f39e100]: "111 <span class=\"text-xs text-faint\">{{ $customer->created_at->format('H:i') }}</span>"
+            - generic [ref=f39e101]: 112 </a>
+            - generic [ref=f39e102]: "113"
+        - generic [ref=f39e104] [cursor=pointer]:
+          - generic [ref=f39e109]: 57 vendor frames
+          - button [ref=f39e110]
+        - generic [ref=f39e116] [cursor=pointer]:
+          - generic [ref=f39e119]:
+            - code [ref=f39e123]:
+              - generic [ref=f39e124]: Illuminate\Foundation\Application->handleRequest(object(Illuminate\Http\Request))
+            - generic [ref=f39e125]: public/index.php:20
+          - button [ref=f39e128]
+    - generic [ref=f39e133]:
+      - generic [ref=f39e134]:
+        - heading "Queries" [level=3] [ref=f39e139]
+        - generic [ref=f39e140]: 1-9 of 9
+      - generic [ref=f39e142]:
+        - generic [ref=f39e143]:
+          - generic [ref=f39e144]:
+            - generic [ref=f39e145]: pgsql
+            - code [ref=f39e152]:
+              - generic [ref=f39e153]: select * from "sessions" where "id" = 'umN0aG0BignOMsRFiKtXt2dh3erISXZ2kznRtYSz' limit 1
+          - generic [ref=f39e154]: 5.04ms
+        - generic [ref=f39e155]:
+          - generic [ref=f39e156]:
+            - generic [ref=f39e157]: pgsql
+            - code [ref=f39e164]:
+              - generic [ref=f39e165]: select * from "admins" where "id" = 1 limit 1
+          - generic [ref=f39e166]: 0.56ms
+        - generic [ref=f39e167]:
+          - generic [ref=f39e168]:
+            - generic [ref=f39e169]: pgsql
+            - code [ref=f39e176]:
+              - generic [ref=f39e177]: select count(*) as aggregate from "customers" where "customers"."deleted_at" is null
+          - generic [ref=f39e178]: 1.12ms
+        - generic [ref=f39e179]:
+          - generic [ref=f39e180]:
+            - generic [ref=f39e181]: pgsql
+            - code [ref=f39e188]:
+              - generic [ref=f39e189]: select count(*) as aggregate from "customers" where "created_at" >= '2026-10-01 00:00:00' and "customers"."deleted_at" is null
+          - generic [ref=f39e190]: 0.27ms
+        - generic [ref=f39e191]:
+          - generic [ref=f39e192]:
+            - generic [ref=f39e193]: pgsql
+            - code [ref=f39e200]:
+              - generic [ref=f39e201]: select count(*) as aggregate from "customers" where "created_at"::date = '2026-10-06' and "customers"."deleted_at" is null
+          - generic [ref=f39e202]: 0.29ms
+        - generic [ref=f39e203]:
+          - generic [ref=f39e204]:
+            - generic [ref=f39e205]: pgsql
+            - code [ref=f39e212]:
+              - generic [ref=f39e213]: select count(*) as aggregate from "customers" where "status" = 0 and "customers"."deleted_at" is null
+          - generic [ref=f39e214]: 0.24ms
+        - generic [ref=f39e215]:
+          - generic [ref=f39e216]:
+            - generic [ref=f39e217]: pgsql
+            - code [ref=f39e224]:
+              - generic [ref=f39e225]: select count(*) as aggregate from "customers" where "status" = 0 and "updated_at" >= '2026-10-01 00:00:00' and "customers"."deleted_at" is null
+          - generic [ref=f39e226]: 0.21ms
+        - generic [ref=f39e227]:
+          - generic [ref=f39e228]:
+            - generic [ref=f39e229]: pgsql
+            - code [ref=f39e236]:
+              - generic [ref=f39e237]: select count(*) as aggregate from "customers" where "status" = 0 and "updated_at"::date = '2026-10-06' and "customers"."deleted_at" is null
+          - generic [ref=f39e238]: 0.2ms
+        - generic [ref=f39e239]:
+          - generic [ref=f39e240]:
+            - generic [ref=f39e241]: pgsql
+            - code [ref=f39e248]:
+              - generic [ref=f39e249]: select * from "customers" where "created_at"::date = '2026-10-06' and "customers"."deleted_at" is null order by "created_at" desc limit 5
+          - generic [ref=f39e250]: 0.66ms
+  - generic [ref=f39e252]:
+    - generic [ref=f39e253]:
+      - heading "Headers" [level=2] [ref=f39e254]
+      - generic [ref=f39e255]:
+        - generic [ref=f39e256]:
+          - generic [ref=f39e257]: host
+          - generic [ref=f39e259]: 192.168.1.9
+        - generic [ref=f39e260]:
+          - generic [ref=f39e261]: connection
+          - generic [ref=f39e263]: keep-alive
+        - generic [ref=f39e264]:
+          - generic [ref=f39e265]: upgrade-insecure-requests
+          - generic [ref=f39e267]: "1"
+        - generic [ref=f39e268]:
+          - generic [ref=f39e269]: user-agent
+          - generic [ref=f39e271]: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36
+        - generic [ref=f39e272]:
+          - generic [ref=f39e273]: accept
+          - generic [ref=f39e275]: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+        - generic [ref=f39e276]:
+          - generic [ref=f39e277]: accept-encoding
+          - generic [ref=f39e279]: gzip, deflate
+        - generic [ref=f39e280]:
+          - generic [ref=f39e281]: accept-language
+          - generic [ref=f39e283]: es-ES,es;q=0.9
+        - generic [ref=f39e284]:
+          - generic [ref=f39e285]: cookie
+          - generic [ref=f39e287]: XSRF-TOKEN=eyJpdiI6ImdMc29xZ2tXeTVZQlJGZGJ5S0taRFE9PSIsInZhbHVlIjoiZWE3K2Zna0drMEdiY2xaMGh4ZGJOMGI3Q2UrcDd6MWxnanVBRmd6TmhnRHBGY3hIbGRRWnViL3ExZUJEWXNETkpESGVVcTY1L3U5dDl6TWFzdW1uN3ZVU0Q4SmtYR2dEWDFpNUM3ZUN0ZC9xUHpCbTZJdno4VUZxbHRpY0pBclciLCJtYWMiOiIwMWNiNTE1NmZiODFlOTE0MmQ2OTcwNDhiZGIxMmRhNTExNWUwYTJlZDUzNTFkYmFhYTM1NTVjZjA2ZDlhM2Q1IiwidGFnIjoiIn0%3D; laravel-session=eyJpdiI6IjlTdWNuc1FpdlpQd0hCWE5pMERyQ1E9PSIsInZhbHVlIjoiZUp5bU51U0FJYk12TlZLU2h0OGNXS3VINHR2V040Y0FKd0JXSGZqL21IbDhNTEpnQnhFTk1RbXFVemJkWVVjaWw4citQaE8wc253NnN1NittRU5ZTHdPeXR5NEt2NkdscUxZOXdtQ1hTeFFCdHpiOTY5MjFmc1BuWHFwdjJBT0ciLCJtYWMiOiI0ZTZlZjM5OTcxYjZjNjcwODczMTg3ODczY2Y2ZmI3ZTI5OGEwMzJjN2M4YjA3ZGVkZDU3NmEwOTIzNTk5MmI2IiwidGFnIjoiIn0%3D
+    - generic [ref=f39e288]:
+      - heading "Body" [level=2] [ref=f39e289]
+      - generic [ref=f39e290]: // No request body
+    - generic [ref=f39e291]:
+      - heading "Routing" [level=2] [ref=f39e292]
+      - generic [ref=f39e293]:
+        - generic [ref=f39e294]:
+          - generic [ref=f39e295]: controller
+          - generic [ref=f39e297]: App\Http\Controllers\Admin\Customers\CustomerController@index
+        - generic [ref=f39e298]:
+          - generic [ref=f39e299]: route name
+          - generic [ref=f39e301]: admin.customers.index
+        - generic [ref=f39e302]:
+          - generic [ref=f39e303]: middleware
+          - generic [ref=f39e305]: web, auth:admin
+    - generic [ref=f39e306]:
+      - heading "Routing parameters" [level=2] [ref=f39e307]
+      - generic [ref=f39e308]: // No routing parameters

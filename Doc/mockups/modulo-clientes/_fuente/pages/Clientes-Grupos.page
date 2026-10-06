@@ -1,0 +1,51 @@
+---META---
+{"title": "Grupos de clientes", "h": 1000, "maxw": 1200, "ctx": "{ module: 'clientes', active: 'grupos', crumbs: [{ label: 'Inicio', href: 'Main.dc.html' }, { label: 'Clientes', href: 'Clientes-Resumen.dc.html' }, { label: 'Grupos de clientes' }] }", "state": "{ name: '', def: false, items: [] }"}
+---CONTENT---
+<div>
+<h1 style="margin: 0; font-size: 26px; font-weight: 800; font-family: {{T.head}}">Grupos de clientes</h1>
+<p style="margin: 6px 0 0; color: {{T.muted}}">Crea grupos para clasificar a tus clientes y filtrarlos en las búsquedas.</p>
+</div>
+<div class="split" style="display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: {{T.gap}}px; align-items: start">
+<section aria-labelledby="nuevo" style="{{T.card}}">
+<div style="{{sectionHead}}"><h2 id="nuevo" style="{{h2}}">Nuevo grupo</h2></div>
+<form onSubmit="{{add}}" style="padding: 20px 22px; display: flex; flex-direction: column; gap: 16px">
+<label><span style="{{T.label}}">Nombre del grupo</span><input type="text" value="{{name}}" onChange="{{onName}}" placeholder="Ej. Clientes VIP" style="{{T.input}}"></label>
+<label style="display: flex; gap: 10px; align-items: flex-start; cursor: pointer"><input type="checkbox" checked="{{def}}" onChange="{{toggleDef}}" style="accent-color: {{T.accent}}; width: 18px; height: 18px; margin: 2px 0 0; flex-shrink: 0"><span><span style="display: block; font-weight: 700">Valor inicial para clientes nuevos</span><span style="display: block; margin-top: 4px; font-size: 12px; color: {{T.faint}}; line-height: 1.5">Solo un grupo puede ser el valor inicial: al marcarlo se quita del grupo anterior.</span></span></label>
+<button type="submit" style="{{T.btnP}}">Registrar grupo</button>
+</form>
+</section>
+<section aria-labelledby="lista" style="{{T.card}}; overflow: hidden">
+<div style="{{sectionHead}}; display: flex; justify-content: space-between; align-items: center"><h2 id="lista" style="{{h2}}">Grupos registrados</h2><span style="font-size: 13px; color: {{T.muted}}">{{count}}</span></div>
+<sc-if value="{{isEmpty}}" hint-placeholder-val="{{ true }}">
+<div style="{{empty}}"><strong style="color: {{T.text}}">Todavía no hay grupos de clientes</strong><span>Crea el primero con el formulario.</span></div>
+</sc-if>
+<sc-if value="{{hasItems}}" hint-placeholder-val="{{ false }}">
+<div role="table" aria-label="Grupos registrados">
+<div role="row" style="display: grid; grid-template-columns: minmax(0, 1fr) 190px 110px"><div role="columnheader" style="{{th}}">Nombre</div><div role="columnheader" style="{{th}}">Acciones</div><div role="columnheader" style="{{th}}">Orden</div></div>
+<sc-for list="{{items}}" as="row" hint-placeholder-count="2">
+<div role="row" style="display: grid; grid-template-columns: minmax(0, 1fr) 190px 110px">
+<div role="cell" style="{{td}}; gap: 10px; font-weight: 700">{{row.name}}<sc-if value="{{row.def}}" hint-placeholder-val="{{ false }}"><span style="padding: 2px 8px; border-radius: 999px; background: {{T.accentSoft}}; color: {{T.accentSoftFg}}; font-size: 12px">Valor inicial</span></sc-if></div>
+<div role="cell" style="{{td}}; gap: 6px"><button type="button" style="{{T.btn}}; height: 34px; padding: 0 12px">Editar</button><button type="button" onClick="{{row.del}}" style="{{T.btn}}; height: 34px; padding: 0 12px; color: {{T.req}};">Eliminar</button></div>
+<div role="cell" style="{{td}}; gap: 4px"><button type="button" onClick="{{row.up}}" aria-label="Subir {{row.name}}" style="{{T.iconBtn}}; width: 36px; height: 36px">↑</button><button type="button" onClick="{{row.down}}" aria-label="Bajar {{row.name}}" style="{{T.iconBtn}}; width: 36px; height: 36px">↓</button></div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+</section>
+</div>
+---VALS---
+      const items = s.items;
+      const move = (i, d) => { const a = this.state.items.slice(); const j = i + d; if (j < 0 || j >= a.length) return; const t = a[i]; a[i] = a[j]; a[j] = t; set({ items: a }); };
+      return {
+        name: s.name, def: s.def,
+        onName: (e) => set({ name: e.target.value }), toggleDef: () => set({ def: !this.state.def }),
+        add: (e) => {
+          if (e && e.preventDefault) e.preventDefault();
+          const n = (this.state.name || '').trim(); if (!n) return;
+          const prev = this.state.def ? this.state.items.map((x) => ({ ...x, def: false })) : this.state.items;
+          set({ items: prev.concat([{ name: n, def: this.state.def }]), name: '', def: false });
+        },
+        items: items.map((g, i) => ({ ...g, del: () => set({ items: this.state.items.filter((_, k) => k !== i) }), up: () => move(i, -1), down: () => move(i, 1) })),
+        isEmpty: items.length === 0, hasItems: items.length > 0,
+        count: items.length === 1 ? '1 grupo' : items.length + ' grupos'
+      };

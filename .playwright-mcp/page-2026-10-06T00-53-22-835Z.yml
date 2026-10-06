@@ -1,0 +1,439 @@
+- generic [ref=f36e2]:
+  - generic [ref=f36e3]:
+    - link [ref=f36e5] [cursor=pointer]:
+      - /url: /system/select.php
+      - img "総合業務管理システム" [ref=f36e6]
+    - list [ref=f36e7]:
+      - listitem [ref=f36e8]:
+        - link "お問合せ" [ref=f36e9] [cursor=pointer]:
+          - /url: javascript:void(0)
+      - listitem [ref=f36e10]:
+        - link "サポート" [ref=f36e11] [cursor=pointer]:
+          - /url: http://crm-s.jp/user_support/
+      - listitem [ref=f36e12]:
+        - link "総合トップ" [ref=f36e13] [cursor=pointer]:
+          - /url: /system/select.php
+      - listitem [ref=f36e14]:
+        - link "ログアウト" [ref=f36e15] [cursor=pointer]:
+          - /url: /system/logout.php
+    - list [ref=f36e17]:
+      - listitem [ref=f36e18]:
+        - link "顧客管理" [ref=f36e19] [cursor=pointer]:
+          - /url: /system/category1/
+      - listitem [ref=f36e20]:
+        - link "販売促進管理" [ref=f36e21] [cursor=pointer]:
+          - /url: /system/category3/
+      - listitem [ref=f36e22]:
+        - link "マイページ管理" [ref=f36e23] [cursor=pointer]:
+          - /url: /system/category6/
+      - listitem [ref=f36e24]:
+        - link "ホームページ管理" [ref=f36e25] [cursor=pointer]:
+          - /url: /system/category4/
+      - listitem [ref=f36e26]:
+        - link "業務支援管理" [ref=f36e27] [cursor=pointer]:
+          - /url: /system/category5/
+      - listitem [ref=f36e28]:
+        - link "端末管理" [ref=f36e29] [cursor=pointer]:
+          - /url: /system/category7/
+      - listitem [ref=f36e30]:
+        - link "予約管理" [ref=f36e31] [cursor=pointer]:
+          - /url: /system/category9/
+      - listitem [ref=f36e32]:
+        - link "基本情報管理" [ref=f36e33] [cursor=pointer]:
+          - /url: /system/category0/
+  - generic [ref=f36e34]:
+    - generic [ref=f36e38]:
+      - text: 顧客管理
+      - generic [ref=f36e43]:
+        - paragraph [ref=f36e44]: ■顧客新規登録
+        - paragraph [ref=f36e45]: ※マークがある項目は、必須項目です。（空白にはしないで下さい）
+        - generic [ref=f36e46]:
+          - group "顧客情報" [ref=f36e47]:
+            - table [ref=f36e49]:
+              - rowgroup [ref=f36e56]:
+                - row [ref=f36e57]:
+                  - columnheader "会員番号" [ref=f36e58]
+                  - cell "1100029" [ref=f36e59]
+                  - rowheader "管理番号" [ref=f36e60]
+                  - cell [ref=f36e61]:
+                    - textbox "管理番号" [ref=f36e62]
+                - row [ref=f36e63]:
+                  - rowheader [ref=f36e64]:
+                    - generic [ref=f36e65]:
+                      - text: 個人・法人
+                      - emphasis [ref=f36e66]: ※
+                  - cell [ref=f36e67]:
+                    - list [ref=f36e68]:
+                      - listitem [ref=f36e69]:
+                        - radio "個人・法人※ 個人" [checked] [ref=f36e70]
+                        - text: 個人
+                      - listitem [ref=f36e71]:
+                        - radio "法人" [ref=f36e72]
+                        - text: 法人
+                - row [ref=f36e73]:
+                  - rowheader "名前(カナ)" [ref=f36e74]
+                  - cell "【姓】 【名】" [ref=f36e76]:
+                    - text: 【姓】
+                    - textbox [ref=f36e77]
+                    - text: 【名】
+                    - textbox [ref=f36e78]
+                - row [ref=f36e79]:
+                  - rowheader "名前" [ref=f36e80]
+                  - cell "【姓】 【名】" [ref=f36e81]:
+                    - text: 【姓】
+                    - textbox [ref=f36e82]
+                    - text: 【名】
+                    - textbox [ref=f36e83]
+                - row [ref=f36e84]:
+                  - columnheader "住所" [ref=f36e85]
+                  - rowheader "郵便番号" [ref=f36e86]
+                  - cell [ref=f36e87]:
+                    - textbox "郵便番号" [ref=f36e88]
+                    - button "住所検索" [ref=f36e89]
+                - row [ref=f36e90]:
+                  - rowheader "都道府県" [ref=f36e91]
+                  - cell "▼都道府県選択" [ref=f36e92]:
+                    - combobox [ref=f36e93]:
+                      - option "▼都道府県選択" [selected]
+                      - option "北海道"
+                      - option "青森県"
+                      - option "岩手県"
+                      - option "宮城県"
+                      - option "秋田県"
+                      - option "山形県"
+                      - option "福島県"
+                      - option "茨城県"
+                      - option "栃木県"
+                      - option "群馬県"
+                      - option "埼玉県"
+                      - option "千葉県"
+                      - option "東京都"
+                      - option "神奈川県"
+                      - option "新潟県"
+                      - option "富山県"
+                      - option "石川県"
+                      - option "福井県"
+                      - option "山梨県"
+                      - option "長野県"
+                      - option "岐阜県"
+                      - option "静岡県"
+                      - option "愛知県"
+                      - option "三重県"
+                      - option "滋賀県"
+                      - option "京都府"
+                      - option "大阪府"
+                      - option "兵庫県"
+                      - option "奈良県"
+                      - option "和歌山県"
+                      - option "鳥取県"
+                      - option "島根県"
+                      - option "岡山県"
+                      - option "広島県"
+                      - option "山口県"
+                      - option "徳島県"
+                      - option "香川県"
+                      - option "愛媛県"
+                      - option "高知県"
+                      - option "福岡県"
+                      - option "佐賀県"
+                      - option "長崎県"
+                      - option "熊本県"
+                      - option "大分県"
+                      - option "宮崎県"
+                      - option "鹿児島県"
+                      - option "沖縄県"
+                - row [ref=f36e94]:
+                  - rowheader "市区町村(カナ)" [ref=f36e95]
+                  - cell [ref=f36e97]:
+                    - textbox "市区町村(カナ)" [ref=f36e98]
+                - row [ref=f36e99]:
+                  - rowheader "市区町村" [ref=f36e100]
+                  - cell [ref=f36e101]:
+                    - textbox "市区町村" [ref=f36e102]
+                - row [ref=f36e103]:
+                  - rowheader "丁目・番地" [ref=f36e104]
+                  - cell [ref=f36e105]:
+                    - textbox "丁目・番地" [ref=f36e106]
+                - row [ref=f36e107]:
+                  - rowheader "マンション・ビル名(カナ)" [ref=f36e108]
+                  - cell [ref=f36e110]:
+                    - textbox "マンション・ビル名(カナ)" [ref=f36e111]
+                - row [ref=f36e112]:
+                  - rowheader "マンション・ビル名" [ref=f36e113]
+                  - cell [ref=f36e114]:
+                    - textbox "マンション・ビル名" [ref=f36e115]
+                - row [ref=f36e116]:
+                  - columnheader "連絡先" [ref=f36e117]
+                  - rowheader "電話番号" [ref=f36e118]
+                  - cell [ref=f36e119]:
+                    - textbox "電話番号" [ref=f36e120]
+                  - rowheader "FAX番号" [ref=f36e121]
+                  - cell [ref=f36e122]:
+                    - textbox "FAX番号" [ref=f36e123]
+                - row [ref=f36e124]:
+                  - rowheader "メールアドレス1" [ref=f36e125]
+                  - cell [ref=f36e126]:
+                    - textbox "メールアドレス1" [ref=f36e127]
+                - row [ref=f36e128]:
+                  - rowheader "メールアドレス2" [ref=f36e129]
+                  - cell [ref=f36e130]:
+                    - textbox "メールアドレス2" [ref=f36e131]
+                - row [ref=f36e132]:
+                  - rowheader "指名担当者" [ref=f36e133]
+                  - cell "▼担当者選択" [ref=f36e134]:
+                    - combobox "指名担当者" [ref=f36e135]:
+                      - option "▼担当者選択" [selected]
+                      - option "管理者"
+                      - option "テスト"
+                - row [ref=f36e136]:
+                  - rowheader "紹介者" [ref=f36e137]
+                  - cell [ref=f36e138]:
+                    - button "会員検索" [ref=f36e139]
+          - group "個人情報" [ref=f36e141]:
+            - table [ref=f36e143]:
+              - rowgroup [ref=f36e151]:
+                - row [ref=f36e152]:
+                  - rowheader "生年月日" [ref=f36e153]
+                  - cell "西暦 年 月 日" [ref=f36e154]:
+                    - text: 西暦
+                    - textbox [ref=f36e155]
+                    - text: 年
+                    - textbox [ref=f36e156]
+                    - text: 月
+                    - textbox [ref=f36e157]
+                    - text: 日
+                  - rowheader "性別" [ref=f36e158]
+                  - cell [ref=f36e159]:
+                    - list [ref=f36e160]:
+                      - listitem [ref=f36e161]:
+                        - radio "性別 男性" [ref=f36e162]
+                        - text: 男性
+                      - listitem [ref=f36e163]:
+                        - radio "女性 女性" [ref=f36e164]
+                        - text: 女性
+                  - rowheader "血液型" [ref=f36e165]
+                  - cell [ref=f36e166]:
+                    - combobox [ref=f36e167]:
+                      - option [selected]
+                      - option "A"
+                      - option "B"
+                      - option "O"
+                      - option "AB"
+                - row [ref=f36e168]:
+                  - rowheader "携帯電話番号" [ref=f36e169]
+                  - cell [ref=f36e170]:
+                    - textbox "携帯電話番号" [ref=f36e171]
+                - row [ref=f36e172]:
+                  - rowheader "個人メールアドレス" [ref=f36e173]
+                  - cell [ref=f36e174]:
+                    - textbox "個人メールアドレス" [ref=f36e175]
+                - row [ref=f36e176]:
+                  - rowheader "職業" [ref=f36e177]
+                  - cell "▼職業選択" [ref=f36e178]:
+                    - combobox "職業" [ref=f36e179]:
+                      - option "▼職業選択" [selected]
+                      - option "会社員"
+                      - option "自営・自由業"
+                      - option "公務員"
+                      - option "その他学生"
+                      - option "専業主婦"
+                      - option "フリーター"
+                      - option "無職"
+                      - option "その他"
+                      - option "大学生"
+                      - option "高校生"
+                      - option "中学生以下"
+                - row [ref=f36e180]:
+                  - rowheader "勤務先 名前(カナ)" [ref=f36e181]
+                  - cell [ref=f36e183]:
+                    - textbox "勤務先 名前(カナ)" [ref=f36e184]
+                - row [ref=f36e185]:
+                  - rowheader "勤務先 名前" [ref=f36e186]
+                  - cell [ref=f36e187]:
+                    - textbox "勤務先 名前" [ref=f36e188]
+                - row [ref=f36e189]:
+                  - rowheader "勤務先 業種" [ref=f36e190]
+                  - cell "▼業種選択" [ref=f36e191]:
+                    - combobox [ref=f36e192]:
+                      - option "▼業種選択" [selected]
+                      - option "農業"
+                      - option "林業"
+                      - option "漁業"
+                      - option "鉱業"
+                      - option "採石業"
+                      - option "砂利採取業"
+                      - option "建設業"
+                      - option "製造業"
+                      - option "電気・ガス・熱供給・水道業"
+                      - option "情報通信業"
+                      - option "運輸業"
+                      - option "郵便業"
+                      - option "卸売業"
+                      - option "小売業"
+                      - option "金融業"
+                      - option "保険業"
+                      - option "不動産業"
+                      - option "物品賃貸業"
+                      - option "学術研究"
+                      - option "専門・技術サービス業"
+                      - option "宿泊業"
+                      - option "飲食サービス業"
+                      - option "生活関連サービス業"
+                      - option "娯楽業"
+                      - option "教育"
+                      - option "学習支援業"
+                      - option "医療"
+                      - option "福祉"
+                      - option "他の営利事業"
+                      - option "その他（政治・経済・文化・宗教団体など）"
+                - row [ref=f36e193]:
+                  - rowheader "勤務先 電話番号" [ref=f36e194]
+                  - cell [ref=f36e195]:
+                    - textbox "勤務先 電話番号" [ref=f36e196]
+                  - rowheader "勤務先 ファックス番号" [ref=f36e197]
+                  - cell [ref=f36e198]:
+                    - textbox "勤務先 ファックス番号" [ref=f36e199]
+          - group "販促用情報" [ref=f36e200]:
+            - table [ref=f36e202]:
+              - rowgroup [ref=f36e208]:
+                - row [ref=f36e209]:
+                  - rowheader "メルマガ配信" [ref=f36e210]
+                  - cell [ref=f36e211]:
+                    - list [ref=f36e212]:
+                      - listitem [ref=f36e213]:
+                        - radio "メルマガ配信 配信する" [checked] [ref=f36e214]
+                        - text: 配信する
+                      - listitem [ref=f36e215]:
+                        - radio "配信しない" [ref=f36e216]
+                        - text: 配信しない
+                      - listitem [ref=f36e217]:
+                        - radio "不達配信" [ref=f36e218]
+                        - text: 不達配信
+                  - rowheader "アドレス区分" [ref=f36e219]
+                  - cell [ref=f36e220]:
+                    - combobox [ref=f36e221]:
+                      - option [selected]
+                      - option "パソコン"
+                      - option "DoCoMo"
+                      - option "AU"
+                      - option "Softbank"
+                      - option "その他"
+                - row [ref=f36e222]:
+                  - rowheader "予約リマインダーメール" [ref=f36e223]
+                  - cell [ref=f36e224]:
+                    - listitem [ref=f36e225]:
+                      - radio "配信する" [checked] [ref=f36e226]
+                      - text: 配信する
+                    - listitem [ref=f36e227]:
+                      - radio "配信しない" [ref=f36e228]
+                      - text: 配信しない
+                - row [ref=f36e229]:
+                  - rowheader "顧客グループ" [ref=f36e230]
+                  - cell [ref=f36e231]:
+                    - combobox [ref=f36e232]:
+                      - option [selected]
+                  - rowheader "新規来店動機" [ref=f36e233]
+                  - cell [ref=f36e234]:
+                    - combobox "新規来店動機" [ref=f36e235]:
+                      - option [selected]
+                      - option "たまたまきた"
+                - row [ref=f36e236]:
+                  - rowheader "備考" [ref=f36e237]
+                  - cell [ref=f36e238]:
+                    - textbox "備考 パスワード※" [ref=f36e239]
+          - group "家族情報" [ref=f36e240]:
+            - table [ref=f36e242]:
+              - rowgroup [ref=f36e243]:
+                - row [ref=f36e244]:
+                  - rowheader [ref=f36e245]:
+                    - generic [ref=f36e246]:
+                      - text: 配偶者
+                      - emphasis [ref=f36e247]: ※
+                  - cell "選択して下さい" [ref=f36e248]:
+                    - combobox "配偶者※" [ref=f36e249]:
+                      - option "選択して下さい" [selected]
+                      - option "有"
+                      - option "無"
+                - row [ref=f36e250]:
+                  - rowheader [ref=f36e251]:
+                    - generic [ref=f36e252]:
+                      - text: 結婚記念日
+                      - emphasis [ref=f36e253]: ※
+                  - cell "年 月 日" [ref=f36e254]:
+                    - textbox "結婚記念日※" [ref=f36e255]
+                    - text: 年
+                    - textbox [ref=f36e256]
+                    - text: 月
+                    - textbox [ref=f36e257]
+                    - text: 日
+          - group "Mascota" [ref=f36e258]:
+            - table [ref=f36e260]:
+              - rowgroup [ref=f36e261]:
+                - row [ref=f36e262]:
+                  - rowheader "Nombre" [ref=f36e263]
+                  - cell [ref=f36e264]:
+                    - textbox "Nombre" [ref=f36e265]
+                  - rowheader "Tipo" [ref=f36e266]
+                  - cell "選択して下さい" [ref=f36e267]:
+                    - combobox "Tipo" [ref=f36e268]:
+                      - option "選択して下さい" [selected]
+                      - option "Perro"
+                      - option "Gato"
+                      - option "Conejo"
+                      - option "Hamster"
+                      - option "Otros"
+                  - rowheader "Peso" [ref=f36e269]
+                  - cell "Kg" [ref=f36e270]:
+                    - textbox "Peso" [ref=f36e271]
+                    - text: Kg
+          - group "ログイン" [ref=f36e272]:
+            - table [ref=f36e274]:
+              - rowgroup [ref=f36e279]:
+                - row [ref=f36e280]:
+                  - rowheader "ID" [ref=f36e281]
+                  - cell "1100029" [ref=f36e282]
+                - row [ref=f36e283]:
+                  - rowheader [ref=f36e284]:
+                    - generic [ref=f36e285]:
+                      - text: パスワード
+                      - emphasis [ref=f36e286]: ※
+                  - cell [ref=f36e287]:
+                    - textbox [ref=f36e288]: "2687"
+          - button "この内容で確認する" [ref=f36e290]
+    - generic [ref=f36e292]:
+      - paragraph [ref=f36e293]: 管理者
+      - tablist [ref=f36e294]:
+        - tab "顧客管理" [expanded] [active] [ref=f36e295]
+        - tabpanel [ref=f36e296]:
+          - list [ref=f36e297]:
+            - listitem [ref=f36e298]:
+              - link "顧客新規登録" [ref=f36e299] [cursor=pointer]:
+                - /url: /system/category1/customer/customer_new.php
+            - listitem [ref=f36e300]:
+              - link "顧客検索" [ref=f36e301] [cursor=pointer]:
+                - /url: /system/category1/customer/customer_list.php
+            - listitem [ref=f36e302]:
+              - link "来店処理" [ref=f36e303] [cursor=pointer]:
+                - /url: /system/category1/customer/customer_search.php
+            - listitem [ref=f36e304]:
+              - link "登録・検索項目設定" [ref=f36e305] [cursor=pointer]:
+                - /url: /system/category1/customer/form_config.php
+            - listitem [ref=f36e306]:
+              - link "顧客情報集計" [ref=f36e307] [cursor=pointer]:
+                - /url: /system/category1/shukei/shukei_list.php
+            - listitem [ref=f36e308]:
+              - link "顧客グループ設定" [ref=f36e309] [cursor=pointer]:
+                - /url: /system/category1/customer/customer_group_category_new.php
+            - listitem [ref=f36e310]:
+              - link "初回来店動機項目設定" [ref=f36e311] [cursor=pointer]:
+                - /url: /system/category1/customer/raiten_douki.php
+            - listitem [ref=f36e312]:
+              - link "顧客ランク設定" [ref=f36e313] [cursor=pointer]:
+                - /url: /system/category1/rank/customer_rank_list.php
+            - listitem [ref=f36e314]:
+              - link "顧客ランク振り分け設定" [ref=f36e315] [cursor=pointer]:
+                - /url: /system/category1/rank/customer_rank_schedule.php
+            - listitem [ref=f36e316]:
+              - link "顧客追加情報設定" [ref=f36e317] [cursor=pointer]:
+                - /url: /system/category1/customer/search_cate_list.php
+  - paragraph [ref=f36e319]: Copyright © shop All Rights Reserved.

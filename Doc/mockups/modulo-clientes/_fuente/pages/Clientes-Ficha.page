@@ -1,0 +1,89 @@
+---META---
+{"title": "Ficha del cliente", "h": 1900, "maxw": 1200, "ctx": "{ module: 'clientes', active: 'buscar', crumbs: [{ label: 'Clientes', href: 'Clientes-Resumen.dc.html' }, { label: 'Buscar clientes', href: 'Clientes-Buscar.dc.html' }, { label: 'Ficha 1100028' }] }", "state": "{ tab: 'info', pw: false, confirmDel: false }"}
+---CONTENT---
+<a href="Clientes-Buscar.dc.html" style="font-size: 13px; font-weight: 700; color: {{T.link}}; text-decoration: none">← Volver a los resultados</a>
+
+<section aria-label="Cliente" style="{{T.card}}; padding: 22px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap">
+<span style="width: 64px; height: 64px; border-radius: 50%; background: {{T.accentSoft}}; color: {{T.accentSoftFg}}; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; flex-shrink: 0">十倉</span>
+<div style="flex-grow: 1; min-width: 220px">
+<div style="font-size: 12px; color: {{T.faint}}">トクラテスト トクラテスト</div>
+<h1 style="margin: 2px 0 0; font-size: 26px; font-weight: 800; font-family: {{T.head}}">十倉テスト 十倉テスト</h1>
+<div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; font-size: 13px">
+<span style="padding: 2px 10px; border-radius: 999px; background: {{T.surface2}}; font-weight: 700">Nº de socio 1100028</span>
+<span style="padding: 2px 10px; border-radius: 999px; background: {{T.surface2}}">Persona</span>
+<span style="padding: 2px 10px; border-radius: 999px; background: {{T.surface2}}">Tienda: shop</span>
+<span style="padding: 2px 10px; border-radius: 999px; background: {{T.accentSoft}}; color: {{T.accentSoftFg}}; font-weight: 700">Registrado</span>
+</div>
+</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap">
+<button type="button" onClick="{{askDel}}" style="{{T.btn}}; color: {{T.req}};">Eliminar cliente</button>
+<a href="Clientes-Nuevo.dc.html" style="{{T.btnP}}">Editar cliente</a>
+</div>
+</section>
+
+<sc-if value="{{confirmDel}}" hint-placeholder-val="{{ false }}">
+<div role="alertdialog" aria-label="Confirmar eliminación" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 14px 18px; border-radius: {{T.R}}px; background: {{delBg}}; color: {{delFg}}">
+<strong style="flex-grow: 1">¿Eliminar a este cliente? Se borrarán también su historial y sus datos adicionales.</strong>
+<button type="button" onClick="{{cancelDel}}" style="{{T.btn}}">Cancelar</button>
+<a href="Clientes-Buscar.dc.html" style="{{T.btn}}; background: #B42318; border-color: #B42318; color: #fff">Sí, eliminar</a>
+</div>
+</sc-if>
+
+<div role="tablist" aria-label="Secciones de la ficha" style="display: flex; flex-wrap: wrap; gap: 2px; border-bottom: 1px solid {{T.border}}">
+<sc-for list="{{tabs}}" as="tb" hint-placeholder-count="12"><button type="button" role="tab" aria-selected="{{tb.on}}" onClick="{{tb.pick}}" style="{{tb.style}}">{{tb.label}}</button></sc-for>
+</div>
+
+<sc-for list="{{sections}}" as="sec" hint-placeholder-count="4">
+<section aria-label="{{sec.title}}" style="{{T.card}}; overflow: hidden">
+<div style="{{sectionHead}}"><h2 style="{{h2}}">{{sec.title}}</h2></div>
+<dl class="g2" style="margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr))">
+<sc-for list="{{sec.items}}" as="fi" hint-placeholder-count="6">
+<div style="display: grid; grid-template-columns: 170px minmax(0, 1fr); border-top: 1px solid {{T.border}}; grid-column: {{fi.col}}">
+<dt style="padding: 12px 16px; font-size: 13px; font-weight: 700; color: {{T.muted}}; background: {{T.surface2}}">{{fi.k}}</dt>
+<dd style="margin: 0; padding: 12px 16px; display: flex; flex-direction: column; gap: 6px; min-width: 0">
+<span style="color: {{fi.color}}">{{fi.v}}</span>
+<sc-if value="{{fi.isPw}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{togglePw}}" style="{{T.btn}}; height: 30px; padding: 0 10px; align-self: flex-start; font-size: 12px">{{pwLabel}}</button></sc-if>
+<sc-if value="{{fi.hasNote}}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; color: {{T.faint}}; line-height: 1.5">{{fi.note}}</span></sc-if>
+</dd>
+</div>
+</sc-for>
+</dl>
+</section>
+</sc-for>
+
+<sc-if value="{{isEmptyTab}}" hint-placeholder-val="{{ false }}">
+<section style="{{T.card}}"><div style="{{empty}}"><strong style="color: {{T.text}}">{{emptyTitle}}</strong><span>No hay registros para este cliente.</span></div></section>
+</sc-if>
+
+<div style="display: flex; justify-content: center"><a href="Clientes-Buscar.dc.html" style="{{T.btn}}">Cerrar ficha</a></div>
+---VALS---
+      const dash = '—';
+      const it = (k, v, extra) => ({ k, v: v || dash, color: v ? T.text : T.faint, col: 'auto', isPw: false, hasNote: false, note: '', ...(extra || {}) });
+      const wide = { col: '1 / -1' };
+      const INFO = [
+        { title: 'Datos del cliente', items: [it('Nº de gestión'), it('Tienda de registro', 'shop'), it('Nombre (fonético)', 'トクラテスト トクラテスト'), it('Nombre', '十倉テスト 十倉テスト'), it('Dirección', '', wide), it('Email'), it('Teléfono'), it('Fax'), it('Fecha de nacimiento'), it('Sexo'), it('Ocupación'), it('Personal asignado'), it('Referido por'), it('Rango por importe', 'Actual — · Anterior —'), it('Rango por visitas', 'Actual — · Anterior —')] },
+        { title: 'Registro y acceso', items: [it('Fecha de alta', '2026/05/15 18:13'), it('Última actualización', '2026/05/15 18:13'), it('ID de acceso', '1100028'), it('Contraseña', s.pw ? '6992' : '••••', { isPw: true }), it('Registro de terminal', 'Sin terminal registrado', wide)] },
+        { title: 'Datos personales', items: [it('Email personal'), it('Teléfono móvil'), it('Lugar de trabajo'), it('Rubro del trabajo'), it('Teléfono del trabajo'), it('Fax del trabajo')] },
+        { title: 'Información de promoción', items: [
+          it('Newsletter', 'Suscrito'), it('Tipo de dirección'),
+          it('Correos no entregados', '0', { hasNote: true, note: 'Tras 3 errores de envío la dirección pasa a «no entregable». El contador también depende de la red y del operador: es solo orientativo.' }),
+          it('Dispositivo', 'iPhone · Inicio de sesión rápido: no configurado', { hasNote: true, note: 'Se actualiza cuando el cliente se registra, cambia sus datos o entra en Mi página.' }),
+          it('Recordatorio de reservas', 'Suscrito'), it('Grupo de cliente'), it('Motivo de primera visita'), it('Notas', '', wide)
+        ] }
+      ];
+      const EXTRA = {
+        sampleform: [{ title: 'sampleform', items: [it('remarks', '', wide), it('remarks2', '', wide)] }],
+        karte: [{ title: 'Ficha (カルテ)', items: [it('Contenido del mensaje', '', wide), it('Nombre del personal')] }],
+        familia: [{ title: 'Información familiar', items: [it('Cónyuge'), it('Aniversario de boda')] }],
+        mascota: [{ title: 'Mascota', items: [it('Nombre'), it('Tipo'), it('Peso')] }]
+      };
+      const TABS = [['info', 'Información'], ['visitas', 'Historial de visitas'], ['cupones', 'Mis cupones'], ['album', 'Mi álbum'], ['puntos', 'Puntos'], ['sellos', 'Sellos'], ['sampleform', 'sampleform'], ['karte', 'Ficha'], ['familia', 'Familia'], ['mascota', 'Mascota'], ['reservas', 'Reservas'], ['referidos', 'Referidos']];
+      const sections = s.tab === 'info' ? INFO : (EXTRA[s.tab] || []);
+      const cur = TABS.find((t) => t[0] === s.tab);
+      return {
+        tabs: TABS.map(([k, label]) => { const on = s.tab === k; return { label, on, pick: () => set({ tab: k }), style: 'min-height: 44px; padding: 0 14px; border: 0; background: transparent; font: inherit; white-space: nowrap; cursor: pointer; font-weight: ' + (on ? 700 : 500) + '; color: ' + (on ? T.text : T.muted) + '; box-shadow: inset 0 -2px 0 ' + (on ? T.accent : 'transparent') }; }),
+        sections, isEmptyTab: sections.length === 0, emptyTitle: cur ? cur[1] : '',
+        togglePw: () => set({ pw: !this.state.pw }), pwLabel: s.pw ? 'Ocultar' : 'Mostrar',
+        confirmDel: s.confirmDel, askDel: () => set({ confirmDel: true }), cancelDel: () => set({ confirmDel: false }),
+        delBg: T.dark ? '#3A1D20' : '#FDECEC', delFg: T.dark ? '#FFD7D9' : '#8F1D14'
+      };
