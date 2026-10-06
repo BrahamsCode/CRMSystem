@@ -8,7 +8,7 @@
     APP_TIMEZONE=Asia/Tokyo
     DB_HOST=db
     DB_PORT=5432
-    DB_DATABASE=crmsystem
+    DB_DATABASE=crmsystem2
     DB_USERNAME=root
     DB_PASSWORD=Root2020
     MAIL_MAILER=smtp
@@ -86,5 +86,14 @@
     | `MAILPIT_PORT` | 8026 | Mailpit |
     | `VITE_PORT` | 5174 | Vite 開発サーバー |
 
-    `COMPOSE_PROJECT_NAME` も他のプロジェクトと別の名前にしてください（同じ名前だとコンテナとボリュームが共有されます）。
+    `COMPOSE_PROJECT_NAME`（既定値 `crmsystem2`）も他のプロジェクトと別の名前にしてください（同じ名前だとコンテナとボリュームが共有されます）。
     変更後は `docker compose down && docker compose up -d` で再起動します。
+
+11. テスト用データベース
+
+    新しいボリュームで初回起動すると `docker/initdb` のスクリプトが `crmsystem2_testing` を作成します。
+    既存のボリュームの場合は手動で作成します。
+
+    ~~~ sh
+    docker compose exec db psql -U root -d postgres -c "CREATE DATABASE crmsystem2_testing;"
+    ~~~
