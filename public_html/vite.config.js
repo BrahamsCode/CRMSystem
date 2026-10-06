@@ -11,6 +11,11 @@ export default defineConfig({
         tailwindcss(),
     ],
     server: {
+        // Dentro del contenedor «node»: escucha en todas las interfaces y avisa al
+        // navegador del puerto del host (docker/.env → VITE_PORT)
+        host: true,
+        port: 5173,
+        hmr: { clientPort: Number(process.env.VITE_PORT ?? 5173) },
         watch: {
             ignored: ['**/storage/framework/views/**'],
         },

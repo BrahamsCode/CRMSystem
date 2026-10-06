@@ -56,7 +56,7 @@
 
 6. ブラウザで確認
 
-    http://localhost
+    http://localhost:8081
 
 
 7. フロントエンド（必要な時のみ）
@@ -66,7 +66,7 @@
     docker compose run --rm node npm run build
     ~~~
 
-8. メール確認 (Mailpit): http://localhost:8025
+8. メール確認 (Mailpit): http://localhost:8026
 
 9. ディスク容量の解放（ビルドキャッシュ削除）
 
@@ -74,3 +74,17 @@
     docker builder prune -f
     docker image prune -f
     ~~~
+
+10. ポート設定（他のプロジェクトと同時に起動する場合）
+
+    ホスト側のポートは `docker/.env` で変更できます。
+
+    | 変数 | 既定値 | 用途 |
+    |---|---|---|
+    | `APP_PORT` | 8081 | Web (http://localhost:8081) |
+    | `DB_FORWARD_PORT` | 15434 | PostgreSQL（ホストからの接続用） |
+    | `MAILPIT_PORT` | 8026 | Mailpit |
+    | `VITE_PORT` | 5174 | Vite 開発サーバー |
+
+    `COMPOSE_PROJECT_NAME` も他のプロジェクトと別の名前にしてください（同じ名前だとコンテナとボリュームが共有されます）。
+    変更後は `docker compose down && docker compose up -d` で再起動します。
