@@ -49,13 +49,58 @@ it('registra un cliente nuevo', function () {
         'last_name' => 'Tanaka',
         'first_name' => 'Yui',
         'mail1' => 'yui@example.com',
-        'mail_magazine_flg' => 1,
+        'mail_magazine' => 1,
         'reservation_reminder_flg' => 0,
+        'password' => '1234',
     ])->assertRedirect();
 
     expect(Customer::where('mail1', 'yui@example.com')->first())
         ->not->toBeNull()
-        ->reservation_reminder_flg->toBe(0);
+        ->reservation_reminder_flg->toBe(0)
+        ->sex->toBe(\App\Enums\Sex::Unknown);
+});
+
+// Mismos datos que se probaron en el formulario del legacy (顧客新規登録)
+it('normaliza como el legacy: teléfonos y código postal a dígitos, lecturas a katakana', function () {
+    $this->post(route('admin.customers.store'), [
+        'shop_id' => Shop::first()->id, 'type' => 1, 'password' => 'pass1234',
+        'last_name' => 'テスト', 'first_name' => '太郎', 'last_name_kana' => 'てすと', 'first_name_kana' => 'ﾀﾛｳ',
+        'zip' => '530-0001', 'pref' => '大阪府', 'city' => '大阪市北区', 'street_address' => '梅田1-2-3', 'building' => '梅田ビル502',
+        'tel1' => '06-1234-5678', 'tel2' => '０９０-１１１１-２２２２', 'tel3' => '06 1234 5679', 'sex' => 2, 'birth_date' => '1990-02-28',
+        'company' => ['name' => '勤務先株式会社', 'name_kana' => 'きんむさき', 'industry' => 8, 'tel1' => '06-0000-1111', 'tel3' => '06-0000-2222',
+            // Datos de empresa enviados por error en una persona: se descartan
+            'capital' => 1000, 'department' => '営業部'],
+    ])->assertSessionHasNoErrors()->assertRedirect();
+
+    $c = Customer::with('company')->where('last_name', 'テスト')->firstOrFail();
+    expect($c)->zip->toBe('5300001')->tel1->toBe('0612345678')->tel2->toBe('09011112222')->tel3->toBe('0612345679')
+        ->last_name_kana->toBe('テスト')->first_name_kana->toBe('タロウ')->building->toBe('梅田ビル502')
+        ->and($c->company)->name->toBe('勤務先株式会社')->name_kana->toBe('キンムサキ')->tel1->toBe('0600001111')
+        ->capital->toBeNull()->department->toBeNull();
+});
+
+it('registra una empresa con sus datos y sin datos personales', function () {
+    $this->post(route('admin.customers.store'), [
+        'shop_id' => Shop::first()->id, 'type' => 2, 'password' => 'pass1234', 'last_name' => '株式会社テスト',
+        'birth_date' => '1990-01-01', 'tel2' => '09011112222', 'sex' => 1,
+        'company' => ['founded_on' => '2001-04-01', 'capital' => '10000000', 'industry' => 7, 'department' => '営業部',
+            'representative_last_name' => '代表', 'representative_first_name' => '花子', 'representative_last_name_kana' => 'ダイヒョウ',
+            'representative_sex' => 2, 'contact_last_name' => '担当', 'contact_tel1' => '06-3333-4444', 'contact_mail' => 'tantou@example.com'],
+    ])->assertSessionHasNoErrors();
+
+    $c = Customer::with('company')->where('last_name', '株式会社テスト')->firstOrFail();
+    expect($c)->sex->toBe(\App\Enums\Sex::NotApplicable)->birth_date->toBeNull()->tel2->toBeNull()
+        ->and($c->company)->capital->toBe(10000000)->contact_tel1->toBe('0633334444')->representative_sex->toBe(\App\Enums\Sex::Female);
+
+    $this->get(route('admin.customers.show', $c))->assertOk()->assertSee('Datos de empresa')->assertSee('営業部');
+});
+
+it('rechaza lo que el legacy rechaza y también las fechas imposibles que el legacy acepta', function () {
+    $this->post(route('admin.customers.store'), [
+        'shop_id' => Shop::first()->id, 'type' => 1, 'last_name' => 'Mal',
+        'last_name_kana' => 'Taro', 'zip' => '53-ab', 'tel1' => 'abc-1234', 'mail1' => 'no-es-email',
+        'birth_date' => '1990-02-29', 'wedding_date' => '2099-01-01',
+    ])->assertSessionHasErrors(['last_name_kana', 'zip', 'tel1', 'mail1', 'birth_date', 'wedding_date', 'password']);
 });
 
 it('registra una visita y respeta el intervalo de la tienda', function () {

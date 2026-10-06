@@ -26,8 +26,8 @@ class DashboardController extends ModuleController
             // Las cifras de la portada del legacy: registrados y no entregables
             'members' => [
                 'total' => Customer::where('status', 1)->count(),
-                'reachable' => Customer::where('status', 1)->whereNotNull('mail1')->where('mail_magazine_flg', MailMagazine::Send)->count(),
-                'undeliverable' => Customer::where('status', 1)->where('mail_magazine_flg', MailMagazine::Undeliverable)->count(),
+                'reachable' => Customer::where('status', 1)->whereNotNull('mail1')->where('mail_magazine', MailMagazine::Send)->count(),
+                'undeliverable' => Customer::where('status', 1)->where('mail_magazine', MailMagazine::Undeliverable)->count(),
                 'month' => Customer::where('created_at', '>=', $today->copy()->startOfMonth())->count(),
                 'today' => Customer::whereDate('created_at', $today)->count(),
             ],

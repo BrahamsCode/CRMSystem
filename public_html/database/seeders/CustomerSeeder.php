@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Enums\AddressType;
 use App\Enums\CustomerStatus;
 use App\Enums\CustomerType;
-use App\Enums\AddressType;
+use App\Enums\Industry;
 use App\Enums\MailMagazine;
 use App\Enums\Occupation;
 use App\Enums\Sex;
@@ -29,6 +30,7 @@ class CustomerSeeder extends Seeder
 
         $this->delMockup($shop, $grupo, $motivos);
         $this->generados($tiendas, $grupo, $motivos);
+        $this->conEmpresa($tiendas->first());
 
         $this->command?->info('CustomerSeeder: ' . Customer::count() . ' clientes en la base.');
     }
@@ -59,15 +61,15 @@ class CustomerSeeder extends Seeder
                     'first_name_kana' => $nombreKana,
                     'sex' => $sexo,
                     'birth_date' => now()->subYears(25 + $i)->subDays($i * 37),
-                    'tel1' => '06-' . str_pad((string) (1000 + $i), 4, '0', STR_PAD_LEFT) . '-0000',
+                    'tel1' => '06' . str_pad((string) (1000 + $i), 4, '0', STR_PAD_LEFT) . '0000',
                     'mail1' => 'cliente' . ($i + 1) . '@example.com',
-                    'zip' => '530-000' . $i,
+                    'zip' => '530000' . ($i % 10),
                     'pref' => 'Osaka',
                     'city' => 'Osaka',
                     'street_address' => 'Kita-ku ' . ($i + 1) . '-' . ($i + 2),
                     'customer_group_id' => $grupo?->id,
                     'visit_motive_id' => $motivos->get($i % max($motivos->count(), 1)),
-                    'mail_magazine_flg' => MailMagazine::Send,
+                    'mail_magazine' => MailMagazine::Send,
                     'address_type' => AddressType::cases()[$i % count(AddressType::cases())],
                     'occupation' => Occupation::cases()[$i % count(Occupation::cases())],
                     'status' => CustomerStatus::Registered,
@@ -146,11 +148,11 @@ class CustomerSeeder extends Seeder
                     'sex' => $n % 2 === 0 ? Sex::Male : Sex::Female,
                     'birth_date' => now()->subYears(20 + ($n % 45))->subDays($n * 11),
                     'mail1' => "gen{$mesAtras}_{$n}@example.com",
-                    'tel1' => '06-' . str_pad((string) (2000 + $n), 4, '0', STR_PAD_LEFT) . '-' . str_pad((string) $mesAtras, 4, '0', STR_PAD_LEFT),
+                    'tel1' => '06' . str_pad((string) (2000 + $n), 4, '0', STR_PAD_LEFT) . str_pad((string) $mesAtras, 4, '0', STR_PAD_LEFT),
                     'pref' => 'Osaka',
                     'customer_group_id' => $tienda->id === $grupo?->shop_id ? $grupo->id : null,
                     'visit_motive_id' => $motivos->get($n % max($motivos->count(), 1)),
-                    'mail_magazine_flg' => MailMagazine::Send,
+                    'mail_magazine' => MailMagazine::Send,
                     'address_type' => AddressType::cases()[$n % count(AddressType::cases())],
                     'occupation' => Occupation::cases()[$n % count(Occupation::cases())],
                     'status' => CustomerStatus::Registered,
@@ -162,5 +164,33 @@ class CustomerSeeder extends Seeder
                 $this->visitas($cliente, $visitas, 3000 + ($n % 5) * 800);
             }
         }
+    }
+
+    /**
+     * Un cliente empresa y una persona con lugar de trabajo, con los mismos datos
+     * que se probaron en el formulario del legacy (法人情報 / 勤務先).
+     */
+    private function conEmpresa(Shop $shop): void
+    {
+        $empresa = Customer::firstOrCreate(['shop_id' => $shop->id, 'last_name' => '株式会社テスト'], [
+            'type' => CustomerType::Company, 'last_name_kana' => 'カブシキガイシャテスト',
+            'zip' => '5300001', 'pref' => '大阪府', 'city' => '大阪市北区', 'street_address' => '梅田1-2-3', 'building' => '梅田ビル502',
+            'tel1' => '0612345678', 'tel3' => '0612345679', 'mail1' => 'empresa@example.com',
+            'mail_magazine' => MailMagazine::Send, 'status' => CustomerStatus::Registered,
+        ]);
+        $empresa->company()->firstOrCreate([], [
+            'industry' => Industry::cases()[6], 'department' => '営業部', 'founded_on' => '2001-04-01', 'capital' => 10000000,
+            'representative_last_name' => '代表', 'representative_first_name' => '花子',
+            'representative_last_name_kana' => 'ダイヒョウ', 'representative_first_name_kana' => 'ハナコ',
+            'representative_birth_date' => '1970-05-05', 'representative_sex' => Sex::Female,
+            'contact_last_name' => '担当', 'contact_first_name' => '次郎', 'contact_last_name_kana' => 'タントウ', 'contact_first_name_kana' => 'ジロウ',
+            'contact_tel1' => '0633334444', 'contact_tel3' => '0633335555', 'contact_mail' => 'tantou@example.com',
+        ]);
+
+        $persona = Customer::where('shop_id', $shop->id)->where('type', CustomerType::Person)->orderBy('id')->first();
+        $persona?->company()->firstOrCreate([], [
+            'name' => '勤務先株式会社', 'name_kana' => 'キンムサキカブシキガイシャ', 'industry' => Industry::cases()[7],
+            'tel1' => '0600001111', 'tel3' => '0600002222',
+        ]);
     }
 }

@@ -1550,9 +1550,9 @@ $$ LANGUAGE plpgsql;
 ## Recursos Adicionales
 
 - [Documentación PostgreSQL JSONB](https://www.postgresql.org/docs/current/datatype-json.html)
-- [Documentación de las 23 vistas del legacy](./docs/mockups/modulo-clientes/DOCUMENTACION_LEGACY.md)
-- [Flujos del módulo de clientes](./docs/mockups/modulo-clientes/FLUJOS_DETALLADOS.md)
-- [Índice de capturas](./docs/mockups/modulo-clientes/INDICE_CAPTURAS.md)
+- [Documentación de las 23 vistas del legacy](../mockups/modulo-clientes/DOCUMENTACION_LEGACY.md)
+- [Flujos del módulo de clientes](../mockups/modulo-clientes/FLUJOS_DETALLADOS.md)
+- [Índice de capturas](../mockups/modulo-clientes/INDICE_CAPTURAS.md)
 
 ---
 

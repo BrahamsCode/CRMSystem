@@ -127,8 +127,8 @@ describe('CustomerSearch', function () {
 describe('Envíos', function () {
     beforeEach(function () {
         Mail::fake();
-        $this->yes = makeCustomer(['last_name' => 'Recibe', 'mail_magazine_flg' => MailMagazine::Send]);
-        $this->no = makeCustomer(['last_name' => 'NoQuiere', 'mail_magazine_flg' => MailMagazine::DoNotSend]);
+        $this->yes = makeCustomer(['last_name' => 'Recibe', 'mail_magazine' => MailMagazine::Send]);
+        $this->no = makeCustomer(['last_name' => 'NoQuiere', 'mail_magazine' => MailMagazine::DoNotSend]);
     });
 
     $payload = fn (array $extra = []) => $extra + [
@@ -209,7 +209,7 @@ describe('Envíos', function () {
             $dispatcher->registerBounce($this->yes->fresh());
         }
 
-        expect($this->yes->fresh())->bounce_count->toBe(3)->mail_magazine_flg->toBe(MailMagazine::Undeliverable);
+        expect($this->yes->fresh())->bounce_count->toBe(3)->mail_magazine->toBe(MailMagazine::Undeliverable);
     });
 });
 
@@ -328,7 +328,7 @@ describe('Fidelización', function () {
     it('al completar la tarjeta entrega el cupón y empieza otra', function () {
         $premio = coupon(['usage_type' => CouponUsage::StampExchange, 'cost' => 10]);
         StampRule::create(['shop_id' => $this->shop->id, 'stamp_count' => 10, 'coupon_id' => $premio->id, 'notify_flg' => 1, 'reset_flg' => 1]);
-        $c = makeCustomer(['mail_magazine_flg' => MailMagazine::Send]);
+        $c = makeCustomer(['mail_magazine' => MailMagazine::Send]);
 
         app(LoyaltyService::class)->addStamps($c, $this->shop, 9, StampMovement::Adjustment);
 

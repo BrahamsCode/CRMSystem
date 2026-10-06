@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Enums\AddressType;
 use App\Enums\CustomerStatus;
 use App\Enums\CustomerType;
-use App\Enums\Industry;
 use App\Enums\MailMagazine;
 use App\Enums\Occupation;
 use App\Enums\Sex;
@@ -29,15 +28,11 @@ class Customer extends BaseModel
             'status' => CustomerStatus::class,
             'type' => CustomerType::class,
             'sex' => Sex::class,
-            'mail_magazine_flg' => MailMagazine::class,
+            'mail_magazine' => MailMagazine::class,
             'address_type' => AddressType::class,
             'occupation' => Occupation::class,
-            'company_industry' => Industry::class,
-            'industry' => Industry::class,
             'birth_date' => 'date',
             'wedding_date' => 'date',
-            'company_founded_date' => 'date',
-            'rep_birth_date' => 'date',
             'last_visit_date' => 'date',
             'next_visit_date' => 'date',
             'last_login_at' => 'datetime',
@@ -54,6 +49,13 @@ class Customer extends BaseModel
     {
         static::creating(function (self $customer) {
             $customer->code ??= static::nextCode();
+        });
+
+        // sex no admite null: sin dato es 0 (ISO 5218 «no conocido») y una empresa, 9
+        static::saving(function (self $customer) {
+            if ($customer->sex === null) {
+                $customer->sex = $customer->type === CustomerType::Company ? Sex::NotApplicable : Sex::Unknown;
+            }
         });
     }
 
@@ -85,6 +87,17 @@ class Customer extends BaseModel
     public function shop(): BelongsTo
     {
         return $this->belongsTo(Shop::class);
+    }
+
+    /** Lugar de trabajo o datos de empresa, según el tipo de cliente */
+    public function company(): HasOne
+    {
+        return $this->hasOne(CustomerCompany::class);
+    }
+
+    public function isCompany(): bool
+    {
+        return $this->type === CustomerType::Company;
     }
 
     /** El legacy muestra 端末登録有/無; se deduce de si hay terminal asignado */

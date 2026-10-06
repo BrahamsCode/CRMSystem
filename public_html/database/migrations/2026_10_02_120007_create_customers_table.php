@@ -25,60 +25,40 @@ return new class extends Migration
             $table->text('last_name_kana')->nullable();
             $table->text('first_name_kana')->nullable();
             $table->date('birth_date')->nullable();
-            $table->smallInteger('sex')->nullable()->comment('ISO 5218 — 1: masculino, 2: femenino');
+            // ISO 5218 completo: el legacy permite dejarlo vacío (0) y una empresa no tiene sexo (9)
+            $table->smallInteger('sex')->default(0)->comment('ISO 5218 — 0: no conocido, 1: masculino, 2: femenino, 9: no aplica');
             $table->text('blood_type')->nullable();
             $table->smallInteger('occupation')->nullable()->comment('Catálogo App\Enums\Occupation');
 
             // --- Dirección ---
-            $table->text('zip')->nullable();
+            // Las cuatro columnas del estándar más el edificio, que el legacy guarda
+            // aparte (マンション・ビル名) y que las etiquetas de correo imprimen en su
+            // propia línea. Las lecturas en kana de ciudad y edificio no se migran: no
+            // se buscan ni se ordenan por ellas.
+            $table->text('zip')->nullable()->comment('Solo dígitos, como el legacy: 5300001');
             $table->text('pref')->nullable();
-            $table->text('city')->nullable();
-            $table->text('city_kana')->nullable();
-            $table->text('street_address')->nullable();
-            $table->text('building')->nullable();
-            $table->text('building_kana')->nullable();
+            $table->text('city')->nullable()->comment('市区町村');
+            $table->text('street_address')->nullable()->comment('丁目・番地');
+            $table->text('building')->nullable()->comment('マンション・ビル名');
 
-            // --- Contacto ---
+            // --- Contacto (teléfonos solo dígitos, como el legacy) ---
             $table->text('tel1')->nullable()->comment('Teléfono');
-            $table->text('tel2')->nullable()->comment('Teléfono móvil');
-            $table->text('fax')->nullable();
+            $table->text('tel2')->nullable()->comment('Teléfono móvil (solo personas)');
+            $table->text('tel3')->nullable()->comment('Fax');
             $table->text('mail1')->nullable();
             $table->text('mail2')->nullable();
-            $table->text('mail3')->nullable()->comment('Email personal');
+            $table->text('mail3')->nullable()->comment('Email personal (solo personas)');
 
-            // --- Lugar de trabajo ---
-            $table->text('company_name')->nullable();
-            $table->text('company_name_kana')->nullable();
-            $table->smallInteger('company_industry')->nullable()->comment('Rubro del lugar de trabajo — App\Enums\Industry');
-            $table->smallInteger('industry')->nullable()->comment('Rubro propio cuando el cliente es empresa — App\Enums\Industry');
-            $table->text('company_dept')->nullable()->comment('Departamento');
-            $table->text('company_tel')->nullable();
-            $table->text('company_fax')->nullable();
-            $table->date('company_founded_date')->nullable();
-            $table->integer('company_capital')->nullable()->comment('Capital social, unidad mínima de la moneda');
-
-            // --- Representante (clientes de tipo empresa) ---
-            $table->text('rep_last_name')->nullable();
-            $table->text('rep_first_name')->nullable();
-            $table->text('rep_last_name_kana')->nullable();
-            $table->text('rep_first_name_kana')->nullable();
-            $table->date('rep_birth_date')->nullable();
-
-            // --- Persona de contacto ---
-            $table->text('contact_last_name')->nullable();
-            $table->text('contact_first_name')->nullable();
-            $table->text('contact_last_name_kana')->nullable();
-            $table->text('contact_first_name_kana')->nullable();
-            $table->text('contact_tel')->nullable();
-            $table->text('contact_mail')->nullable();
+            // Lugar de trabajo (personas) y datos de empresa (empresas): tabla
+            // customer_companies, una fila por cliente.
 
             // --- Información familiar ---
             $table->smallInteger('spouse_flg')->nullable()->comment('0: sin cónyuge, 1: con cónyuge');
             $table->date('wedding_date')->nullable()->comment('Aniversario de boda');
 
             // --- Promoción ---
-            $table->smallInteger('mail_magazine_flg')->default(1)
-                ->comment('1: enviar, 2: no enviar, 3: no entregable');
+            $table->smallInteger('mail_magazine')->default(1)
+                ->comment('1: enviar, 2: no enviar, 3: no entregable (legacy mailmaga_flg: 1, 0, 9)');
             $table->integer('bounce_count')->default(0)->comment('Correos no entregados');
             $table->smallInteger('reservation_reminder_flg')->default(1)
                 ->comment('0: no enviar, 1: enviar recordatorio de reservas');

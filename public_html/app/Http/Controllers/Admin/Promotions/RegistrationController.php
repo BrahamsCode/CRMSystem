@@ -19,7 +19,7 @@ class RegistrationController extends ModuleController
 {
     public function index(): View
     {
-        $byType = Customer::where('status', 1)->where('mail_magazine_flg', MailMagazine::Send)->whereNotNull('mail1')
+        $byType = Customer::where('status', 1)->where('mail_magazine', MailMagazine::Send)->whereNotNull('mail1')
             ->selectRaw("coalesce(address_type::text, '') as tipo, count(*) as total")
             ->groupBy('tipo')->pluck('total', 'tipo');
 

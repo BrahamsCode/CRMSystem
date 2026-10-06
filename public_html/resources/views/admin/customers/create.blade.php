@@ -23,6 +23,8 @@
 
     <div x-data="{
              paso: 'form',
+             /* 1 persona, 2 empresa: como en el legacy, cada tipo tiene su propia sección 2 */
+             tipo: {{ (int) old('type', 1) }},
              get bloqueado() { return this.paso !== 'form' },
              ir(p) { this.paso = p; window.scrollTo({ top: 0, behavior: 'smooth' }) },
 
@@ -41,7 +43,6 @@
                      const d = await r.json();
                      this.$refs.pref.value = d.pref;
                      this.$refs.city.value = d.city;
-                     this.$refs.cityKana.value = d.city_kana;
                      this.$refs.calle.focus();
                  } catch (e) {
                      this.errorZip = @js(__('customers.nuevo.zip_error'));
@@ -77,7 +78,11 @@
                         <span class="flex h-6 w-6 items-center justify-center rounded-full bg-surface2 text-xs font-extrabold text-ink">
                             {{ $loop->iteration }}
                         </span>
-                        {{ $x['label'] }}
+                        @if ($x['id'] === 'personal')
+                            <span x-text="tipo === 2 ? @js($t('seccion_empresa')) : @js($x['label'])">{{ $x['label'] }}</span>
+                        @else
+                            {{ $x['label'] }}
+                        @endif
                     </a>
                 @endforeach
             </nav>
@@ -117,7 +122,7 @@
                             <div class="flex flex-wrap gap-2">
                                 @foreach (CustomerType::cases() as $type)
                                     <label class="inline-flex h-10 items-center gap-2 rounded-ctl border border-line bg-surface px-3.5 text-sm font-semibold">
-                                        <input type="radio" name="type" value="{{ $type->value }}"
+                                        <input type="radio" name="type" value="{{ $type->value }}" x-model.number="tipo"
                                                @checked(old('type', 1) == $type->value)
                                                class="accent-[var(--crm-accent)]">
                                         {{ $type === CustomerType::Person ? $t('tipo_persona') : $t('tipo_empresa') }}
@@ -134,6 +139,7 @@
                         </x-ui.field>
                         <x-ui.field :label="$t('apellido')" required>
                             <x-ui.input name="last_name" :value="old('last_name')" autocomplete="family-name" required />
+                            <span x-show="tipo === 2" x-cloak class="mt-1.5 block text-xs text-faint">{{ $t('empresa_nombre_hint') }}</span>
                         </x-ui.field>
                         <x-ui.field :label="$t('nombre')">
                             <x-ui.input name="first_name" :value="old('first_name')" autocomplete="given-name" />
@@ -157,18 +163,12 @@
                         <x-ui.field :label="$t('pref')">
                             <x-ui.input name="pref" x-ref="pref" :value="old('pref')" />
                         </x-ui.field>
-                        <x-ui.field :label="$t('ciudad_kana')">
-                            <x-ui.input name="city_kana" x-ref="cityKana" :value="old('city_kana')" />
-                        </x-ui.field>
                         <x-ui.field :label="$t('ciudad')">
                             <x-ui.input name="city" x-ref="city" :value="old('city')" />
                         </x-ui.field>
                         <x-ui.field :label="$t('calle')">
                             <x-ui.input name="street_address" x-ref="calle" :value="old('street_address')"
                                         autocomplete="street-address" />
-                        </x-ui.field>
-                        <x-ui.field :label="$t('edificio_kana')">
-                            <x-ui.input name="building_kana" :value="old('building_kana')" />
                         </x-ui.field>
                         <x-ui.field :label="$t('edificio')">
                             <x-ui.input name="building" :value="old('building')" />
@@ -180,7 +180,7 @@
                             <x-ui.input type="tel" name="tel1" :value="old('tel1')" autocomplete="tel" />
                         </x-ui.field>
                         <x-ui.field :label="$t('fax')">
-                            <x-ui.input type="tel" name="fax" :value="old('fax')" />
+                            <x-ui.input type="tel" name="tel3" :value="old('tel3')" />
                         </x-ui.field>
                         <x-ui.field :label="$t('mail1')">
                             <x-ui.input type="email" name="mail1" :value="old('mail1')" autocomplete="email" />
@@ -195,6 +195,8 @@
                     </x-customers.form-section>
 
                     {{-- 2 --}}
+                    {{-- Persona: datos personales y lugar de trabajo. El fieldset deshabilitado no envía nada. --}}
+                    <fieldset x-show="tipo !== 2" :disabled="tipo === 2" class="m-0 min-w-0 border-0 p-0">
                     <x-customers.form-section id="personal" number="2" :title="$t('seccion_personal')">
                         <x-ui.field :label="$t('nacimiento')">
                             <x-ui.input type="date" name="birth_date" :value="old('birth_date')" />
@@ -202,13 +204,13 @@
 
                         <x-ui.field :label="$t('sexo')" group>
                             <div class="flex flex-wrap gap-2">
-                                @foreach (Sex::cases() as $sexo)
+                                @foreach (Sex::forPeople() as $sexo)
                                     <label class="inline-flex h-10 items-center gap-2 rounded-ctl border border-line bg-surface px-3.5 text-sm font-semibold">
                                         <input type="radio" name="sex" value="{{ $sexo->value }}"
-                                               @checked(old('sex') == $sexo->value)
+                                               @checked((int) old('sex', 0) === $sexo->value)
                                                class="accent-[var(--crm-accent)]">
                                         {{ app()->getLocale() === 'ja'
-                                            ? ($sexo === Sex::Male ? '男性' : '女性')
+                                            ? [0 => '未設定', 1 => '男性', 2 => '女性'][$sexo->value]
                                             : $sexo->label() }}
                                     </label>
                                 @endforeach
@@ -243,16 +245,16 @@
                         <x-customers.subheading>{{ $t('sub_trabajo') }}</x-customers.subheading>
 
                         <x-ui.field :label="$t('trabajo_nombre_kana')">
-                            <x-ui.input name="company_name_kana" :value="old('company_name_kana')" />
+                            <x-ui.input name="company[name_kana]" :value="old('company.name_kana')" />
                         </x-ui.field>
                         <x-ui.field :label="$t('trabajo_nombre')">
-                            <x-ui.input name="company_name" :value="old('company_name')" autocomplete="organization" />
+                            <x-ui.input name="company[name]" :value="old('company.name')" autocomplete="organization" />
                         </x-ui.field>
                         <x-ui.field :label="$t('rubro')">
-                            <x-ui.select name="company_industry">
+                            <x-ui.select name="company[industry]">
                                 <option value="">{{ __('customers.comun.seleccionar') }}</option>
                                 @foreach (Industry::cases() as $rubro)
-                                    <option value="{{ $rubro->value }}" @selected(old('company_industry') == $rubro->value)>
+                                    <option value="{{ $rubro->value }}" @selected(old('company.industry') == $rubro->value)>
                                         {{ $rubro->label() }}
                                     </option>
                                 @endforeach
@@ -260,12 +262,87 @@
                         </x-ui.field>
                         <div class="hidden sm:block"></div>
                         <x-ui.field :label="$t('trabajo_tel')">
-                            <x-ui.input type="tel" name="company_tel" :value="old('company_tel')" />
+                            <x-ui.input type="tel" name="company[tel1]" :value="old('company.tel1')" />
                         </x-ui.field>
                         <x-ui.field :label="$t('trabajo_fax')">
-                            <x-ui.input type="tel" name="company_fax" :value="old('company_fax')" />
+                            <x-ui.input type="tel" name="company[tel3]" :value="old('company.tel3')" />
                         </x-ui.field>
                     </x-customers.form-section>
+                    </fieldset>
+
+                    {{-- Empresa: 法人情報 del legacy --}}
+                    <fieldset x-show="tipo === 2" x-cloak :disabled="tipo !== 2" class="m-0 min-w-0 border-0 p-0">
+                    <x-customers.form-section id="empresa" number="2" :title="$t('seccion_empresa')">
+                        <x-ui.field :label="$t('empresa_fundacion')">
+                            <x-ui.input type="date" name="company[founded_on]" :value="old('company.founded_on')" />
+                        </x-ui.field>
+                        <x-ui.field :label="$t('empresa_capital')">
+                            <x-ui.input type="number" min="0" name="company[capital]" :value="old('company.capital')" />
+                        </x-ui.field>
+                        <x-ui.field :label="$t('rubro')">
+                            <x-ui.select name="company[industry]">
+                                <option value="">{{ __('customers.comun.seleccionar') }}</option>
+                                @foreach (Industry::cases() as $rubro)
+                                    <option value="{{ $rubro->value }}" @selected(old('company.industry') == $rubro->value)>{{ $rubro->label() }}</option>
+                                @endforeach
+                            </x-ui.select>
+                        </x-ui.field>
+                        <x-ui.field :label="$t('empresa_departamento')">
+                            <x-ui.input name="company[department]" :value="old('company.department')" />
+                        </x-ui.field>
+
+                        <x-customers.subheading>{{ $t('empresa_representante') }}</x-customers.subheading>
+                        <x-ui.field :label="$t('apellido_kana')">
+                            <x-ui.input name="company[representative_last_name_kana]" :value="old('company.representative_last_name_kana')" />
+                        </x-ui.field>
+                        <x-ui.field :label="$t('nombre_kana')">
+                            <x-ui.input name="company[representative_first_name_kana]" :value="old('company.representative_first_name_kana')" />
+                        </x-ui.field>
+                        <x-ui.field :label="$t('apellido')">
+                            <x-ui.input name="company[representative_last_name]" :value="old('company.representative_last_name')" />
+                        </x-ui.field>
+                        <x-ui.field :label="$t('nombre')">
+                            <x-ui.input name="company[representative_first_name]" :value="old('company.representative_first_name')" />
+                        </x-ui.field>
+                        <x-ui.field :label="$t('nacimiento')">
+                            <x-ui.input type="date" name="company[representative_birth_date]" :value="old('company.representative_birth_date')" />
+                        </x-ui.field>
+                        <x-ui.field :label="$t('sexo')" group>
+                            <div class="flex flex-wrap gap-2">
+                                @foreach (Sex::forPeople() as $sexo)
+                                    <label class="inline-flex h-10 items-center gap-2 rounded-ctl border border-line bg-surface px-3.5 text-sm font-semibold">
+                                        <input type="radio" name="company[representative_sex]" value="{{ $sexo->value }}"
+                                               @checked((int) old('company.representative_sex', 0) === $sexo->value) class="accent-[var(--crm-accent)]">
+                                        {{ $sexo->label() }}
+                                    </label>
+                                @endforeach
+                            </div>
+                        </x-ui.field>
+
+                        <x-customers.subheading>{{ $t('empresa_contacto') }}</x-customers.subheading>
+                        <x-ui.field :label="$t('apellido_kana')">
+                            <x-ui.input name="company[contact_last_name_kana]" :value="old('company.contact_last_name_kana')" />
+                        </x-ui.field>
+                        <x-ui.field :label="$t('nombre_kana')">
+                            <x-ui.input name="company[contact_first_name_kana]" :value="old('company.contact_first_name_kana')" />
+                        </x-ui.field>
+                        <x-ui.field :label="$t('apellido')">
+                            <x-ui.input name="company[contact_last_name]" :value="old('company.contact_last_name')" />
+                        </x-ui.field>
+                        <x-ui.field :label="$t('nombre')">
+                            <x-ui.input name="company[contact_first_name]" :value="old('company.contact_first_name')" />
+                        </x-ui.field>
+                        <x-ui.field :label="$t('empresa_contacto_tel')">
+                            <x-ui.input type="tel" name="company[contact_tel1]" :value="old('company.contact_tel1')" />
+                        </x-ui.field>
+                        <x-ui.field :label="$t('empresa_contacto_fax')">
+                            <x-ui.input type="tel" name="company[contact_tel3]" :value="old('company.contact_tel3')" />
+                        </x-ui.field>
+                        <x-ui.field :label="$t('empresa_contacto_mail')" class="sm:col-span-full">
+                            <x-ui.input type="email" name="company[contact_mail]" :value="old('company.contact_mail')" />
+                        </x-ui.field>
+                    </x-customers.form-section>
+                    </fieldset>
 
                     {{-- 3 --}}
                     <x-customers.form-section id="promo" number="3" :title="$t('seccion_promo')">
@@ -273,8 +350,8 @@
                             <div class="flex flex-wrap gap-2">
                                 @foreach (MailMagazine::cases() as $option)
                                     <label class="inline-flex h-10 items-center gap-2 rounded-ctl border border-line bg-surface px-3.5 text-sm font-semibold">
-                                        <input type="radio" name="mail_magazine_flg" value="{{ $option->value }}"
-                                               @checked(old('mail_magazine_flg', 1) == $option->value)
+                                        <input type="radio" name="mail_magazine" value="{{ $option->value }}"
+                                               @checked(old('mail_magazine', 1) == $option->value)
                                                class="accent-[var(--crm-accent)]">
                                         {{ __('customers.comun.' . match ($option) {
                                             MailMagazine::Send => 'enviar',

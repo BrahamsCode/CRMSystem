@@ -346,12 +346,14 @@ class CustomerSearch
 
         if (isset($f['q'])) {
             $term = $like($f['q']);
+            $digits = preg_replace('/\D+/', '', mb_convert_kana($f['q'], 'n'));
+            $telTerm = $digits !== '' ? $like($digits) : $term;
             $c[] = fn (Builder $q) => $q->where(fn (Builder $w) => $w
                 ->where('code', 'ilike', $term)
                 ->orWhere('management_no', 'ilike', $term)
                 ->orWhereRaw("concat_ws(' ', last_name, first_name) ilike ?", [$term])
                 ->orWhereRaw("concat_ws(' ', last_name_kana, first_name_kana) ilike ?", [$term])
-                ->orWhere('tel1', 'ilike', $term)->orWhere('tel2', 'ilike', $term)
+                ->orWhere('tel1', 'ilike', $telTerm)->orWhere('tel2', 'ilike', $telTerm)
                 ->orWhere('mail1', 'ilike', $term)->orWhere('mail2', 'ilike', $term)->orWhere('mail3', 'ilike', $term));
         }
         if (isset($f['code'])) {
@@ -361,7 +363,8 @@ class CustomerSearch
             $c[] = fn (Builder $q) => $q->whereIn('code', $f['codes']);
         }
         if (isset($f['tel'])) {
-            $term = $like(preg_replace('/\s+/', '', $f['tel']));
+            // Los teléfonos se guardan solo con dígitos: se busca igual, aunque escriban guiones
+            $term = $like(preg_replace('/\D+/', '', mb_convert_kana($f['tel'], 'n')));
             $c[] = fn (Builder $q) => $q->where(fn (Builder $w) => $w->where('tel1', 'ilike', $term)->orWhere('tel2', 'ilike', $term));
         }
         if (isset($f['name'])) {
@@ -407,7 +410,7 @@ class CustomerSearch
             $c[] = fn (Builder $q) => $q->whereDate('created_at', '<=', $f['joined_to']);
         }
         if (isset($f['mail_magazine'])) {
-            $c[] = fn (Builder $q) => $q->where('mail_magazine_flg', (int) $f['mail_magazine']);
+            $c[] = fn (Builder $q) => $q->where('mail_magazine', (int) $f['mail_magazine']);
         }
         if (isset($f['occupation'])) {
             $c[] = fn (Builder $q) => $q->where('occupation', (int) $f['occupation']);

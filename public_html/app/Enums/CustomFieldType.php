@@ -5,8 +5,7 @@ namespace App\Enums;
 /**
  * Tipos de campo de los formularios personalizados.
  *
- * Pendiente: la documentación del legacy dice «14 tipos» pero enumera 15.
- * Aquí están los 15 de la lista; hay que confirmar cuál sobra.
+ * Son 15, confirmados contra el selector del legacy (search_form_new.php, form_type).
  */
 enum CustomFieldType: int
 {

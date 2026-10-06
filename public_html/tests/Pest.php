@@ -79,7 +79,7 @@ function seedPromotions(int $customers = 15): void
             'sex' => $i % 2 ? 2 : 1,
             'birth_date' => now()->subYears(20 + $i)->subDays($i),
             'occupation' => 1 + $i % 5,
-            'mail_magazine_flg' => 1,
+            'mail_magazine' => 1,
         ]);
 
         for ($v = 0; $v < 1 + $i % 3; $v++) {

@@ -48,54 +48,63 @@ queda vacía, igual que Puntos, Sellos, Mi álbum, Reservas y Referidos.
 
 ## `customers` campo a campo
 
-La pantalla **Campos y CSV** del mockup lista los 57 campos estándar del legacy. Esa es
-la lista autoritativa. Así quedó mapeada:
+Verificado contra el formulario real del legacy (`customer_new.php`). Se rellenó con datos de prueba y se envió **solo hasta la confirmación** (`customer_new_confirm.php`), sin registrar nada. La primera columna es el nombre del campo que envía el legacy: sirve para migrar los datos.
 
-| Legacy | Columna creada | Nota |
-|---|---|---|
-| `num` Nº de cliente | `code` | Visible al usuario |
-| `mgmt` Nº de gestión | `management_no` | |
-| `store` Tienda de registro | `shop_id` | FK a `shops` |
-| `ptype` Persona / empresa | `type` | `1`: persona, `2`: empresa |
-| `joined` Fecha de alta | `created_at` | Estándar §3 |
-| `status` Estado de registro | `status` | `1`: registrado, `0`: dado de baja |
-| `news` Newsletter | `mail_magazine_flg` | 3 estados, por eso `smallint` |
-| `updated` Fecha de modificación | `updated_at` | Estándar §3 |
-| `group` Grupo de cliente | `customer_group_id` | |
-| `pass` Contraseña | `password` | El usuario de acceso es el propio `code` |
-| `name` Nombre | `last_name` + `first_name` | El estándar §2.1 lo separa |
-| `namek` Nombre (fonético) | `last_name_kana` + `first_name_kana` | Ídem |
-| `birth` Fecha de nacimiento | `birth_date` | |
-| `age` Edad | *(ninguna)* | Se calcula desde `birth_date` |
-| `sex` Sexo | `sex` | ISO 5218 |
-| `blood` Grupo sanguíneo | `blood_type` | |
-| `job` Ocupación | `occupation` | |
-| `tel` Teléfono | `tel1` | Estándar §2.4 |
-| `mobile` Teléfono móvil | `tel2` | Estándar §2.4 |
-| `fax` Fax | `fax` | |
-| `mail1` / `mail2` | `mail1` / `mail2` | |
-| `pmail` Email personal | `mail3` | |
-| `zip`, `pref`, `city`, `street` | `zip`, `pref`, `city`, `street_address` | Estándar §2.3 |
-| `cityk` Ciudad (fonético) | `city_kana` | |
-| `bldg` / `bldgk` | `building` / `building_kana` | |
-| `wname`, `wnamek` Lugar de trabajo | `company_name`, `company_name_kana` | |
-| `wind` Rubro del lugar de trabajo | `company_industry` | |
-| `industry` Rubro | `industry` | **Campo distinto del anterior** |
-| `wtel`, `wfax` | `company_tel`, `company_fax` | |
-| `founded` Fecha de fundación | `company_founded_date` | |
-| `capital` Capital social | `company_capital` | `integer`, unidad mínima |
-| `dept` Departamento | `company_dept` | |
-| `rep`, `repk`, `repb` Representante | `rep_last_name`/`rep_first_name` (+`_kana`), `rep_birth_date` | Nombre separado |
-| `cname`, `cnamek`, `ctel`, `cmail` Contacto | `contact_*` | Ídem |
-| `treg` Registro de terminal | `terminal_registered_at` | **Suposición — ver pendientes** |
-| `tid` ID de terminal | `terminal_id` | |
-| `bounce` Correos no entregados | `bounce_count` | |
-| `stamps` Sellos | *(ninguna)* | Otro módulo |
-| `points` Puntos | *(ninguna)* | Otro módulo |
-| `staff` Personal asignado | *(ninguna)* | **Bloqueado — ver pendientes** |
-| `motive` Motivo de primera visita | `visit_motive_id` | |
-| `arn` / `arp` Rango por importe | `amount_rank_id` / `prev_amount_rank_id` | |
-| `vrn` / `vrp` Rango por visitas | `visit_rank_id` / `prev_visit_rank_id` | |
+| Legacy (POST) | Pantalla | Columna nueva | Nota |
+|---|---|---|---|
+| `id`, `login_id` | 会員番号 / ID | `customers.code` | El ID de acceso es el propio Nº de socio |
+| `kanri_id` | 管理番号 | `management_no` | |
+| `tb_shop_cd` | 登録店舗 | `shop_id` | |
+| `type` = 個人 / 法人 | 個人・法人 | `type` 1 / 2 | Obligatorio |
+| `name_sei`, `name_mei` | 名前 | `last_name`, `first_name` | En una empresa, `last_name` es la razón social |
+| `name_kana_sei`, `name_kana_mei` | 名前(カナ) | `last_name_kana`, `first_name_kana` | El legacy exige katakana de ancho completo; aquí se convierte solo |
+| `zip` | 郵便番号 | `zip` | El legacy quita el guion: `530-0001` → `5300001` |
+| `pref` | 都道府県 | `pref` | Texto (大阪府) |
+| `add` | 市区町村 | `city` | |
+| `add_number` | 丁目・番地 | `street_address` | |
+| `add_build` | マンション・ビル名 | `building` | Columna aparte: las etiquetas de correo lo imprimen en su propia línea |
+| `add_kana`, `add_build_kana` | lecturas de la dirección | *(no se migran)* | No se buscan ni se ordenan por ellas |
+| `tel` | 電話番号 | `tel1` | Solo dígitos, igual que el legacy |
+| `kojin_mobile` | 携帯電話番号 | `tel2` | Solo personas |
+| `fax` | FAX番号 | `tel3` | Estándar §2.4: teléfonos numerados |
+| `email1`, `email2` | メールアドレス1 / 2 | `mail1`, `mail2` | |
+| `kojin_mail` | 個人メールアドレス | `mail3` | Solo personas |
+| `tb_staff_cd` | 指名担当者 | *(pendiente)* | Falta la tabla de empleados en el estándar |
+| `searchKaiin_cd` | 紹介者 | `referrer_id` | |
+| `kojin_birth_y/m/d` | 生年月日 | `birth_date` | El legacy acepta fechas imposibles (1990/02/29); aquí se validan |
+| `kojin_sex` = 男性 / 女性 / vacío | 性別 | `sex` 1 / 2 / 0 | ISO 5218 completo; empresa = 9 |
+| `kojin_bloodtype` | 血液型 | `blood_type` | A, B, O, AB |
+| `job` | 職業 | `occupation` | Enum `Occupation` (texto japonés → número) |
+| `kinmusaki_name`, `kinmusaki_name_kana` | 勤務先 名前 | `customer_companies.name`, `name_kana` | Solo personas |
+| `kinmusaki_gyoushu` | 勤務先 業種 | `customer_companies.industry` | |
+| `kinmusaki_tel`, `kinmusaki_fax` | 勤務先 電話 / FAX | `customer_companies.tel1`, `tel3` | |
+| `houjin_setsuritsu_y/m/d` | 設立年月日 | `customer_companies.founded_on` | Solo empresas |
+| `houjin_shihon` | 資本金 | `customer_companies.capital` | `bigint`, unidad mínima |
+| `houjin_gyoushu` | 業種 | `customer_companies.industry` | Excluyente con el del lugar de trabajo: una sola columna |
+| `houjin_busho` | 部署 | `customer_companies.department` | |
+| `daihyousha_name`, `_kana` | 代表者 | `representative_last_name` / `_first_name` (+ `_kana`) | El legacy lo guarda en un solo campo: al migrar se separa por el espacio |
+| `daihyousha_birth_y/m/d`, `daihyousha_sex` | 代表者 生年月日 / 性別 | `representative_birth_date`, `representative_sex` | |
+| `tantou_name`, `_kana` | 担当者 | `contact_last_name` / `_first_name` (+ `_kana`) | Ídem |
+| `tantou_tel`, `tantou_fax`, `tantou_mail` | 担当者 | `contact_tel1`, `contact_tel3`, `contact_mail` | |
+| `mailmaga_flg` = 1 / 0 / 9 | メルマガ配信 | `mail_magazine` 1 / 2 / 3 | Enviar / no enviar / no entregable. Era `mail_magazine_flg`; tiene 3 estados, así que no es una bandera (§4) |
+| `mailmaga_email_type` | アドレス区分 | `address_type` | パソコン, DoCoMo, AU, Softbank, その他 → 1..5 |
+| `stop_yoyaku_reminder_mail_flg` = vacío / 1 | 予約リマインダーメール | `reservation_reminder_flg` 1 / 0 | El legacy la guarda invertida |
+| `tb_customer_group_cd` | 顧客グループ | `customer_group_id` | |
+| `tb_raiten_douki_master_cd` | 新規来店動機 | `visit_motive_id` | |
+| `bikou` | 備考 | `note` | |
+| `form5` = 有 / 無 | 配偶者 | `spouse_flg` 1 / 0 | |
+| `form6yyy/mmm/ddd` | 結婚記念日 | `wedding_date` | |
+| `form7`, `form8`, … | Información adicional | `custom_data` (jsonb) | `formN` es el id del campo personalizado |
+| `login_pass` | パスワード | `password` | Obligatoria en el legacy; aquí se guarda cifrada |
+| `touroku_kubun` = 2 | (oculto) | `status` | 2 = registrado en el legacy |
+
+### Persona y empresa
+
+En el legacy las dos secciones son excluyentes. Al elegir 個人 se ocultan los datos de empresa, y al elegir 法人 se ocultan los datos personales y el lugar de trabajo. Así se hace aquí:
+
+- El formulario solo envía la sección del tipo elegido.
+- La validación descarta lo que no corresponde al tipo.
+- `customer_companies` es una fila por cliente: guarda el lugar de trabajo de una persona o los datos de una empresa.
 
 ---
 
@@ -142,6 +151,22 @@ múltiple (varias mascotas, por ejemplo) usan la tabla `custom_values`. Ambas co
 son `jsonb` y no `json`, porque la pantalla Buscar filtra por campos personalizados y
 PostgreSQL solo admite índices GIN sobre `jsonb`.
 
+**4. Dirección: las cuatro columnas del estándar más `building`.** El legacy separa 市区町村, 丁目・番地 y マンション・ビル名, cada uno con su lectura en kana. Se decidió:
+- `city` y `street_address` como pide el estándar.
+- `building` aparte, porque el CSV para correo postal lo imprime en su propia línea.
+- Las lecturas en kana de la dirección se descartan: no se buscan ni se ordenan por ellas.
+
+**5. Fax en `tel3`.** El estándar numera los teléfonos (`tel1`–`tel3`) y el legacy tiene exactamente tres por persona: teléfono, móvil y fax. En `customer_companies` se usa `tel1` y `tel3` con el mismo significado, para que el fax sea siempre `tel3`.
+
+**6. Sexo con ISO 5218 completo.** El legacy permite dejarlo vacío, que se guarda como `0`. Una empresa recibe `9` (no aplica). La columna ya no admite `null`.
+
+**7. Empresa en `customer_companies` (1:1).** En el legacy cada cliente empresa es su propia empresa: no hay empresas compartidas entre clientes. Por eso no se creó una tabla `companies` con N:1, sino una fila por cliente. Guarda el lugar de trabajo de una persona o los datos de una empresa, porque las dos secciones son excluyentes.
+
+**8. Normalización al guardar, como el legacy.**
+- Teléfonos y código postal solo con dígitos.
+- Lecturas en katakana de ancho completo. Donde el legacy da error, aquí se convierte solo: el hiragana y el katakana de medio ancho pasan a katakana de ancho completo.
+- Se rechazan las fechas imposibles, que el legacy aceptaba.
+
 ---
 
 ## Pendientes de confirmar
@@ -165,16 +190,15 @@ Es un campo aparte de `tid` «ID de terminal». Se creó como `terminal_register
 (timestamp), suponiendo que guarda cuándo el cliente registró su terminal. Conviene
 verificarlo contra el legacy.
 
-**4. ¿14 o 15 tipos de campo personalizado?**
-La documentación dice «14 tipos» pero la lista enumera 15: texto, email, alfanumérico,
-numérico, textarea, checkbox, select, radio, año, año‑mes, año‑mes‑día, mes‑día, fecha
-de referencia, tabla y menú. Hay que fijarlo antes de codificar el `smallint`.
+**4. ~~¿14 o 15 tipos de campo personalizado?~~ Resuelto: son 15.** El selector del legacy (`search_form_new.php`, campo `form_type`) tiene テキスト, メールアドレス, 半角英数テキスト, 数値テキスト, テキストエリア, チェックボックス, セレクト, ラジオボタン, 年, 年月, 年月日, 月日, 起算日, テーブル y メニュー項目. Los tamaños (`style_class`) son los 10 de `FieldSize`.
 
 ---
 
 ## Estado actual
 
-Las 13 tablas están creadas como migraciones de Laravel en
+Tras estas decisiones hay que recrear la base: `php artisan migrate:fresh --seed`.
+
+Las 13 tablas (más `customer_companies`) están creadas como migraciones de Laravel en
 `public_html/database/migrations/` y verificadas contra el estándar: 0 columnas
 `boolean`, 0 `varchar`, claves primarias `bigserial` coherentes con las FK `bigint`.
 El rollback y la re-migración corren limpios.

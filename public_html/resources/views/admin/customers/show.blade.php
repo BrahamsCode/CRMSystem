@@ -19,6 +19,8 @@
 
     $fecha = fn (?object $d, string $f = 'Y/m/d') => $d?->format($f);
     $mascota = $c?->custom_data['mascota'] ?? null;
+    $co = $c?->company;
+    $empresa = $c?->isCompany() ?? false;
 
     // [etiqueta, valor, ancho_completo, nota, es_contraseña]
     $content = [
@@ -31,10 +33,8 @@
                 ['Dirección', trim(implode(' ', array_filter([$c?->zip, $c?->pref, $c?->city, $c?->street_address, $c?->building]))), true],
                 ['Email', $c?->mail1],
                 ['Teléfono', $c?->tel1],
-                ['Fax', $c?->fax],
-                ['Fecha de nacimiento', $fecha($c?->birth_date)],
-                ['Sexo', $c?->sex?->label()],
-                ['Ocupación', $c?->occupation?->label()],
+                ['Fax', $c?->tel3],
+                ['Persona / empresa', $c?->type?->label()],
                 ['Personal asignado', null],
                 ['Referido por', $c?->referrer?->full_name],
                 ['Rango por importe', 'Actual ' . ($c?->amountRank?->name ?: $dash) . ' · Anterior ' . $dash],
@@ -49,17 +49,31 @@
                 ['Dispositivo', $c ? trim(($c->device_type ?: $dash) . ' · Inicio de sesión rápido: ' . ($c->easy_login ?: 'no configurado')) : null, false,
                     'Se actualiza cuando el cliente se registra, cambia sus datos o entra en Mi página.'],
             ]],
-            ['titulo' => 'Datos personales', 'items' => [
+            // Persona y empresa tienen secciones distintas, como en el legacy
+            ...($empresa ? [['titulo' => 'Datos de empresa', 'items' => [
+                ['Fecha de fundación', $fecha($co?->founded_on)],
+                ['Capital social', $co?->capital !== null ? \App\Support\Money::format($co->capital) : null],
+                ['Rubro', $co?->industry?->label()],
+                ['Departamento', $co?->department],
+                ['Representante', $co ? trim($co->representativeName() . ($co->representative_last_name_kana ? ' (' . trim($co->representative_last_name_kana . ' ' . $co->representative_first_name_kana) . ')' : '')) : null],
+                ['Nacimiento del representante', $fecha($co?->representative_birth_date)],
+                ['Persona de contacto', $co?->contactName()],
+                ['Contacto: teléfono / fax', $co ? trim(implode(' / ', array_filter([$co->contact_tel1, $co->contact_tel3]))) : null],
+                ['Contacto: email', $co?->contact_mail],
+            ]]] : [['titulo' => 'Datos personales', 'items' => [
+                ['Fecha de nacimiento', $c?->birth_date ? $fecha($c->birth_date) . ' (' . $c->age() . ' años)' : null],
+                ['Sexo', $c?->sex?->label()],
+                ['Ocupación', $c?->occupation?->label()],
+                ['Grupo sanguíneo', $c?->blood_type],
                 ['Email personal', $c?->mail3],
                 ['Teléfono móvil', $c?->tel2],
-                ['Grupo sanguíneo', $c?->blood_type],
-                ['Lugar de trabajo', $c?->company_name],
-                ['Rubro del trabajo', $c?->company_industry?->label()],
-                ['Teléfono del trabajo', $c?->company_tel],
-                ['Fax del trabajo', $c?->company_fax],
-            ]],
+                ['Lugar de trabajo', trim(($co?->name ?? '') . ($co?->name_kana ? ' (' . $co->name_kana . ')' : ''))],
+                ['Rubro del trabajo', $co?->industry?->label()],
+                ['Teléfono del trabajo', $co?->tel1],
+                ['Fax del trabajo', $co?->tel3],
+            ]]]),
             ['titulo' => 'Información de promoción', 'items' => [
-                ['Newsletter', $c?->mail_magazine_flg?->label()],
+                ['Newsletter', $c?->mail_magazine?->label()],
                 ['Tipo de dirección', $c?->address_type?->label()],
                 ['Correos no entregados', $c ? (string) $c->bounce_count : null, false,
                     'Tras 3 errores de envío la dirección pasa a «no entregable». El contador también depende de la red y del operador: es solo orientativo.'],
@@ -198,7 +212,7 @@
                                                 Guardada cifrada: no se puede mostrar, solo restablecer.
                                             </span>
                                         @else
-                                            <span @class(['text-faint' => ! $value])>{{ $value ?: $dash }}</span>
+                                            <span @class(['text-faint' => ! filled($value)])>{{ filled($value) ? $value : $dash }}</span>
                                         @endif
 
                                         @if ($nota)

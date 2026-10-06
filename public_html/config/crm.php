@@ -117,9 +117,8 @@ return [
         ],
         'Dirección' => [
             ['zip', 'Código postal', '0000'], ['pref', 'Región / provincia', '0000'],
-            ['city', 'Ciudad / distrito', '0000'], ['cityk', 'Ciudad (fonético)', '0000'],
-            ['street', 'Calle y número', '0000'], ['bldg', 'Edificio / depto.', '0000'],
-            ['bldgk', 'Edificio (fonético)', '0000'],
+            ['city', 'Ciudad / distrito', '0000'], ['street', 'Calle y número', '0000'],
+            ['bldg', 'Edificio / depto.', '0000'],
         ],
         'Trabajo y empresa' => [
             ['wname', 'Lugar de trabajo', '0000'], ['wnamek', 'Lugar de trabajo (fonético)', '0000'],

@@ -56,7 +56,7 @@ class MessageDispatcher
     {
         if ($channel->isEmail()) {
             return $query->whereNotNull('mail1')->where('mail1', '<>', '')
-                ->where('mail_magazine_flg', MailMagazine::Send);
+                ->where('mail_magazine', MailMagazine::Send);
         }
 
         return $query->whereHas('devices', fn (Builder $d) => $d->where('status', 1));
@@ -212,7 +212,7 @@ class MessageDispatcher
     {
         $channel = $customer->devices()->where('status', 1)->exists() ? MessageChannel::Push : MessageChannel::TextEmail;
 
-        if ($channel->isEmail() && (! $customer->mail1 || $customer->mail_magazine_flg !== MailMagazine::Send)) {
+        if ($channel->isEmail() && (! $customer->mail1 || $customer->mail_magazine !== MailMagazine::Send)) {
             return null;
         }
 
@@ -246,8 +246,8 @@ class MessageDispatcher
     {
         $customer->increment('bounce_count');
 
-        if ($customer->bounce_count >= self::BOUNCE_LIMIT && $customer->mail_magazine_flg === MailMagazine::Send) {
-            $customer->forceFill(['mail_magazine_flg' => MailMagazine::Undeliverable])->saveQuietly();
+        if ($customer->bounce_count >= self::BOUNCE_LIMIT && $customer->mail_magazine === MailMagazine::Send) {
+            $customer->forceFill(['mail_magazine' => MailMagazine::Undeliverable])->saveQuietly();
         }
     }
 

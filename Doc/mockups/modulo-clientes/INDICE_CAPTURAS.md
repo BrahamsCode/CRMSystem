@@ -1,9 +1,9 @@
 # Índice Visual de Capturas - Módulo de Gestión de Clientes
 
 ## Ubicación de Archivos
-📁 `docs/mockups/modulo-clientes/legacy/`
+📁 `Doc/mockups/modulo-clientes/legacy/`
 
-Total de capturas: **23 vistas documentadas**
+Total de capturas: **24 capturas** (00–25; la 02 y la 16 eran duplicados y se eliminaron)
 
 ---
 
@@ -17,10 +17,9 @@ Total de capturas: **23 vistas documentadas**
 
 ## Vistas Principales
 
-### 01-02: Portal y Navegación Principal
+### 01: Portal y Navegación Principal
 ```
 📸 01-portal-inicio.png (1.8 MB)
-📸 02-menu-principal-clientes.png (1.8 MB)
 ```
 - **Ruta**: `/system/select.php`
 - **Descripción**: Portal principal del sistema con los 9 módulos
@@ -248,9 +247,9 @@ Total de capturas: **23 vistas documentadas**
 
 ---
 
-### 16: Formulario de Agregar Grupo
+### 16: Formulario de Agregar Grupo (misma pantalla que 09)
 ```
-📸 16-formulario-agregar-grupo.png (147 KB)
+📸 09-grupos-clientes.png (la captura 16 era idéntica y se eliminó)
 ```
 - **Ruta**: `/system/category1/customer/customer_group_category_new.php`
 - **Descripción**: Formulario de creación de grupo de clientes
@@ -505,17 +504,16 @@ Uso Final (después de configurar):
 
 ---
 
-## Archivos Legacy Adicionales
-
-Archivos anteriores a la documentación numerada:
+## Capturas añadidas después
 
 ```
-📸 buscar-clientes.webp (285 KB)
-📸 campos-csv.png (490 KB)
-📸 estadisticas.png (273 KB)
-📸 inicio.webp (94 KB)
-📸 test-login-page.png (288 KB)
+📸 00-login.png
+📸 24-estadisticas-informe.png
+📸 25-estadisticas-informe-filtro.png
 ```
+- **00**: pantalla de login (antes `test-login-page.png`).
+- **24 y 25**: informe «顧客情報集計» que el legacy abre en una ventana emergente desde el enlace de la vista 05. Muestra el total por sexo, la distribución por edad de hombres y mujeres y las altas de los últimos 5 años; abajo, el filtro «種別» (業種別 / 県別) con periodo. En el rediseño el informe se muestra directamente, sin ventana emergente.
+- Se eliminaron las capturas sin numerar y los duplicados exactos **02** (igual a 01) y **16** (igual a 09).
 
 ---
 
@@ -523,9 +521,8 @@ Archivos anteriores a la documentación numerada:
 
 | Tipo | Cantidad | Tamaño |
 |------|----------|--------|
-| Capturas PNG numeradas | 23 | ~7.8 MB |
-| Capturas legacy | 5 | ~1.4 MB |
-| **Total** | **28 archivos** | **~9.2 MB** |
+| Capturas PNG numeradas | 24 | ~7.5 MB |
+| **Total** | **24 archivos** | **~7.5 MB** |
 
 ---
 

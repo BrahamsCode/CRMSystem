@@ -81,7 +81,7 @@ Esquema completo de base de datos diseñado para el **nuevo sistema CRM** basado
 psql -U postgres -d crm_database
 
 # 2. Ejecutar el script completo
-\i docs/database/ESQUEMA_BD_MODULO_CLIENTES.md
+\i Doc/database/ESQUEMA_BD_MODULO_CLIENTES.md
 # (extraer solo las secciones SQL del markdown)
 
 # 3. Verificar tablas creadas
@@ -328,9 +328,9 @@ Este esquema fue diseñado basándose en:
 - **14 tipos de campo** soportados
 
 Ver documentación del sistema legacy:
-- [docs/mockups/modulo-clientes/DOCUMENTACION_LEGACY.md](../mockups/modulo-clientes/DOCUMENTACION_LEGACY.md)
-- [docs/mockups/modulo-clientes/FLUJOS_DETALLADOS.md](../mockups/modulo-clientes/FLUJOS_DETALLADOS.md)
-- [docs/mockups/modulo-clientes/INDICE_CAPTURAS.md](../mockups/modulo-clientes/INDICE_CAPTURAS.md)
+- [Doc/mockups/modulo-clientes/DOCUMENTACION_LEGACY.md](../mockups/modulo-clientes/DOCUMENTACION_LEGACY.md)
+- [Doc/mockups/modulo-clientes/FLUJOS_DETALLADOS.md](../mockups/modulo-clientes/FLUJOS_DETALLADOS.md)
+- [Doc/mockups/modulo-clientes/INDICE_CAPTURAS.md](../mockups/modulo-clientes/INDICE_CAPTURAS.md)
 
 ---
 

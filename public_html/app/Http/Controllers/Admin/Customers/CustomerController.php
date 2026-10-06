@@ -12,6 +12,7 @@ use App\Services\Customers\CustomerSearch;
 use App\Services\Customers\FilterOptions;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -47,9 +48,17 @@ class CustomerController extends ModuleController
 
     public function store(StoreCustomerRequest $request): RedirectResponse
     {
-        $customer = Customer::create(
-            $request->validated() + ['custom_data' => $this->customData($request->input('custom', []))]
-        );
+        $customer = DB::transaction(function () use ($request) {
+            $customer = Customer::create(
+                $request->customerData() + ['custom_data' => $this->customData($request->input('custom', []))]
+            );
+
+            if ($company = $request->companyData()) {
+                $customer->company()->create($company);
+            }
+
+            return $customer;
+        });
 
         return redirect()
             ->route('admin.customers.show', $customer)
@@ -60,7 +69,7 @@ class CustomerController extends ModuleController
     {
         return view('admin.customers.show', [
             'customer' => $customer->load([
-                'shop', 'terminal', 'group', 'visitMotive',
+                'shop', 'terminal', 'group', 'visitMotive', 'company',
                 'amountRank', 'visitRank', 'referrer',
                 'coupons' => fn ($q) => $q->with('coupon')->take(30),
                 'stamps' => fn ($q) => $q->take(30),
