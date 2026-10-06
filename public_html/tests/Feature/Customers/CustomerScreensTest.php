@@ -72,7 +72,8 @@ it('normaliza como el legacy: teléfonos y código postal a dígitos, lecturas a
     $this->post(route('admin.customers.store'), [
         'shop_id' => Shop::first()->id, 'type' => 1, 'password' => 'pass1234',
         'last_name' => 'テスト', 'first_name' => '太郎', 'last_name_kana' => 'てすと', 'first_name_kana' => 'ﾀﾛｳ',
-        'zip' => '530-0001', 'pref' => '大阪府', 'city' => '大阪市北区', 'street_address' => '梅田1-2-3', 'building' => '梅田ビル502',
+        'zip' => '530-0001', 'pref' => '大阪府', 'city' => '大阪市北区', 'city_kana' => 'おおさかしきたく　ｳﾒﾀﾞ',
+        'street_address' => '梅田1-2-3', 'building' => '梅田ビル502', 'building_kana' => 'うめだビル５０２',
         'tel1' => '06-1234-5678', 'tel2' => '０９０-１１１１-２２２２', 'tel3' => '06 1234 5679', 'sex' => 2, 'birth_date' => '1990-02-28',
         'company' => ['name' => '勤務先株式会社', 'name_kana' => 'きんむさき', 'industry' => 8, 'tel1' => '06-0000-1111', 'tel3' => '06-0000-2222',
             // Datos de empresa enviados por error en una persona: se descartan
@@ -82,6 +83,7 @@ it('normaliza como el legacy: teléfonos y código postal a dígitos, lecturas a
     $c = Customer::with('company')->where('last_name', 'テスト')->firstOrFail();
     expect($c)->zip->toBe('5300001')->tel1->toBe('0612345678')->tel2->toBe('09011112222')->tel3->toBe('0612345679')
         ->last_name_kana->toBe('テスト')->first_name_kana->toBe('タロウ')->building->toBe('梅田ビル502')
+        ->city_kana->toBe('オオサカシキタク ウメダ')->building_kana->toBe('ウメダビル５０２')
         ->and($c->company)->name->toBe('勤務先株式会社')->name_kana->toBe('キンムサキ')->tel1->toBe('0600001111')
         ->capital->toBeNull()->department->toBeNull();
 });
@@ -165,4 +167,21 @@ it('crea un campo con opciones y lo vuelve a guardar sin chocar con el índice �
     $this->put(route('admin.customers.custom-fields.update', $field), $payload)->assertSessionHasNoErrors();
 
     expect($field->options()->count())->toBe(2);
+});
+
+it('solo acepta las 47 prefecturas, como el selector del legacy', function () {
+    $this->post(route('admin.customers.store'), [
+        'shop_id' => Shop::first()->id, 'type' => 1, 'password' => '1234', 'last_name' => 'テスト', 'pref' => 'Osaka',
+    ])->assertSessionHasErrors('pref');
+});
+
+it('el código postal devuelve prefectura, ciudad, barrio y lectura como el legacy', function () {
+    \Illuminate\Support\Facades\Http::fake(['zipcloud.ibsnet.co.jp/*' => \Illuminate\Support\Facades\Http::response(['results' => [[
+        'zipcode' => '5300001', 'address1' => '大阪府', 'address2' => '大阪市北区', 'address3' => '梅田',
+        'kana1' => 'ｵｵｻｶﾌ', 'kana2' => 'ｵｵｻｶｼｷﾀｸ', 'kana3' => 'ｳﾒﾀﾞ',
+    ]]])]);
+
+    $this->getJson('/admin/customers/postal-code/530-0001')->assertOk()->assertExactJson([
+        'pref' => '大阪府', 'city' => '大阪市北区', 'street_address' => '梅田', 'city_kana' => 'オオサカシキタク ウメダ',
+    ]);
 });

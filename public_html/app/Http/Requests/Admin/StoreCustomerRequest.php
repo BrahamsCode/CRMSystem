@@ -38,7 +38,7 @@ class StoreCustomerRequest extends FormRequest
         'contact_tel1', 'contact_tel3', 'contact_mail',
     ];
 
-    private const KANA = ['last_name_kana', 'first_name_kana', 'company.name_kana', 'company.representative_last_name_kana',
+    private const KANA = ['last_name_kana', 'first_name_kana', 'city_kana', 'building_kana', 'company.name_kana', 'company.representative_last_name_kana',
         'company.representative_first_name_kana', 'company.contact_last_name_kana', 'company.contact_first_name_kana'];
 
     private const DIGITS = ['zip', 'tel1', 'tel2', 'tel3', 'company.tel1', 'company.tel3', 'company.contact_tel1', 'company.contact_tel3'];
@@ -67,10 +67,13 @@ class StoreCustomerRequest extends FormRequest
 
             // Dirección
             'zip' => ['nullable', 'string', 'regex:/^\d{3,10}$/'],
-            'pref' => ['nullable', 'string', 'max:100'],
+            'pref' => ['nullable', Rule::in(config('crm.prefectures'))],
             'city' => ['nullable', 'string', 'max:255'],
+            'city_kana' => $kana,
             'street_address' => ['nullable', 'string', 'max:255'],
             'building' => ['nullable', 'string', 'max:255'],
+            // El nombre del edificio puede llevar números y guiones (メゾン２１－Ａ)
+            'building_kana' => ['nullable', 'string', 'max:255', 'regex:/^[\x{30A0}-\x{30FF}\x{3000}\x{FF10}-\x{FF19}\x{FF21}-\x{FF3A}0-9A-Za-z\-－ ]+$/u'],
 
             // Contacto
             'tel1' => $tel,
@@ -126,6 +129,7 @@ class StoreCustomerRequest extends FormRequest
         return [
             'regex' => 'El campo :attribute no tiene un formato válido.',
             '*_kana.regex' => 'El campo :attribute debe escribirse en katakana (フリガナ).',
+            'building_kana.regex' => 'El campo :attribute debe escribirse en katakana (フリガナ); se admiten números y letras.',
             'company.*_kana.regex' => 'El campo :attribute debe escribirse en katakana (フリガナ).',
             'zip.regex' => 'El código postal debe tener solo números (ej. 5300001).',
         ];
@@ -143,7 +147,8 @@ class StoreCustomerRequest extends FormRequest
             'mail1' => $t('mail1'), 'mail2' => $t('mail2'), 'mail3' => $t('mail_personal'),
             'tel1' => $t('tel'), 'tel2' => $t('movil'), 'tel3' => $t('fax'),
             'occupation' => $t('ocupacion'), 'address_type' => $t('tipo_direccion'),
-            'birth_date' => $t('nacimiento'), 'zip' => $t('zip'), 'password' => $t('password'),
+            'birth_date' => $t('nacimiento'), 'zip' => $t('zip'), 'pref' => $t('pref'),
+            'city_kana' => $t('ciudad_kana'), 'building_kana' => $t('edificio_kana'), 'password' => $t('password'),
             'company.name' => $t('trabajo_nombre'), 'company.name_kana' => $t('trabajo_nombre_kana'),
             'company.industry' => $t('rubro'), 'company.tel1' => $t('trabajo_tel'), 'company.tel3' => $t('trabajo_fax'),
             'company.founded_on' => $t('empresa_fundacion'), 'company.capital' => $t('empresa_capital'),

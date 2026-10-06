@@ -9,6 +9,19 @@ return [
     /* Dirección de Mi página (módulo 3): destino del QR de registro y de las notificaciones push */
     'mypage_url' => env('CRM_MYPAGE_URL', env('APP_URL', 'http://localhost') . '/mypage'),
 
+    /*
+     * Prefecturas (都道府県), en el orden JIS del legacy. Se guardan como texto
+     * (大阪府), igual que el legacy, para que la migración de datos sea directa.
+     */
+    'prefectures' => [
+        '北海道', '青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県', '茨城県',
+        '栃木県', '群馬県', '埼玉県', '千葉県', '東京都', '神奈川県', '新潟県', '富山県',
+        '石川県', '福井県', '山梨県', '長野県', '岐阜県', '静岡県', '愛知県', '三重県',
+        '滋賀県', '京都府', '大阪府', '兵庫県', '奈良県', '和歌山県', '鳥取県', '島根県',
+        '岡山県', '広島県', '山口県', '徳島県', '香川県', '愛媛県', '高知県', '福岡県',
+        '佐賀県', '長崎県', '熊本県', '大分県', '宮崎県', '鹿児島県', '沖縄県',
+    ],
+
     'currency' => [
         'symbol' => env('CRM_CURRENCY_SYMBOL', '¥'),
         'decimals' => (int) env('CRM_CURRENCY_DECIMALS', 0),
@@ -116,9 +129,10 @@ return [
             ['mail1', 'Email 1', '1111'], ['mail2', 'Email 2', '0000'], ['pmail', 'Email personal', '0000'],
         ],
         'Dirección' => [
-            ['zip', 'Código postal', '0000'], ['pref', 'Región / provincia', '0000'],
-            ['city', 'Ciudad / distrito', '0000'], ['street', 'Calle y número', '0000'],
-            ['bldg', 'Edificio / depto.', '0000'],
+            ['zip', 'Código postal', '0000'], ['pref', 'Prefectura', '0000'],
+            ['cityk', 'Ciudad / distrito (kana)', '0000'], ['city', 'Ciudad / distrito', '0000'],
+            ['street', 'Calle y número', '0000'],
+            ['bldgk', 'Edificio / depto. (kana)', '0000'], ['bldg', 'Edificio / depto.', '0000'],
         ],
         'Trabajo y empresa' => [
             ['wname', 'Lugar de trabajo', '0000'], ['wnamek', 'Lugar de trabajo (fonético)', '0000'],

@@ -78,7 +78,9 @@ return [
         'zip_error' => '該当する住所が見つかりませんでした。',
         'pref' => '都道府県',
         'ciudad' => '市区町村',
+        'ciudad_kana' => '市区町村(カナ)',
         'calle' => '番地',
+        'edificio_kana' => '建物名(カナ)',
         'edificio' => '建物名',
 
         'tel' => '電話番号',

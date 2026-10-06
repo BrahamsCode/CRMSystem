@@ -11,10 +11,10 @@ class ShopSeeder extends Seeder
     {
         // Las cuatro tiendas que aparecen en los mockups del módulo
         $shops = [
-            ['name' => 'shop', 'name_kana' => 'ショップ', 'pref' => 'Osaka', 'city' => 'Osaka'],
-            ['name' => 'Polos', 'name_kana' => 'ポロス', 'pref' => 'Osaka', 'city' => 'Osaka'],
-            ['name' => 'Pantalones', 'name_kana' => 'パンタロネス', 'pref' => 'Osaka', 'city' => 'Sakai'],
-            ['name' => 'テスト2', 'name_kana' => 'テストツー', 'pref' => 'Tokyo', 'city' => 'Shibuya'],
+            ['name' => 'shop', 'name_kana' => 'ショップ', 'pref' => '大阪府', 'city' => '大阪市北区'],
+            ['name' => 'Polos', 'name_kana' => 'ポロス', 'pref' => '大阪府', 'city' => '大阪市北区'],
+            ['name' => 'Pantalones', 'name_kana' => 'パンタロネス', 'pref' => '大阪府', 'city' => '堺市堺区'],
+            ['name' => 'テスト2', 'name_kana' => 'テストツー', 'pref' => '東京都', 'city' => '渋谷区'],
         ];
 
         foreach ($shops as $shop) {

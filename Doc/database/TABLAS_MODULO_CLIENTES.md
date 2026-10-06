@@ -59,11 +59,12 @@ Verificado contra el formulario real del legacy (`customer_new.php`). Se rellen�
 | `name_sei`, `name_mei` | 名前 | `last_name`, `first_name` | En una empresa, `last_name` es la razón social |
 | `name_kana_sei`, `name_kana_mei` | 名前(カナ) | `last_name_kana`, `first_name_kana` | El legacy exige katakana de ancho completo; aquí se convierte solo |
 | `zip` | 郵便番号 | `zip` | El legacy quita el guion: `530-0001` → `5300001` |
-| `pref` | 都道府県 | `pref` | Texto (大阪府) |
+| `pref` | 都道府県 | `pref` | Texto (大阪府). Selector con las 47 prefecturas (`config('crm.prefectures')`), como el legacy |
+| `add_kana` | 市区町村(カナ) | `city_kana` | Lectura de 市区町村 y 町域: `オオサカシキタク ウメダ` |
 | `add` | 市区町村 | `city` | |
 | `add_number` | 丁目・番地 | `street_address` | |
 | `add_build` | マンション・ビル名 | `building` | Columna aparte: las etiquetas de correo lo imprimen en su propia línea |
-| `add_kana`, `add_build_kana` | lecturas de la dirección | *(no se migran)* | No se buscan ni se ordenan por ellas |
+| `add_build_kana` | マンション・ビル名(カナ) | `building_kana` | Admite números y letras (メゾン２１) |
 | `tel` | 電話番号 | `tel1` | Solo dígitos, igual que el legacy |
 | `kojin_mobile` | 携帯電話番号 | `tel2` | Solo personas |
 | `fax` | FAX番号 | `tel3` | Estándar §2.4: teléfonos numerados |
@@ -154,7 +155,8 @@ PostgreSQL solo admite índices GIN sobre `jsonb`.
 **4. Dirección: las cuatro columnas del estándar más `building`.** El legacy separa 市区町村, 丁目・番地 y マンション・ビル名, cada uno con su lectura en kana. Se decidió:
 - `city` y `street_address` como pide el estándar.
 - `building` aparte, porque el CSV para correo postal lo imprime en su propia línea.
-- Las lecturas en kana de la dirección se descartan: no se buscan ni se ordenan por ellas.
+- Las lecturas en kana de la dirección se guardan en `city_kana` y `building_kana`. Al principio se descartaron, pero se recuperaron para no perder datos al migrar y para tener los mismos campos que el legacy.
+- Búsqueda por código postal (zipcloud): rellena la prefectura, `city` (大阪市北区) y `city_kana` (オオサカシキタク ウメダ). El 町域 (梅田) se escribe al inicio de `street_address`, con el cursor al final para escribir el número. El legacy lo pone en 市区町村 (`大阪市北区 梅田`), pero así `city` queda solo con el 市区町村, como pide el estándar.
 
 **5. Fax en `tel3`.** El estándar numera los teléfonos (`tel1`–`tel3`) y el legacy tiene exactamente tres por persona: teléfono, móvil y fax. En `customer_companies` se usa `tel1` y `tel3` con el mismo significado, para que el fax sea siempre `tel3`.
 

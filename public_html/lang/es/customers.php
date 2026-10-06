@@ -73,7 +73,9 @@ return [
         'zip_error' => 'No se encontró ninguna dirección con ese código postal.',
         'pref' => 'Prefectura',
         'ciudad' => 'Ciudad / distrito',
+        'ciudad_kana' => 'Ciudad / distrito (kana)',
         'calle' => 'Calle y número',
+        'edificio_kana' => 'Edificio / depto. (kana)',
         'edificio' => 'Edificio / depto.',
 
         'tel' => 'Teléfono',

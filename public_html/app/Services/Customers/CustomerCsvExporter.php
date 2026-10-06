@@ -46,8 +46,10 @@ class CustomerCsvExporter
             'pmail' => fn (Customer $c) => $c->mail3,
             'zip' => fn (Customer $c) => $c->zip,
             'pref' => fn (Customer $c) => $c->pref,
+            'cityk' => fn (Customer $c) => $c->city_kana,
             'city' => fn (Customer $c) => $c->city,
             'street' => fn (Customer $c) => $c->street_address,
+            'bldgk' => fn (Customer $c) => $c->building_kana,
             'bldg' => fn (Customer $c) => $c->building,
             // Lugar de trabajo (persona) y datos de empresa: customer_companies
             'wname' => fn (Customer $c) => $c->isCompany() ? null : $c->company?->name,
@@ -103,7 +105,7 @@ class CustomerCsvExporter
     {
         return $this->stream($query->whereNotNull('street_address'), $filename,
             ['Nº de socio', 'Nombre', 'Código postal', 'Prefectura', 'Ciudad', 'Dirección', 'Edificio'],
-            fn (Customer $c) => [$c->code, $c->full_name, $c->zip, $c->pref, $c->city, $c->street_address, $c->building]);
+            fn (Customer $c) => [$c->code, $c->full_name, preg_replace('/^(\d{3})(\d{4})$/', '$1-$2', (string) $c->zip), $c->pref, $c->city, $c->street_address, $c->building]);
     }
 
     private function stream(Builder $query, string $filename, array $header, \Closure $row): StreamedResponse

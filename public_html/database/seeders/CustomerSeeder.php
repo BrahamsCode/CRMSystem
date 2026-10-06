@@ -64,9 +64,10 @@ class CustomerSeeder extends Seeder
                     'tel1' => '06' . str_pad((string) (1000 + $i), 4, '0', STR_PAD_LEFT) . '0000',
                     'mail1' => 'cliente' . ($i + 1) . '@example.com',
                     'zip' => '530000' . ($i % 10),
-                    'pref' => 'Osaka',
-                    'city' => 'Osaka',
-                    'street_address' => 'Kita-ku ' . ($i + 1) . '-' . ($i + 2),
+                    'pref' => '大阪府',
+                    'city' => '大阪市北区',
+                    'city_kana' => 'オオサカシキタク ウメダ',
+                    'street_address' => '梅田' . ($i + 1) . '-' . ($i + 2),
                     'customer_group_id' => $grupo?->id,
                     'visit_motive_id' => $motivos->get($i % max($motivos->count(), 1)),
                     'mail_magazine' => MailMagazine::Send,
@@ -149,7 +150,7 @@ class CustomerSeeder extends Seeder
                     'birth_date' => now()->subYears(20 + ($n % 45))->subDays($n * 11),
                     'mail1' => "gen{$mesAtras}_{$n}@example.com",
                     'tel1' => '06' . str_pad((string) (2000 + $n), 4, '0', STR_PAD_LEFT) . str_pad((string) $mesAtras, 4, '0', STR_PAD_LEFT),
-                    'pref' => 'Osaka',
+                    'pref' => '大阪府',
                     'customer_group_id' => $tienda->id === $grupo?->shop_id ? $grupo->id : null,
                     'visit_motive_id' => $motivos->get($n % max($motivos->count(), 1)),
                     'mail_magazine' => MailMagazine::Send,
@@ -174,7 +175,8 @@ class CustomerSeeder extends Seeder
     {
         $empresa = Customer::firstOrCreate(['shop_id' => $shop->id, 'last_name' => '株式会社テスト'], [
             'type' => CustomerType::Company, 'last_name_kana' => 'カブシキガイシャテスト',
-            'zip' => '5300001', 'pref' => '大阪府', 'city' => '大阪市北区', 'street_address' => '梅田1-2-3', 'building' => '梅田ビル502',
+            'zip' => '5300001', 'pref' => '大阪府', 'city' => '大阪市北区', 'city_kana' => 'オオサカシキタク ウメダ',
+            'street_address' => '梅田1-2-3', 'building' => '梅田ビル502', 'building_kana' => 'ウメダビル',
             'tel1' => '0612345678', 'tel3' => '0612345679', 'mail1' => 'empresa@example.com',
             'mail_magazine' => MailMagazine::Send, 'status' => CustomerStatus::Registered,
         ]);

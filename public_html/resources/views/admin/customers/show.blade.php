@@ -30,7 +30,12 @@
                 ['Tienda de registro', $c?->shop?->name],
                 ['Nombre (fonético)', $c?->full_name_kana],
                 ['Nombre', $c?->full_name],
-                ['Dirección', trim(implode(' ', array_filter([$c?->zip, $c?->pref, $c?->city, $c?->street_address, $c?->building]))), true],
+                // El código postal se guarda solo con dígitos; se muestra como 〒530-0001
+                ['Dirección', trim(implode(' ', array_filter([
+                    $c?->zip ? '〒' . preg_replace('/^(\d{3})(\d{4})$/', '$1-$2', $c->zip) : null,
+                    $c?->pref, $c?->city, $c?->street_address, $c?->building,
+                ]))), true],
+                ['Dirección (fonético)', trim(implode(' ', array_filter([$c?->city_kana, $c?->building_kana]))), true],
                 ['Email', $c?->mail1],
                 ['Teléfono', $c?->tel1],
                 ['Fax', $c?->tel3],

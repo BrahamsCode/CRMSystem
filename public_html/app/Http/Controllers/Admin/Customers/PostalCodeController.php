@@ -36,10 +36,14 @@ class PostalCodeController extends Controller
             return response()->json(['error' => 'No se encontró ninguna dirección con ese código postal.'], 404);
         }
 
+        // Como el legacy, la lectura cubre 市区町村 y 町域 separados por un espacio
+        // (オオサカシキタク ウメダ). El 町域 (梅田) va al inicio de la calle, para
+        // que solo falte escribir el número (梅田1-2-3).
         return response()->json([
             'pref' => $data['address1'],
-            'city' => $data['address2'] . $data['address3'],
-            'city_kana' => $this->anchoCompleto($data['kana2'] . $data['kana3']),
+            'city' => $data['address2'],
+            'street_address' => $data['address3'],
+            'city_kana' => trim($this->anchoCompleto($data['kana2']) . ' ' . $this->anchoCompleto($data['kana3'])),
         ]);
     }
 

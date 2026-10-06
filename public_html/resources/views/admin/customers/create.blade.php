@@ -43,7 +43,12 @@
                      const d = await r.json();
                      this.$refs.pref.value = d.pref;
                      this.$refs.city.value = d.city;
-                     this.$refs.calle.focus();
+                     this.$refs.cityKana.value = d.city_kana;
+                     /* El 町域 va en la calle: el cursor queda al final para escribir el número */
+                     const calle = this.$refs.calle;
+                     calle.value = d.street_address;
+                     calle.focus();
+                     calle.setSelectionRange(calle.value.length, calle.value.length);
                  } catch (e) {
                      this.errorZip = @js(__('customers.nuevo.zip_error'));
                  } finally {
@@ -160,18 +165,29 @@
                             </span>
                         </x-ui.field>
 
-                        <x-ui.field :label="$t('pref')">
-                            <x-ui.input name="pref" x-ref="pref" :value="old('pref')" />
+                        <x-ui.field :label="$t('pref')" class="sm:col-span-full">
+                            <x-ui.select name="pref" x-ref="pref" class="sm:w-60!">
+                                <option value="">{{ __('customers.comun.seleccionar') }}</option>
+                                @foreach (config('crm.prefectures') as $pref)
+                                    <option value="{{ $pref }}" @selected(old('pref') === $pref)>{{ $pref }}</option>
+                                @endforeach
+                            </x-ui.select>
                         </x-ui.field>
                         <x-ui.field :label="$t('ciudad')">
-                            <x-ui.input name="city" x-ref="city" :value="old('city')" />
+                            <x-ui.input name="city" x-ref="city" :value="old('city')" autocomplete="address-level2" />
                         </x-ui.field>
-                        <x-ui.field :label="$t('calle')">
+                        <x-ui.field :label="$t('ciudad_kana')">
+                            <x-ui.input name="city_kana" x-ref="cityKana" :value="old('city_kana')" />
+                        </x-ui.field>
+                        <x-ui.field :label="$t('calle')" class="sm:col-span-full">
                             <x-ui.input name="street_address" x-ref="calle" :value="old('street_address')"
-                                        autocomplete="street-address" />
+                                        placeholder="梅田1-2-3" autocomplete="address-line1" />
                         </x-ui.field>
                         <x-ui.field :label="$t('edificio')">
-                            <x-ui.input name="building" :value="old('building')" />
+                            <x-ui.input name="building" :value="old('building')" autocomplete="address-line2" />
+                        </x-ui.field>
+                        <x-ui.field :label="$t('edificio_kana')">
+                            <x-ui.input name="building_kana" :value="old('building_kana')" />
                         </x-ui.field>
 
                         <x-customers.subheading>{{ $t('sub_contacto') }}</x-customers.subheading>
