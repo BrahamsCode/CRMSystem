@@ -12,7 +12,7 @@
 */
 
 pest()->extend(Tests\TestCase::class)
- // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Feature');
 
 /*
@@ -41,7 +41,27 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+/** Datos mínimos del sistema: admin, tienda y catálogos, sin los 120 clientes de prueba */
+function seedBase(): \App\Models\Admin
 {
-    // ..
+    test()->seed([
+        \Database\Seeders\AdminSeeder::class,
+        \Database\Seeders\ShopSeeder::class,
+        \Database\Seeders\CatalogSeeder::class,
+        \Database\Seeders\CustomCategorySeeder::class,
+        \Database\Seeders\FieldSettingSeeder::class,
+    ]);
+
+    return \App\Models\Admin::first();
+}
+
+/** Cliente de prueba en la primera tienda */
+function makeCustomer(array $attributes = []): \App\Models\Customer
+{
+    return \App\Models\Customer::create($attributes + [
+        'shop_id' => \App\Models\Shop::orderBy('id')->value('id'),
+        'last_name' => 'Prueba',
+        'first_name' => 'Cliente',
+        'mail1' => 'cliente' . random_int(1000, 999999) . '@example.com',
+    ]);
 }

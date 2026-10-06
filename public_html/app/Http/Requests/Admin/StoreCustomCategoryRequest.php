@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 use App\Enums\CustomCategoryType;
+use App\Models\Shop;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -14,11 +15,13 @@ class StoreCustomCategoryRequest extends FormRequest
     {
         $categoria = $this->route('category');
 
+        // Misma tienda con la que trabaja ModuleController::shop(); el formulario no la envía
+
         return [
             'name' => [
                 'required', 'string', 'max:255',
                 Rule::unique('custom_categories', 'name')
-                    ->where('shop_id', $this->input('shop_id'))
+                    ->where('shop_id', Shop::active()->orderBy('id')->value('id'))
                     ->ignore($categoria?->id)
                     ->whereNull('deleted_at'),
             ],

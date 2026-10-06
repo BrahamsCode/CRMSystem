@@ -75,8 +75,8 @@ class CustomCategoryController extends ModuleController
     {
         $data = $request->validate([
             'categories' => ['array'],
-            'categorias.*.search_flg' => ['nullable', 'in:0,1'],
-            'categorias.*.display_flg' => ['nullable', 'in:0,1'],
+            'categories.*.search_flg' => ['nullable', 'in:0,1'],
+            'categories.*.display_flg' => ['nullable', 'in:0,1'],
             'order' => ['array'],
         ]);
 

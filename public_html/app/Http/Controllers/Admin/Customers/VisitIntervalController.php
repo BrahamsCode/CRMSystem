@@ -28,7 +28,7 @@ class VisitIntervalController extends ModuleController
     {
         $data = $request->validate([
             'intervals' => ['required', 'array'],
-            'intervalos.*' => ['required', 'integer', 'in:' . implode(',', array_keys($this->opciones()))],
+            'intervals.*' => ['required', 'integer', 'in:' . implode(',', array_keys($this->opciones()))],
         ]);
 
         foreach ($data['intervals'] as $shopId => $seconds) {

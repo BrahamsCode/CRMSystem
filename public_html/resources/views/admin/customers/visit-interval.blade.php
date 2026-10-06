@@ -34,7 +34,7 @@
                                 <tr class="border-t border-line">
                                     <th scope="row" class="px-5 py-3 text-left font-bold">{{ $shop->name }}</th>
                                     <td class="px-5 py-3">
-                                        <x-ui.select :name="'intervalos[' . $shop->id . ']'"
+                                        <x-ui.select :name="'intervals[' . $shop->id . ']'"
                                                      :aria-label="'Intervalo de ' . $shop->name">
                                             @foreach ($options as $seconds => $label)
                                                 <option value="{{ $seconds }}"

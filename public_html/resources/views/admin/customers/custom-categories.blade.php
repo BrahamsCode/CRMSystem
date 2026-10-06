@@ -59,7 +59,7 @@
                                         <td class="px-4 py-3">
                                             <a href="{{ route('admin.customers.custom-categories.edit', $category) }}"
                                                class="font-bold hover:text-accent-fg">{{ $category->name }}</a>
-                                            <input type="hidden" name="orden[]" value="{{ $category->id }}">
+                                            <input type="hidden" name="order[]" value="{{ $category->id }}">
                                         </td>
                                         <td class="px-4 py-3">
                                             <x-ui.badge>{{ $category->type->label() }}</x-ui.badge>
@@ -77,15 +77,15 @@
                                             </x-ui.btn>
                                         </td>
                                         <td class="px-4 py-3">
-                                            <input type="hidden" name="categorias[{{ $category->id }}][search_flg]" value="0">
-                                            <input type="checkbox" name="categorias[{{ $category->id }}][search_flg]" value="1"
+                                            <input type="hidden" name="categories[{{ $category->id }}][search_flg]" value="0">
+                                            <input type="checkbox" name="categories[{{ $category->id }}][search_flg]" value="1"
                                                    @checked($category->search_flg === 1)
                                                    aria-label="{{ $category->name }}: usar en búsqueda"
                                                    class="h-5 w-5 accent-[var(--crm-accent)]">
                                         </td>
                                         <td class="px-4 py-3">
-                                            <input type="hidden" name="categorias[{{ $category->id }}][display_flg]" value="0">
-                                            <input type="checkbox" name="categorias[{{ $category->id }}][display_flg]" value="1"
+                                            <input type="hidden" name="categories[{{ $category->id }}][display_flg]" value="0">
+                                            <input type="checkbox" name="categories[{{ $category->id }}][display_flg]" value="1"
                                                    @checked($category->display_flg === 1)
                                                    aria-label="{{ $category->name }}: mostrar"
                                                    class="h-5 w-5 accent-[var(--crm-accent)]">

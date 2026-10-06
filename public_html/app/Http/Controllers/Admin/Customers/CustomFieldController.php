@@ -24,7 +24,7 @@ class CustomFieldController extends ModuleController
             ->ordered()
             ->get();
 
-        $current = $categories->firstWhere('id', $request->integer('categoria'))
+        $current = $categories->firstWhere('id', $request->integer('category'))
             ?? $categories->firstWhere('slug', 'mascota')
             ?? $categories->first();
 
@@ -38,7 +38,7 @@ class CustomFieldController extends ModuleController
     {
         return view('admin.customers.custom-field-form', [
             'field' => null,
-            'category' => $this->categoriaDe($request->integer('categoria')),
+            'category' => $this->categoriaDe($request->integer('category')),
         ]);
     }
 
@@ -119,12 +119,12 @@ class CustomFieldController extends ModuleController
     private function guardarOpciones(CustomField $field, array $options): void
     {
         if (! $field->usesOptions()) {
-            $field->options()->delete();
+            $field->options()->forceDelete();
 
             return;
         }
 
-        $field->options()->delete();
+        $field->options()->forceDelete();
 
         $orden = 0;
 

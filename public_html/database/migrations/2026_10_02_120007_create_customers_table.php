@@ -81,7 +81,7 @@ return new class extends Migration
                 ->comment('1: enviar, 2: no enviar, 3: no entregable');
             $table->integer('bounce_count')->default(0)->comment('Correos no entregados');
             $table->smallInteger('reservation_reminder_flg')->default(1)
-                ->comment('1: enviar recordatorio de reservas, 2: no enviar');
+                ->comment('0: no enviar, 1: enviar recordatorio de reservas');
             $table->smallInteger('address_type')->nullable()->comment('App\Enums\AddressType — desglose por operador en la búsqueda');
             $table->text('note')->nullable()->comment('Notas');
 
