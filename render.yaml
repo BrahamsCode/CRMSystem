@@ -1,0 +1,76 @@
+services:
+  # Servicio web de Laravel
+  - type: web
+    name: crmsystem-web
+    env: docker
+    region: oregon
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    envVars:
+      # Laravel
+      - key: APP_NAME
+        value: CRM System
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        sync: false
+      - key: APP_KEY
+        generateValue: true
+
+      # Locale
+      - key: APP_LOCALE
+        value: es
+      - key: APP_FALLBACK_LOCALE
+        value: en
+
+      # Database - Render inyectará automáticamente estas variables desde el servicio de PostgreSQL
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: crmsystem-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: crmsystem-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: crmsystem-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: crmsystem-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: crmsystem-db
+          property: password
+
+      # Session, Cache, Queue
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database
+
+      # Mail (configurar según tus necesidades)
+      - key: MAIL_MAILER
+        value: log
+      - key: MAIL_FROM_ADDRESS
+        value: noreply@example.com
+      - key: MAIL_FROM_NAME
+        value: CRM System
+
+databases:
+  # Base de datos PostgreSQL
+  - name: crmsystem-db
+    databaseName: crmsystem2
+    user: root
+    region: oregon
+    plan: starter
+    postgresMajorVersion: 15

@@ -1,0 +1,50 @@
+# Git
+.git
+.gitignore
+
+# Docker
+docker/
+Dockerfile
+docker-compose.yml
+.dockerignore
+docker-entrypoint.sh
+
+# Documentación
+Doc/
+README.md
+*.md
+
+# Archivos de entorno locales
+.env
+.env.local
+.env.*.local
+
+# Dependencias (se instalarán en el build)
+public_html/node_modules
+public_html/vendor
+
+# Archivos temporales de Laravel
+public_html/storage/*.key
+public_html/storage/logs/*
+public_html/storage/framework/cache/*
+public_html/storage/framework/sessions/*
+public_html/storage/framework/views/*
+public_html/bootstrap/cache/*
+
+# Testing
+public_html/.phpunit.cache
+public_html/tests/
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Playwright
+.playwright-mcp/
