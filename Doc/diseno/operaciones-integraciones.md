@@ -50,7 +50,7 @@ Integraciones: `routes/publico/integraciones.php`, que S1 carga fuera del grupo 
 | `kintai_delete.php` | (día: borrar) | `admin.operaciones.kintai.destroy` | `KintaiController@destroy` | E `kintai_tb_hiduke`, `kintai_tb_kintai` | pendiente ⏸ |
 | `password_update.php`, `password_update_complete.php` | 端末パスワード変更 | `admin.operaciones.kintai.password.edit` / `.update` | `KintaiConfigController@editPassword` / `@updatePassword` | L/E `kintai_tb_config.password` | pendiente ⏸ (texto plano: lo lee el terminal, §7) |
 | `config.php` | 各種設定データ | `admin.operaciones.kintai.config.edit` / `.update` | `KintaiConfigController@edit` / `@update` | L/E `kintai_tb_config`; L `tb_staff`, `tb_staff_shift_kind` | pendiente ⏸ |
-| `staff_shift_kind.php`, `_frm.php`, `_register.php` | シフト区分管理 | `admin.operaciones.shift-kinds.*` (index, store, update, destroy, `sort`) | `StaffShiftKindController` | L/E `tb_staff_shift_kind`, `hatuban` | pendiente (lo usan los turnos: no espera a Antony) |
+| `staff_shift_kind.php`, `_frm.php`, `_register.php` | シフト区分管理 | `admin.operaciones.shift-kinds.*` (index, store, update, destroy, `sort`) | `StaffShiftKindController` | L/E `tb_staff_shift_kind`, `hatuban` | hecho (pantalla propia, solo master, menú スケジュール管理; ▲▼ con `LegacyRanking`) |
 | `csv_out.php`, `csv_download/csv_out.php` | (CSV diario) | `admin.operaciones.kintai.csv.daily` | `KintaiCsvController@daily` | L `kintai_tb_config`, `kintai_tb_kintai`, `tb_staff` | pendiente ⏸ |
 | `monthly_csv_out.php`, `csv_download/monthly_csv_out.php` | (CSV mensual por persona) | `admin.operaciones.kintai.csv.monthly` | `KintaiCsvController@monthly` | L las mismas | pendiente ⏸ |
 | `csv_download/csv_file_out.php`, `csv_download/csv_file_del.php` | (archivo temporal Flash) | — | — | — | descartado: `StreamedResponse` sin archivo temporal |
@@ -91,7 +91,7 @@ Integraciones: `routes/publico/integraciones.php`, que S1 carga fuera del grupo 
 | `felica_mode.php` | カードリーダーモード設定 | `admin.operaciones.felica-mode.edit` / `.update` | `FelicaModeController@edit` / `@update` | L/E `tb_felica_mode` (fila `cd=1`) | pendiente ⏸ |
 | `card_new.php` | カード管理 (新規カード管理) | `admin.operaciones.cards.index` / `.assign` | `StaffCardController@index` / `@assign` | L/E `tb_card`, `tb_felica_mode`, `tb_staff`, `tb_work_time` | pendiente ⏸ |
 | `card_staff_select.php` | (fragmento) | parcial Blade | — | L `tb_staff` | pendiente ⏸ |
-| `shop_work_calendar.php` | 営業日設定 | `admin.operaciones.shop-work.edit` / `.update` | `ShopWorkController@edit` / `@update` | L/E `tb_shop_work`, `hatuban` | pendiente (no depende del terminal; botón 更新 dentro del form; también lo enlaza el menú de S2) |
+| `shop_work_calendar.php` | 営業日設定 | `admin.operaciones.shop-work.edit` / `.update` | `ShopWorkController@edit` / `@update` | L/E `tb_shop_work`, `hatuban` | hecho (fila por tienda y mes; festivos con `LegacyHolidays` = check_holiday) |
 | `index.php` (category5) | 業務支援管理 (menú) | `config/menu/operaciones.php` | — | L `tb_base_system_child` | pendiente |
 | `inc/page_control.php` | (paginador) | paginador de Laravel con el HTML del legacy | — | — | pendiente |
 

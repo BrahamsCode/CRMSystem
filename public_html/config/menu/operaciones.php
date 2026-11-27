@@ -22,5 +22,26 @@ return [
                 ['label' => 'インフォメーション管理', 'url' => '/admin/operaciones/information'],
             ],
         ],
+        [
+            // En el legacy este bloque está vacío y los turnos cuelgan de 勤怠管理 solo en un servidor concreto
+            // (SERVER_ADDR); aquí se agrupan en スケジュール管理, que es su tb_base_system_child.
+            'title' => 'スケジュール管理',
+            'image' => 'ln_t5_1.gif',
+            'ac' => 'ac3',
+            'child' => 'スケジュール管理',
+            'links' => [
+                ['label' => 'シフト区分管理', 'url' => '/admin/operaciones/shift-kinds', 'can' => 'nucleo.master'],
+            ],
+        ],
+        [
+            'title' => '初期設定管理',
+            'image' => 'ln_t5_1.gif',
+            'ac' => 'ac4',
+            'child' => '初期設定管理',
+            'links' => [
+                // カードリーダーモード設定 y 新規カード管理: ⏸ hasta que Antony confirme 勤怠
+                ['label' => '営業日設定', 'url' => '/admin/operaciones/shop-work'],
+            ],
+        ],
     ],
 ];
