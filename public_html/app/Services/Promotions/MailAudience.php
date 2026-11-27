@@ -17,7 +17,12 @@ use Illuminate\Support\Str;
  */
 class MailAudience
 {
-    private const SESSION = 'promocion.audience.';
+    /**
+     * Clave única de la búsqueda guardada, dueña S2 (acuerdo S0/S2/S3): `customer_search.<uniqid>` con la
+     * forma de CustomerSearch::describe(). La edición de un programado guarda ahí `['raw' => …, 'display' => …]`
+     * con un uniqid propio (no lo comparte con 顧客検索).
+     */
+    public const SESSION = 'customer_search.';
 
     public function __construct(private readonly CustomerSearch $search) {}
 

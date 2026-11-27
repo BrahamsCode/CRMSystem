@@ -303,12 +303,12 @@ function statusControl(shop_cd, type, target_cd, vl){
 
 	<tr>
 	<th style="width:20%;">名称<span class="attention">※</span></th>
-	<td><input type="text" name="name" class="inputL" value="{{ old('name', $menu?->name) }}" /></td>
+	<td><input type="text" name="name" class="inputL" value="{!! old('name') !== null ? e(old('name')) : $menu?->name !!}" /></td>
 	</tr>
 
 	<tr>
 	<th style="width:20%;">内容</th>
-	<td><textarea name="naiyou" id="naiyou" class="writeArea" rows="6">{{ old('naiyou', $menu?->naiyou) }}</textarea>
+	<td><textarea name="naiyou" id="naiyou" class="writeArea" rows="6">{!! old('naiyou') !== null ? e(old('naiyou')) : $menu?->naiyou !!}</textarea>
 	</td>
 	</tr>
 

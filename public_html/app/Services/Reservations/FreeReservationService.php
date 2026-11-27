@@ -53,7 +53,8 @@ class FreeReservationService
     {
         DB::transaction(function () use ($shopCd, $values) {
             foreach (self::FIELDS as $input => $field) {
-                $text = (string) ($values[$input] ?? '');
+                // form2Db() de free_yoyaku_register.php (半角カナ → 全角 y recorte); texto plano
+                $text = ReservationInput::form2Db($values[$input] ?? '');
 
                 if ($this->entry($field, $shopCd)->exists()) {
                     $this->entry($field, $shopCd)->update(['text_data' => $text]);

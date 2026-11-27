@@ -329,7 +329,7 @@
 
 	<div class="btnBox">
 
-		<form method="post" name="add_record_form" id="add_record_form" class="form" action="{{ route('admin.clientes.visit-records.create') }}">
+		<form method="post" name="add_record_form" id="add_record_form" class="form" action="{{ $pendingRoute('admin.clientes.visit-records.create') }}">
 		@csrf
 		<input type="submit" name="add_record" id="add_record" class="btn btnStyleM" value="{{ $karuteLabel }}を追加" />
 		<input type="hidden" name="kaiin_cd" id="kaiin_cd" class="btn" value="{{ $customer->cd }}">
@@ -338,7 +338,7 @@
 		<input type="hidden" name="page" id="page" value="{{ request('page') }}" />
 		</form>
 		@if (! empty($relatedFeature['cd']))
-		<form method="post" name="update_record_form" id="add_record_form" class="form" action="{{ route('admin.clientes.visit-records.create') }}">
+		<form method="post" name="update_record_form" id="add_record_form" class="form" action="{{ $pendingRoute('admin.clientes.visit-records.create') }}">
 		@csrf
 		<input type="submit" name="add_record" id="add_record" class="btn btnStyleM" value="{{ $karuteLabel }}を修正" />
 		<input type="hidden" name="kaiin_cd" id="kaiin_cd" class="btn" value="{{ $customer->cd }}">
@@ -347,7 +347,7 @@
 		<input type="hidden" name="related_features_cd" id="related_features_cd" value="{{ $relatedFeature['cd'] }}">
 		<input type="hidden" name="page" id="page" value="{{ request('page') }}" />
 		</form>
-		<form method="post" name="delete_record_form" id="delete_record_form" class="form" action="{{ route('admin.clientes.visit-records.destroy') }}">
+		<form method="post" name="delete_record_form" id="delete_record_form" class="form" action="{{ $pendingRoute('admin.clientes.visit-records.destroy') }}">
 		@csrf
 		<input type="button" name="add_record" id="add_record" class="btn btnStyleM" value="{{ $karuteLabel }}を削除" onclick="submitChk(document.delete_record_form);" />
 		<input type="hidden" name="kaiin_cd" id="kaiin_cd" class="btn" value="{{ $customer->cd }}">

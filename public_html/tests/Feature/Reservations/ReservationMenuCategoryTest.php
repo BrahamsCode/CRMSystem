@@ -69,3 +69,18 @@ it('ordena, cambia 表示 y borra desde la lista', function () {
         ->and($c->fresh()->rank)->toBe(1)
         ->and($b->fresh()->rank)->toBe(2);
 });
+
+it('guarda el nombre con form2Db() como yoyaku_koumoku_category_register.php y lo imprime escapado', function () {
+    $this->post(route('admin.reservas.menu-categories.store'), ['name' => "　ｶﾗｰ <b>\"A\" 'B'</b>　"])->assertRedirect();
+
+    $category = ReservationMenuCategory::firstOrFail();
+    expect($category->name)->toBe("カラー <b>\"A\" 'B'</b>");
+
+    $this->post(route('admin.reservas.menu-categories.list'))
+        ->assertOk()
+        ->assertSee("<td>カラー &lt;b&gt;&quot;A&quot; &#039;B&#039;&lt;/b&gt;</td>", false)
+        ->assertDontSee('<b>"A"', false);
+
+    $this->get(route('admin.reservas.menu-categories.index', ['cd' => $category->cd]))
+        ->assertSee('value="カラー &lt;b&gt;&quot;A&quot; &#039;B&#039;&lt;/b&gt;"', false);
+});

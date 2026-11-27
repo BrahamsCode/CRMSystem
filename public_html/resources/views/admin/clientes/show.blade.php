@@ -14,10 +14,14 @@
        $appLayoutMode          int: contents_master mycolle/app_layout_mode (1 → pestaña 有料会員状況)
        $popup                  bool: true = ficha abierta como ventana (legacy sin $window_type = "ALL": sin menú y con botón 閉じる)
        $isTablet               bool: tableta Android (閉じる llama a roid.windowClose())
-       + las variables de cada pestaña (ver el comentario inicial de tabs/tabN). --}}
+       $shopList               array cd => kaishamei de tb_shop (disp_flg != 9), común a varias pestañas
+       $isMaster               bool: el staff es master
+       + las variables de cada pestaña (ver el comentario inicial de tabs/tabN).
+     session('restoreError'): el 復元 no se hizo porque otro socio ya usa el correo (customer_recover_confirm.php). --}}
 @extends(($popup ?? false) ? 'layouts.legacy-popup' : 'layouts.legacy')
 
 @section('menu', 'clientes')
+@section('wrapClass', 'customerDetail')
 @section('title', '顧客登録情報 - ' . config('app.name'))
 
 @section('css')
@@ -220,6 +224,12 @@ function stamp_submitChk2 () {
 	}
 }
 
+@if (session('restoreError'))
+$(document).ready(function() {
+	alert("すでに再登録されたメールアドレスが存在するため復元できません。");
+});
+@endif
+
 function send_tab(tabNo, search_cate_cd) {
 	document.send_tab_form.tab.value = tabNo;
 	document.send_tab_form.search_cate_cd.value = search_cate_cd;
@@ -239,6 +249,10 @@ function send_tab(tabNo, search_cate_cd) {
     if (! view()->exists('admin.clientes.tabs.' . $tabView)) {
         $tabView = 'tab1';
     }
+    // Botones hacia pantallas de otras tareas (edición, カルテ, álbum, registros…): '#' mientras su ruta no exista
+    $pendingRoute = fn (string $name, mixed $params = []) => \Illuminate\Support\Facades\Route::has($name) ? route($name, $params) : '#';
+    // Ventana emergente: se conserva al cambiar de pestaña y en los formularios
+    $popupInput = ($popup ?? false) ? '<input type="hidden" name="wintype" value="no_headers" />' : '';
 @endphp
 <div class="contents">
 
@@ -266,6 +280,7 @@ function send_tab(tabNo, search_cate_cd) {
 	<input type="hidden" name="kaiin_cd" id="kaiin_cd" value="{{ $customer->cd }}" />
 	<input type="hidden" name="tab" id="tab" value="" />
 	<input type="hidden" name="search_cate_cd" id="search_cate_cd" value="" />
+	{!! $popupInput !!}
 </form>
 <!-- / div.customerTabArea END --></div>
 
@@ -278,7 +293,7 @@ function send_tab(tabNo, search_cate_cd) {
 
 @can('kengen', [1001, 3])
 @if ($customer->disp_flg != 9) {{-- 修正ボタン --}}
-<form method="get" name="form1" id="form1" class="form" action="{{ route('admin.clientes.edit', $customer->cd) }}">
+<form method="get" name="form1" id="form1" class="form" action="{{ $pendingRoute('admin.clientes.edit', $customer->cd) }}">
 <input type="submit" name="enter" id="enter" class="btn btnStyleS" value="顧客情報を修正する" />
 <input type="hidden" name="kaiin_cd" id="kaiin_cd" value="{{ $customer->cd }}" />
 </form>
@@ -290,6 +305,7 @@ function send_tab(tabNo, search_cate_cd) {
 @if ($customer->disp_flg != '1') {{-- 削除・復元ボタン --}}
 <form method="post" name="form2" id="form2" class="form" action="{{ route('admin.clientes.restore', $customer->cd) }}">
 @csrf
+{!! $popupInput !!}
 <input type="button" name="delete" id="delete" class="btn btnStyleS" value="顧客情報を復元する" onclick="submitChk(document.form2);">
 <input type="hidden" name="delete_flg" id="delete_flg" class="btn" value="recover">
 <input type="hidden" name="customer_cd" id="customer_cd" class="btn" value="{{ $customer->cd }}">
@@ -297,6 +313,8 @@ function send_tab(tabNo, search_cate_cd) {
 @else
 <form method="post" name="form2" id="form2" class="form" action="{{ route('admin.clientes.destroy', $customer->cd) }}">
 @csrf
+@method('DELETE')
+{!! $popupInput !!}
 <input type="button" name="delete" id="delete" class="btn btnStyleS" value="顧客情報を削除する" onclick="submitChk(document.form2);">
 <input type="hidden" name="delete_flg" id="delete_flg" class="btn" value="del">
 <input type="hidden" name="customer_cd" id="customer_cd" class="btn" value="{{ $customer->cd }}">

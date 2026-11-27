@@ -102,3 +102,15 @@ it('reescribe las filas del empleado y su 指名許諾 al guardar', function () 
         ->assertSee("setStaff('1', '10')", false)
         ->assertSee('window.parent !== window', false);
 });
+
+it('imprime 名前 y 内容 del menú (guardados con get_form2()) sin escapar dos veces', function () {
+    DB::table('tb_yoyaku_koumoku_master')->where('cd', 100)->update([
+        'name' => "&lt;b&gt;&quot;カット&quot;&lt;/b&gt; 'A'", 'naiyou' => "&lt;i&gt;説明&lt;/i&gt;\n2行目",
+    ]);
+
+    $this->post(route('admin.reservas.staff-works.menu'), ['shop_cd' => 1, 'staff_cd' => 10])
+        ->assertOk()
+        ->assertSee("<span style=\"font-weight:bold;\">&lt;b&gt;&quot;カット&quot;&lt;/b&gt; 'A'</span>", false)
+        ->assertSee('&lt;i&gt;説明&lt;/i&gt;<br />', false)
+        ->assertDontSee('&amp;lt;', false);
+});

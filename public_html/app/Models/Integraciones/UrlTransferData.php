@@ -2,7 +2,9 @@
 
 namespace App\Models\Integraciones;
 
+use App\Models\Customers\Customer;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -37,5 +39,9 @@ class UrlTransferData extends Model
         ]);
     }
 
-    // La relación con el cliente (tb_customer, modelo de S2) se agrega cuando S2 lo publique
+    /** Socio que abrió el enlace (tb_customer de S2); null para visitantes sin cuenta */
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class, 'tb_customer_cd', 'cd');
+    }
 }

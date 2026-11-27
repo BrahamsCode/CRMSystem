@@ -97,6 +97,7 @@
   - S5: スタッフ管理 completo.
   `laravel13` con 437 pruebas en verde. C1 de S2 (8f39ad3) NO se integra todavía: con él falla `F1CouponsTest`, porque la vista de S3 llama a `route('admin.clientes.show', ['kaiin_cd' => …])` y el parámetro de S2 es `{customer}`. Lo arregla S3.
   La búsqueda guardada de clientes queda en una sola clave de sesión, `customer_search.<uniqid>` (dueño S2), que S3 lee sin copiarla.
+- 2026-11-27 (01:20): integrados el arreglo de S3 (541d12d: la ruta de la ficha y la búsqueda en `customer_search.*`), C1 de S2 (顧客一覧・検索, ficha con 14 pestañas, alta y edición), y de S5 `MobileShopClient` y `UrlTransferData::customer()`. `laravel13` con 496 pruebas en verde.
 - 2026-11-27: siguiente tarea de S1 (Antony: el login primero): modelo base y traits comunes, luego el login contra el personal del legacy, el layout idéntico y los estáticos comunes.
 
 ## Hecho

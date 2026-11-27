@@ -4,6 +4,7 @@ namespace App\Services\Reservations;
 
 use App\Models\Reservations\ReservationMenu;
 use App\Models\Reservations\ReservationMenuCategory;
+use App\Support\LegacyText;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
@@ -48,9 +49,10 @@ class ReservationMenuService
             }
 
             $menu->fill([
-                'name' => $data['name'],
+                // get_form2() de yoyaku_koumoku_register.php: se guardan entidades HTML (se imprime con {!! !!})
+                'name' => LegacyText::input($data['name']),
                 'shoyou_time' => (int) $data['shoyou_time'],
-                'naiyou' => $data['naiyou'] ?? '',
+                'naiyou' => LegacyText::input($data['naiyou'] ?? ''),
                 'tb_shop_cd' => $shopCd,
                 'type_flg' => $typeFlg,
                 'tb_yoyaku_koumoku_category_cd' => $categoryCd,

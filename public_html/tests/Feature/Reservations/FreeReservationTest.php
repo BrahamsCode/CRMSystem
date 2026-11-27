@@ -117,3 +117,16 @@ it('▲▼ intercambia el orden', function () {
         'shop_cd' => 1, 'send_type' => 'rankup', 'send_targetCd' => 11, 'send_prevCd' => '', 'send_vl' => '1',
     ])->assertOk()->assertSeeInOrder(['佐藤', '鈴木', '山田']);
 });
+
+it('guarda el 表示名 con form2Db() como free_yoyaku_register.php y lo imprime escapado', function () {
+    $this->post(route('admin.reservas.free.update'), [
+        'free_shop_cd' => 1, 'act' => 'new', 'hyouji_flg' => '1', 'name' => "　ｼﾒｲﾅｼ <b>\"A\" 'B'</b>　", 'staff_select_flg' => '', 'timeline_staff_flg' => '',
+    ])->assertRedirect();
+
+    expect(freeSetting('free_yoyaku_name'))->toBe("シメイナシ <b>\"A\" 'B'</b>");
+
+    $this->get(route('admin.reservas.free', ['shop' => 1]))
+        ->assertOk()
+        ->assertSee('value="シメイナシ &lt;b&gt;&quot;A&quot; &#039;B&#039;&lt;/b&gt;"', false)
+        ->assertDontSee('<b>"A"', false);
+});
