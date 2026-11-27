@@ -42,18 +42,18 @@ Abreviaturas: `Cu\` = `Admin\Customers\`, `Sa\` = `Admin\Sales\`, `Re\` = `Admin
 | `customer_search.php` | 来店処理 | `admin.clientes.visits`, `.visits.store` | `Cu\VisitController@index/store` + `VisitService::register` | L/E `tb_customer`, `tb_raiten_rireki`, `hatuban`; puntos y sellos vía S3 | pendiente |
 | wrappers `customer_new*.php`, `customer_detail.php`, `customer_recover_confirm.php`, `customer_delete_register.php`, `del_record.php`, `kanren_*` (4), `add_record_*` (3), `photoalbum_*` (3) | (wrappers) | — | — | — | descartado: wrappers de 3 líneas de `inc/` (filas en `inc/`); `kanren_record_confirm.php` roto |
 | `customer_new_complete.php` | 顧客登録情報 | — | — | — | descartado: versión paralela del alta sin enlace; el alta de `inc/` la cubre |
-| `form_config.php`, `form_config_register.php` | 表示・検索・CSV項目設定 | `admin.clientes.field-settings`, `.field-settings.update` | `Cu\FieldSettingController@index/update` | L/E `tb_search_form` (`hissu`, `hyouji_flg`, `serach_flg`, `csv_flg`), `tb_koumoku`; L `tb_search_cate` | pendiente |
-| `search_cate_list.php` | 顧客追加情報設定 | `admin.clientes.custom-categories` (+`.sort`, `.flags`) | `Cu\CustomCategoryController@index/sort/updateFlags` | L/E `tb_search_cate` | pendiente |
-| `search_cate_new.php`, `_new_check.php`, `_new_up.php` | 顧客追加情報 (categoría) | `.custom-categories.create/.store` (+`.check` JSON) | `@create/store/check` | E `tb_search_cate`, `hatuban` | pendiente |
-| `search_cate_update.php`, `_update_up.php` | 〃 | `.custom-categories.edit/.update` | `@edit/update` | E `tb_search_cate` | pendiente |
-| `search_cate_delete_up.php` | 〃 | `.custom-categories.destroy` | `@destroy` | E `tb_search_cate`, `tb_search_form`, `tb_customer_sub` (`disp_flg = 9`) | pendiente |
-| `search_form_list.php` | 顧客追加情報 (campos) | `admin.clientes.custom-fields` | `Cu\CustomFieldController@index` | L `tb_search_form`, `tb_search_cate` | pendiente |
-| `search_form_new.php`, `_new_check.php`, `_new_up.php` | 〃 | `.custom-fields.create/.store` (+`.check`) | `@create/store/check` | E `tb_search_form`, `hatuban` | pendiente |
-| `search_form_update.php`, `_update_up.php` | 〃 | `.custom-fields.edit/.update` | `@edit/update` | E `tb_search_form` | pendiente |
-| `search_form_delete_up.php` | 〃 | `.custom-fields.destroy` | `@destroy` | E `tb_search_form`, `tb_customer_sub` | pendiente |
-| `customer_group_category_new.php`, `_frm.php`, `_register.php` | 顧客グループ設定 | `admin.clientes.groups` (+`.store/.update/.sort/.destroy`) | `Cu\CustomerGroupController` | L/E `tb_customer_group` (modelo de S3), `hatuban` | pendiente |
-| `customer_level_category_new.php`, `_frm.php`, `_register.php` | 顧客レベル | `admin.clientes.levels` (sin entrada de menú, como el legacy) | `Cu\CustomerLevelController` | L/E `tb_customer_level`, `hatuban` | pendiente (prioridad baja; S0: tiene pantalla porque el legacy la tenía) |
-| `raiten_douki.php`, `_frm.php`, `_register.php` | 初回来店動機項目設定 | `admin.clientes.visit-motives` (+`.store/.update/.sort/.destroy`) | `Cu\VisitMotiveController` | L/E `tb_raiten_douki_master`, `hatuban` | pendiente |
+| `form_config.php`, `form_config_register.php` | 表示・検索・CSV項目設定 | `admin.clientes.field-settings`, `.field-settings.update` | `Cu\FieldSettingController@index/update` | L/E `tb_search_form` (`hissu`, `hyouji_flg`, `serach_flg`, `csv_flg`), `tb_koumoku`; L `tb_search_cate` | hecho (C2; URL legacy `form_config.php`) |
+| `search_cate_list.php` | 顧客追加情報設定 | `admin.clientes.custom-categories` (+`.sort`, `.flags`) | `Cu\CustomCategoryController@index/sort/updateFlags` | L/E `tb_search_cate` | hecho (C2; ▲▼ por POST `.sort`; URL legacy `search_cate_list.php`) |
+| `search_cate_new.php`, `_new_check.php`, `_new_up.php` | 顧客追加情報 (categoría) | `.custom-categories.create/.store` (+`.check` JSON) | `@create/store/check` | E `tb_search_cate`, `hatuban` | hecho (C2; sin `.check`: el legacy valida en el POST con `CustomCategoryRequest`) |
+| `search_cate_update.php`, `_update_up.php` | 〃 | `.custom-categories.edit/.update` | `@edit/update` | E `tb_search_cate` | hecho (C2) |
+| `search_cate_delete_up.php` | 〃 | `.custom-categories.destroy` | `@destroy` | E `tb_search_cate`, `tb_search_form`, `tb_customer_sub` (`disp_flg = 9`) | hecho (C2) |
+| `search_form_list.php` | 顧客追加情報 (campos) | `admin.clientes.custom-fields` | `Cu\CustomFieldController@index` | L `tb_search_form`, `tb_search_cate` | hecho (C2; URL legacy `search_form_list.php?pcd=` → redirección) |
+| `search_form_new.php`, `_new_check.php`, `_new_up.php` | 〃 | `.custom-fields.create/.store` (+`.check`) | `@create/store/check` | E `tb_search_form`, `hatuban` | hecho (C2; sin `.check`: valida `CustomFieldRequest`) |
+| `search_form_update.php`, `_update_up.php` | 〃 | `.custom-fields.edit/.update` | `@edit/update` | E `tb_search_form` | hecho (C2) |
+| `search_form_delete_up.php` | 〃 | `.custom-fields.destroy` | `@destroy` | E `tb_search_form`, `tb_customer_sub` | hecho (C2) |
+| `customer_group_category_new.php`, `_frm.php`, `_register.php` | 顧客グループ設定 | `admin.clientes.groups` (+`.store/.update/.sort/.destroy`) | `Cu\CustomerGroupController` | L/E `tb_customer_group` (modelo de S3), `hatuban` | hecho (C2) (`cd` con createHatsuban como el legacy; ▲ es POST `.sort?kind=up`) |
+| `customer_level_category_new.php`, `_frm.php`, `_register.php` | 顧客レベル | `admin.clientes.levels` (sin entrada de menú, como el legacy) | `Cu\CustomerLevelController` | L/E `tb_customer_level`, `hatuban` | hecho (C2) |
+| `raiten_douki.php`, `_frm.php`, `_register.php` | 初回来店動機項目設定 | `admin.clientes.visit-motives` (+`.store/.update/.sort/.destroy`) | `Cu\VisitMotiveController` | L/E `tb_raiten_douki_master`, `hatuban` | hecho (C2) (`cd` con createHatsuban como el legacy) |
 | `point_setting.php`, `_frm.php`, `_register.php` | ポイント管理 | (S3) | — | `tb_point_setting`, `tb_c1_point_setting`, `contents_master` | descartado: lo cubre S3 (Point*); el menú de clientes enlaza a su ruta |
 | `ajax_apliFileUpload.php` | (imágenes マイページ) | (S3) | — | — | descartado: parte de ポイント管理 (S3) |
 | `point_history.php` | ポイント利用一覧 | `admin.clientes.point-history`, `.point-history.csv` | `Cu\PointHistoryController@index/csv` | L `tb_point_log` (S3), `tb_customer`, `tb_shop`, `tb_staff`, `tb_terminal` | pendiente (CSV SJIS-win) |
@@ -143,14 +143,14 @@ Abreviaturas: `Cu\` = `Admin\Customers\`, `Sa\` = `Admin\Sales\`, `Re\` = `Admin
 
 | Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas `tb_*` | Estado |
 |---|---|---|---|---|---|
-| `customer_rank_list.php` | 顧客ランク設定 | `admin.clientes.ranks` (+`.status`) | `Cu\RankController@index/updateStatus` | L/E `tb_kingaku_rank_master`, `tb_raiten_rank_master` (`hyouji_flg`) | pendiente |
-| `kingaku_rank_new.php`, `kingaku_rank_update.php` | 顧客ランク設定 (金額) | `.ranks.create/.store/.edit/.update/.destroy/.sort?type=kingaku` | `Cu\RankController` | E `tb_kingaku_rank_master`, `hatuban` | pendiente |
-| `raiten_rank_new.php`, `raiten_rank_update.php` | 顧客ランク設定 (来店) | ídem `?type=raiten` | `Cu\RankController` | E `tb_raiten_rank_master`, `hatuban` | pendiente |
-| `customer_rank_frm.php`, `customer_rank_frm_register.php` | (formulario de rango) | (ídem) | `StoreRankRequest` | E ambas tablas | pendiente |
-| `ajax_customer_rank_list.php` | (lista AJAX) | `admin.clientes.ranks.list` | `@list` | L ambas tablas | pendiente (el JS del legacy la recarga por AJAX) |
-| `customer_rank_schedule.php`, `_register.php` | 顧客ランク振り分け設定 | `admin.clientes.rank-schedules` | `Cu\RankScheduleController@edit/update` | L/E `admin_master` (`kingaku_rank_shori_date/_time/_kikan`, `raiten_rank_shori_*`) | pendiente (el Scheduler lee estas columnas; sin `crontab`) |
-| `setCustomerKingakuRank.php` | (tarea) | — | `clientes:asignar-rangos --tipo=kingaku` | L/E `tb_customer` (`kingaku_rank_now/pre`); L `tb_kingaku_rank_master`, `tb_point_log`, `admin_master` | pendiente |
-| `setCustomerRaitenRank.php` | (tarea) | — | `clientes:asignar-rangos --tipo=raiten` | L/E `tb_customer` (`raiten_rank_now/pre`); L `tb_raiten_rank_master`, `tb_raiten_rireki` | pendiente |
+| `customer_rank_list.php` | 顧客ランク設定 | `admin.clientes.ranks` (+`.status`) | `Cu\RankController@index/updateStatus` | L/E `tb_kingaku_rank_master`, `tb_raiten_rank_master` (`hyouji_flg`) | hecho (C2) (+`.display`: `admin_master.customer_rank_disp_flg`) |
+| `kingaku_rank_new.php`, `kingaku_rank_update.php` | 顧客ランク設定 (金額) | `.ranks.create/.store/.edit/.update/.destroy/.sort?type=kingaku` | `Cu\RankController` | E `tb_kingaku_rank_master`, `hatuban` | hecho (C2) (`{type}` en la ruta: `ranks/kingaku/...`) |
+| `raiten_rank_new.php`, `raiten_rank_update.php` | 顧客ランク設定 (来店) | ídem `?type=raiten` | `Cu\RankController` | E `tb_raiten_rank_master`, `hatuban` | hecho (C2) (`ranks/raiten/...`) |
+| `customer_rank_frm.php`, `customer_rank_frm_register.php` | (formulario de rango) | (ídem) | `StoreRankRequest` | E ambas tablas | hecho (C2) (`RankRequest`) |
+| `ajax_customer_rank_list.php` | (lista AJAX) | `admin.clientes.ranks.list` | `@list` | L ambas tablas | hecho (C2) (misma URL `legacy.clientes.ranks-ajax` → `@legacyAjax`: type=rank/hyouji; el borrado por GET pasa a `.destroy`) |
+| `customer_rank_schedule.php`, `_register.php` | 顧客ランク振り分け設定 | `admin.clientes.rank-schedules` | `Cu\RankScheduleController@edit/update` | L/E `admin_master` (`kingaku_rank_shori_date/_time/_kikan`, `raiten_rank_shori_*`) | hecho (C2) (el Scheduler lee estas columnas; sin `crontab`) |
+| `setCustomerKingakuRank.php` | (tarea) | — | `clientes:asignar-rangos --tipo=kingaku` | L/E `tb_customer` (`kingaku_rank_now/pre`); L `tb_kingaku_rank_master`, `tb_point_log`, `admin_master` | hecho (C2) (`RankAssigner`; como el legacy también suma `tb_stamp_log` en UNION) |
+| `setCustomerRaitenRank.php` | (tarea) | — | `clientes:asignar-rangos --tipo=raiten` | L/E `tb_customer` (`raiten_rank_now/pre`); L `tb_raiten_rank_master`, `tb_raiten_rireki` | hecho (C2) |
 
 #### `shukei/` — agregaciones
 
@@ -201,17 +201,17 @@ Abreviaturas: `Cu\` = `Admin\Customers\`, `Sa\` = `Admin\Sales\`, `Re\` = `Admin
 | `time_table_staff.php` | スタッフ別予約表 | `admin.reservas.timetable.staff` | `@staff` | + `tb_staff_works` | pendiente |
 | `new_time_table.php` | 予約表 (nuevo) | — | — | — | descartado: sin enlace, solo carga |
 | `ajax_time_table.php` | — | `admin.reservas.timetable.data` | `@data` + `TimetableService` | L `tb_customer`, `tb_raiten_rireki`, `tb_staff`, `tb_staff_works`, `tb_yoyaku*` | pendiente (misma respuesta HTML/JSON que espera `timetable.js`) |
-| `ajax_move_objs.php` | — | `admin.reservas.move` | `Re\ReservationController@move` + `ReservationService::move` | E `tb_yoyaku`, `tb_yoyaku_uketsuke_day` | pendiente |
+| `ajax_move_objs.php` | — | `admin.reservas.move` | `Re\ReservationController@move` + `ReservationService::move` | E `tb_yoyaku`, `tb_yoyaku_uketsuke_day` | hecho (R3; URL legacy `system/category9/yoyaku/ajax_move_objs.php`) |
 | `ajax_uketsuke_status.php` | — | `admin.reservas.slots.status` | `Re\ReservationSlotController@status` | E `tb_yoyaku_uketsuke_day.status_flg` + log | pendiente |
 | `ajax_loadNewYoyakuList.php`, `ajax_loadNewRaitenList.php` | — | `admin.reservas.timetable.recent` | `@recent` | L `tb_customer`, `tb_staff`, `tb_yoyaku`, `tb_raiten_rireki` | pendiente |
 | `ajax_getYoyakuDatetimeForm.php` | — | `admin.reservas.datetime-form` | `Re\ReservationController@datetimeForm` | L `tb_staff`, `tb_yoyaku`, `tb_yoyaku_config`, `tb_yoyaku_uketsuke_day` | pendiente |
 | `time_table_function.php`, `sample_array.php` | — | — | — | — | descartado: funciones (`TimetableService`) y datos de ejemplo |
-| `yoyaku.php` | 予約 | `admin.reservas.create` | `Re\ReservationController@create` | L `tb_customer` | pendiente |
-| `yoyaku_calendar.php` | 時間選択 | `admin.reservas.calendar-select` | `@calendar` + `AvailabilityService` | L `tb_setsubi`, `tb_shop`, `tb_staff`, `tb_staff_works`, `tb_yoyaku`, `tb_yoyaku_config`, `tb_yoyaku_koumoku_master`, `tb_yoyaku_uketsuke_day` | pendiente |
-| `yoyaku_customer_select.php` | 顧客情報入力 | `admin.reservas.customer-select` | `@customerSelect` | L `tb_customer`, `tb_staff`, `tb_staff_works`, `tb_yoyaku_koumoku_master` | pendiente |
-| `yoyaku_register.php` | (registro de reserva) | `admin.reservas.store/.update` | `@store/update` + `ReservationService` + Mailable `ReservationMail` | E `tb_yoyaku`, `hatuban`; L `tb_customer`, `tb_koumoku`, `tb_shop`, `tb_staff`, `tb_staff_works`, `tb_yoyaku_koumoku_*` | pendiente (correo sin `md5(login_pass)`: enlace firmado) |
-| `ajax_yoyaku_register.php` | — | `admin.reservas.store/.update` (JSON) | ídem, llamada directa a `ReservationService::move` | L/E `tb_yoyaku`, `tb_yoyaku_uketsuke_day` | pendiente |
-| `ajax_yoyaku_menu.php`, `ajax_menu.php`, `ajax_staff.php`, `ajax_search_kaiin.php`, `ajax_yoyaku_koumoku_category.php` | — | `admin.reservas.options.*`, `admin.clientes.lookup` | `Re\OptionController` | L `tb_staff`, `tb_staff_works`, `tb_yoyaku_koumoku_*`, `tb_customer` | pendiente |
+| `yoyaku.php` | 予約 | `admin.reservas.create` | `Re\ReservationController@create` | L `tb_customer` | hecho (R3) |
+| `yoyaku_calendar.php` | 時間選択 | `admin.reservas.calendar-select` | `@calendar` + `AvailabilityService` | L `tb_setsubi`, `tb_shop`, `tb_staff`, `tb_staff_works`, `tb_yoyaku`, `tb_yoyaku_config`, `tb_yoyaku_koumoku_master`, `tb_yoyaku_uketsuke_day` | hecho (R3) |
+| `yoyaku_customer_select.php` | 顧客情報入力 | `admin.reservas.customer-select` | `@customerSelect` | L `tb_customer`, `tb_staff`, `tb_staff_works`, `tb_yoyaku_koumoku_master` | hecho (R3) |
+| `yoyaku_register.php` | (registro de reserva) | `admin.reservas.store/.update` | `@store/update` + `ReservationService` + Mailable `ReservationMail` | E `tb_yoyaku`, `hatuban`; L `tb_customer`, `tb_koumoku`, `tb_shop`, `tb_staff`, `tb_staff_works`, `tb_yoyaku_koumoku_*` | hecho (R3; correo sin `md5(login_pass)`: enlace firmado si existe la ruta de Mi página `publico.mypage.login`; aforo con `lockForUpdate`) |
+| `ajax_yoyaku_register.php` | — | `admin.reservas.store/.update` (JSON) | ídem, llamada directa a `ReservationService::move` | L/E `tb_yoyaku`, `tb_yoyaku_uketsuke_day` | hecho (R3; URL legacy, misma respuesta de texto) |
+| `ajax_yoyaku_menu.php`, `ajax_menu.php`, `ajax_staff.php`, `ajax_search_kaiin.php`, `ajax_yoyaku_koumoku_category.php` | — | `admin.reservas.options.*`, `admin.clientes.lookup` | `Re\ReservationOptionController` (+ `StaffWorkController@menu`) | L `tb_staff`, `tb_staff_works`, `tb_yoyaku_koumoku_*`, `tb_customer` | hecho (R3; URL legacy `system/category9/yoyaku/*.php`) |
 | `ajax_free_yoyaku_rank.php` | — | `admin.reservas.free.ranks` | `Re\FreeReservationController@ranks` | L/E `tb_free_yoyaku_rank` | hecho (R1) |
 | `ajax_getReservationData.php` | — | — | `App\Services\Customers\PosGateway` | — | descartado: datos para el POS (fuera de alcance) |
 | `yoyaku_new*.php` (7) | (flujo `yoyaku_new_*`) | — | — | — | descartado: roto en master (columna y archivo inexistentes) |
@@ -234,7 +234,7 @@ Abreviaturas: `Cu\` = `Admin\Customers\`, `Sa\` = `Admin\Sales\`, `Re\` = `Admin
 | `print/yoyaku_list_print.php` | 予約一覧出力 | `admin.reservas.print` | `@print` | L `tb_customer`, `tb_staff`, `tb_yoyaku`, `tb_yoyaku_koumoku_master`, `tb_yoyaku_uketsuke_day` | pendiente |
 | `print/csv_download.php`, `csv_file_out.php`, `csv_file_del.php` | (CSV 予約) | `admin.reservas.csv` | `@csv` | L `tb_customer`, `tb_staff`, `tb_yoyaku_koumoku_master`, `tb_yoyaku` | pendiente (StreamedResponse SJIS-win, sin Flash) |
 | `yoyakuPrint.php`, `ajaxYoyakuPrint.php` | 予約プリント | `admin.reservas.printer` (+`.poll`) | `Re\PrinterController` | L `tb_customer`, `tb_staff`, `tb_yoyaku*`; E `tb_yoyaku.print_flg` (`'1'` → `'2'`) | pendiente (sondeo como el legacy) |
-| `related_customer.php`, `ajax_related_customer.php` | 顧客関連づけ | `admin.reservas.related-customer` (+`.store`) | `Re\ReservationController@relatedCustomer` | L `tb_yoyaku`, `tb_yoyaku_uketsuke_day`; E `tb_yoyaku.tb_customer_cd` | pendiente |
+| `related_customer.php`, `ajax_related_customer.php` | 顧客関連づけ | `admin.reservas.related-customer` (+`.store`) | `Re\ReservationController@relatedCustomer` | L `tb_yoyaku`, `tb_yoyaku_uketsuke_day`; E `tb_yoyaku.tb_customer_cd` | hecho (R3) |
 
 ### 1.3 bis 予約管理 — `category3/reservation/` (cedido por S3)
 

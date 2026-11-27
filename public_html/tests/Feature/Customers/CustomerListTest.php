@@ -65,8 +65,8 @@ it('busca por nombre, guarda la búsqueda en sesión y muestra 件数 e 内訳',
     expect(strlen($uniqid))->toBe(16)
         ->and(session("customer_search.$uniqid.params"))->toMatchArray(['name' => '山田'])
         ->and(session("customer_search.$uniqid.display"))->toContain('名前：山田')
-        // 「この条件で配信する」 (S3) lee la misma búsqueda
-        ->and(session("promocion.audience.$uniqid"))->toBe(session("customer_search.$uniqid"));
+        // Una sola clave: S3 lee customer_search.<uniqid>
+        ->and(session("promocion.audience.$uniqid"))->toBeNull();
     $response->assertSee('value="' . $uniqid . '"', false);
     expect($yamada->cd)->toBeInt();
 });

@@ -129,7 +129,7 @@ class CustomerFormService
     }
 
     /** makeMenuTable(): menús de tb_yoyaku_koumoku_master para el tipo メニュー項目 */
-    private function menuItems(?int $shopCd): Collection
+    public function menuItems(?int $shopCd): Collection
     {
         return DB::table('tb_yoyaku_koumoku_master as tb1')
             ->leftJoin('tb_yoyaku_koumoku_category as tb2', function ($join) {
