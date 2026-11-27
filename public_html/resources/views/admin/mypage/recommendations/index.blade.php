@@ -7,8 +7,9 @@
         $recommendation   Recommendation|null  la オススメ en modificación (disp_flg = '1'), null en alta
         $editing          bool    llegó ?cd= (el legacy decide 修正/登録 por $_REQUEST['cd'], exista o no)
         $formVisible      bool    cKengen 1016 nivel 2 (alta) o 3 (modificación) o master; si no, style="display: none;"
+                                  y, a diferencia del legacy, el formulario no se imprime (tampoco su AjaxUpload)
         $canEdit          bool    cKengen 1016 nivel 3 o master (checkbox 表示, botón 修正, 表示情報を更新)
-        $canDelete        bool    cKengen 1016 nivel 4 o master (botón 削除)
+        $canDelete        bool    cKengen 1016 nivel 4 o master (botón 削除 y el form_delete oculto)
         $showShopSelect   bool    master y más de una tienda: <select name="tb_shop_cd">; si no, nombre + hidden
         $shops            Collection<Shop>  tb_shop disp_flg <> '9' ORDER BY cd (cd, kaishamei)
         $sessionShopCd    int|null, $sessionShopName string  tienda de la sesión
@@ -77,6 +78,7 @@ function deletePic() {
 }
 </script>
 
+@if ($formVisible)
 <script type="text/javascript" src="{{ asset('legacy/system/js/ajaxupload-3.5.js') }}"></script>
 {{-- js/staff_entry.js con las URL de las rutas y el _token --}}
 <script type="text/javascript">
@@ -165,6 +167,7 @@ $(document).ready(function(){
 
 });
 </script>
+@endif
 @endsection
 
 @section('content')
@@ -180,6 +183,7 @@ $(document).ready(function(){
     $hidden = ($recommendation->hyouji_flg ?? null) === '9';
 @endphp
 <div class="contents" @if (! $formVisible) style="display: none;" @endif>
+@if ($formVisible)
 
 <p class="h2Title">■{{ $menuName }}情報登録</p>
 
@@ -336,6 +340,7 @@ $(document).ready(function(){
 </div>
 
 </form>
+@endif
 
 
 
@@ -409,12 +414,14 @@ $(document).ready(function(){
 <input type="hidden" name="update_hyouji_flg" id="update_hyouji_flg" value="update" />
 </form>
 
+@if ($canDelete)
 <form method="post" name="form_delete" id="form_delete" class="displayNone" action="{{ route('admin.mypage.recommendations.destroy') }}">
 @csrf
 <input type="hidden" name="delete_flg" id="delete" class="btn" value="del">
 <input type="hidden" name="cd" class="btn" value="">
 <input type="submit" name="delete" id="delete" class="btn" value="削除する">
 </form>
+@endif
 
 <!--/.form--></div>
 

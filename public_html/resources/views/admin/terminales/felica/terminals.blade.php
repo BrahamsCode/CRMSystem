@@ -13,6 +13,8 @@
 @extends('layouts.legacy')
 
 @section('menu', 'terminales')
+{{-- Como la muestra legacy: esta pantalla carga su propio <head> con la UI clásica (import.css). Lo aplica el layout de S1 (QA diferencias-terminales.md) --}}
+@section('ui_version', '1')
 
 @section('title', '端末管理  - ' . ($siteName ?? ''))
 
