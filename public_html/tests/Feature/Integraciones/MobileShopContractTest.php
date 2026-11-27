@@ -13,10 +13,7 @@ use Illuminate\Support\Facades\Http;
 const MS_FIXTURES = __DIR__.'/../../Fixtures/integraciones';
 
 /** Casos que todavía no tienen endpoint en Laravel (o se comparan aparte) */
-const MS_PENDING = [
-    // Necesitan exchangeSalesItem() de S3, aún no integrado
-    'ms_point_exchange_not_exchangeable', 'ms_point_exchange_missing', 'ms_point_exchange_ok',
-];
+const MS_PENDING = [];
 
 beforeEach(function () {
     DB::unprepared(file_get_contents(MS_FIXTURES.'/legacy-base.sql'));
