@@ -49,4 +49,26 @@ Route::prefix('terminales')->name('terminales.')->group(function () {
         Route::post('{cd}/update', 'update')->whereNumber('cd')->name('update');
         Route::post('{cd}/destroy', 'destroy')->whereNumber('cd')->name('destroy');
     });
+
+    // ペーパーサイネージ (card_signage/*.php). control.php (AJAX) está en routes/legacy/terminales.php
+    Route::prefix('paper-cards')->name('paper-cards.')->controller(\App\Http\Controllers\Admin\Terminales\PaperCardController::class)->group(function () {
+        Route::match(['get', 'post'], '/', 'index')->name('index');
+        Route::get('create', 'create')->name('create');
+        Route::post('edit', 'edit')->name('edit');
+        Route::get('aggregate', 'aggregate')->name('aggregate');
+        Route::get('csv', 'csv')->name('csv');
+        Route::get('qr', 'qr')->name('qr');
+    });
+
+    // ICカード管理 / 端末管理 (felica/terminal_list.php). Borrado AJAX en routes/legacy/terminales.php
+    Route::prefix('felica-terminals')->name('felica-terminals.')->controller(\App\Http\Controllers\Admin\Terminales\FelicaTerminalController::class)->group(function () {
+        Route::match(['get', 'post'], '/', 'index')->name('index');
+        Route::get('sort', 'sort')->name('sort');
+    });
+
+    // ICカード管理 / カード管理 (felica/card_list.php). 会員検索 y borrado AJAX en routes/legacy/terminales.php
+    Route::prefix('felica-cards')->name('felica-cards.')->controller(\App\Http\Controllers\Admin\Terminales\FelicaCardController::class)->group(function () {
+        Route::match(['get', 'post'], '/', 'index')->name('index');
+        Route::post('update', 'update')->name('update');
+    });
 });

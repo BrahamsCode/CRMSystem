@@ -37,11 +37,12 @@ it('relaciona 求人, 職種 y tienda como el legacy', function () {
         ->and($category->recruits()->pluck('cd')->all())->toBe([50]);
 });
 
-it('lee el nombre del menú de tb_mobile_navi', function () {
-    MobileNavi::create(['cd' => 900, 'name' => 'イチオシ', 'link' => 'recommend.php', 'rank' => 1, 'disp_flg' => '1']);
+it('arma el título del menú de オススメ desde la fila 9 de tb_mobile_navi', function () {
+    expect(MobileNavi::recommendTitle())->toBe('');
 
-    expect(MobileNavi::nameForLink('recommend', 'オススメ'))->toBe('イチオシ')
-        ->and(MobileNavi::nameForLink('whatsnew', '新着情報'))->toBe('新着情報');
+    MobileNavi::create(['cd' => MobileNavi::RECOMMEND_CD, 'name' => 'ｲﾁｵｼ', 'link' => 'recommend.php', 'rank' => 1, 'disp_flg' => '1']);
+
+    expect(MobileNavi::recommendTitle())->toBe('イチオシ管理');
 });
 
 it('lee y guarda mypage_config con el formato del legacy', function () {
