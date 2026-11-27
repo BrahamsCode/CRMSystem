@@ -1,8 +1,13 @@
 <?php
 
-use App\Enums\PointMovement;
 use App\Services\Integraciones\LegacyJson;
 use Carbon\CarbonImmutable;
+
+/** Enum de prueba: pgText debe convertir cualquier BackedEnum a su valor en texto */
+enum LegacyJsonTestFlag: int
+{
+    case Use = 6;
+}
 
 // Lo que imprime el legacy con `echo json_encode($x)` sin flags
 
@@ -51,7 +56,7 @@ it('pgText convierte booleanos a t/f, enums a su valor y fechas a Y-m-d H:i:s', 
     expect(LegacyJson::pgText([
         'ok' => true,
         'ng' => false,
-        'type' => PointMovement::Use,
+        'type' => LegacyJsonTestFlag::Use,
         'at' => CarbonImmutable::create(2026, 11, 27, 9, 5, 0),
     ]))->toBe(['ok' => 't', 'ng' => 'f', 'type' => '6', 'at' => '2026-11-27 09:05:00']);
 });
