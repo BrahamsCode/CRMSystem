@@ -10,6 +10,7 @@
 |---|---|
 | `<modulo>` | `promocion` |
 | Rutas admin | `routes/modulos/promocion.php` → nombres `admin.promocion.*`. URL: las del legacy sin `.php` (`/promocion/mail_mag/mail_new`…), para que los enlaces copiados del HTML cambien lo mínimo |
+| URL literales del legacy | `routes/legacy/promocion.php` (`legacy.promocion.*`): los `ajax_*.php` y los `action` de formularios que llaman los JS copiados (`/system/category3/…`), sin prefijo y con el guard del personal; el layout pone el CSRF en jQuery, así que los JS no se tocan (CONVENCIONES §2) |
 | Rutas públicas | `routes/publico/promocion.php` (`publico.promocion.*`): solo si un contrato externo llama a category3 (hoy ninguno; los enlaces de los correos van a Mi página, S4) |
 | Controladores | `app/Http/Controllers/Admin/Promotions/` · Form Requests en `app/Http/Requests/Promotions/` |
 | Servicios | `app/Services/Promotions/` |
@@ -372,7 +373,7 @@ Reglas (CONVENCIONES §0, §4): `protected $table`, `protected $primaryKey = 'cd
 
 ## 2b. UI: HTML, CSS y JS del legacy
 
-Cada pantalla se pasa a Blade con el mismo HTML (clases, ids, textos japoneses) sobre el layout de S1 (cabecera y `left_navi3`). Estáticos desde `public/legacy/`. Los parciales `category3/inc/*_frm.php` pasan a `resources/views/admin/promocion/inc/` y los usan todas las familias.
+Cada pantalla se pasa a Blade con el mismo HTML (clases, ids, textos japoneses) sobre el layout de S1 (cabecera y `left_navi3`). Estáticos: los comunes (`system/css|js|img`, incluido `Chart.min.js`) los copia S1; los de category3 están en `public/legacy/system/category3/` (copiados por S3: `css/`, `js/`, `img/`, `mail_mag/img|js`, `anketo*/css|js`, `decomail/js/tiny_mce/`, `digital_signage/js`, `mycoupon/js`, `push/push_new.js`, `smatopi/`; sin Flash, sin `excanvas`/`iepngfix`, sin `jquery.gchart`, sin los datos de la librería QR ni subidas). colorbox y smatopi también los usa S2. Los parciales `category3/inc/*_frm.php` pasan a `resources/views/admin/promocion/inc/` y los usan todas las familias.
 
 | Submódulo | CSS (además de los del layout) | JS del legacy | Notas |
 |---|---|---|---|
@@ -383,7 +384,7 @@ Cada pantalla se pasa a Blade con el mismo HTML (clases, ids, textos japoneses) 
 | anketo, anketo2 | `import.css`, `colorbox.css`, `popupwindow.css` | `default.js`, `circle.js`, `jquery.colorbox.js`, `jquery.maskedinput-1.2.2.js`, `popupwindow-1.8.js`, `scrollsmoothly.js` | |
 | mycoupon | `import.css`, `myFlexSelect.css`, `popupwindow.css`, `ui.datepicker.css` | `ajaxupload-3.5.js`, `default.js`, `gcalendar-holidays.js`, `jquery.maskedinput-1.2.2.js`, `myFlexSelect.js`, `popupwindow-1.8.js`, `shopping_entry.js`, `staff_entry.js`, `ui.datepicker-ja.js`, `mycoupon/js/user.js` | |
 | point | `import.css`, `jquery.alerts.css`, `popInline.css`, `ui.datepicker.css` | `default.js`, `jquery.alerts.js`, `popInline.js`, `tiny_mce.js`, `ui.datepicker-ja.js` | `point_aggregate.php` lleva su JS en línea (AJAX) |
-| stamp | `import.css`, `popInline.css` | `ajaxupload-3.5.js`, `default.js`, `jquery.maskedinput-1.2.2.js`, `popInline.js`, `shopping_entry.js`, `tiny_mce.js` | Imágenes de los 79 diseños en `public/legacy/` |
+| stamp | `import.css`, `popInline.css` | `ajaxupload-3.5.js`, `default.js`, `jquery.maskedinput-1.2.2.js`, `popInline.js`, `shopping_entry.js`, `tiny_mce.js` | Imágenes de los 79 diseños: el legacy las lee de `hp/uploads/c4/stamp/<cd>.gif` (no están en `crm2-php8`: llegan con los archivos de producción a Storage, ruta `/hp/uploads/…` de S1) |
 | smatopi | `destyle.css`, `common.css`, `all.min.css`, `jquery-ui.min.css` (propios) | jQuery 1.11.3 + `jquery-ui-dialog-compat.js`, `jquery.ui.datepicker-ja.js`, `smatopiCommon.js`, `smatopiMessage.js`, `smatopiSentHistory.js` | Pantallas en pestaña nueva, sin layout |
 | visit | `import.css`, `colorbox.css`, `popupwindow.css` | `default.js`, `circle.js`, `jquery.colorbox.js`, `jquery.maskedinput-1.2.2.js`, `popupwindow-1.8.js`, `jquery.gchart.min.js` | `jquery.gchart` usa la API de imágenes de Google Charts (retirada): mismo gráfico con `Chart.min.js` del legacy |
 
