@@ -28,6 +28,16 @@ return [
     // Versión que muestra システム管理 (system/version.ini del legacy); vacía = tb_package_master
     'version' => env('CRM_VERSION', '2.2.2'),
 
+    // PDF (App\Support\LegacyPdf, mPDF): fuentes japonesas propias opcionales. Sin archivos, mPDF usa su Sun-ExtA.
+    'pdf' => [
+        'font_dir' => env('CRM_PDF_FONT_DIR', storage_path('fonts')),
+        'fonts' => [
+            'ipaexg' => ['R' => 'ipaexg.ttf'],   // IPAexゴシック
+            'ipaexm' => ['R' => 'ipaexm.ttf'],   // IPAex明朝
+        ],
+        'default_font' => env('CRM_PDF_DEFAULT_FONT', ''),
+    ],
+
     /* IP de desarrollo (Constant::DEVELOPMENT_IPS del legacy), separadas por comas */
     'developer_ips' => array_filter(array_map('trim', explode(',', (string) env('CRM_DEVELOPER_IPS', '')))),
 
