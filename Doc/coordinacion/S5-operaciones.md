@@ -69,6 +69,8 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 - **削除する / カード解除:** redirigen a la lista sin la pantalla intermedia «解除中です。» de 2 s. La baja no borra `tb_work_time` (solo vacía `felica_no`; el diseño decía lo contrario y se corrigió). カード解除 pide el permiso 1024/3 (el legacy no pedía ninguno); 削除/復元 el 1024/4; nunca se borra el cd 1.
 - **復元する:** se vuelve a comprobar que el ID y la メールアドレス1 no los use otro activo (el legacy solo avisaba en la confirmación). En la confirmación se muestran 都道府県, 雇用形態, 役職 y 携帯電話番号 (variables sin asignar en el legacy).
 
+- **スタッフ新規登録/修正 (2026-11-27):** los datos viajan en crudo entre formulario y confirmación y se aplica get_form2 al guardar; lo leído de `tb_staff` se des-escapa para el formulario. Se guardan los teléfonos ya sin guiones (el legacy validaba la versión limpia pero guardaba la original). 所属部署: el texto libre gana al desplegable siempre y se agrega a `tb_belongpost` solo si no existe (el legacy duplicaba en el alta y vaciaba el campo en la edición). `rank_pass` = '' como el legacy, salvo master/cd 1, que conservan contraseña, grupo y `rank_pass`. La foto se sube con JS propio (rutas de Laravel) en lugar de `staff_entry.js`; se guarda como JPEG reducido a 200 px. Sin las pantallas intermedias «登録中です。».
+
 ## Hecho
 
 - 2026-11-26 — Diseño con tablas nuevas, aprobado por S0 (obsoleto desde el cambio de base).
@@ -82,3 +84,4 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 - 2026-11-27 — Controladores y rutas de スタッフグループ設定, スタッフ検索項目設定 e インフォメーション管理 con su menú (`StaffScreensTest`).
 - 2026-11-27 — `point_use` y `point_exchange_item` con el `PointService` de S3 (af8dd48): la API JWT completa coincide con el legacy; `MobileShopContractTest` autosuficiente (eb92d9a). Integrado por S0 (0396404).
 - 2026-11-27 — スタッフ検索・一覧 (búsqueda de `search_set1/2`, paginación, CSV para master), スタッフ登録情報 (4 pestañas), 削除する, 削除を取り消す/復元する y カード関連付け解除 (`StaffController`, `StaffSearch`, `StaffListTest` 10 pruebas). Suite completa: 395 en verde.
+- 2026-11-27 — スタッフ新規登録 / 修正 completos: formulario, confirmación con `LegacyCheck`, 書き直す, registro (createHatsuban/createID, `hatuban`, 所属部署 nuevo, `PosGateway`), 完了 y foto por AJAX (`StaffEntryController`, `StaffPhotoStore`, `StaffEntryTest` 8 pruebas). スタッフ管理 terminado salvo lo de 勤怠 (⏸). Suite: 403 en verde.
