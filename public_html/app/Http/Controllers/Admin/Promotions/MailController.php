@@ -187,11 +187,15 @@ class MailController extends Controller
         $query = MailmagMaster::query()
             ->where('受付メールアドレス', 'なし')
             ->where('配信状況', MailmagMaster::STATUS_PENDING)
-            ->when(! $this->staff->isMaster(), fn ($q) => $q->where('店id', (string) $this->staff->shopCd()))
+            // リマインダ: la tienda destino está dentro de su SELECT (« AND tb2.shop_cd = N»), no en 店id
+            ->when(! $this->staff->isMaster(), fn ($q) => $mailType === 'yoyaku'
+                ? $q->where('振分配信', 'like', '%AND tb2.shop_cd = '.(int) $this->staff->shopCd().'%')
+                : $q->where('店id', (string) $this->staff->shopCd()))
             ->when(match ($mailType) {
                 'deco' => ['deco'],
                 'follow' => ['follow', 'followdeco'],
                 'auto' => ['auto', 'autodeco'],
+                'yoyaku' => ['yoyaku', 'posyoyaku', 'remdeco', 'posremdeco'],
                 default => null,
             }, fn ($q, $types) => $q->whereIn('type_flg', $types),
                 fn ($q) => $q->whereRaw("coalesce(type_flg, '') IN ('', 'anketo', 'coupon')"))
@@ -204,6 +208,7 @@ class MailController extends Controller
                 'deco' => '予約メール配信',
                 'follow' => 'フォロー'.$this->toolName().'配信',
                 'auto' => '自動メール配信',
+                'yoyaku' => 'リマインダーメール配信',
                 default => '予約'.$this->toolName().'配信',
             },
             'statusUrl' => route('legacy.promocion.inc.ajax_change_status'),
@@ -225,7 +230,7 @@ class MailController extends Controller
         if (in_array($mail->type_flg, array_merge(MailRegistrar::FOLLOW_TYPES, MailRegistrar::AUTO_TYPES, ['anketo']), true)) {
             $mailType = (string) $mail->type_flg;
         }
-        $recurring = in_array($mailType, ['follow', 'followdeco', 'auto', 'autodeco'], true);
+        $recurring = in_array($mailType, array_merge(MailRegistrar::FOLLOW_TYPES, MailRegistrar::AUTO_TYPES), true);
         $folder = MailImageStore::folder($mailType);
         $extra = [];
         if (in_array($mailType, MailRegistrar::AUTO_TYPES, true)) {
@@ -544,6 +549,7 @@ class MailController extends Controller
             'anketo' => 'anketo.mail',
             'follow', 'followdeco' => 'follow',
             'auto', 'autodeco' => 'auto',
+            'yoyaku', 'posyoyaku', 'remdeco', 'posremdeco' => 'reminder',
             default => 'mail',
         };
     }
@@ -563,6 +569,7 @@ class MailController extends Controller
             'auto' => '.ac11',
             'anketo.mail' => '.ac8',
             'anketo2.reply' => '.ac109',
+            'reminder' => '.ac110',
             default => '.ac1',
         };
     }
@@ -575,6 +582,10 @@ class MailController extends Controller
     {
         if (in_array($mailType, ['follow', 'auto'], true) && $request->input('mail_type') === $mailType.'deco') {
             return $mailType.'deco';
+        }
+        // リマインダ: yoyaku (テキストのみ) o remdeco (デコメール); los del POS quedan fuera de alcance
+        if ($mailType === 'yoyaku' && $request->input('mail_type') === 'remdeco') {
+            return 'remdeco';
         }
 
         return $mailType;

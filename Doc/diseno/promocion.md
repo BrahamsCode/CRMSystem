@@ -110,9 +110,9 @@ Mismas pantallas con `mail_type = deco` (`$tb_base_system_child_cd = 32`); cuerp
 
 | Legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas | Estado |
 |---|---|---|---|---|---|
-| `reminder_new.php` | リマインダーメール新規作成 | `reminder.create` | `RC@create` (`yoyaku`) | L tb_shop (`pos_domain`), tb_base_system_grandchild | pendiente (M6) |
-| `reminder_new_confirm.php` | (確認: reservas afectadas) | `reminder.confirm` | `RC@confirm` | L tb_yoyaku, tb_yoyaku_uketsuke_day, tb_customer, tb_staff (vía `Reservation` de S2) | pendiente (M6) |
-| `reminder_mail_new*.php` (3), `reminder_mail_future*.php` (4), `mail_kaijo.php` | リマインダお知らせ設定一覧 / 編集 / 解除 | `reminder.mail.*`, `reminder.future/edit/update/cancel` | `MC@*` (`yoyaku`/`remdeco`) | E mailmag_master, send_schedule | pendiente (M6) |
+| `reminder_new.php` | リマインダーメール新規作成 | `reminder.create` | `RC@create` (`yoyaku`) | L tb_shop (`pos_domain`), tb_base_system_grandchild | hecho (M6; sin POS) |
+| `reminder_new_confirm.php` | (確認: reservas afectadas) | `reminder.confirm` | `RC@confirm` | L tb_yoyaku, tb_yoyaku_uketsuke_day, tb_customer, tb_staff (vía `Reservation` de S2) | hecho (M6; sin POS) |
+| `reminder_mail_new*.php` (3), `reminder_mail_future*.php` (4), `mail_kaijo.php` | リマインダお知らせ設定一覧 / 編集 / 解除 | `reminder.mail.*`, `reminder.future/edit/update/cancel` | `MC@*` (`yoyaku`/`remdeco`) | E mailmag_master, send_schedule | hecho (M6; sin POS) |
 | Variantes `posyoyaku`/`posremdeco` | (reserva en POS de tienda) | — | `Promotions\PosGateway` (implementación nula) | — | descartado: POS fuera de alcance |
 
 #### プッシュ通知 — `push/`
@@ -535,3 +535,4 @@ Orden con una sola sesión (decisión de S0): 0.1 → M1 → M2 → F1 → F2 �
 - F3 (2026-11-27): el borrado de ポイント発行ルール era un enlace GET; aquí el mismo enlace envía un POST con CSRF (sigue siendo borrado físico). Las fechas de 期間指定/日付指定 se interpretan en Asia/Tokyo.
 - M3 (2026-11-27): `follow/mail_future_list.php` (copia vieja que solo enlazaba el redirect relativo de mail_future_frm) queda **descartada**; los redirects van a `follow.future`/`auto.future`. El número de días de フォロー se exige solo dígitos en el servidor (el legacy lo validaba en JS y lo metía en el SQL); un `step1` de campo personalizado inexistente vuelve al formulario. 起動/停止 usa CSRF y el permiso n-4 de su tipo en lugar del id de sesión. Los títulos «…登録情報 修正» se mantienen (el legacy compara `act` con «new», que nunca llega). Las ramas `kind=followPush/autoPush` solo cambian textos y destino (push en M5).
 - M4 (2026-11-27): クリックカウンタ en `/admin/promocion/<carpeta>/<archivo>` para las cuatro familias (`ClickCounterController`, `ClickStats::forType`). La descarga CSV por Adobe AIR/Flash se cambia por el formulario normal; el CSV de deco, que en el legacy fallaba (sin caso en `csv_download.php`), exporta sus clics con el título «デコメールからアクセス数».
+- M6 (2026-11-27): リマインダ en `/admin/promocion/reminder/…` con `mail_type` yoyaku|remdeco; las variantes del POS (`posyoyaku`/`posremdeco`, tiendas con `pos_domain`) quedan fuera de alcance como el resto del POS. El `振分配信` es la SELECT de reservas del legacy; las pantallas no la cuentan ni muestrean (en el legacy esas consultas fallaban: 0 y el ejemplo fijo) y la ejecuta MailSender. El personal no master solo ve y crea recordatorios de su tienda; los días se exigen solo dígitos en el servidor.

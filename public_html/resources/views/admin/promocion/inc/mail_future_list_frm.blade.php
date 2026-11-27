@@ -13,7 +13,7 @@
 	$recurring = in_array($mailType, ['follow', 'followdeco', 'auto', 'autodeco'], true);
 	$canEdit = $isMaster || Gate::allows('kengen.' . $kengenNo . '.3');
 	$canStatus = $isMaster || Gate::allows('kengen.' . $kengenNo . '.4');
-	$hasStatus = in_array($mailType, ['auto', 'follow', 'reminder'], true);
+	$hasStatus = in_array($mailType, ['auto', 'follow', 'yoyaku'], true);
 	$from = ($mails->currentPage() - 1) * $perPage;
 @endphp
 
@@ -109,7 +109,7 @@ function kensuSet(parts){
 	@endif
 	</td>
 	<td>
-	<textarea name="naiyou" id="naiyou" class="inputM" rows="3" readonly="readonly">{{ $m('search_display') }}</textarea>
+	<textarea name="naiyou" id="naiyou" class="inputM" rows="3" readonly="readonly">{{ preg_match("/AND COALESCE\(s1.entry_type, ''\) IN \('1','2','3','4'/i", (string) $m('振分配信')) ? "※携帯予約の方にだけ配信する\n\n" : '' }}{{ $m('search_display') }}</textarea>
 	@if (in_array($mailType, ['auto', 'autodeco'], true))
 	@php $p = array_pad(explode('<>', (string) $m('send_parameter')), 3, ''); @endphp
 	<br/>{!! \App\Http\Controllers\Admin\Promotions\MailController::autoParameters($p[0], $p[1], $p[2], $p[0] === '2' ? $p[1] : '', '&lt;&gt;') !!}

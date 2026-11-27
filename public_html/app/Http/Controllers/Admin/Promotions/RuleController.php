@@ -178,6 +178,96 @@ class RuleController extends Controller
     }
 
     // ------------------------------------------------------------------
+    // リマインダ (reminder/reminder_new.php → reminder_new_confirm.php → reminder_mail_new.php)
+    // ------------------------------------------------------------------
+
+    public function reminder(Request $request): View
+    {
+        $data = $request->has('modoru') ? $this->clean($request, fn ($v) => LegacyText::form($v)) : $this->defaultTime();
+
+        return view('admin.promocion.reminder.reminder_new', [
+            'data' => $data,
+            'isMaster' => $this->staff->isMaster(),
+            'staffShopName' => (string) DB::table('tb_shop')->where('cd', $this->staff->shopCd())->value('kaishamei'),
+            'staffShopCd' => $this->staff->shopCd(),
+            'shops' => DB::table('tb_shop')->where('disp_flg', '<>', '9')->orderBy('cd')->get(['cd', 'kaishamei']),
+        ]);
+    }
+
+    /**
+     * reminder_new_confirm.php: el `振分配信` es la SELECT de reservas del día «hoy + N» (tb_yoyaku de la tienda,
+     * sin los que pararon los recordatorios y, opcionalmente, solo las de 携帯予約), que MailSender ejecuta al enviar.
+     * La tienda del personal no master es siempre la suya; los días, solo dígitos (el legacy lo metía en el SQL).
+     */
+    public function reminderConfirm(Request $request): View|RedirectResponse
+    {
+        $data = $this->clean($request, fn ($v) => LegacyText::form($v));
+        $days = (string) ($data['step2_1'] ?? '');
+        $shopCd = $this->staff->isMaster() ? (string) ($data['shop_cd'] ?? '') : (string) $this->staff->shopCd();
+        if (! preg_match('/^[0-9]+$/', $days) || $shopCd === '') {
+            return redirect()->route('admin.promocion.reminder.rule');
+        }
+        $n = (int) $days;
+        $data['step2_1'] = (string) $n;
+        $data['shop_cd'] = $shopCd;
+        $data['mail_type'] = ($data['mail_type'] ?? '') === 'remdeco' ? 'remdeco' : 'yoyaku';
+
+        if ($shopCd === '-1') {
+            $whereShop = '';
+            $shopName = '全店舗';
+        } else {
+            $whereShop = 'AND tb2.shop_cd = '.(int) $shopCd;
+            $shopName = (string) DB::table('tb_shop')->where('disp_flg', '<>', '9')->where('cd', (int) $shopCd)->value('kaishamei');
+        }
+        $mobileOnly = ($data['step2_yoyakuflg'] ?? '') === '1' ? "AND COALESCE(s1.entry_type, '') IN ('1','2','3','4','5','6','100','101') " : '';
+        $interval = $n > 0 ? " + interval '{$n}days'" : '';
+
+        $select = <<<SQL
+SELECT
+ s1.tb_customer_cd AS cd,
+ s1.start_time,
+ CASE WHEN tb_customer_cd > 0 THEN s2.name ELSE s1.name END AS name,
+ CASE WHEN tb_customer_cd > 0 THEN s2.tel ELSE s1.tel END AS tel,
+ CASE WHEN tb_customer_cd > 0 THEN s2.email1 ELSE s1.mail END AS email1,
+ CASE WHEN tb_customer_cd > 0 THEN s2.login_id ELSE '' END AS login_id,
+ CASE WHEN tb_customer_cd > 0 THEN s2.mailmaga_email_type ELSE '' END AS mailmaga_email_type,
+ CASE WHEN tb_customer_cd > 0 THEN s2.login_pass ELSE '' END AS login_pass,
+ s3.moushikomi_date
+FROM
+ tb_yoyaku AS s1
+LEFT JOIN
+ tb_customer AS s2
+ ON s1.tb_customer_cd = s2.cd
+LEFT JOIN
+ tb_yoyaku_uketsuke_day AS s3
+ ON s1.tb_yoyaku_uketsuke_day_cd = s3.cd
+WHERE
+     s1.disp_flg='1'
+ AND s1.tb_yoyaku_uketsuke_day_cd IN
+ (
+ SELECT
+  tb1.cd
+ FROM
+  tb_yoyaku_uketsuke_day as tb1
+ INNER JOIN
+  tb_staff as tb2
+  ON tb1.tb_staff_cd = tb2.cd
+ WHERE
+  tb1.moushikomi_date = TO_CHAR(timestamp 'today'{$interval}, 'YYYY/MM/DD')
+  {$whereShop}
+ )
+ AND coalesce(s2.stop_yoyaku_reminder_mail_flg, '')=''
+ {$mobileOnly};
+SQL;
+
+        return view('admin.promocion.reminder.reminder_new_confirm', [
+            'data' => $data,
+            'shopName' => $shopName,
+            'searchUniqid' => $this->audience->storeRaw($select, null, '予約日の'.$n.'日前になったら、お客様にメールを配信'),
+        ]);
+    }
+
+    // ------------------------------------------------------------------
 
     private function common(Request $request, string $family): array
     {

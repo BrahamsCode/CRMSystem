@@ -21,4 +21,5 @@ it('abre las pantallas del módulo con el título y el menú del legacy', functi
     'admin.promocion.points.rules.index', 'admin.promocion.points.rules.create',
     'admin.promocion.follow.rule', 'admin.promocion.follow.future', 'admin.promocion.auto.rule', 'admin.promocion.auto.future',
     'admin.promocion.clicks.mail', 'admin.promocion.clicks.deco', 'admin.promocion.clicks.coupon',
+    'admin.promocion.reminder.rule', 'admin.promocion.reminder.future',
 ]);

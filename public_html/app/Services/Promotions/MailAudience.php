@@ -70,6 +70,16 @@ class MailAudience
         return implode('<>', (array) ($this->description($uniqid)['display'] ?? []));
     }
 
+    /**
+     * Recordatorio (reminder_new_confirm.php): el `振分配信` es una SELECT completa sobre tb_yoyaku, no un WHERE sobre
+     * tb_customer. Las pantallas no pueden contarla ni sacar una muestra (en el legacy esas consultas fallaban y
+     * mostraban 0 y el ejemplo fijo); la ejecuta MailSender al enviar.
+     */
+    public function isSelect(string $uniqid): bool
+    {
+        return (bool) preg_match('/^\s*SELECT\b/i', (string) ($this->description($uniqid)['raw'] ?? ''));
+    }
+
     /** Clientes del filtro sin los 例外顧客 */
     public function query(string $uniqid, array $excludedCds = []): Builder
     {
@@ -121,6 +131,9 @@ class MailAudience
      */
     public function counts(string $uniqid, array $excludedCds = []): array
     {
+        if ($this->isSelect($uniqid)) {
+            return ['total' => 0, 'pc' => 0, 'docomo' => 0, 'au' => 0, 'softbank' => 0, 'other' => 0];
+        }
         $row = $this->query($uniqid, $excludedCds)->selectRaw("count(*) AS total,
             sum(case when mailmaga_email_type = 'パソコン' then 1 else 0 end) AS pc,
             sum(case when mailmaga_email_type = 'DoCoMo' then 1 else 0 end) AS docomo,
@@ -136,6 +149,9 @@ class MailAudience
     /** Un cliente al azar del filtro para la vista previa; null si no hay ninguno */
     public function sample(string $uniqid, array $excludedCds = []): ?array
     {
+        if ($this->isSelect($uniqid)) {
+            return null;
+        }
         $row = $this->query($uniqid, $excludedCds)->inRandomOrder()->first();
 
         return $row ? (array) $row : null;
