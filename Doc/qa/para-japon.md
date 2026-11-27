@@ -1,6 +1,6 @@
 # Para Antony y Japón: informe consolidado de la migración
 
-S5, 2026-11-27, sobre `laravel13` (8e0f4e2, 931 pruebas en verde). Fuentes: secciones «Decisiones» y «Pedidos» de `Doc/coordinacion/S0…S5-*.md`, los diseños de `Doc/diseno/` y `Doc/qa/`. Una línea por punto: **qué** — sesión, archivo de origen.
+S5, 2026-11-27, sobre `laravel13` (8e0f4e2, 931 pruebas en verde); §3 y §5 al día con las respuestas de Antony (05cca12). Fuentes: secciones «Decisiones» y «Pedidos» de `Doc/coordinacion/S0…S5-*.md`, los diseños de `Doc/diseno/` y `Doc/qa/`. Una línea por punto: **qué** — sesión, archivo de origen.
 
 Base común (Antony, 2026-11-26): misma BD (`crm2019`) y misma UI que el legacy; `hp/`, `admin/`, POS (category11), SNS (category12) y touchcation quedan fuera.
 
@@ -60,17 +60,33 @@ Base común (Antony, 2026-11-26): misma BD (`crm2019`) y misma UI que el legacy;
 - `signage/view` (reproductor) es público — S4, `diseno/contenido-terminales.md` · **Propuesta:** limitar por terminal registrado.
 - Al borrar un display de 電子看板 sus materiales quedan huérfanos (como el legacy) — S4/S0, `coordinacion/S4-contenido.md`.
 
-## 3. Decisiones pendientes de Antony
+## 3. Decisiones de Antony
 
-- **勤怠** (kintai, working, lector FeliCa) sin touchcation: 26 pantallas ⏸ y el bloque 勤怠管理 del menú — S5, `coordinacion/S5-operaciones.md`.
+Respuestas del 2026-11-27 (`coordinacion/S0-coordinador.md` y `MIGRACION-LARAVEL13.md` §8b).
+
+### Firmes
+
+- **新着情報 (M9)** se migra por paridad; **DM発行** ya está; **スマトピ (F8)** sigue oculto — S3, `coordinacion/S3-promocion.md`.
+- **勤怠**: se migra la gestión, que es local y sin dependencias externas: `category5/kintai` (S5) y `category5/working` (S2), sobre los modelos de S5. El fichaje desde el quiosco queda fuera, con touchcation — S5/S2, `coordinacion/S5-operaciones.md`.
+- **Login de `hp/user`**: fuera (`hp/` completo). La reserva web entra con el token desde la app; el enlace de `mpa_getTopBanner` queda como deuda (§5) — S0/S5, `coordinacion/S0-coordinador.md`.
+
+### Provisionales (hasta que conteste Japón)
+
+- **BD `admin` de `signage/`**: se sigue con el esquema mínimo `signage-admin.sql` y se reemplaza cuando llegue el volcado real — S4/S0, `diseno/contenido-terminales.md`.
+- **GoTel (`signage/mail`) y PDF (`signage/pdf`)**: en pausa porque dependen de esa BD; rutas preparadas con la URL legacy — S4, `diseno/contenido-terminales.md`.
+- **ビーコン**: en pausa (que no responda en desarrollo no prueba que esté muerto en producción); solo modelo y conexión `beacon`, sin pantallas — S1/S4, `diseno/contenido-terminales.md`.
+- **Push**: se mantiene el GET a `b.g-api.net` como el legacy; FCM se decide después — S3, `diseno/promocion.md`.
+
+### Pendientes de Japón
+
+- **Volcado de la BD `admin`** de `signage/` (producción) — S4/S0.
+- **¿`b.g-api.net` sigue activo en producción?** De eso dependen el push (S3) y las llamadas de `appview` a g-api (S5).
+- **¿Qué módulos usan los clientes reales?** Decide lo que se prueba primero y lo que queda oculto.
+
+### Siguen pendientes
+
 - **`exp_cmd/cron/get_shukei_data*.php`**: escribe `tb_crm_check_operation` en la BD de VIZAN (203.183.91.218) con la clave del POS; no se sabe quién lo llama — S5, `diseno/operaciones-integraciones.md`.
 - **Cliente Adobe AIR** (`air/`): ¿sigue en uso? (hecho igual por contrato) — S5, `diseno/operaciones-integraciones.md`.
-- **ビーコン**: servidor externo caído; ¿se conserva? — S4, `diseno/contenido-terminales.md`.
-- **GoTel (`signage/mail`) y PDF (`signage/pdf`)**: ¿se conservan? — S4, `diseno/contenido-terminales.md`.
-- **Volcado de la BD `admin` de `signage/`**: hoy funciona con un esquema mínimo de desarrollo — S4/S0, `diseno/contenido-terminales.md`.
-- **Push: seguir con g-api (`b.g-api.net`) o pasar a FCM** — S3/S0, `diseno/promocion.md`.
-- **新着情報 (M9) y スマトピ (F8)**: confirmar uso real; DM発行 ya está hecho — S3, `coordinacion/S3-promocion.md`.
-- **Login de `hp/user` para reservar**: la app entra en `r/` con token; ¿se sigue usando el sitio móvil? — S0/S5, `coordinacion/S0-coordinador.md`.
 - **`DOMAIN_LIST` y credenciales** de las BD que consulta `mobile_shop/customer` — S5, `diseno/operaciones-integraciones.md` §7.
 - **Pantallas sin enlace** (`customer_level`, `school*`, `mail_comment`, `customer_new_complete`): se reabren si Japón las usa — S2, `coordinacion/S2-clientes.md`.
 - **Worktree `CRMSystem-quiosco` y rama `l13/quiosco`** sin uso: ¿se borran? — S0, `coordinacion/S0-coordinador.md`.
@@ -92,3 +108,7 @@ Base común (Antony, 2026-11-26): misma BD (`crm2019`) y misma UI que el legacy;
 - Promoción: sistema de cupón-imagen (`coupon_*`, `coupon_bg_*`, `pit_coupon*`, sin enlace), flujo antiguo `mycoupon_issue`/`_hakkou`/`_rireki`, variantes muertas de mail_mag, `fix_visit_stats.php` (script peligroso), M10 (ya no hay importador) — S3/S0, `diseno/promocion.md`.
 - Señalización: `signage/_tool.php` (chmod 777), `sample*.php`, micrositios de inmuebles y recetas — S4, `diseno/contenido-terminales.md`.
 - Scripts de cron y CLI (envíos, caducidades, puntos): no son vistas; los reemplazan comandos del Scheduler — S3, `diseno/promocion.md`.
+
+## 5. Deuda conocida
+
+- **`mpa_getTopBanner` enlaza la banda マイページ (`mypage.png`, `mypage02.png`) a `hp/user/control.php`** con `md5` de usuario y contraseña. `hp/` queda fuera (Antony, 2026-11-27), así que en Laravel ese enlace apunta a una página que no se migra: o la sirve el legacy mientras conviva, o queda roto. Se mantiene por contrato con la app. **Propuesta:** cuando haya una マイページ en Laravel (o se decida quitarla), cambiar el destino del enlace y, de paso, pasar a un enlace firmado (§2) — S5, `public_html/app/Http/Controllers/Publico/Integraciones/MpaController.php`.
