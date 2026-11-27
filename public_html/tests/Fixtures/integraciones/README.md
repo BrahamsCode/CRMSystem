@@ -64,3 +64,9 @@ Pantallas HTML del WebView de la app: `appview/manifest.json` + `appview/*.body`
 - No se graban `photo_gallery` ni `visit_history`: llaman a `g-api.net` real. Se prueban con `Http::fake()` (`AppviewMemberTest`).
 
 Lo que mostraron: `memberId`/`qr_code` responden `error` (texto) si `customer_cd` no son dígitos; un `cd` inexistente muestra `ID: ` vacío. `member_comp` sin `kaiincd` → `エラー`; ya vinculado → `既に登録済みか、顧客の情報が正しくありません。`. `privacyPage` sin `domain` → `不正なリクエストです`; dominio no reconocido → `解析エラーです。`. `member_kiyaku` nunca valida la メール (`$tmp_tel` sin asignar).
+
+**Lote B (cupones y sellos):** `appview-seed.sql` agrega plantilla móvil (`tb_hp_color`, `tb_mobile_template`), cupones, un cupón usado, `印刷` en `tb_base_system_grandchild` y sellos. En la copia del legacy hace falta `hp/inc_m/` entero (kihon, emoji, bandas). Casos con `User-Agent` de iPhone (bandas de smartphone) y sin él (bandas de PC). Lo que mostraron:
+- `coupon_control.php` con `act=use` da **500** en crm2-php8: `pg_fetch_array(..., N, ...)` usa la constante `N` sin definir (fatal en PHP 8) dentro de la transacción, y el cupón no se usa. Laravel lo usa (como en PHP 7); la prueba de contrato salta ese caso y `AppviewCouponTest` cubre el flujo. `act=print` redirige a `coupon_print.php`, que no existe en el legacy.
+- `coupon_detail.php` de un cupón ajeno responde 302 a `coupon.php` **con** la página (sin `exit` tras `header()`).
+- `coupon.php` borra los cupones caducados de todos los socios en cada visita; `kensu` no numérico vale 0 (lista vacía).
+- `qr_code.php?demo=1` toma «el primer socio» sin `ORDER BY`: depende del orden físico (por eso `av_qr_demo` cambió al agregar los `UPDATE` de sellos).

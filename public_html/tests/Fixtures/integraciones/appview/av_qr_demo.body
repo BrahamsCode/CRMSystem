@@ -19,9 +19,9 @@
 			<img src="./images/qr_title.png" width="200" style="margin: 30px 0 20px;">
 			<p style="font-size: 16px; margin: 10px 0 15px;">会員用QRコード</p>
 			<div>
-				<img src="/system/category3/mail_mag/qr_img.php?d=iLegU52qhqW2kaphmZ2kmV56VXZpVXFpXnBwV3xjVWlpVXp2Wn0=&e=Q&s=6" style="border: 2px solid #CCCCCC" />
+				<img src="/system/category3/mail_mag/qr_img.php?d=iLegU52qhqW2kaphmZ2kmV56VXZpVm5kXW9wXXljVWlqVnN9VnU=&e=Q&s=6" style="border: 2px solid #CCCCCC" />
 			</div>
-			<p style="font-size: 30px;">ID: 1000001</p>
+			<p style="font-size: 30px;">ID: 1000003</p>
 		</div>
 	</body>
 </html>

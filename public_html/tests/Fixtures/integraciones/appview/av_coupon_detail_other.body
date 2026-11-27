@@ -1,0 +1,76 @@
+
+
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title></title>
+<style>
+body{
+	font-family: 'Meiryo',"ヒラギノ角ゴ Pro W3","ＭＳ Ｐゴシック","Osaka", sans-serif;
+}
+</style>
+</head>
+
+<body>
+
+<h2 bgcolor="#FF6600" color="#FFFFFF">ｸｰﾎﾟﾝ詳細</h2>
+<div class="textCenter" align="center">
+<br>
+<span class="textS"><font size="-1"></font></span><br>
+
+<img src="../hp/user/img/spacer.gif" width="1" height="3" alt=""><br>
+
+</div>
+
+
+
+
+
+<div class="textLeft" align="left">
+<span class="textS"><font size="-1">有効期限：1970/01/01まで</font></span><br>
+<img src="../hp/user/img/img/spacer.gif" width="1" height="3" alt=""><br>
+
+
+
+
+
+<div class="hr_border"></div>
+
+<div class="textCenter p10" align="center">
+
+<span class="textS"><font size="-1">1回のみの使用となりますので<br>下記ﾎﾞﾀﾝは<br>必ず店内で押してください。</font></span><br>
+
+<form method="post" name="form1" id="form1" class="form" action="coupon_control.php">
+
+<input type="hidden" name="tb_shop_cd" id="tb_shop_cd" value="">
+<input type="hidden" name="customer_cd" value="1610793770001489815">
+<input type="hidden" name="coupon_cd" id="coupon_cd" value="">
+<input type="hidden" name="my_coupon_cd" id="my_coupon_cd" value="">
+<input type="hidden" name="act" id="act" value="use">
+<input type="submit" name="enter" id="enter" value="使用する">
+</form>
+
+<br>
+<form method="post" name="form2" id="form2" class="form" action="coupon_control.php">
+
+<br><span class="textS"><font size="-1">※印刷する場合は店舗を<br>選択してください。</font></span><br>
+<select name="tb_shop_cd" id="tb_shop_cd">
+<option value="1" >shop</option>
+</select>
+
+<input type="hidden" name="coupon_cd" id="coupon_cd" value="">
+<input type="hidden" name="my_coupon_cd" id="my_coupon_cd" value="">
+<input type="hidden" name="act" id="act" value="print">
+<input type="submit" name="print_enter" id="print_enter" value="お店で印刷する">
+</form>
+</div>
+
+
+
+
+
+<div align="right">
+<span class="textS"><font size="-1"><a href="./coupon.php?customer_cd=1610793770001489815">一覧に戻る</a></font></span>
+</div>
+
+</body>
+</html>

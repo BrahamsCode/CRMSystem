@@ -133,12 +133,12 @@ Rutas `appview/<archivo>.php` idénticas, con sesión (como el legacy). Controla
 
 | Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas legacy | Estado |
 |---|---|---|---|---|---|
-| `coupon.php` | クーポン | `publico.integraciones.appview.coupon` | `CouponController@index` | L `tb_customer`, `tb_mycoupon`, `tb_mycoupon_master`, `tb_shop` | pendiente |
-| `coupon_detail.php` | クーポン詳細 | `publico.integraciones.appview.coupon-detail` | `CouponController@show` | L `tb_mycoupon(_master)`, `tb_shop`, `tb_base_system_grandchild` | pendiente |
-| `coupon_use.php` | クーポン利用 | `publico.integraciones.appview.coupon-use` | `CouponController@confirmUse` | L `tb_customer`, `tb_mycoupon_master`, `tb_mycoupon_used` | pendiente |
-| `coupon_control.php` | (AJAX uso) | `publico.integraciones.appview.coupon-control` | `CouponController@use` | E `tb_mycoupon`, `tb_mycoupon_used` | pendiente |
-| `used_coupon_list.php` | 利用済みクーポン | `publico.integraciones.appview.used-coupons` | `CouponController@used` | L `tb_mycoupon_used`… | pendiente |
-| `stamp.php` | スタンプ | `publico.integraciones.appview.stamp` | `StampController@show` | L `tb_customer`, `tb_stamp_config`, `admin_master` | pendiente |
+| `coupon.php` | クーポン | `publico.integraciones.appview.coupon` | `CouponController@index` | L `tb_customer`, `tb_mycoupon`, `tb_mycoupon_master`, `tb_shop` | hecho (contrato; borra los caducados de todos los socios como el legacy) |
+| `coupon_detail.php` | クーポン詳細 | `publico.integraciones.appview.coupon-detail` | `CouponController@show` | L `tb_mycoupon(_master)`, `tb_shop`, `tb_base_system_grandchild` | hecho (contrato; sin cupón del socio: 302 con la página, como el legacy) |
+| `coupon_use.php` | クーポン利用 | `publico.integraciones.appview.coupon-use` | `CouponController@confirmUse` | L `tb_customer`, `tb_mycoupon_master`, `tb_mycoupon_used` | hecho (contrato + flujo con sesión) |
+| `coupon_control.php` | (AJAX uso) | `publico.integraciones.appview.coupon-control` | `CouponController@use` | E `tb_mycoupon`, `tb_mycoupon_used` | hecho (302, no JSON: uso e impresión con `CouponService` de S3; en crm2-php8 `act=use` daba fatal 500 y no usaba el cupón) |
+| `used_coupon_list.php` | 利用済みクーポン | `publico.integraciones.appview.used-coupons` | `CouponController@used` | L `tb_mycoupon_used`… | hecho (contrato) |
+| `stamp.php` | スタンプ | `publico.integraciones.appview.stamp` | `StampController@show` | L `tb_customer`, `tb_stamp_config`, `admin_master` | hecho (contrato) |
 | `visit_history.php` | 来店履歴 | `publico.integraciones.appview.visit-history` | `MemberController@visitHistory` | L `admin_master` + HTTP `g-api.net` | hecho (g-api.net con `Http::`, 3 s) |
 | `qr_code.php` | (QR) | `publico.integraciones.appview.qr-code` | `MemberController@qrCode` | L `tb_customer` | hecho (contrato) |
 | `memberId.php` | (会員ID) | `publico.integraciones.appview.member-id` | `MemberController@memberId` | L `tb_customer` | hecho (contrato) |
