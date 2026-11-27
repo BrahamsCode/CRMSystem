@@ -7,9 +7,11 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — F1 (マイクーポン)
+## Próximo paso — F2
 
-Alta/edición/lista/detalle/borrado, emisión con filtro (reutiliza `MailAudience` y `inc/mail_*_frm` con `mailType = mycoupon`), historial, ranking, uso, envío por correo; `CouponService::markUsed/markPrinted` para S4/S5.
+Siguiente en el orden del diseño: F2 → F3 → M3 → M4 (クリックカウンタ, incluye `mycoupon_analyze`) → F5 → F6 → F4 → F7 → F1b → M6 → M7 → M10 → M5 → M8 → M9 → F8.
+
+F1 terminado (2026-11-27): マイクーポン 一覧/新規登録/修正/詳細+解析/削除 (0faf5f7), このクーポンを送る y 過去クーポン配信 con el flujo común (60ff225), 使用数ランキング, クーポン利用数確認 y 利用者照会. `mycoupon_issue/_hakkou/_create/_complete/_rireki` descartados (solo los enlazaba la versión antigua sin uso). Pruebas `F1CouponsTest` (7).
 
 M2 terminado (2026-11-27): M2c con 予定配信 (lista, 修正 reutilizando `inc/mail_frm` con `registerType = update`, 確認/登録 de edición, 予定解除 con borrado físico) y 過去配信 (lista con búsqueda, tasa de clics y push, borrado lógico; 詳細 con クリックカウンタ por sexo/edad/ocupación y CSV de clics; 配信先 con apertura y CSV), para mail_mag y decomail; menú メルマガ管理 y デコメール管理 (`.ac9`). Pruebas `M2MailHistoryTest` (6); suite 315 en verde.
 
@@ -64,6 +66,8 @@ Detalle en `Doc/diseno/promocion.md` §5. Resumen:
 Ver `Doc/diseno/promocion.md` §6. Las principales: controladores en `Admin/Promotions` (existente) con rutas/vistas/lang/menú `promocion`; ninguna pantalla en `hecho` porque la base existente no cumple aún la paridad (textos fuera de `lang/ja`, sin Form Requests ni Policies, faltan campos); `anketo`+`anketo2` → `surveys.type`; `hyouji_flg` → `status`; históricos de envío como solo lectura (la SQL `振分配信` no se migra); saldos de puntos/sellos como movimiento inicial.
 
 ## Hecho
+
+- 2026-11-27 — F1: マイクーポン completo (CRUD, envío por correo, ranking, estadísticas).
 
 - 2026-11-27 — M2c: 予定配信 y 過去配信 de メルマガ/デコメール (M2 completo).
 

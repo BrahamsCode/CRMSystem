@@ -50,9 +50,9 @@ return [
             ['label' => 'クーポン一覧', 'route' => 'admin.promocion.coupons.index', 'kengen' => [1009, 1]],
             ['label' => '過去クーポン配信一覧', 'route' => 'admin.promocion.coupons.mail.past', 'kengen' => [1005, 2]],
             ['label' => 'テンプレート管理', 'route' => 'admin.promocion.templates.index'],
-            ['label' => '使用ランキング', 'url' => '/system/category3/mycoupon/mycoupon_ranking.php'],
+            ['label' => '使用ランキング', 'route' => 'admin.promocion.coupons.ranking'],
             ['label' => 'クリックカウンタ', 'url' => '/system/category3/mycoupon/mycoupon_analyze.php'],
-            ['label' => 'クーポン利用数確認', 'url' => '/system/category3/mycoupon/mycoupon_stats.php'],
+            ['label' => 'クーポン利用数確認', 'route' => 'admin.promocion.coupons.stats'],
         ],
     ],
 ];
