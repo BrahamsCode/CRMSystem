@@ -2,7 +2,9 @@
 
 namespace App\Services\Terminales;
 
-use Illuminate\Support\Facades\DB;
+use App\Models\Mypage\Recruit;
+use App\Models\Shop;
+use App\Models\Terminales\SignageProgram;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -20,8 +22,7 @@ use Illuminate\Support\Facades\Storage;
  * un material borrado o inexistente se omite (el legacy emitía un <p> vacío) y
  * 【応募資格】 sale de oubo_shikaku (el legacy repetía koyou_keitai).
  *
- * Lee las tablas con el query builder: los modelos Eloquent de tb_* llegan con
- * las pantallas (Doc/diseno/contenido-terminales.md §2).
+ * Lee con los modelos SignageProgram/SignageMaterial (Terminales), Recruit (Mypage) y Shop (S1).
  */
 class SignageFeedBuilder
 {
@@ -36,33 +37,19 @@ class SignageFeedBuilder
      */
     public function program(int $programCd): string
     {
-        $program = DB::table('tb_c7_movie_program')
-            ->where('cd', $programCd)
-            ->where(fn ($q) => $q->whereNull('disp_flg')->orWhere('disp_flg', '<>', '9'))
-            ->first();
-
-        if (! $program || (string) $program->disp_conf !== '1') {
+        $program = SignageProgram::query()->find($programCd);
+        if (! $program || ! $program->usesFiles()) {
             return '';
         }
 
-        $materialCds = array_values(array_filter(
-            explode('<>', (string) $program->tb_screensaver_cds),
-            fn ($cd) => ctype_digit($cd)
-        ));
-        $materials = DB::table('tb_screensaver')
-            ->whereIn('cd', $materialCds ?: [0])
-            ->where(fn ($q) => $q->whereNull('disp_flg')->orWhere('disp_flg', '<>', '9'))
-            ->get()
-            ->keyBy(fn ($row) => (string) $row->cd);
-
-        $xml = self::HEADER."<data>\n";
-        foreach ($materialCds as $cd) {
-            if ($materials->has($cd)) {
-                $xml .= $this->materialLine((array) $materials[$cd]);
-            }
+        $xml = self::HEADER."<data>
+";
+        foreach ($program->materials() as $material) {
+            $xml .= $this->materialLine($material->getAttributes());
         }
 
-        return $xml."</data>\n";
+        return $xml."</data>
+";
     }
 
     /** Escribe hp/uploads/c7/display/<cd>.xml como xml_up.php */
@@ -96,8 +83,7 @@ class SignageFeedBuilder
     /** floormap.xml desde tb_shop, tb_recruit y tb_recruit_category */
     public function floormap(): string
     {
-        $shops = DB::table('tb_shop')
-            ->where(fn ($q) => $q->whereNull('disp_flg')->orWhere('disp_flg', '<>', '9'))
+        $shops = Shop::query()
             ->whereRaw("COALESCE(floor_name, '') <> ''")
             ->orderBy('floor_name')
             ->orderBy('cd')
@@ -106,16 +92,10 @@ class SignageFeedBuilder
         $floors = [];
         foreach ($shops as $shop) {
             // Como el legacy: el primer 求人 vigente de la tienda
-            $recruit = DB::table('tb_recruit')
-                ->where('tb_shop_cd', $shop->cd)
-                ->where(fn ($q) => $q->whereNull('disp_flg')->orWhere('disp_flg', '<>', '9'))
-                ->orderBy('cd')
-                ->first();
-            if ($recruit) {
-                $recruit->boshu_shokushu_name = DB::table('tb_recruit_category')
-                    ->where('cd', $recruit->boshu_shokushu)
-                    ->where('disp_flg', '1')
-                    ->value('shokushu');
+            $recruit = Recruit::query()->with('category')->where('tb_shop_cd', $shop->cd)->orderBy('cd')->first();
+            $row = $recruit?->getAttributes();
+            if ($row !== null) {
+                $row['boshu_shokushu_name'] = $recruit->category?->shokushu;
             }
 
             $floors[$shop->floor_name][] = [
@@ -124,7 +104,7 @@ class SignageFeedBuilder
                 'name' => $shop->kaishamei,
                 'kana' => $shop->kaishamei_kana,
                 'details' => $this->companyDetails($shop->kaisha_data),
-                'recruit' => $recruit ? (array) $recruit : null,
+                'recruit' => $row,
             ];
         }
 

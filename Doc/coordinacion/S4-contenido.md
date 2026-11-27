@@ -7,9 +7,9 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — Modelos de los submódulos 1–5 sobre `tb_*` (cuando S0 avise que la base de S1 está integrada)
+## Próximo paso — Controladores y rutas de マイコレ y 電子看板 (cuando exista `layouts.legacy` de S1)
 
-Diseño v2 aprobado. Hecho: estáticos en `public/legacy/` y ruta pública del XML. Siguiente: modelos en `app/Models/Mypage|Terminales/` (`Recommendation`, `Recruit`, `RecruitCategory`, `MobileNavi`, `SignageDisplay`, `SignageProgram`, `SignageMaterial`, `SignageSystem`) con `LegacyModel`/`HasHatuban`/`LegacySoftDeletes` de S1, y servicios `MypageConfig`/`LotteryConfig` sobre `ContentsMaster`. Rutas de AJAX y formularios del personal: `routes/legacy/<modulo>.php`.
+Hecho: modelos 1–5 sobre `tb_*`, `MypageConfig`, vistas Blade de マイコレ (`admin/mypage/app-images/`) y 電子看板 (`admin/terminales/signage-*`). Cada vista documenta su contrato de datos en el comentario inicial. Siguiente: controladores + `routes/modulos/{mypage,terminales}.php` + `routes/legacy/mypage.php` (`ajax_apliFileUpload.php`) llenando esos contratos; pruebas de carga cuando el layout exista. Luego オススメ, 求人, ガチャリン (`LotteryConfig` sobre `contents_master`).
 
 ## Tarea anterior — Diseño (sin código, hecho)
 
@@ -41,6 +41,8 @@ Ver diseño §5. A S0: BD `admin` de `signage/` (no está en el esquema); GoTel/
 
 ## Decisiones
 
+- Vistas: `content` = interior de `<div class="main">`. 電子看板 sin pantallas de confirmación (el legacy no las tiene: `processing` con meta Refresh); 放映素材 usa `layouts.legacy-popup`. マイコレ renderiza solo la sección visible. Bugs corregidos/conservados: ver resúmenes en el commit de vistas.
+
 - S0 (2026-11-26): touchcation y `category7/kiosk` fuera de alcance (no se usan). La AppKey `md5(host<>rank)` era de `signageApp` (touchcation): ya no aplica a S4.
 - category4 entero y lo de category6 que solo leía `hp/`: descartado: sin consumidor. Vivo: マイコレ, 2 opciones de app, オススメ, 求人, ガチャリン.
 - Base del legacy (Antony, 2026-11-26): misma BD y UI. Capa de datos sobre tablas nuevas quitada (d45a652); `SignageFeedBuilder` reescrito sobre las `tb_*` (f7deb45).
@@ -48,6 +50,8 @@ Ver diseño §5. A S0: BD `admin` de `signage/` (no está en el esquema); GoTel/
 - Config de マイコレ y ガチャリン en `contents_master` (modelo de S1) vía servicios de S4; `mypage_config` sigue con `serialize()` (lo leen `mpa_*`).
 
 ## Hecho
+
+- 2026-11-27 Modelos Mypage/Terminales sobre `tb_*`, `MypageConfig`, `SignageFeedBuilder` con modelos; 30 vistas Blade (マイコレ, 電子看板) que compilan.
 
 - 2026-11-27 Estáticos de category6/7, `digitalsignage/` y `signage/` en `public/legacy/`; ruta `publico.senalizacion.display-xml` con 4 pruebas (suite 22 verde).
 
