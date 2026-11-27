@@ -7,7 +7,7 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — Esperar revisión de S0 del diseño; mientras tanto, factories y seeders del grupo
+## Próximo paso — Esperar revisión de S0 del diseño v2 (BD y UI del legacy); después D1 (modelos sobre `tb_*`, `Reservation` para S3 y servicios publicados)
 
 ## Tarea anterior — Diseño (sin código, HECHO)
 
@@ -51,6 +51,14 @@ Ver `Doc/diseno/clientes-ventas-reservas.md` §5 (S1: `staff`, Gates, rutas púb
 - 2026-11-26: `felica_no` en `customers` (pedido S4); `felica_cards` y カード管理 son de S4. Sin `paper_card_id`: el legacy solo relaciona cliente y tarjeta de papel en `url_transfer_data` (S4).
 - 2026-11-26: `id = cd` en `customers`, `visits`, `products`; resto por `legacy_id_map`. Mapeo inverso para API de S5: `name` = apellido + espacio de medio ancho + nombre; `kojin_birth` = `Y/m/d` (vacío `'//'`).
 
+- 2026-11-26 (v2, BD legacy): sin tablas nuevas; modelos sobre `tb_*`. La v1 queda en git (`917be77`) y en el stash `obsoleto: tablas nuevas (S2 R1 reservas)` (SHA `9db26956`).
+- 2026-11-26: `login_pass` se mantiene en claro como el legacy (misma BD que producción; `appview`, `ptag`, `mpa_*` comparan en claro o con `md5`). El hash queda para cuando se migren esos contratos.
+- 2026-11-26: `category3/reservation` sigue sobre `tb_reserve` (sistema independiente de `tb_yoyaku`, como el legacy); `Reservation` = `tb_yoyaku`, `SimpleReservation` = `tb_reserve`.
+- 2026-11-26: pantallas sin enlace en el menú (`customer_level`, `school*`, `mail_comment`, `biyou`, `model_reservation`) se migran con prioridad baja (S0: tienen pantalla porque el legacy la tenía).
+- 2026-11-26: si falta `tb_felica_mode` `cd = 2`, se crea al guardar en vez de no guardar en silencio (defecto del legacy).
+
 ## Hecho
+
+- 2026-11-26: diseño v2 sobre la BD y la UI del legacy (paridad con tablas `tb_*`, modelos por tabla y dueño, UI/JS por pantalla, contrato `Reservation` sobre `tb_yoyaku`, orden 84 pts).
 
 - 2026-11-26: diseño `Doc/diseno/clientes-ventas-reservas.md` (paridad de todas las vistas de 01, category9 de 05, `r/`/`reserve/` de 07 y category3/reservation; esquema con mapeo `tb_*` en el Anexo A; servicios; orden 76 puntos; pedidos). Pendiente de revisión de S0.
