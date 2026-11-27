@@ -144,6 +144,24 @@ Pendientes:
 
 Web local `http://localhost:8081` (checkout principal en `laravel13`, BD `crmsystem2` con el esquema `signage`). La muestra no se tocó.
 
+## Regresión global sobre `laravel13` 738907f con los datos de las fases A (S1, 2026-11-28)
+
+`Doc/qa/scripts/regresion.js` recorrió `:8081` después de la recarga de S0 (`migrate:fresh` + `bd-legacy.sh` + `db:seed` con los DemoSeeder de los 5 módulos, 05:07 JST). Se abrieron todos los menús, de la cabecera, del lateral y de 予約管理, más las 128 URL de `config/menu`, que coinciden con la lista anterior. Hubo una pasada como master y otra como `qa_partial`. Los diálogos no se aceptan y los enlaces de borrar, reiniciar y logout se saltan.
+
+| Usuario | Pantallas | 500 | En blanco | Error de JS | 404 | 403 |
+|---|---:|---:|---:|---:|---:|---:|
+| master | 135 | 0 | 0 | 0 | 3 | 7: condiciones que el menú también oculta: `nucleo.maintenance`/`nucleo.shop-create` (4, sin IP de desarrollo), `clientes.ext-shop.enabled` (ポイント管理), `nucleo.maintenance` (CSVインポート) y `operaciones.working-report.enabled` (帳票管理) |
+| qa_partial | 133 | 0 | 0 | 0 | 3 | 28: las 7 de master más las que no tiene permitidas: category0 entera (solo master), 顧客新規登録 (1001-2), マイコレ y las imágenes de la app (1035), 求人新規 y 職種 (1023-2), スタッフ新規 y グループ, シフト区分, y 勤怠 パスワード y 各種設定 (solo master) |
+
+- **404**: las mismas tres de siempre, que esperan una decisión y no son fallos nuevos: `smatopi_message.php` y `smatopi_sent_history.php` (スマトピ, F8) y `category7/beacon/beacon_list.php` (ビーコン, en pausa). El enlace externo `https://smatopi.net/login` no se abre (es externo).
+- **Log** (`storage/logs/laravel.log` de `:8081`, desde la recarga, solo las entradas `local.*`; las `testing.*` son de la suite que S0 pasa en el checkout principal y comparte el archivo):
+  - Ningún error ni excepción. Los dos recorridos (268 pantallas) no dejaron ninguna línea.
+  - Intentos de salir: 2 «g-api apagado» de ShopService `setStoreTel` (mi edición de 京都店 en la segunda pasada S1, bloqueada) y 1 «PushTrigger (log)» (`push` cd 9513, a las 05:23: un envío de push de prueba de S3, que no sale porque en local el trigger es el de log).
+- **Antes de la recarga** (04:16 y 04:50, en `:8081`), dos errores de permisos de archivos del entorno. Se pasan a S0:
+  - `Unable to create a directory at /var/www/storage/app/public/hp/uploads/c6/apli_temp. mkdir(): Permission denied`: subida de imágenes de la app (S4, `app-images`).
+  - `file_get_contents(/var/www/storage/app/keys/private.pem): Failed to open stream: Permission denied`: `MobileShopJwt` (S5), que no puede leer la clave privada.
+- Auditoría de llamadas externas del código: [llamadas-externas.md](llamadas-externas.md).
+
 ## Segunda pasada: `laravel13` 1c56ac2 (2026-11-27)
 
 El mismo script, sobre `:8081` con `laravel13` en 1c56ac2 (más a7d724b, que solo toca documentación). Se hizo `composer install` y no había migraciones pendientes. La lista de URL de `config/menu` se regeneró: ahora son 128 e incluyen 勤怠 (`/admin/operaciones/kintai*`, `working/calendar`, `working/report`).
