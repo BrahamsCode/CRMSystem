@@ -83,6 +83,8 @@ Ver `Doc/diseno/promocion.md` §6. Las principales: controladores en `Admin/Prom
 
 - 2026-11-27 — M4: クリックカウンタ de メルマガ, デコメール, マイクーポン y アンケート + CSV (master). Estado de promocion.md al día. Reparto S0: F4/F5 → S2, M5/M7 → S4, M10 descartado, M9/F8 esperan a Antony; quedan F1b y M6.
 
+- 2026-11-27 — Datos de demo: `database/seeders/Demo/PromocionDemoSeeder.php` (8 cupones, entregados/usados, 15 envíos enviados + 3 programados, フォロー/自動 de correo y push en 停止, historial de push, puntos/sellos, 2 encuestas con respuestas, クリックカウンター, 5 新着情報). Idempotente (備考 `[demo-promocion]`); sin socios solo configuración. DM発行 y QR no guardan datos. `DemoSeederTest` (Promotions).
+
 - 2026-11-27 — M9: 新着情報 (listado, 修正, 削除, subida del archivo; URL legacy redirigida). Sin lectores externos de `tb_digital_signage`.
 
 - 2026-11-27 — M3 compatible con F6 de S4: `carry` acepta escalares (AnketoMailTest); pedidos S4: `family()`/`activeAc()` con `anketo` (`anketo.mail`, .ac8) y prefijo por ruta `->defaults('mailFamily', 'anketo2.reply')` (.ac109); `MailRegistrar` marca la encuesta 発行済 (alta y edición, cupón en attached_cd); la edición/actualización de un programado toma el tipo de su fila y una アンケート ya no pierde su encuesta al quitar el cupón (bug del legacy).
