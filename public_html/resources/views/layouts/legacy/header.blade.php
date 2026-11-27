@@ -31,7 +31,7 @@
 <div id="bookmarkArea"{!! $isTopPage ? $legacyUi->part('bookmarkAreaProperty') : '' !!}>
 <ul id="bookmarkAreaList"{!! $bookmarkAreaFlg === 1 ? $legacyUi->part('bookmarkAreaProperty2') : '' !!}>
 @foreach ($bookmarks as $bookmark)
-<li><a href="{{ $bookmark->url }}">{{ $bookmark->bookmark_name }}</a></li>
+<li><a href="{{ $bookmark->targetUrl() }}">{{ $bookmark->bookmark_name }}</a></li>
 @endforeach
 </ul>
 <div id="openBookmarkArea">{!! $legacyUi->part('bookmarkArea', ['bookmarkArea_flg' => $bookmarkAreaFlg]) !!}</div>

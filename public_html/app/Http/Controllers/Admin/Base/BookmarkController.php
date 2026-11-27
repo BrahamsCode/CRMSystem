@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Base;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bookmark;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
@@ -20,7 +21,7 @@ class BookmarkController extends Controller
     public function index(): View
     {
         return view('admin.base.bookmarks.index', [
-            'rows' => $this->visible()->where('tb1.bookmark_flg', '1')->orderBy('tb1.user_rank')->get(),
+            'rows' => $this->visible()->where('tb1.bookmark_flg', '1')->orderBy('tb1.user_rank')->get()->filter($this->hasScreen(...))->values(),
         ]);
     }
 
@@ -49,7 +50,13 @@ class BookmarkController extends Controller
             ->addSelect('tb2.system_name as base_name', 'tb3.system_name as child_name')
             ->orderBy('tb1.rank')->get();
 
-        return view('admin.base.bookmarks.list', ['groups' => $this->group($rows->reject(fn ($row) => $this->skip($row->title)))]);
+        return view('admin.base.bookmarks.list', ['groups' => $this->group($rows->filter($this->hasScreen(...))->reject(fn ($row) => $this->skip($row->title)))]);
+    }
+
+    /** Solo los accesos cuya pantalla existe en Laravel (las descartadas o fuera de alcance no se ofrecen) */
+    private function hasScreen(object $row): bool
+    {
+        return Bookmark::resolveUrl((string) $row->url) !== null;
     }
 
     /** Accesos activos cuya categoría y subcategoría están habilitadas (tb_base_system*.system_flg) */
