@@ -77,6 +77,8 @@ Ver diseño §5. A S0: BD `admin` de `signage/` (no está en el esquema); GoTel/
 
 ## Hecho
 
+- 2026-11-28 `database/seeders/Demo/ContenidoDemoSeeder.php`: マイコレ (カバー 4, バナー 3, HOME y サムネイル), オススメ 3, 求人 3 (2 職種, floormap.xml), ガチャリン (config + tiradas de socios), 電子看板 (3 素材 con imagen, 2 プログラム horizontal/vertical con XML, 2 displays), ペーパーサイネージ 3, ICカード 5 (3 asignadas), signage/ (paquete, 3 imágenes, 2 terminales). Idempotente por bloque; sin socios o sin esquema signage/ salta esa parte. Placeholders GD en el disco public. `tests/Feature/Contenido/DemoSeederTest.php`. Suite 991 verde.
+
 - 2026-11-28 (respuestas provisionales de Antony) GoTel provisional: `/signage/mail/index.php` お問い合わせ (`ContactController`, INSERT en `contact` + `ContactReceivedMail` en cola si `SIGNAGE_CONTACT_NOTIFY`) y `/signage/pdf/{invoice,receipt}.php` (`BillingPdfController` con `LegacyPdf`); `customer`/`shop`/`contact` marcadas PROVISIONAL en `signage-admin.sql`. ビーコン: solo modelos `Terminales\Beacon\{Beacon,BeaconReceiver}` en la conexión `beacon` (pendiente S1), sin pantallas; 4 filas «pendiente (provisional, espera a Japón)». Paridad S4: 70 hechos / 4 pendientes. Suite 955 verde.
 
 - 2026-11-28 Quitadas de `routes/legacy/promocion.php` las rutas `system/inc/ajax_picupload.php` y `system/uploads/{file}` (las sirve el núcleo); `PushImageStore::promote()` usa `TempUploads` (sin GD propio). Paridad: reproductores `digitalsignage/` y portadas category6/7 marcados como hechos en `contenido-terminales.md` y `Doc/qa/paridad.md` (S4: 67 hechos, 7 pendientes ⏸ de Antony: ビーコン ×4, GoTel/PDF ×3). Suite 940 verde.
