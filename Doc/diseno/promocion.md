@@ -479,6 +479,7 @@ Orden con una sola sesión (decisión de S0): 0.1 → M1 → M2 → F1 → F2 �
 1. Modelo `Reservation` (sobre `tb_yoyaku`) con scope `remindable()`.
 2. Modelos de `tb_customer`, `tb_customer_sub`, `tb_raiten_rireki`, `tb_search_form`, `tb_search_cate`, `tb_koumoku`, y el armado del filtro de 発行条件選択 si S2 lo comparte con 顧客検索. S3 escribe en `tb_customer` (`error_send_cnt`, `mailmaga_flg`, `stamp_count`, `stamp_yukoukigen`, rangos) a través del modelo de S2.
 3. Ficha `admin.clientes.show` para los enlaces.
+4. Los bloques de búsqueda comunes de `system/inc` (`search_set1.php`, カスタマイズ検索 con `createform_search_form`, `search_rireki_set1.php`, `search_kaikei_set1.php`, `search_method_set1.php`) como un parcial Blade, y el constructor del WHERE de `search_set2.php` como servicio. S3 los incluye en 発行条件選択 (`admin/promocion/inc/mail_customer_select_frm.blade.php` recibe el nombre del parcial en `$searchFormPartial`). `search_pos_kaikei_set1.php` no: POS fuera de alcance.
 
 ### A S4 (Mi página / señalización)
 1. Modelos `LotterySetting`/`LotteryPrize` sobre `contents_master tb_c6_kujibiki` (lectura para el sorteo); Mi página llama a `LotteryService::draw`.
@@ -501,6 +502,8 @@ Orden con una sola sesión (decisión de S0): 0.1 → M1 → M2 → F1 → F2 �
 - `振分配信` se sigue guardando como SQL (lo leen el envío y g-api), generada por el servidor desde un filtro validado.
 - `send_schedule` se sigue escribiendo como el legacy aunque lo lea el Scheduler.
 - Envío inmediato: en el minuto siguiente por el Scheduler (sin colas ni `exec`).
+- El legacy reenvía el WHERE (`post_wherestr`) en campos ocultos del formulario: se quita; el WHERE vive solo en el servidor, en sesión por `search_uniqid`, como el resto del legacy.
+- `submitChk2` de las direcciones de prueba usa `document.forms[...]` en vez de `eval(...)` (mismo efecto).
 - Los borrados físicos del legacy (`mail_kaijo`, `point_rules_delete`) se mantienen.
 - Se corrigen: `aterna_a4_12.php` (`kaiin_master` → `tb_customer`), `daycsv_download.php` vacío, `anketo2` con consultas a `tb_c3_anketo_*`, `jquery.gchart` (API de Google retirada) → `Chart.min.js`.
 - Los contadores por tipo de dirección del legacy (`pc配信数`…) se siguen llenando.
