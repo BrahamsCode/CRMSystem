@@ -81,6 +81,8 @@ class PromocionServiceProvider extends ServiceProvider
         Gate::define('promocion.app.enabled', fn ($staff = null) => $admin('application_use_flg'));
         Gate::define('promocion.beacon.enabled', fn ($staff = null) => $admin('beacon_use_flg'));
         Gate::define('promocion.smatopi.enabled', fn ($staff = null) => $admin('smatopi_flg'));
+        // スマトピ連携: espera a Antony (F8). Hasta que decida se oculta el bloque (sus pantallas no están migradas)
+        Gate::define('promocion.smatopi-f8.enabled', fn ($staff = null) => false);
         Gate::define('promocion.ext-shop.enabled', fn ($staff = null) => $extShop());
         Gate::define('promocion.app-ext-shop.enabled', fn ($staff = null) => $admin('application_use_flg') && $extShop());
         // ポイントルール一覧: con ビーコン y (master o kengen 1037-3)

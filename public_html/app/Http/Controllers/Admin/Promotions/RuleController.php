@@ -30,6 +30,12 @@ class RuleController extends Controller
         private readonly StaffContext $staff,
     ) {}
 
+    /** URL legacy (follow_new.php, auto_new.php, p. ej. ?kind=followPush del menú viejo): a la pantalla migrada con su query */
+    public function legacyRedirect(Request $request, string $target): RedirectResponse
+    {
+        return redirect()->route($target, $request->query());
+    }
+
     // ------------------------------------------------------------------
     // 自動
     // ------------------------------------------------------------------

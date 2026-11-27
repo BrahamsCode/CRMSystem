@@ -65,7 +65,8 @@ return [
             'image' => 'ln_t3_8.gif',
             'ac' => 'ac14',
             'child' => 'スマトピ連携',
-            'can' => 'promocion.smatopi.enabled',
+            'can' => 'promocion.smatopi-f8.enabled',
+            // Oculto: スマトピ espera a Antony (F8); sin pantallas migradas
             'links' => [
                 ['label' => 'メッセージ作成', 'url' => '/system/category3/smatopi/smatopi_message.php', 'target' => '_blank'],
                 ['label' => 'メッセージ送信履歴', 'url' => '/system/category3/smatopi/smatopi_sent_history.php', 'target' => '_blank'],
@@ -175,9 +176,9 @@ return [
                 ['label' => 'プッシュ通知新規作成', 'url' => '/system/category3/push/push_customer_select.php'],
                 ['label' => '予定通知設定一覧', 'url' => '/system/category3/push/push_follow_list.php?type_flg=scheduled'],
                 ['label' => '過去配信内容一覧', 'url' => '/system/category3/push/push_past.php'],
-                ['label' => 'フォロー通知新規作成', 'url' => '/system/category3/follow/follow_new.php?kind=followPush'],
+                ['label' => 'フォロー通知新規作成', 'url' => "$p/follow/follow_new?kind=followPush"],
                 ['label' => 'フォロー通知設定一覧', 'url' => '/system/category3/push/push_follow_list.php?type_flg=follow'],
-                ['label' => '自動通知新規作成', 'url' => '/system/category3/auto/auto_new.php?kind=autoPush'],
+                ['label' => '自動通知新規作成', 'url' => "$p/auto/auto_new?kind=autoPush"],
                 ['label' => '自動通知設定一覧', 'url' => '/system/category3/push/push_follow_list.php?type_flg=auto'],
                 ['label' => 'プッシュ通知集計', 'url' => '/system/category3/push/push_history.php', 'can' => 'promocion.ext-shop.enabled'],
             ],

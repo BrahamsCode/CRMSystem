@@ -32,6 +32,9 @@ Route::prefix('system/category3')->name('promocion.')->group(function () {
     Route::match(['get', 'post'], 'inc/ajax_search_kaiin.php', [MailAjaxController::class, 'searchCustomers'])->name('inc.ajax_search_kaiin');
     Route::get('inc/ajax_get_shop_data.php', [MailAjaxController::class, 'shopOptions'])->name('inc.ajax_get_shop_data');
     Route::post('inc/ajax_change_status.php', [MailAjaxController::class, 'changeStatus'])->name('inc.ajax_change_status');
+    // URL legacy de フォロー/自動 (enlaces viejos, p. ej. プッシュ通知 con ?kind=…): a la pantalla migrada con la query
+    Route::get('follow/follow_new.php', [\App\Http\Controllers\Admin\Promotions\RuleController::class, 'legacyRedirect'])->name('follow.follow_new')->defaults('target', 'admin.promocion.follow.rule');
+    Route::get('auto/auto_new.php', [\App\Http\Controllers\Admin\Promotions\RuleController::class, 'legacyRedirect'])->name('auto.auto_new')->defaults('target', 'admin.promocion.auto.rule');
     // CSV de la クリックカウンタ (solo master)
     Route::post('inc/csv_download.php', [\App\Http\Controllers\Admin\Promotions\ClickCounterController::class, 'csv'])->name('inc.csv_download');
 
