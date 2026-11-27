@@ -156,7 +156,7 @@ class ReservationListController extends Controller
                 $cells[] = $row['menu'];
                 echo LegacyCsv::encode(LegacyCsv::line($cells));
             }
-        }, 'yoyaku.csv', ['Content-Type' => 'text/x-csv']);
+        }, 'yoyaku.csv', ['Content-Type' => 'text/x-csv; charset=Shift_JIS']);
     }
 
     // ---------------------------------------------------------------- auxiliares

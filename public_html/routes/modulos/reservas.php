@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('reservas')->name('reservas.')->group(function () {
     // --- R1-A: 予約設定 (tienda, formulario, funciones, 注釈) ---
+    // Permisos (QA S2): el legacy solo ocultaba el enlace de yoyaku_navi; aquí también se cierra la URL directa
     Route::controller(\App\Http\Controllers\Admin\Reservations\ReservationSettingController::class)
+        ->middleware("can:kengen,'1029','1'")
         ->prefix('settings')->name('settings.')->group(function () {
             Route::get('shop', 'shop')->name('shop');
             Route::post('shop', 'updateShop')->name('shop.update');
@@ -26,21 +28,21 @@ Route::prefix('reservas')->name('reservas.')->group(function () {
 
     // --- R1-B: 予約項目, 予約項目カテゴリ, 設備 ---
     // 予約項目管理 (yoyaku_koumoku_new.php / _register.php; la lista de ajax_yoyaku_koumoku_new.php → menus.list y menus.sort)
-    Route::get('menus', [\App\Http\Controllers\Admin\Reservations\ReservationMenuController::class, 'index'])->name('menus.index');
-    Route::post('menus', [\App\Http\Controllers\Admin\Reservations\ReservationMenuController::class, 'store'])->name('menus.store');
-    Route::post('menus/list', [\App\Http\Controllers\Admin\Reservations\ReservationMenuController::class, 'list'])->name('menus.list');
-    Route::post('menus/sort', [\App\Http\Controllers\Admin\Reservations\ReservationMenuController::class, 'sort'])->name('menus.sort');
-    Route::put('menus/{menu}', [\App\Http\Controllers\Admin\Reservations\ReservationMenuController::class, 'update'])->name('menus.update');
-    Route::delete('menus/{menu}', [\App\Http\Controllers\Admin\Reservations\ReservationMenuController::class, 'destroy'])->name('menus.destroy');
+    Route::get('menus', [\App\Http\Controllers\Admin\Reservations\ReservationMenuController::class, 'index'])->name('menus.index')->middleware("can:kengen,'1027','1'");
+    Route::post('menus', [\App\Http\Controllers\Admin\Reservations\ReservationMenuController::class, 'store'])->name('menus.store')->middleware("can:kengen,'1027','1'");
+    Route::post('menus/list', [\App\Http\Controllers\Admin\Reservations\ReservationMenuController::class, 'list'])->name('menus.list')->middleware("can:kengen,'1027','1'");
+    Route::post('menus/sort', [\App\Http\Controllers\Admin\Reservations\ReservationMenuController::class, 'sort'])->name('menus.sort')->middleware("can:kengen,'1027','1'");
+    Route::put('menus/{menu}', [\App\Http\Controllers\Admin\Reservations\ReservationMenuController::class, 'update'])->name('menus.update')->middleware("can:kengen,'1027','1'");
+    Route::delete('menus/{menu}', [\App\Http\Controllers\Admin\Reservations\ReservationMenuController::class, 'destroy'])->name('menus.destroy')->middleware("can:kengen,'1027','1'");
 
     // 予約項目カテゴリ管理 (yoyaku_koumoku_category.php / _register.php; ajax_yoyaku_koumoku_category.php → list, sort, toggle, destroy)
-    Route::get('menu-categories', [\App\Http\Controllers\Admin\Reservations\ReservationMenuCategoryController::class, 'index'])->name('menu-categories.index');
-    Route::post('menu-categories', [\App\Http\Controllers\Admin\Reservations\ReservationMenuCategoryController::class, 'store'])->name('menu-categories.store');
-    Route::post('menu-categories/list', [\App\Http\Controllers\Admin\Reservations\ReservationMenuCategoryController::class, 'list'])->name('menu-categories.list');
-    Route::put('menu-categories/{category}', [\App\Http\Controllers\Admin\Reservations\ReservationMenuCategoryController::class, 'update'])->name('menu-categories.update');
-    Route::post('menu-categories/{category}/sort', [\App\Http\Controllers\Admin\Reservations\ReservationMenuCategoryController::class, 'sort'])->name('menu-categories.sort');
-    Route::post('menu-categories/{category}/toggle', [\App\Http\Controllers\Admin\Reservations\ReservationMenuCategoryController::class, 'toggle'])->name('menu-categories.toggle');
-    Route::delete('menu-categories/{category}', [\App\Http\Controllers\Admin\Reservations\ReservationMenuCategoryController::class, 'destroy'])->name('menu-categories.destroy');
+    Route::get('menu-categories', [\App\Http\Controllers\Admin\Reservations\ReservationMenuCategoryController::class, 'index'])->name('menu-categories.index')->middleware("can:kengen,'1027','1'");
+    Route::post('menu-categories', [\App\Http\Controllers\Admin\Reservations\ReservationMenuCategoryController::class, 'store'])->name('menu-categories.store')->middleware("can:kengen,'1027','1'");
+    Route::post('menu-categories/list', [\App\Http\Controllers\Admin\Reservations\ReservationMenuCategoryController::class, 'list'])->name('menu-categories.list')->middleware("can:kengen,'1027','1'");
+    Route::put('menu-categories/{category}', [\App\Http\Controllers\Admin\Reservations\ReservationMenuCategoryController::class, 'update'])->name('menu-categories.update')->middleware("can:kengen,'1027','1'");
+    Route::post('menu-categories/{category}/sort', [\App\Http\Controllers\Admin\Reservations\ReservationMenuCategoryController::class, 'sort'])->name('menu-categories.sort')->middleware("can:kengen,'1027','1'");
+    Route::post('menu-categories/{category}/toggle', [\App\Http\Controllers\Admin\Reservations\ReservationMenuCategoryController::class, 'toggle'])->name('menu-categories.toggle')->middleware("can:kengen,'1027','1'");
+    Route::delete('menu-categories/{category}', [\App\Http\Controllers\Admin\Reservations\ReservationMenuCategoryController::class, 'destroy'])->name('menu-categories.destroy')->middleware("can:kengen,'1027','1'");
 
     // 設備管理 (setsubi_new.php / setsubi_register.php)
     Route::get('facilities', [\App\Http\Controllers\Admin\Reservations\FacilityController::class, 'index'])->name('facilities.index');
@@ -51,9 +53,9 @@ Route::prefix('reservas')->name('reservas.')->group(function () {
 
     // --- R1-C: スタッフ施術管理, フリー予約 ---
     // staff_works.php (+ su AJAX ajax_menu.php, solo lo usa esta pantalla)
-    Route::get('staff-works', [\App\Http\Controllers\Admin\Reservations\StaffWorkController::class, 'edit'])->name('staff-works');
-    Route::post('staff-works', [\App\Http\Controllers\Admin\Reservations\StaffWorkController::class, 'update'])->name('staff-works.update');
-    Route::match(['get', 'post'], 'staff-works/menu', [\App\Http\Controllers\Admin\Reservations\StaffWorkController::class, 'menu'])->name('staff-works.menu');
+    Route::get('staff-works', [\App\Http\Controllers\Admin\Reservations\StaffWorkController::class, 'edit'])->name('staff-works')->middleware("can:kengen,'1028','1'");
+    Route::post('staff-works', [\App\Http\Controllers\Admin\Reservations\StaffWorkController::class, 'update'])->name('staff-works.update')->middleware("can:kengen,'1028','1'");
+    Route::match(['get', 'post'], 'staff-works/menu', [\App\Http\Controllers\Admin\Reservations\StaffWorkController::class, 'menu'])->name('staff-works.menu')->middleware("can:kengen,'1028','1'");
     // free_yoyaku.php, free_yoyaku_register.php y ajax_free_yoyaku_rank.php
     Route::get('free', [\App\Http\Controllers\Admin\Reservations\FreeReservationController::class, 'edit'])->name('free');
     Route::post('free', [\App\Http\Controllers\Admin\Reservations\FreeReservationController::class, 'update'])->name('free.update');
