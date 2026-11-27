@@ -196,6 +196,7 @@
   - Riesgo encontrado: :8081 llamaba a b.g-api.net de producción (admin_master.push_api_host=1 del backup). Hubo 2 llamadas setStoreTel con domain=localhost, de S1. Solución: interruptor común `GApi` (S1, dc7f712) y regla en CONVENCIONES §4. S3, S4 y S5 deben adaptar sus servicios. El seeder pone push_api_host=0 y system_mail @example.com.
   - .env local (no versionado): correo a Mailpit, CRM_GAPI_ENABLED=false y claves de prueba de tool/api y JWT (RSA en storage/app/keys). php-fpm corre como `apache`: storage es de apache.
   - Suite completa: solo la paso yo, en serie, porque las sesiones en paralelo agotaban la memoria. Pruebas inestables: Contenido\DemoSeederTest (S4), SimpleReservationTest y WorkingDayTest (en vigilancia).
+- 2026-11-27 (16:00), tercera pasada casi cerrada (laravel13 cffd6f3). Fallos corregidos con prueba: S1 4, S2 6, S3 7, S4 5, S5 4. Interruptores para salir a internet: GApi (S1; S3, S4 y S5 ya lo usan) y MOBILESHOP_EXTLINK_ENABLED (S5); auditoría en Doc/qa/llamadas-externas.md. Pendientes: S4 compara el HTML con la muestra; la suite completa en serie la cortó el sistema por falta de memoria (los módulos pasan uno a uno) y hay que relanzarla con las sesiones paradas.
 
 ## Hecho
 
