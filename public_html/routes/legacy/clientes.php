@@ -142,3 +142,15 @@ Route::get('system/category1/config/schoolclass_config.php', [\App\Http\Controll
 Route::get('system/category1/entrance/working_calendar.php', [\App\Http\Controllers\Admin\Customers\EntryController::class, 'calendar'])->name('clientes.working-calendar');
 Route::get('system/category1/entrance/work_list.php', [\App\Http\Controllers\Admin\Customers\EntryController::class, 'index'])->name('clientes.work-list');
 // --- fin C7 ---
+
+// --- C8: ポイント管理 (point_setting) ---
+// Menú lateral (solo con isExtShopDomain()); el formulario del legacy hacía POST a la misma URL (act = new | up | del)
+Route::middleware('can:clientes.ext-shop.enabled')->group(function () {
+    Route::get('system/category1/customer/point_setting.php', [\App\Http\Controllers\Admin\Customers\PointSettingController::class, 'index'])->name('clientes.point-setting');
+    Route::post('system/category1/customer/point_setting.php', [\App\Http\Controllers\Admin\Customers\PointSettingController::class, 'legacyRegister'])->name('clientes.point-setting.register');
+    // JS de 『ポイントについて』用画像: subida temporal, borrado (delMain) y guardado (sendMainData); siempre JSON
+    Route::post('system/category1/customer/ajax_apliFileUpload.php', [\App\Http\Controllers\Admin\Customers\PointSettingController::class, 'apliFileUpload'])->name('clientes.apli-file-upload');
+    // Temporales de la subida (./uploads/temp/<imageName>), disco public
+    Route::get('system/category1/customer/uploads/temp/{file}', [\App\Http\Controllers\Admin\Customers\PointSettingController::class, 'tempImage'])->where('file', '[A-Za-z0-9_.-]+')->name('clientes.apli-temp');
+});
+// --- fin C8 ---

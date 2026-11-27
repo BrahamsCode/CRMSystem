@@ -184,6 +184,17 @@ Route::prefix('clientes')->name('clientes.')->group(function () {
     Route::post('entries', [\App\Http\Controllers\Admin\Customers\EntryController::class, 'update'])->name('entries.update');
     // --- fin C7 ---
 
+    // --- C8: ポイント管理 (point_setting) ---
+    // Solo con isExtShopDomain() (mycolle/app_layout_mode = '1'), como el menú. Formulario (?cd= edita) + lista ▲▼ y 削除
+    Route::middleware('can:clientes.ext-shop.enabled')->group(function () {
+        Route::get('point-settings', [\App\Http\Controllers\Admin\Customers\PointSettingController::class, 'index'])->name('point-settings');
+        Route::post('point-settings', [\App\Http\Controllers\Admin\Customers\PointSettingController::class, 'store'])->name('point-settings.store');
+        Route::put('point-settings/{cd}', [\App\Http\Controllers\Admin\Customers\PointSettingController::class, 'update'])->whereNumber('cd')->name('point-settings.update');
+        Route::delete('point-settings/{cd}', [\App\Http\Controllers\Admin\Customers\PointSettingController::class, 'destroy'])->whereNumber('cd')->name('point-settings.destroy');
+        Route::post('point-settings/{cd}/sort', [\App\Http\Controllers\Admin\Customers\PointSettingController::class, 'sort'])->whereNumber('cd')->name('point-settings.sort');
+    });
+    // --- fin C8 ---
+
     // --- C1-b: ficha y pestañas, borrar, recuperar (al final: captura /{customer}) ---
     Route::get('{customer}', [\App\Http\Controllers\Admin\Customers\CustomerController::class, 'show'])->whereNumber('customer')->name('show');
     Route::delete('{customer}', [\App\Http\Controllers\Admin\Customers\CustomerController::class, 'destroy'])->whereNumber('customer')->name('destroy');
