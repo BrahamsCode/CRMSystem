@@ -91,7 +91,7 @@ Integraciones: `routes/publico/integraciones.php`, que S1 carga fuera del grupo 
 | `felica_mode.php` | カードリーダーモード設定 | `admin.operaciones.felica-mode.edit` / `.update` | `FelicaModeController@edit` / `@update` | L/E `tb_felica_mode` (fila `cd=1`) | pendiente ⏸ |
 | `card_new.php` | カード管理 (新規カード管理) | `admin.operaciones.cards.index` / `.assign` | `StaffCardController@index` / `@assign` | L/E `tb_card`, `tb_felica_mode`, `tb_staff`, `tb_work_time` | pendiente ⏸ |
 | `card_staff_select.php` | (fragmento) | parcial Blade | — | L `tb_staff` | pendiente ⏸ |
-| `shop_work_calendar.php` | 営業日設定 | `admin.operaciones.shop-work.edit` / `.update` | `ShopWorkController@edit` / `@update` | L/E `tb_shop_work`, `hatuban` | pendiente (no depende del terminal; botón 更新 dentro del form; también lo enlaza el menú de S2) |
+| `shop_work_calendar.php` | 営業日設定 | `admin.operaciones.shop-work.edit` / `.update` | `ShopWorkController@edit` / `@update` | L/E `tb_shop_work`, `hatuban` | hecho (fila por tienda y mes; festivos con `LegacyHolidays` = check_holiday) |
 | `index.php` (category5) | 業務支援管理 (menú) | `config/menu/operaciones.php` | — | L `tb_base_system_child` | pendiente |
 | `inc/page_control.php` | (paginador) | paginador de Laravel con el HTML del legacy | — | — | pendiente |
 

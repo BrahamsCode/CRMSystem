@@ -92,3 +92,4 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 - 2026-11-27 — Pedidos de S0: `MobileShopClient` como interfaz + `HttpMobileShopClient` (para S2) y `UrlTransferData::customer()` (para S4) (362b8f3).
 - 2026-11-27 — `tool/api` (7 de 8 endpoints + `CheckCrmApiKey`) y CTI (3) con fixtures del legacy grabadas sobre datos sintéticos (`tool-seed.sql`, 47 casos) y `ToolApiContractTest`: todo coincide byte a byte (salvo espacios del `htmlData`). Pendiente: `setRaitenDetail` (servicio de S2). Suite: 442 en verde.
 - 2026-11-27 — `mpa_*` (5 endpoints: corresponding, getTopBanner, getCoverFlow, setraiten, albumUpdate): los 12 casos grabados coinciden (setraiten_ok corregido) y `MpaTest` cubre imágenes por tienda, beacon y álbum. Suite: 503 en verde (con laravel13 fusionado por S0).
+- 2026-11-27 — 営業日設定 (`ShopWorkController`, `LegacyHolidays` con las reglas de `check_holiday` tal cual) y bloque 初期設定管理 del menú (`ShopWorkTest`).

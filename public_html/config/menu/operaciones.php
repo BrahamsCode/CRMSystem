@@ -22,5 +22,15 @@ return [
                 ['label' => 'インフォメーション管理', 'url' => '/admin/operaciones/information'],
             ],
         ],
+        [
+            'title' => '初期設定管理',
+            'image' => 'ln_t5_1.gif',
+            'ac' => 'ac4',
+            'child' => '初期設定管理',
+            'links' => [
+                // カードリーダーモード設定 y 新規カード管理: ⏸ hasta que Antony confirme 勤怠
+                ['label' => '営業日設定', 'url' => '/admin/operaciones/shop-work'],
+            ],
+        ],
     ],
 ];

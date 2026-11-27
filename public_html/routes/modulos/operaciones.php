@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\Operaciones\InformationController;
+use App\Http\Controllers\Admin\Operaciones\ShopWorkController;
 use App\Http\Controllers\Admin\Operaciones\StaffController;
 use App\Http\Controllers\Admin\Operaciones\StaffEntryController;
 use App\Http\Controllers\Admin\Operaciones\StaffFieldController;
@@ -50,6 +51,10 @@ Route::prefix('operaciones')->name('operaciones.')->group(function () {
     // スタッフ検索項目設定 (form_config.php)
     Route::get('staff-fields', [StaffFieldController::class, 'edit'])->name('staff-fields.edit');
     Route::put('staff-fields', [StaffFieldController::class, 'update'])->name('staff-fields.update');
+
+    // 営業日設定 (config/shop_work_calendar.php)
+    Route::get('shop-work', [ShopWorkController::class, 'edit'])->name('shop-work.edit');
+    Route::put('shop-work', [ShopWorkController::class, 'update'])->name('shop-work.update');
 
     // インフォメーション管理 (information.php)
     Route::get('information', [InformationController::class, 'index'])->name('information.index');
