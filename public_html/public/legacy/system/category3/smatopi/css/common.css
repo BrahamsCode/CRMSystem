@@ -1,0 +1,286 @@
+@charset "UTF-8";
+body {
+	font-size: 16px;
+	color: #333;
+	font-family: sans-serif;
+	background: #e9e9e9;
+}
+
+#root {
+	max-width: 1920px;
+	width: 100%;
+	height: 100%;
+	background: #e9e9e9;
+}
+
+.main {
+	margin: 0 auto;
+	max-width: 480px;
+	width: 100%;
+	height: auto;
+	background: #FFF;
+	/* position: absolute; */
+	/* top: 0; */
+	/* right: 0; */
+	/* left: 0; */
+}
+
+.header {
+	background: #FFF;
+	display: flex;
+	align-items: center;
+	box-shadow: 2px 2px 5px rgba(0, 0, 0, .16);
+}
+
+.headerPagerBox {
+	width: 50px;
+	height: 50px;
+	display: flex;
+}
+
+.headerTtl {
+	padding: 0.3em 0 0.2em;
+	height: 100%;
+	font-size: 18px;
+	font-weight: 700;
+	line-height: 1.75em;
+	flex: 1;
+	text-align: center;
+}
+
+.headerPagerLink {
+	font-size: 19px;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.ttl01Box {
+	padding: 15px 15px 12px;
+	background: #f5fffd;
+	box-shadow: 2px 2px 5px rgba(0, 0, 0, .16);
+}
+
+.ttl01 {
+	font-size: 16px;
+	text-align: center;
+	font-weight: 700;
+	line-height: 1.75em;
+}
+
+.wrap {
+	padding: 40px 15px;
+}
+
+.formLabel {
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 1.75em;
+}
+
+.formSmall {
+	display: block;
+	font-size: 12px;
+	line-height: 1.75em;
+}
+
+.formSet {
+	margin: 5px 0 0;
+	position: relative;
+}
+
+.formInput,
+.formTextarea,
+.formSelect {
+	padding: 5px 10px;
+	width: 100%;
+	border: 2px solid #ccc;
+	border-radius: 5px;
+	line-height: 1.75em;
+}
+
+.formInput::placeholder {
+	color: #ccc;
+}
+
+.formItem {
+	margin: 25px 0 0;
+}
+
+.formSelectArrow {
+	position: absolute;
+	top: 0;
+	right: 10px;
+	bottom: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 16px;
+	pointer-events: none;
+}
+
+.formSetIcon {
+	position: absolute;
+	top: 0;
+	right: 10px;
+	bottom: 0;
+	font-size: 16px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	pointer-events: none;
+}
+
+.btn01 {
+	margin: 0 15px;
+	padding: 0.7em 1.5em 0.5em;
+	font-size: 18px;
+	display: flex;
+	justify-content: center;
+	border: 1px solid #aaa;
+	border-radius: 50px;
+	font-weight: 700;
+	box-shadow: 2px 2px 5px rgba(0, 0, 0, .16);
+}
+
+.btn01Box {
+	position: relative;
+	display: flex;
+	justify-content: center;
+}
+
+.formQuestion {
+	width: 25px;
+	height: 25px;
+	border: 1px solid #107f7b;
+	background: #107f7b;
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #FFF;
+	font-size: 12px;
+	position: absolute;
+	top: 0;
+	right: -30px;
+	bottom: 0;
+	margin: auto;
+}
+
+.btn01Item {
+	margin: 0 15px;
+	position: relative;
+}
+
+.formUpLabel {
+	padding: 1em .5em 0.7em;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: 1px solid #17c1c0;
+	border-radius: 10px;
+	box-shadow: 2px 2px 2px rgba(0, 0, 0, .16);
+	background: #17c1c0;
+	color: #FFF;
+	font-size: 18px;
+	font-weight: 700;
+}
+
+.formUpLabel + input[type="file"] {
+	display: none;
+}
+
+.formSet--switch {
+	display: flex;
+}
+
+.formSwithcLabel {
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 1.75em;
+}
+
+.formCheckSwitch {
+	width: 60px;
+	height: 30px;
+	background: #ddd;
+	border-radius: 50px;
+	position: relative;
+	transition: .5s;
+	cursor: pointer;
+}
+
+.formCheckSwitch:after {
+	content: "";
+	display: block;
+	width: 30px;
+	height: 30px;
+	background: #aaa;
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	transition: .5s;
+	border-radius: 50%;
+}
+
+.formCheckSwitch:checked:after {
+	left: 0;
+	background: #17c1c0;
+	transform: translateX(30px);
+}
+
+.formSwitch {
+	margin: 0 0 0 20px;
+}
+
+.formSet--icon .formInput {
+	padding-right: 35px;
+}
+
+#remainingCount {
+	color: #007f7e;
+	font-size: 220%;
+	font-weight: bold;
+}
+
+#sentCount, #friendsCount {
+	color: #000000;
+	font-size: 180%;
+	font-weight: bold;
+}
+
+#ageMin, #ageMax {
+	appearance: auto;
+	padding: 5px 10px;
+	border: 2px solid #ccc;
+	border-radius: 5px;
+}
+
+.weekday {
+	display: flex;
+	margin: 5px 30px 5px 0;
+}
+
+#smatopiLogo {
+	text-align: right;
+}
+
+#smatopiLogo img {
+	height: 60px;
+}
+
+/* ダイアログ */
+.ui-widget-header {
+	background: #17c1c0;
+	background-color: #17c1c0;
+	font-weight: bold;
+	border: 1px solid #17c1c0;
+	border-radius: 5px !important;
+}
+
+.ui-dialog-buttonset button {
+	border-radius: 5px !important;
+}
