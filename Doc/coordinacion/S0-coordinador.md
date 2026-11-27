@@ -54,6 +54,8 @@
 
 ## Decisiones
 
+- 2026-11-26 (Antony): **misma BD y misma UI que el legacy** (`CONVENCIONES.md` §0). Esquema Laravel = `database/schema/pgsql-schema.sql` desde `crm2019.backup`; lo construido sobre tablas nuevas se borró (clientes, promociones, layout Tailwind, `Admin`). Los diseños ya escritos o aprobados (S4) deben rehacer su parte de esquema y UI. Cada worktree: `git merge laravel13`, después `bash scripts/en-docker.sh php artisan migrate:fresh` y `bash scripts/bd-legacy.sh crmsystem2_<grupo>`.
+
 - 2026-11-26: orquestación creada (S0 + 5 trabajadores, ver ORCHESTRATION.md §7). Rama de integración `laravel13`. Todos los permisos: los trabajadores hacen commit y push de su rama, S0 integra. Fuera (confirmado que no se usan): POS (`category11`), SNS (`category12`) y touchcation con `category7/kiosk/`; `digitalsignage` se mantiene (reproductor Flash → HTML5). Análisis vista por vista en `Doc/analisis-legacy/`. `hp/` fuera de alcance (Antony).
 - 2026-11-26: arranque de S0. Fase 1 confirmada a S1 (en su cola, el grupo de rutas del quiosco pasa a ser solo para integraciones y señalización) y diseño confirmado a S2–S5, con aviso del recorte de touchcation (filas `descartado: touchcation fuera de alcance`). A S6 se le pidió detenerse sin hacer commit; la rama `l13/quiosco` y el worktree `CRMSystem-quiosco` quedan sin uso (no se borran sin Antony).
 - 2026-11-26: S6 se detuvo y cerró la sesión: worktree limpio, sin commits ni push.

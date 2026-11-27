@@ -12,10 +12,11 @@ Reescritura en **Laravel 13 + PHP 8.5** del CRM legacy (VivaTech / Japón). El c
 | Muestra visual | `https://development.crm-s.net/system/login.php` (master / master, **solo lectura**: nunca guardar ni borrar nada allí) |
 | Análisis vista por vista | `Doc/analisis-legacy/NN-*.md` (buscar la sección por título con grep; no leer completo) |
 | Reglas de código y propiedad de carpetas | [Doc/contratos/CONVENCIONES.md](Doc/contratos/CONVENCIONES.md) |
-| Estándares de BD | [Doc/database/ESTANDARES_BD.md](Doc/database/ESTANDARES_BD.md) |
+| Base de datos | La del legacy: `public_html/database/schema/pgsql-schema.sql` (desde `crm2-php8/db/crm2019.backup`); datos con `bash scripts/bd-legacy.sh <bd>`. Ver `CONVENCIONES.md`, sección 0 |
 
 ## Reglas
 
+- **Misma BD y misma UI que el legacy** (Antony, 2026-11-26): modelos Eloquent sobre las `tb_*`, mismos CSS/HTML; responsive y rediseño al final. Detalle en `CONVENCIONES.md`, sección 0.
 - **Paridad funcional:** todo lo que el legacy hace, Laravel lo hace. Los servicios viejos se reemplazan por los de Laravel (Mail + colas, Scheduler, Storage, Policies, StreamedResponse…), paso a paso.
 - **Fuera de alcance:** `hp/` (sitio viejo), `admin/` y `system/category8` (女の子管理).
 - **Fuera de alcance por ahora:** POS (`system/category11`, terminales `CRMPOS-<id>` y conexión a los servidores POS de tienda), SNS (`system/category12`) y touchcation (quiosco táctil y su gestión `category7/kiosk/`): confirmado que no se usan (Antony, 2026-11-26).
