@@ -16,6 +16,13 @@ Fuente legacy: `system/login.php`, `session.php`, `select.php`, `inc/head.php`, 
 
 Zona horaria de la app: `Asia/Tokyo`, como el legacy.
 
+### Numeración (`App\Services\Nucleo\Hatuban`)
+
+- `app(Hatuban::class)->next('tb_x')` / `peek()`: contador de la tabla `hatuban` (cHatuban). `HasHatuban` lo usa en los modelos.
+- `Hatuban::legacyCd($shopCd = '')`: `createHatsuban()` del legacy (epoch + tienda en 3 cifras + 6 cifras aleatorias, en texto) para las tablas sin contador. **Usar este en vez de copiar `time().sprintf(...).random_int(...)`**: hoy hay copias en `CustomerRegistrationService`, `StaffEntryController`, `CouponController`, `PointConfigController` y `LotteryConfig::legacyCd()`.
+- **Pruebas** (inestables por orden): `Hatuban::fake($epoch = 1700000000, $start = 1)` hace `legacyCd()` determinista (epoch fijo y secuencia creciente: los `cd` salen en orden de alta); `tests/TestCase.php` lo deshace al terminar cada prueba. `Hatuban::fixCounters(['tb_x' => 100])` fija el próximo número de `next()` (lo deshace `RefreshDatabase`). Con `RefreshDatabase` la tabla `hatuban` ya empieza vacía en cada prueba (`next()` da 1): el orden de las pruebas solo influye si se usan números aleatorios o la hora.
+- Si una consulta ordena por una columna con empates (misma hora, mismo `rank`), añadir un desempate (`cd`) según el orden que resulte del legacy: sin él, PostgreSQL devuelve los empates en cualquier orden (es el caso de `SetRaitenDetailTest`).
+
 ## 2. Login del personal
 
 - URL del legacy: `GET|POST /system/login.php` (ruta `login`), `GET /system/logout.php` (ruta `logout`, enlace de la cabecera), `GET /system/select.php` (ruta `nucleo.select`, システム選択). `/` y `/system` redirigen.

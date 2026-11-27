@@ -132,3 +132,9 @@ it('lee y escribe pares categoría/campo de contents_master', function () {
     DB::table('contents_master')->where('category', 'mycolle')->update(['disp_flg' => '9']);
     expect(ContentsMaster::text('mycolle', 'app_layout_mode'))->toBeNull();
 });
+
+it('Hatuban::fixCounters fija el próximo número de next()', function () {
+    \App\Services\Nucleo\Hatuban::fixCounters(['tb_qa' => 50]);
+    expect(app(\App\Services\Nucleo\Hatuban::class)->next('tb_qa'))->toBe(50)
+        ->and(app(\App\Services\Nucleo\Hatuban::class)->peek('tb_qa'))->toBe(51);
+});
