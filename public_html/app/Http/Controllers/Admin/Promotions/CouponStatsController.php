@@ -38,7 +38,8 @@ class CouponStatsController extends Controller
             ->when($kubun !== '', fn ($q) => $q->where('tb1.coupon_kubun', (int) $kubun === 0 ? '' : $kubun))
             ->groupBy('tb1.tb_mycoupon_master_cd', 'tb2.cd', 'tb2.title', 'tb2.comment', 'tb2.tb_shop_cd', 'tb2.coupon_kubun')
             ->selectRaw('count(*) as cnt, tb1.tb_mycoupon_master_cd, tb2.cd, tb2.title, tb2.comment, tb2.tb_shop_cd, tb2.coupon_kubun')
-            ->orderByDesc('cnt')->limit(20);
+            // El legacy solo ordenaba por cnt; el cd desempata para que el orden sea estable
+            ->orderByDesc('cnt')->orderBy('tb2.cd')->limit(20);
 
         $rows = $query->get();
         $mailCounts = DB::table('mailmag_master')->where('type_flg', 'coupon')->whereIn('type_data_cd', $rows->pluck('cd')->all())
