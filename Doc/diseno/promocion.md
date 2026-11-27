@@ -312,15 +312,15 @@ Pasa a S2 (decisión de S0): mismas tablas (`tb_reserve`, `tb_reserve_name`, `tb
 
 | Legacy | Título (ja) | Estado |
 |---|---|---|
-| `reserve_customer_search.php` | 予約新規登録 / 顧客一覧・検索 | S2 |
-| `reserve_new.php`, `reserve_new_confirm.php`, `reserve_new_register.php`, `reserve_new_complete.php` | 予約新規登録 / 確認 / 完了 | S2 |
-| `reserve_calendar.php` | 予約・来店一覧 | S2 |
-| `reserve_list.php` | 予約一覧 | S2 |
-| `reserve_detail.php`, `reserve_change_status.php`, `reserve_delete.php` | 予約詳細 / 予約情報 | S2 |
-| `category_entry.php`, `category_register.php`, `category_delete.php` | 予約カテゴリ登録・変更 | S2 |
-| `config.php`, `config_register.php` | 予約項目設定 | S2 |
-| `ajax_category.php`, `ajax_staff.php`, `inc/check_select.php` | (AJAX) | S2 |
-| `model_reservation.php` | 予約機種一覧 | S2 |
+| `reserve_customer_search.php` | 予約新規登録 / 顧客一覧・検索 | hecho (R6, S2: detalle en `clientes-ventas-reservas.md` §1.3 bis) |
+| `reserve_new.php`, `reserve_new_confirm.php`, `reserve_new_register.php`, `reserve_new_complete.php` | 予約新規登録 / 確認 / 完了 | hecho (R6, S2: detalle en `clientes-ventas-reservas.md` §1.3 bis) |
+| `reserve_calendar.php` | 予約・来店一覧 | hecho (R6, S2: detalle en `clientes-ventas-reservas.md` §1.3 bis) |
+| `reserve_list.php` | 予約一覧 | hecho (R6, S2: detalle en `clientes-ventas-reservas.md` §1.3 bis) |
+| `reserve_detail.php`, `reserve_change_status.php`, `reserve_delete.php` | 予約詳細 / 予約情報 | hecho (R6, S2: detalle en `clientes-ventas-reservas.md` §1.3 bis) |
+| `category_entry.php`, `category_register.php`, `category_delete.php` | 予約カテゴリ登録・変更 | hecho (R6, S2: detalle en `clientes-ventas-reservas.md` §1.3 bis) |
+| `config.php`, `config_register.php` | 予約項目設定 | hecho (R6, S2: detalle en `clientes-ventas-reservas.md` §1.3 bis) |
+| `ajax_category.php`, `ajax_staff.php`, `inc/check_select.php` | (AJAX) | hecho (R6, S2: detalle en `clientes-ventas-reservas.md` §1.3 bis) |
+| `model_reservation.php` | 予約機種一覧 | hecho (R6, S2: detalle en `clientes-ventas-reservas.md` §1.3 bis) |
 
 ---
 
