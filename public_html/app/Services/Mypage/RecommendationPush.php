@@ -3,7 +3,7 @@
 namespace App\Services\Mypage;
 
 use App\Models\AdminMaster;
-use Illuminate\Support\Facades\Http;
+use App\Support\GApi;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
  * con host b.g-api.net si admin_master.push_api_host = '1', si no b-develop.g-api.net.
  * Solo si admin_master.application_use_flg = 1. El legacy escribía la petición en un socket y
  * no esperaba respuesta; aquí es síncrona con un timeout corto y un fallo no corta el guardado.
+ * Pasa por el interruptor común App\Support\GApi (NUCLEO.md §9): apagado (CRM_GAPI_ENABLED=false) no sale nada.
  */
 class RecommendationPush
 {
@@ -31,13 +32,11 @@ class RecommendationPush
         $host = (string) $admin->push_api_host === '1' ? self::PRODUCTION_HOST : self::DEVELOP_HOST;
 
         try {
-            Http::timeout(self::TIMEOUT_SECONDS)->get("http://{$host}/api/mpa/pushMessage", [
+            return GApi::get("http://{$host}/api/mpa/pushMessage", [
                 'domain' => $domain,
                 'type' => $type,
                 'cd' => $masterCd,
-            ]);
-
-            return true;
+            ], self::TIMEOUT_SECONDS) !== null;
         } catch (\Throwable $e) {
             Log::warning('Push de マイページ no enviado', ['type' => $type, 'cd' => $masterCd, 'error' => $e->getMessage()]);
 

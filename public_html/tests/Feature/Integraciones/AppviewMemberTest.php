@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
     DB::table('admin_master')->insert(['cd' => 1, 'push_api_host' => '1']);
+    config(['crm.gapi.enabled' => true]);   // interruptor común de g-api (NUCLEO.md §9)
 });
 
 it('photo_gallery: muestra solo las fotos de g-api.net cuyo archivo existe en hp/uploads', function () {
@@ -48,5 +49,13 @@ it('sin fila en admin_master no se llama a g-api.net', function () {
     Http::fake();
 
     $this->get('/appview/visit_history.php?cutomer_cd=1')->assertOk();
+    Http::assertNothingSent();
+});
+
+it('con el interruptor de g-api apagado no llama y muestra el aviso de sin datos', function () {
+    config(['crm.gapi.enabled' => false]);
+    Http::fake();
+
+    $this->get('/appview/visit_history.php?cutomer_cd=1')->assertOk()->assertSee('来店履歴はありません。');
     Http::assertNothingSent();
 });

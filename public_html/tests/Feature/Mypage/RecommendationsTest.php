@@ -14,6 +14,7 @@ require_once __DIR__ . '/helpers.php';
 beforeEach(function () {
     mypageLogin();
     Http::fake();
+    config(['crm.gapi.enabled' => true]);   // interruptor común de g-api (NUCLEO.md §9)
     // Nombre del menú en tb_mobile_navi cd 9, en 半角カナ: la pantalla lo pasa a 全角 (mb_convert_kana 'KV')
     DB::table('tb_mobile_navi')->insert(['cd' => 9, 'name' => 'ｵｽｽﾒ', 'link' => 'recommend.php', 'disp_flg' => '1']);
 });
@@ -116,4 +117,14 @@ it('guarda el texto como get_form2 (LegacyText::input) y lo imprime sin escapar 
 
     expect(Recommendation::query()->sole()->title)->toBe('A&amp;B &quot;特価&quot;');
     $this->get(route('admin.mypage.recommendations.index'))->assertSee('A&amp;B &quot;特価&quot;<br />', false);
+});
+
+it('con el interruptor de g-api apagado guarda la オススメ sin enviar el push', function () {
+    config(['crm.gapi.enabled' => false]);
+    DB::table('admin_master')->where('cd', 1)->update(['application_use_flg' => 1]);
+
+    $this->post(route('admin.mypage.recommendations.store'), recommendForm(['push' => '1', 'title' => 'QA push off']));
+
+    expect(\App\Models\Mypage\Recommendation::query()->where('title', 'QA push off')->exists())->toBeTrue();
+    Http::assertNothingSent();
 });
