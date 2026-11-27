@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\Publico\Senalizacion\CouponPrintController;
 use App\Http\Controllers\Publico\Senalizacion\DisplayXmlController;
+use App\Http\Controllers\Publico\Senalizacion\PlayerController;
+use App\Http\Controllers\Publico\Senalizacion\PollController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,4 +16,42 @@ Route::name('publico.senalizacion.')->group(function () {
     Route::get('hp/uploads/c7/display/{file}', DisplayXmlController::class)
         ->where('file', '[0-9]+\.xml|floormap\.xml')
         ->name('display-xml');
+
+    /*
+     * Reproductor digitalsignage/ (HTML5 en lugar de Flash). GET y POST porque el legacy lee $_REQUEST
+     * y los sondeos son jQuery .load() con datos (POST). Los estáticos (coupon_detail_print.css,
+     * digitalsignage_logo.jpg, load_data.xml, fla/floormap/*.xml|jpg, tig_game/img/chara.jpg) los sirve
+     * public/legacy/digitalsignage/ en su URL original.
+     */
+    Route::prefix('digitalsignage')->group(function () {
+        Route::match(['get', 'post'], '/', [PlayerController::class, 'show'])->name('player');
+        Route::match(['get', 'post'], 'index.php', [PlayerController::class, 'show'])->name('player.index');
+        Route::match(['get', 'post'], 'index2.php', [PlayerController::class, 'show'])->name('player.index2');
+        Route::match(['get', 'post'], 'roulette.php', [PlayerController::class, 'roulette'])->name('roulette');
+        Route::match(['get', 'post'], 'slot.php', [PlayerController::class, 'slot'])->name('slot');
+
+        // Sondeos
+        Route::match(['get', 'post'], 'ajax_network_check.php', [PollController::class, 'network'])->name('network-check');
+        Route::match(['get', 'post'], 'ajax_xml_check.php', [PollController::class, 'xmlCheck'])->name('xml-check');
+        Route::match(['get', 'post'], 'ajax_xml_check_2.php', [PollController::class, 'xmlCheck2'])->name('xml-check-2');
+        Route::match(['get', 'post'], 'ajax_display_config_check.php', [PollController::class, 'displayConfigCheck'])->name('display-config-check');
+        Route::match(['get', 'post'], 'ajax_display_config_check_2.php', [PollController::class, 'displayConfigCheck'])->name('display-config-check-2');
+
+        // Cupones impresos
+        $coupons = [
+            'ajax_touch_print_coupon_crawl.php' => ['touch', 'touch-print'],
+            'ajax_touch_print_coupon_crawl_2.php' => ['touch2', 'touch-print-2'],
+            'ajax_shinkyaku_print_coupon_crawl.php' => ['shinkyaku', 'shinkyaku-print'],
+            'ajax_shinkyaku_print_coupon_crawl_2.php' => ['shinkyaku2', 'shinkyaku-print-2'],
+            'ajax_Mujyouken_print_coupon_crawl_2.php' => ['mujyouken', 'mujyouken-print-2'],
+            'ajax_kaiin_raiten_print_coupon_crawl.php' => ['kaiinRaiten', 'kaiin-raiten-print'],
+            'ajax_kaiin_mycoupon_print_crawl.php' => ['mycoupon', 'kaiin-mycoupon-print'],
+            'ajax_print_coupon_crawl.php' => ['visit', 'visit-print'],
+            'ajax_print_coupon_craw_2l.php' => ['visit2', 'visit-print-2'],
+            'fla/floormap/ajax_print_crawl.php' => ['floormap', 'floormap-print'],
+        ];
+        foreach ($coupons as $uri => [$method, $name]) {
+            Route::match(['get', 'post'], $uri, [CouponPrintController::class, $method])->name($name);
+        }
+    });
 });
