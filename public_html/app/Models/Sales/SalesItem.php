@@ -44,9 +44,16 @@ class SalesItem extends LegacyModel
     /** `available_shop_cds` ('{1,2}') como array de enteros */
     public function availableShopCds(): array
     {
-        $raw = trim((string) $this->getRawOriginal('available_shop_cds', $this->attributes['available_shop_cds'] ?? ''), '{}');
+        // El valor actual (también si aún no se guardó), no el original
+        return self::parseCds((string) ($this->attributes['available_shop_cds'] ?? ''));
+    }
 
-        return $raw === '' ? [] : array_map('intval', explode(',', $raw));
+    /** makeArrAvailableShopCds() / buildMultipleSearchCds() del legacy: '{1,2}', '"1", 2' → [1, 2] */
+    public static function parseCds(string $text): array
+    {
+        $text = str_replace(['"', '{', '}', ' '], '', $text);
+
+        return $text === '' ? [] : array_map('intval', explode(',', $text));
     }
 
     public function setAvailableShopCds(array $cds): void
