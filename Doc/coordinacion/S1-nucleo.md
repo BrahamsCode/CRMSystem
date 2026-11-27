@@ -70,6 +70,8 @@ Recibidos de S0 el 2026-11-26 (para la Cola, después de la Fase 1; S0 los asign
 
 ## Hecho
 
+- **基本情報管理 1/5 (2026-11-27):** 店舗情報管理 (lista, detalle, alta/edición con 確認, borrar/recuperar) y 店舗グループ en las URL del legacy, verificados con Playwright contra la muestra; comunes `AreaTree`, `LegacyHtml`, `LegacyCheck`, `LegacyText`, `ZipController` (todas las URL zip.php). Pruebas `tests/Feature/Base/`. Suite: 301 en verde.
+
 - **B) Login + layout (2026-11-26):** login/logout/システム選択 en las URL del legacy contra `tb_staff`, `layouts.legacy` y `layouts.legacy-popup` (contrato §4), menú desde `config/menu/*.php` (`base.php` = left_navi0), portada `system/category0`, Gates (`config/kengen.php`, `kengen.<cd>.<fn>`, `kengen` con lista, banderas `nucleo.*`), estáticos comunes en `public/legacy/` (+ `hp/img/banner`), carga de `routes/legacy/*.php`, `/hp/uploads/{path}`, `Doc/contratos/NUCLEO.md`. Verificado con Playwright contra el backup (master): login, システム選択 y category0 idénticos a la muestra; logout OK. Pruebas: `tests/Feature/Nucleo/{LoginTest,LayoutTest}.php`. Suite: 200 en verde.
 - **Pedido S5:** `firebase/php-jwt` 7.2.2, `services.mobileshop.*`, `services.crm.api_key`.
 

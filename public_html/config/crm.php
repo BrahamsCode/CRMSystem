@@ -39,6 +39,12 @@ return [
         'timeout' => 15,
     ],
 
+    /* Avisos por correo al soporte del proveedor (vacío = no se envía) */
+    'notify' => [
+        // shop_new_register.php: alta de tienda
+        'shop_created' => env('CRM_NOTIFY_SHOP_CREATED', 'support@glory.ne.jp'),
+    ],
+
     /* Días que se recuerda el usuario en el login (cookie, casilla ログイン情報を保存) */
     'remember_login_id_days' => 90,
 

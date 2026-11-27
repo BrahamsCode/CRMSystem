@@ -99,6 +99,15 @@ class LegacyUi
         return $row->text_data . '?sub_domain=' . $subDomain . '&rank=.' . $staff?->legacyRank() . '&shop=' . $staff?->shop_cd;
     }
 
+    /**
+     * Base::isExtShopDomain(): modo "tienda en app" (`contents_master` mycolle/app_layout_mode = 1).
+     * Oculta campos (責任者, 給与丸め…) y cambia menús en varias pantallas.
+     */
+    public function isExtShopDomain(): bool
+    {
+        return (int) ContentsMaster::text('mycolle', 'app_layout_mode', '0') === 1;
+    }
+
     /** ¿Dominio crm-s? (enlaces サポート de header.php y select.php) */
     public function isCrmsDomain(): bool
     {
