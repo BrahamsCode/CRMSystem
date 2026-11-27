@@ -7,7 +7,9 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — Esperar la revisión de S0 del diseño (`Doc/diseno/promocion.md`). Mientras tanto: factories y seeders del grupo.
+## Próximo paso — Esperar a S0: rehacer esquema y UI sobre la BD legacy
+
+2026-11-26: S0 detuvo la capa de datos (Antony: misma BD y misma UI que el legacy, `database/schema/pgsql-schema.sql`; modelos Eloquent sobre las `tb_*`, sin tablas nuevas). El trabajo sin commit (migraciones `promocion_*`, modelos y factories nuevos, `PointRuleResolver`, `LotteryService`, `CouponIssuer::markPrinted`, conversores `Legacy/`, `PromocionServiceProvider`, `PosGateway`, `ReservationReminders` y sus pruebas) quedó en `git stash` con el mensaje `obsoleto: tablas nuevas`. La lógica de servicios y el Scheduler siguen valiendo: recuperarlos de ahí al rehacer sobre las tablas legacy. No se llegó a correr la suite completa con ese código (`migrate:fresh --seed` sí pasó).
 
 ## (Hecho) Diseño (sin código)
 
