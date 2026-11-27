@@ -28,7 +28,17 @@ class PromocionFidelizacionServiceProvider extends ServiceProvider
             // fin F4
 
             // F5
-
+            // Sellos: el legacy (cSendSchedule) ponía en el crontab `min hora * * *` con la hora de admin_master
+            // (stamp_shikkou_alert_time / stamp_shikkou_time, 12:00 si falta), solo con スタンプ管理 activo y
+            // stamp_shikkou_sousa = '1'. Aquí se evalúa cada minuto y la condición se lee al correr schedule:run.
+            foreach ([
+                \App\Services\Promotions\StampExpiryMailer::ALERT => \App\Console\Commands\Promotions\StampShikkouAlertCommand::class,
+                \App\Services\Promotions\StampExpiryMailer::SHIKKOU => \App\Console\Commands\Promotions\StampShikkouCommand::class,
+            ] as $stampKind => $stampCommand) {
+                $schedule->command($stampCommand)->everyMinute()
+                    ->when(fn () => $this->app->make(\App\Services\Promotions\StampExpiryMailer::class)->isDue($stampKind, now()))
+                    ->withoutOverlapping();
+            }
             // fin F5
         });
     }

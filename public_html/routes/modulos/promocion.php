@@ -163,6 +163,30 @@ Route::prefix('promocion')->name('promocion.')->group(function () {
     // --- fin F4 ---
 
     // --- F5 (S2) ---
+    // スタンプ管理 (stamp): デザイン, 仕様 (+ AJAX de afectados y popups de plantillas), ルール y クーポンお知らせ
+    Route::prefix('stamp')->name('stamps.')->group(function () {
+        Route::get('stamp_pattern', [\App\Http\Controllers\Admin\Promotions\StampPatternController::class, 'index'])->name('pattern');
+        Route::post('stamp_pattern_register', [\App\Http\Controllers\Admin\Promotions\StampPatternController::class, 'update'])->name('pattern.update');
 
+        Route::get('stamp_config', [\App\Http\Controllers\Admin\Promotions\StampConfigController::class, 'edit'])->name('config');
+        Route::post('stamp_config_register', [\App\Http\Controllers\Admin\Promotions\StampConfigController::class, 'update'])->name('config.update');
+        Route::post('ajax_stamp_shikkou_kakunin', [\App\Http\Controllers\Admin\Promotions\StampConfigController::class, 'expiryPreview'])->name('expiry-preview');
+        Route::get('mail_template/{type}', [\App\Http\Controllers\Admin\Promotions\StampTemplateController::class, 'edit'])->name('template')
+            ->whereIn('type', array_keys(\App\Http\Controllers\Admin\Promotions\StampTemplateController::TYPES));
+        Route::post('mail_template/{type}', [\App\Http\Controllers\Admin\Promotions\StampTemplateController::class, 'update'])->name('template.update')
+            ->whereIn('type', array_keys(\App\Http\Controllers\Admin\Promotions\StampTemplateController::TYPES));
+
+        // スタンプ発行ルール: lista, alta/modificación (mismo formulario), «登録中です» y borrado físico
+        Route::match(['get', 'post'], 'stamp_rules_list', [\App\Http\Controllers\Admin\Promotions\StampRuleController::class, 'index'])->name('rules.index');
+        Route::match(['get', 'post'], 'stamp_rules_new', [\App\Http\Controllers\Admin\Promotions\StampRuleController::class, 'form'])->name('rules.create');
+        Route::match(['get', 'post'], 'stamp_rules_update', [\App\Http\Controllers\Admin\Promotions\StampRuleController::class, 'form'])->name('rules.edit');
+        Route::get('stamp_rules_register', [\App\Http\Controllers\Admin\Promotions\StampRuleController::class, 'registered'])->name('rules.registered');
+        Route::post('stamp_rules_delete', [\App\Http\Controllers\Admin\Promotions\StampRuleController::class, 'destroy'])->name('rules.destroy');
+
+        // クーポンお知らせ機能管理
+        Route::get('oshirase_coupon', [\App\Http\Controllers\Admin\Promotions\StampOshiraseController::class, 'index'])->name('oshirase');
+        Route::post('ajax_oshirase_coupon', [\App\Http\Controllers\Admin\Promotions\StampOshiraseController::class, 'ajax'])->name('oshirase.ajax');
+        Route::post('oshirase_coupon_register', [\App\Http\Controllers\Admin\Promotions\StampOshiraseController::class, 'store'])->name('oshirase.store');
+    });
     // --- fin F5 ---
 });

@@ -52,6 +52,17 @@ Route::prefix('system/category3')->name('promocion.')->group(function () {
     // --- fin F4 ---
 
     // --- F5 (S2) ---
-
+    // スタンプ管理: GET de las .php del legacy (menú left_navi3, enlaces) → pantallas nuevas con su query
+    foreach ([
+        'stamp_pattern' => 'stamps.pattern', 'stamp_config' => 'stamps.config', 'stamp_rules_list' => 'stamps.rules.index',
+        'stamp_rules_new' => 'stamps.rules.create', 'stamp_rules_update' => 'stamps.rules.edit', 'oshirase_coupon' => 'stamps.oshirase',
+    ] as $stampFile => $stampTarget) {
+        Route::get("stamp/$stampFile.php", [\App\Http\Controllers\Admin\Promotions\StampPatternController::class, 'legacy'])
+            ->name("stamp.$stampFile")->defaults('target', "admin.promocion.$stampTarget");
+    }
+    Route::get('stamp/stamp_alert_mail_template_entry.php', [\App\Http\Controllers\Admin\Promotions\StampPatternController::class, 'legacy'])
+        ->name('stamp.stamp_alert_mail_template_entry')->defaults('target', 'admin.promocion.stamps.template')->defaults('type', 'alert');
+    Route::get('stamp/stamp_shikkou_mail_template_entry.php', [\App\Http\Controllers\Admin\Promotions\StampPatternController::class, 'legacy'])
+        ->name('stamp.stamp_shikkou_mail_template_entry')->defaults('target', 'admin.promocion.stamps.template')->defaults('type', 'shikkou');
     // --- fin F5 ---
 });
