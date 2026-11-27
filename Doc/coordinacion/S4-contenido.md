@@ -7,9 +7,9 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — 6 `digitalsignage` HTML5 (reproductor con el mismo contrato)
+## Próximo paso — 9 ペーパーサイネージ y 10 ICカード
 
-Hecho: submódulos 1–5 y menús (`config/menu/mypage.php`, `terminales.php`). Siguiente: reproductor `/digitalsignage/?shop_cd=&display_cd=` en HTML5 (XML del programa, sondeos `ajax_*`, cupones impresos con `CouponService` de S3, ruleta y tragaperras) en `routes/publico/senalizacion.php`. Luego 9 ペーパーサイネージ y 10 ICカード.
+Hecho: submódulos 1–6 (reproductor `digitalsignage` HTML5 con el mismo contrato) y menús. Gates de condición con sufijo `.enabled` (S1 hará que master no los salte). Siguiente: ペーパーサイネージ (CRUD + QR + 集計 + CSV SJIS-win; accesos de S5) e ICカード (`tb_customer_card`, `CustomerFelicaService` de S2). Luego 11 ビーコン, 7 `signage/` (conexión `signage`) y 8 GoTel/PDF.
 
 ## Tarea anterior — Diseño (sin código, hecho)
 
@@ -58,6 +58,8 @@ Ver diseño §5. A S0: BD `admin` de `signage/` (no está en el esquema); GoTel/
 - Config de マイコレ y ガチャリン en `contents_master` (modelo de S1) vía servicios de S4; `mypage_config` sigue con `serialize()` (lo leen `mpa_*`).
 
 ## Hecho
+
+- 2026-11-27 Reproductor `digitalsignage` HTML5 (player, sondeos, cupones impresos con CouponService de S3, ruleta/スロット/インフォメーション): 14 pruebas; Gates `.enabled`.
 
 - 2026-11-27 Menús laterales de category6/7 con Gates `mypage.mycolle` (app activa + 1035) y `terminales.paper-signage` (UI CRM2): suite 310 verde.
 

@@ -24,7 +24,7 @@ return [
             'image' => 'ln_t7_4.gif',
             'ac' => 'ac4',
             'child' => 'ペーパーサイネージ',
-            'can' => 'terminales.paper-signage',
+            'can' => 'terminales.paper-signage.enabled',
             'links' => [
                 ['label' => 'カード管理', 'url' => '/system/category7/card_signage/list.php'],
             ],

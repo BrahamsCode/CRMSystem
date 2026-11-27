@@ -30,9 +30,9 @@ it('muestra el menú de マイページ管理 con マイコレ solo si la app es
     DB::table('tb_staff')->insert(['cd' => 2, 'office_cd' => 1, 'shop_cd' => 1, 'login_id' => 'otro', 'login_pass' => 'x', 'disp_flg' => '1']);
     DB::table('tb_kengen_contents')->insert(['cd' => 1035, 'hyouji_flg' => '1']); // 権限項目 de マイコレ
     $staff = \App\Models\Staff::find(2);
-    expect(Gate::forUser($staff)->allows('mypage.mycolle'))->toBeFalse();
+    expect(Gate::forUser($staff)->allows('mypage.mycolle.enabled'))->toBeFalse();
     DB::table('admin_master')->where('cd', 1)->update(['application_use_flg' => 1]);
-    expect(Gate::forUser($staff)->allows('mypage.mycolle'))->toBeTrue();
+    expect(Gate::forUser($staff)->allows('mypage.mycolle.enabled'))->toBeTrue();
 });
 
 it('muestra el menú de 端末管理 con ペーパーサイネージ solo en la UI CRM2', function () {
@@ -47,5 +47,5 @@ it('muestra el menú de 端末管理 con ペーパーサイネージ solo en la 
     DB::table('tb_staff')->insert(['cd' => 2, 'office_cd' => 1, 'shop_cd' => 1, 'login_id' => 'otro', 'login_pass' => 'x', 'disp_flg' => '1']);
     $staff = \App\Models\Staff::find(2);
     DB::table('admin_master')->where('cd', 1)->update(['base_system_version_flg' => '1']);
-    expect(Gate::forUser($staff)->allows('terminales.paper-signage'))->toBeFalse();
+    expect(Gate::forUser($staff)->allows('terminales.paper-signage.enabled'))->toBeFalse();
 });

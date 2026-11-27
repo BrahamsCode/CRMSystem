@@ -17,11 +17,11 @@ return [
             'child' => 'マイページ管理',
             'links' => [
                 // Solo con la app activa (admin_master.application_use_flg) y permiso 1035
-                ['label' => 'マイコレ管理', 'url' => '/admin/mypage/app-images/all', 'can' => 'mypage.mycolle'],
-                ['label' => 'カバーフロー画像設定管理', 'url' => '/admin/mypage/app-images/cover', 'can' => 'mypage.mycolle'],
-                ['label' => 'バナー画像設定管理', 'url' => '/admin/mypage/app-images/banner', 'can' => 'mypage.mycolle'],
-                ['label' => 'HOMEメインイメージ管理', 'url' => '/admin/mypage/app-images/main', 'can' => 'mypage.mycolle'],
-                ['label' => 'サムネイル画像管理', 'url' => '/admin/mypage/app-images/thumbnail', 'can' => 'mypage.mycolle'],
+                ['label' => 'マイコレ管理', 'url' => '/admin/mypage/app-images/all', 'can' => 'mypage.mycolle.enabled'],
+                ['label' => 'カバーフロー画像設定管理', 'url' => '/admin/mypage/app-images/cover', 'can' => 'mypage.mycolle.enabled'],
+                ['label' => 'バナー画像設定管理', 'url' => '/admin/mypage/app-images/banner', 'can' => 'mypage.mycolle.enabled'],
+                ['label' => 'HOMEメインイメージ管理', 'url' => '/admin/mypage/app-images/main', 'can' => 'mypage.mycolle.enabled'],
+                ['label' => 'サムネイル画像管理', 'url' => '/admin/mypage/app-images/thumbnail', 'can' => 'mypage.mycolle.enabled'],
                 // El legacy pone el nombre de tb_mobile_navi + 管理; el menú es estático: el nombre por defecto
                 ['label' => 'オススメ管理', 'url' => '/admin/mypage/recommendations', 'can' => 'kengen.1016.1'],
             ],

@@ -14,6 +14,6 @@ class TerminalesServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // left_navi7: ペーパーサイネージ solo con la UI CRM2 ($crmVersion == 2 = admin_master.base_system_version_flg)
-        Gate::define('terminales.paper-signage', fn ($staff) => (string) AdminMaster::current()?->base_system_version_flg === '2');
+        Gate::define('terminales.paper-signage.enabled', fn ($staff) => (string) AdminMaster::current()?->base_system_version_flg === '2');
     }
 }
