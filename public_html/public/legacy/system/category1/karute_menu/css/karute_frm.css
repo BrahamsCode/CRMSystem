@@ -1,0 +1,679 @@
+/* ===========================================================
+
+CSS Information
+
+ File name:	karute_frm.css
+
+ Style Info:	カルテ管理設定
+
+=========================================================== */
+
+
+
+
+
+/* -----------------------------------------------------------
+
+ レイアウト
+
+----------------------------------------------------------- */
+
+.popup .contents
+{
+	margin-bottom: 0;
+}
+
+/* フォーム開くボタン */
+
+#karteFormOpen.btnStyleM
+{
+	padding: 1em;
+	line-height: 2.5;
+}
+
+/* コンテナ */
+
+#karteForm
+{
+	overflow: hidden;
+	width: 100%;
+}
+
+/* 左カラム */
+
+#leftColumn
+{
+	overflow: hidden;
+	float: left;
+
+	width: 49.5%;
+}
+
+/* 右カラム */
+
+#rightColumn
+{
+	overflow: hidden;
+	float: right;
+
+	width: 49.5%;
+}
+
+
+
+
+
+/* -----------------------------------------------------------
+
+ 左カラム
+
+----------------------------------------------------------- */
+
+
+/* カルテ内容
+----------------------------------------------------------- */
+
+#karuteData .h2Title
+{
+	margin-bottom: 0;
+}
+
+#karuteData .container
+{
+	overflow: hidden;
+
+	padding: 10px;
+	border: 3px solid #828E93;
+	border-top: none;
+}
+
+/* 日時 */
+
+#update_date.inputM
+{
+	width: 6em;
+	text-align: center;
+}
+
+
+/* 基本情報 */
+
+#karuteData .container .tableBox5
+{
+	margin-bottom: 20px;
+}
+
+#karuteData .container .tableBox5 th
+{
+	width: 30%;
+	line-height: 2.2;
+}
+
+/* メニュー・割引 */
+
+#karuteData #kaiinBtn,
+#karuteData #staffRemove
+{
+	display: none;
+	margin-left: 1em;
+}
+
+#karuteData .container .inner
+{
+	overflow-x: hidden;
+	overflow-y: scroll;
+
+	height: 121px;
+	margin-bottom: 20px;
+
+	border: 2px solid #CCCCCC;
+}
+
+#karuteData .container .inner table
+{
+	width: 100%;
+}
+
+#karuteData .container .inner table th,
+#karuteData .container .inner table td
+{
+	padding: 7px 10px;
+	border-bottom: 1px solid #CCCCCC;
+}
+
+#karuteData .container .inner table td
+{
+	text-align: right;
+}
+
+#karuteData .container .inner table tr:nth-child(even)
+{
+	background: #EDEDED;
+}
+
+/* その他の割引 */
+
+#otherWaribiki
+{
+	overflow: hidden;
+	margin-bottom: 30px;
+	border: 2px solid #CCCCCC;
+}
+
+#otherWaribiki table
+{
+	width: 100%;
+}
+
+#otherWaribiki table th,
+#otherWaribiki table td
+{
+	padding: 7px 10px;
+}
+
+#otherWaribiki table td:nth-child(2)
+{
+	text-align: center;
+}
+
+#otherWaribiki table td:nth-child(3)
+{
+	padding: 7px 28px 7px 10px;
+	text-align: right;
+}
+
+/* 合計 */
+
+#resultDisplay
+{
+	overflow: hidden;
+	margin-bottom: 20px;
+	border-top: 3px solid #828E93;
+}
+
+#resultDisplay dt,
+#resultDisplay dd
+{
+	overflow: hidden;
+	display: inline-block;
+	width: 50%;
+	padding-top: 10px;
+	line-height: 1.2;
+}
+
+#resultDisplay dt span,
+#resultDisplay dd span
+{
+	overflow: hidden;
+	padding: 0 15px;
+}
+
+#resultDisplay dt
+{
+	font-weight: bold;
+	font-size: 155%;
+	vertical-align: bottom;
+}
+
+#resultDisplay dd
+{
+	font-weight: bold;
+	font-size: 130%;
+	text-align: right;
+	vertical-align: bottom;
+}
+
+#resultDisplay dd em
+{
+	font-weight: bold;
+	font-size: 240%;
+}
+
+/* 選択ボタン */
+
+.addKaiin.btnStyle,
+.addStaff.btnStyle,
+.addMenu.btnStyle,
+.addWaribiki.btnStyle
+{
+	color: #FF0000 !important;
+}
+
+/* 取消ボタン */
+
+#kaiinRemove.btnStyle,
+#staffRemove.btnStyle,
+#otherWaribikiRemove.btnStyle,
+.selectedWaribikiRemove.btnStyle,
+.selectedMenuRemove.btnStyle
+{
+	color: #00479D !important;
+}
+
+/* ボタンエリア */
+
+#btnArea
+{
+	overflow: hidden;
+	padding: 10px;
+	background: #C9D0D3;
+	text-align: center;
+}
+
+#btnArea .btnStyleM
+{
+	padding: 5px 1em;
+}
+
+#btnArea #enter.btnStyleM
+{
+	color: #FF0000 !important;
+}
+
+
+
+
+
+/* -----------------------------------------------------------
+
+ 右カラム
+
+----------------------------------------------------------- */
+
+
+/* 会員検索
+----------------------------------------------------------- */
+
+#kaiinSearch
+{
+	overflow: hidden;
+
+	margin-bottom: 15px;
+}
+
+#kaiinSearch .h2Title
+{
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+	-moz-border-radius-topleft: 6px;
+	-moz-border-radius-topright: 6px;
+	-webkit-border-top-left-radius: 6px;
+	-webkit-border-top-right-radius: 6px;
+}
+
+#kaiinSearch .form .inputL
+{
+	width: 334px;
+}
+
+#kaiinSearch .form li
+{
+	display: inline-block;
+	padding-bottom: 10px;
+}
+
+#kaiinSearch .form li input[type="button"]
+{
+	margin-left: 5px;
+}
+
+#kaiinSearch .form label
+{
+	padding-right: 3px;
+	font-size: 113%;
+}
+
+#kaiinSearch .inner
+{
+	overflow-x: hidden;
+	overflow-y: scroll;
+
+	height: 150px;
+
+	border: 2px solid #CCCCCC;
+}
+
+#kaiinSearch .inner table
+{
+	width: 100%;
+}
+
+#kaiinSearch .inner table th,
+#kaiinSearch .inner table td
+{
+	padding: 7px 10px;
+	border-bottom: 1px solid #CCCCCC;
+}
+
+#kaiinSearch .inner table tr:nth-child(even)
+{
+	background: #EDEDED;
+}
+
+#kaiinSearch .inner table td.noData
+{
+	height: 152px;
+	border: none;
+	text-align: center;
+}
+
+#kaiinSearch .inner table th:nth-child(1),
+#kaiinSearch .inner table td:nth-child(1)
+{
+	width: 10em;
+}
+
+#kaiinSearch .inner table th:nth-child(3),
+#kaiinSearch .inner table td:nth-child(3)
+{
+	width: 10em;
+}
+
+
+
+
+
+/* スタッフ選択
+----------------------------------------------------------- */
+
+#staffSelect
+{
+	overflow: hidden;
+	float: left;
+
+	width: 49%;
+}
+
+#staffSelect .h2Title
+{
+	margin-bottom: 0;
+
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+	-moz-border-radius-topleft: 6px;
+	-moz-border-radius-topright: 6px;
+	-webkit-border-top-left-radius: 6px;
+	-webkit-border-top-right-radius: 6px;
+}
+
+#staffSelect .inner
+{
+	overflow-x: hidden;
+	overflow-y: scroll;
+
+	height: 190px;
+	margin-bottom: 15px;
+
+	border: 2px solid #CCCCCC;
+	border-top: none;
+}
+
+#staffSelect .inner table
+{
+	width: 100%;
+}
+
+#staffSelect .inner table th,
+#staffSelect .inner table td
+{
+	padding: 7px 10px;
+	border-bottom: 1px solid #CCCCCC;
+}
+
+#staffSelect .inner table tr:nth-child(even)
+{
+	background: #EDEDED;
+}
+
+#staffSelect .inner table th
+{
+	font-weight: normal;
+}
+
+#staffSelect .inner table td
+{
+	width: 5em;
+	text-align: right;
+}
+
+#staffSelect .inner table td.noData
+{
+	width: auto;
+	padding-top: 1em;
+	border: none;
+	text-align: center;
+}
+
+
+
+
+
+/* メニュー選択
+----------------------------------------------------------- */
+
+#menuSelect
+{
+	overflow: hidden;
+	float: right;
+
+	width: 50%;
+}
+
+#menuSelect #menuTab
+{
+	overflow: hidden;
+
+	width: 100%;
+}
+
+#menuSelect #menuTab li
+{
+	overflow: hidden;
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+
+	width: 50%;
+}
+
+#menuSelect #menuTab li div
+{
+	overflow: hidden;
+
+	padding: 6px 10px 2px;
+
+	border: 1px solid #778877;
+	background: #EFEFEF;
+
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+	-moz-border-radius-topleft: 6px;
+	-moz-border-radius-topright: 6px;
+	-webkit-border-top-left-radius: 6px;
+	-webkit-border-top-right-radius: 6px;
+
+	font-size: 90%;
+	color: #667266;
+	cursor: pointer;
+}
+
+#menuSelect #menuTab li div.on
+{
+	padding: 6px 10px 4px;
+	background: #828E93;
+
+	font-size: 100%;
+	color: #FFFFFF;
+}
+
+#menuSelect #menuPallet
+{
+	overflow-x: hidden;
+	overflow-y: scroll;
+
+	height: 190px;
+	margin-bottom: 10px;
+
+	border: 2px solid #CCCCCC;
+	border-top: none;
+}
+
+#menuSelect #menuPallet li
+{
+	display: none;
+}
+
+#menuSelect #menuPallet li table
+{
+	width: 100%;
+}
+
+#menuSelect #menuPallet li table th,
+#menuSelect #menuPallet li table td
+{
+	padding: 7px 10px;
+	border-bottom: 1px solid #CCCCCC;
+}
+
+#menuSelect #menuPallet li table tr:nth-child(even)
+{
+	background: #EDEDED;
+}
+
+#menuSelect #menuPallet li table th
+{
+	font-weight: normal;
+}
+
+#menuSelect #menuPallet li table td
+{
+	width: 5em;
+	text-align: right;
+}
+
+#menuSelect #menuPallet li table td.noData
+{
+	width: auto;
+	padding-top: 1em;
+	border: none;
+	text-align: center;
+}
+
+
+
+
+
+/* 履歴
+----------------------------------------------------------- */
+
+#raitenList
+{
+	overflow: hidden;
+	clear: both;
+}
+
+#raitenList .h2Title
+{
+	margin-bottom: 0;
+}
+
+#raitenList .inner
+{
+	overflow-x: hidden;
+	overflow-y: scroll;
+
+	height: 200px;
+	margin-bottom: 15px;
+	border: 2px solid #CCCCCC;
+	border-top: none;
+}
+
+#raitenList .inner table
+{
+	width: 100%;
+}
+
+#raitenList .inner table tr:nth-child(even)
+{
+	background: #EDEDED;
+}
+
+#raitenList .inner table th,
+#raitenList .inner table td
+{
+	padding: 5px 10px;
+	border-bottom: 1px solid #CCCCCC;
+}
+
+/*
+#raitenList .inner table th:nth-child(1),
+#raitenList .inner table td:nth-child(1)
+{
+	width: 25%;
+}
+*/
+
+#raitenList .inner table td.noData
+{
+	width: auto;
+	padding-top: 1em;
+	border: none;
+	text-align: center;
+}
+
+#raitenList .tableBox
+{
+	margin-bottom: 0;
+}
+
+
+
+
+
+/* -----------------------------------------------------------
+
+ 施術メモのウィンドウ
+
+----------------------------------------------------------- */
+
+#dialogWindow
+{
+	display: none;
+}
+
+#dialog
+{
+	overflow: hidden;
+}
+
+#dialog textarea
+{
+	resize: none;
+
+	width: 370px;
+	height: 127px;
+	margin-bottom: 15px;
+	border: 1px solid #7F9DB9;
+
+}
+
+#dialog .btnStyleM
+{
+	padding: 5px 1em;
+}
+
+#dialogEnter.btnStyleM
+{
+	color: #FF0000 !important;
+}
+
+#cboxClose
+{
+	display: none !important;
+}
+
+
+
+
+
+

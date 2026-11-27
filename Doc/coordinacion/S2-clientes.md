@@ -57,6 +57,9 @@ Ver `Doc/diseno/clientes-ventas-reservas.md` §5 (S1: `staff`, Gates, rutas púb
 - 2026-11-26: pantallas sin enlace en el menú (`customer_level`, `school*`, `mail_comment`, `biyou`, `model_reservation`) se migran con prioridad baja (S0: tienen pantalla porque el legacy la tenía).
 - 2026-11-26: si falta `tb_felica_mode` `cd = 2`, se crea al guardar en vez de no guardar en silencio (defecto del legacy).
 
+- 2026-11-26: estáticos de S2 copiados a `public/legacy/` (32 archivos: `system/category1/{customer,inc}/js`, `karute_menu/css`, `category9/yoyaku/{css,js,img}`, `r/{css,js,img}`), idénticos al legacy; sin Flash (`csv_download*`, `AC_RunActiveContent.js`) ni `uploads/`. `category2` y `category3/reservation` no tienen estáticos propios. No existen ni en el legacy (allí daban 404): `biyou/js/shopping_entry.js`, `config/js/topics_entry.js`, `karute_menu/js/user.js`, `reservation/js/staff_entry.js`, `yoyaku/css/popInline.css`, `yoyaku/js/popInline.js`. Los de `system/js`, `system/css`, `system/plugin`, `/common/` (S1) y `category3/{css,js,smatopi}` (S3) no los copia S2.
+- 2026-11-26: los JS del legacy llaman a URL absolutas (`/system/category1/inc/ajax_search_kaiin.php`, `ajax_raiten_list.php`, `ajax_picupload.php`) y relativas (`./ajax_*.php` en `r/`, `time_table_staff.php`). Al implementar: rutas Laravel en esas mismas URL (alias dentro del grupo admin para `/system/...`; `r/` es URL literal), sin tocar los JS.
+
 ## Hecho
 
 - 2026-11-26: diseño v2 sobre la BD y la UI del legacy (paridad con tablas `tb_*`, modelos por tabla y dueño, UI/JS por pantalla, contrato `Reservation` sobre `tb_yoyaku`, orden 84 pts).
