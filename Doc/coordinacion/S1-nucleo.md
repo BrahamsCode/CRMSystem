@@ -9,7 +9,7 @@ Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archiv
 
 ## Próximo paso
 
-A y B hechos (ver "Hecho"). Siguiente, cuando S0 lo confirme: Cola 2 (基本情報管理, category0: configuración, tiendas, asistente de primer acceso `config.php`) y los "Pedidos" que siguen abiertos.
+A, B y category0 completos (ver "Hecho"). Siguiente (asignado por S0 al terminar category0): revisión visual de punta a punta del menú y del layout de todos los módulos contra la muestra, con Playwright. Pendientes de la cola de S0: paquetes PDF/imagen.
 
 **A) Base legacy** (corto; subir apenas esté): traits `app/Models/Concerns/` `HasHatuban` (numeración por `koumoku`), `LegacySoftDeletes` (scope `disp_flg <> '9'`, `delete()` pone `'9'`), `LegacyTimestamps` (`touroku_date`/`update_date` epoch en texto); modelo base `LegacyModel` (`cd`, no incremental, sin timestamps, `$guarded=[]`); servicio `Hatuban`; modelos `Shop` (`tb_shop`), `Staff` (`tb_staff`), `Terminal` (`tb_terminal`), `AdminMaster`, `ContentsMaster`, con pruebas sobre el esquema legacy; registrar `<Modulo>ServiceProvider` existentes en `bootstrap/providers.php`. Terminado: pruebas en verde, commit, push, aviso.
 
