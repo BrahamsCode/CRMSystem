@@ -28,4 +28,8 @@ Route::prefix('system/category3')->name('promocion.')->group(function () {
     Route::post('inc/ajax_sendTestMail.php', [MailAjaxController::class, 'sendTestMail'])->name('inc.ajax_send_test_mail');
     Route::post('inc/ajax_mail_delete.php', [MailPastController::class, 'destroy'])->name('inc.ajax_mail_delete');
     Route::match(['get', 'post'], 'inc/ajax_reigai_kaiin.php', [MailAjaxController::class, 'exceptions'])->name('inc.ajax_reigai_kaiin');
+    // follow/auto: 例外顧客 (reigai_kaiin2.js) y 起動/停止
+    Route::match(['get', 'post'], 'inc/ajax_search_kaiin.php', [MailAjaxController::class, 'searchCustomers'])->name('inc.ajax_search_kaiin');
+    Route::get('inc/ajax_get_shop_data.php', [MailAjaxController::class, 'shopOptions'])->name('inc.ajax_get_shop_data');
+    Route::post('inc/ajax_change_status.php', [MailAjaxController::class, 'changeStatus'])->name('inc.ajax_change_status');
 });

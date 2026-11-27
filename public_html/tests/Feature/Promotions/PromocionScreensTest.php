@@ -19,4 +19,5 @@ it('abre las pantallas del módulo con el título y el menú del legacy', functi
     'admin.promocion.deco.past', 'admin.promocion.templates.index', 'admin.promocion.test-addresses.index',
     'admin.promocion.coupons.index', 'admin.promocion.coupons.create', 'admin.promocion.coupons.ranking', 'admin.promocion.coupons.stats',
     'admin.promocion.points.rules.index', 'admin.promocion.points.rules.create',
+    'admin.promocion.follow.rule', 'admin.promocion.follow.future', 'admin.promocion.auto.rule', 'admin.promocion.auto.future',
 ]);

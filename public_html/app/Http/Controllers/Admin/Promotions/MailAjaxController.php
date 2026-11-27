@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Admin\Promotions;
 use App\Http\Controllers\Controller;
 use App\Mail\Promotions\PromotionMail;
 use App\Models\Promotions\MailTemplate;
+use App\Models\Promotions\MailmagMaster;
 use App\Models\Promotions\MycouponMaster;
 use App\Models\Promotions\TestMailAddress;
 use App\Services\Promotions\LegacyTime;
 use App\Services\Promotions\MailAudience;
 use App\Services\Promotions\MailImageStore;
+use App\Services\Promotions\MailRegistrar;
 use App\Services\Promotions\MailRenderer;
 use App\Services\Promotions\MailSender;
 use App\Services\Promotions\StaffContext;
@@ -17,13 +19,17 @@ use App\Services\Promotions\SystemDomain;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
+use App\Support\LegacyText;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
 /**
  * AJAX de los formularios de envío (URL del legacy, las llaman los JS de category3):
  * inc/ajax_get_template_titles.php, ajax_get_template_body.php, ajax_search_coupon.php,
- * ajax_testMailList.php, ajax_sendTestMail.php, ajax_reigai_kaiin.php
+ * ajax_testMailList.php, ajax_sendTestMail.php, ajax_reigai_kaiin.php, ajax_search_kaiin.php, ajax_get_shop_data.php,
+ * ajax_change_status.php
  * y mail_mag/inc/upload.php, disp_pic.php (rutas relativas de staff_entry.js).
  */
 class MailAjaxController extends Controller
@@ -181,5 +187,75 @@ class MailAjaxController extends Controller
         $url = $images->tempUrl($folder, (string) $request->input('t'), (string) $request->input('ext'));
 
         return response($url === null ? 'ERROR' : '<br/><br/><img src="'.e($url).'" /><br/><br/>');
+    }
+
+    /**
+     * ajax_search_kaiin.php (例外顧客 de follow/auto, reigai_kaiin2.js): con type=display, la ficha de cada cd
+     * con su botón 解除; si no, buscador de socios activos por tienda, nombre/カナ, ID y 管理番号 (200 como máximo).
+     */
+    public function searchCustomers(Request $request): Response|View
+    {
+        if ($request->input('type') === 'display') {
+            $html = '';
+            foreach (DB::table('tb_customer')->whereIn('cd', MailAudience::cds($request->input('reigai_kaiin_cds')))->get(['cd', 'id', 'name', 'email1']) as $c) {
+                $html .= '<div id="member_'.$c->cd.'">'.PHP_EOL
+                    .'<table width="400px" style="table-layout:fixed;border:none;"><tr>'.PHP_EOL
+                    .'<td width="85%" style="border-right:none;padding:1px;">【'.e($c->id).'】&emsp;'.e($c->name).'&emsp;('.e($c->email1).')</td>'.PHP_EOL
+                    .'<td width="15%" style="border-left:none;padding:1px;text-align:center"><input type="button" value="解除" onclick="fnc_DeleteMember(\''.$c->cd.'\');"/></td>'.PHP_EOL
+                    .'</tr></table>'.PHP_EOL.'</div>'.PHP_EOL;
+            }
+
+            return response($html);
+        }
+
+        $like = fn (string $k) => '%'.addcslashes(LegacyText::db($request->input($k)), '%_\\\\').'%';
+        $rows = DB::table('tb_customer')->where('disp_flg', '1')->where('touroku_kubun', '2')
+            ->when((string) $request->input('shop_cd', '') !== '', fn ($q) => $q->where('tb_shop_cd', (int) $request->input('shop_cd')))
+            ->when((string) $request->input('name', '') !== '', fn ($q) => $q->where(fn ($w) => $w->where('name', 'like', $like('name'))->orWhere('name_kana', 'like', $like('name'))))
+            ->when((string) $request->input('id', '') !== '', fn ($q) => $q->where('id', 'like', $like('id')))
+            ->when((string) $request->input('kanri_id', '') !== '', fn ($q) => $q->where('kanri_id', 'like', $like('kanri_id')))
+            ->orderBy('id')->limit(200)->get(['cd', 'id', 'kanri_id', 'name', 'kojin_birth']);
+
+        return view('admin.promocion.inc.ajax.search_kaiin', ['rows' => $rows]);
+    }
+
+    /** ajax_get_shop_data.php: <option> de tiendas (master: todas con una vacía; si no, la suya) */
+    public function shopOptions(): Response
+    {
+        $html = $this->staff->isMaster() ? "<option value=\"\">&nbsp;</option>\n" : '';
+        $shops = DB::table('tb_shop')->where('disp_flg', '<>', '9')
+            ->when(! $this->staff->isMaster(), fn ($q) => $q->where('cd', $this->staff->shopCd()))->orderBy('cd')->get(['cd', 'kaishamei']);
+        foreach ($shops as $shop) {
+            $html .= '<option value="'.$shop->cd.'" >'.e($shop->kaishamei).'</option>';
+        }
+
+        return response($html);
+    }
+
+    /**
+     * ajax_change_status.php: 停止 (disp_flg = 7, fuera de send_schedule) o 起動 (disp_flg vacío y de nuevo en
+     * send_schedule) de envíos follow/auto/recordatorio. El legacy comprobaba el id de sesión; aquí, CSRF y el
+     * permiso de 予約解除 de su tipo (kengen n-4), que es el que muestra los botones.
+     */
+    public function changeStatus(Request $request, MailRegistrar $registrar): Response
+    {
+        $st = (string) $request->input('st');
+        if (! in_array($st, ['停止', '起動'], true)) {
+            return response('');
+        }
+        foreach (MailmagMaster::query()->whereIn('cd', MailAudience::cds($request->input('cd')))->get() as $mail) {
+            if (! $this->staff->isMaster() && ! Gate::allows('kengen.'.MailController::kengenNo((string) $mail->type_flg).'.4')) {
+                continue;
+            }
+            if ($st === '停止') {
+                MailmagMaster::query()->whereKey($mail->cd)->update(['disp_flg' => '7']);
+                DB::table('send_schedule')->where('mag_cd', $mail->cd)->delete();
+            } else {
+                MailmagMaster::query()->whereKey($mail->cd)->update(['disp_flg' => '']);
+                $registrar->schedule($mail->refresh());
+            }
+        }
+
+        return response('');
     }
 }

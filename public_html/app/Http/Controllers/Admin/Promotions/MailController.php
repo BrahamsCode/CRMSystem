@@ -45,6 +45,7 @@ class MailController extends Controller
 
     public function select(Request $request, SearchFormData $formData, string $mailType = 'mail'): View
     {
+        $mailType = self::resolveType($request, $mailType);
         $uniqid = null;
         $result = null;
         $filters = [];
@@ -62,15 +63,18 @@ class MailController extends Controller
         return view('admin.promocion.inc.mail_customer_select_frm', $formData->for($filters) + [
             'menu' => $mailType,
             'mailType' => $mailType,
-            'title' => match ($mailType) { 'deco' => 'デコメール', 'mycoupon' => 'クーポン', default => 'メール' },
-            'mode' => '発行条件選択',
+            'title' => match ($mailType) { 'deco' => 'デコメール', 'mycoupon' => 'クーポン', 'auto', 'autodeco' => '自動', default => 'メール' },
+            'mode' => in_array($mailType, MailRegistrar::AUTO_TYPES, true) ? '配信条件選択' : '発行条件選択',
             'activeAc' => self::activeAc($mailType),
             'selectAction' => route($this->route($mailType, 'select')),
             'issueAction' => route($this->route($mailType, 'create')),
             'searchFormPartial' => 'admin.promocion.inc.customer_search_form',
             'searchUniqid' => $uniqid,
             'result' => $result,
-            'carry' => array_filter($request->only(['mailmagcd', 'coupon_cd', 'hakkou_cd', 'get_coupon_cd', 'get_coupon_text']), fn ($v) => (string) $v !== ''),
+            // 自動: las condiciones de auto_new_confirm ($auto_mail_send_data) viajan ocultas hasta el registro
+            'carry' => array_filter($request->only(array_merge(['mailmagcd', 'coupon_cd', 'hakkou_cd', 'get_coupon_cd', 'get_coupon_text'],
+                in_array($mailType, MailRegistrar::AUTO_TYPES, true) ? ['step1', 'step2_1', 'step2_2', 'step2_3', 'step2_jikan', 'step2_fun', 'mail_type', 'kind'] : [])),
+                fn ($v) => is_string($v) && $v !== ''),
         ]);
     }
 
@@ -90,6 +94,7 @@ class MailController extends Controller
 
     public function create(Request $request, MailReplaceTags $tags, MailImageStore $images, string $mailType = 'mail'): View|RedirectResponse
     {
+        $mailType = self::resolveType($request, $mailType);
         $uniqid = (string) $request->input('search_uniqid');
         if (! $this->audience->has($uniqid)) {
             return redirect()->route('admin.promocion.templates.index');
@@ -123,7 +128,29 @@ class MailController extends Controller
                 ?? $images->tempUrl(MailImageStore::folder($mailType), (string) $in['pic_name'], 'gif');
         }
 
-        return $this->form($mailType, $in, $uniqid, $imageUrl, $tags);
+        // 自動: «HH時MM分 配信月：… 配信日：…» de las condiciones (mail_frm.php)
+        $extra = [];
+        if (in_array($mailType, MailRegistrar::AUTO_TYPES, true) && isset($in['step1'])) {
+            $extra['displayParameters'] = e($in['step2_jikan'] ?? '').'時'.e($in['step2_fun'] ?? '').'分&emsp;'
+                .self::autoParameters((string) $in['step1'], (string) ($in['step2_1'] ?? ''), (string) ($in['step2_2'] ?? ''), (string) ($in['step2_3'] ?? ''));
+        }
+
+        return $this->form($mailType, $in, $uniqid, $imageUrl, $tags, $extra);
+    }
+
+    /**
+     * Texto de las condiciones de un 自動 (mail_frm.php / mail_future_frm.php / mail_future_list_frm.php):
+     * «配信月：1月 2月{$sep}配信日：1日 月末» o «配信曜日：月曜日 金曜日». Escapa los valores (vienen del formulario).
+     */
+    public static function autoParameters(string $step1, string $months, string $days, string $weekdays, string $sep = '&emsp;'): string
+    {
+        $dow = ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'];
+
+        return match ($step1) {
+            '1' => '配信月：'.e(implode('月 ', explode(',', $months))).'月'.$sep.'配信日：'.e(str_replace('32日', '月末', implode('日 ', explode(',', $days)).'日')),
+            '2' => '配信曜日：'.e(implode(' ', array_map(fn ($d) => $dow[(int) $d] ?? '', explode(',', $weekdays)))),
+            default => '',
+        };
     }
 
     /** Pantalla de inc/mail_frm.php (alta) o inc/mail_future_frm.php (edición, $extra['registerType'] = 'update') */
@@ -161,15 +188,25 @@ class MailController extends Controller
             ->where('受付メールアドレス', 'なし')
             ->where('配信状況', MailmagMaster::STATUS_PENDING)
             ->when(! $this->staff->isMaster(), fn ($q) => $q->where('店id', (string) $this->staff->shopCd()))
-            ->when($mailType === 'deco',
-                fn ($q) => $q->where('type_flg', 'deco'),
+            ->when(match ($mailType) {
+                'deco' => ['deco'],
+                'follow' => ['follow', 'followdeco'],
+                'auto' => ['auto', 'autodeco'],
+                default => null,
+            }, fn ($q, $types) => $q->whereIn('type_flg', $types),
                 fn ($q) => $q->whereRaw("coalesce(type_flg, '') IN ('', 'anketo', 'coupon')"))
             ->orderByDesc('配信日時');
 
         return view('admin.promocion.inc.mail_future_list_frm', $this->common($mailType) + [
             'mails' => $query->paginate($perPage, ['*'], 'page', max(1, (int) $request->input('page', 1))),
             'perPage' => $perPage,
-            'pageTitle' => $mailType === 'deco' ? '予約メール配信' : '予約'.$this->toolName().'配信',
+            'pageTitle' => match ($mailType) {
+                'deco' => '予約メール配信',
+                'follow' => 'フォロー'.$this->toolName().'配信',
+                'auto' => '自動メール配信',
+                default => '予約'.$this->toolName().'配信',
+            },
+            'statusUrl' => route('legacy.promocion.inc.ajax_change_status'),
             'shopNames' => $this->shopNames(),
             'kengenNo' => self::kengenNo($mailType),
         ]);
@@ -184,7 +221,19 @@ class MailController extends Controller
             return redirect()->route($this->route($mailType, 'future'));
         }
         $m = fn (string $c) => (string) $mail->getAttribute($c);
+        // mail_future_frm.php: en follow/auto el tipo es el de la fila (texto o デコメール)
+        if (in_array($mail->type_flg, array_merge(MailRegistrar::FOLLOW_TYPES, MailRegistrar::AUTO_TYPES), true)) {
+            $mailType = (string) $mail->type_flg;
+        }
+        $recurring = in_array($mailType, ['follow', 'followdeco', 'auto', 'autodeco'], true);
         $folder = MailImageStore::folder($mailType);
+        $extra = [];
+        if (in_array($mailType, MailRegistrar::AUTO_TYPES, true)) {
+            $p = array_pad(explode('<>', $m('send_parameter')), 3, '');
+            $extra['displayParameters'] = ($in['display_parameters'] ?? '') !== ''
+                ? e($in['display_parameters'])
+                : self::autoParameters($p[0], $p[1], $p[2], $p[0] === '2' ? $p[1] : '');
+        }
 
         if (($in['back_flg'] ?? '') === '1' && $this->audience->has($in['search_uniqid'] ?? null)) {
             if (($in['p_name_b'] ?? '') !== '' && $in['p_name_b'] !== 'delete') {
@@ -206,11 +255,19 @@ class MailController extends Controller
                 'p_s_path' => (string) $imageUrl,
             ];
             if ($m('type_data_cd') !== '') {
-                $in['hakkou_cd'] = $m('type_data_cd');
+                // follow/auto: el cupón adjunto se edita (get_coupon_cd); el resto lo arrastra como hakkou_cd
+                $in[$recurring ? 'get_coupon_cd' : 'hakkou_cd'] = $m('type_data_cd');
+            }
+            // follow: «<tienda> 宛» de send_parameter (tienda<>用途<>日数)
+            if (in_array($mailType, ['follow', 'followdeco'], true)) {
+                $shopName = DB::table('tb_shop')->where('cd', (int) explode('<>', $m('send_parameter'))[0])->value('kaishamei');
+                if ($shopName !== null) {
+                    $in['search_display'] .= ' '.$shopName.' 宛';
+                }
             }
         }
 
-        return $this->form($mailType, $in, $uniqid, $imageUrl, $tags, [
+        return $this->form($mailType, $in, $uniqid, $imageUrl, $tags, $extra + [
             'registerType' => 'update',
             'canCancel' => $this->can(self::kengenNo($mailType), 4),
         ]);
@@ -260,6 +317,7 @@ class MailController extends Controller
 
     public function confirm(Request $request, MailImageStore $images, MailRenderer $renderer, string $mailType = 'mail'): View|RedirectResponse
     {
+        $mailType = self::resolveType($request, $mailType);
         $uniqid = (string) $request->input('search_uniqid');
         if (! $this->audience->has($uniqid)) {
             return redirect()->route('admin.promocion.templates.index');
@@ -353,6 +411,7 @@ class MailController extends Controller
 
     public function store(Request $request, MailRegistrar $registrar, string $mailType = 'mail'): View|RedirectResponse
     {
+        $mailType = self::resolveType($request, $mailType);
         $uniqid = (string) $request->input('search_uniqid');
         $in = $request->except(['_token']);
         $verify = (string) ($in['mail_send_verify'] ?? '');
@@ -416,7 +475,8 @@ class MailController extends Controller
             'staffShopCd' => $this->staff->shopCd(),
             'senderTitle' => $this->senderTitle(),
             'routes' => [
-                'select' => route($this->route($mailType, 'select')),
+                // follow no tiene 発行条件選択 (sus condiciones salen de follow_new): vuelve a ella
+                'select' => route(self::family($mailType) === 'follow' ? 'admin.promocion.follow.rule' : $this->route($mailType, 'select')),
                 'create' => route($this->route($mailType, 'create')),
                 'confirm' => route($this->route($mailType, 'confirm')),
                 'store' => route($this->route($mailType, 'store')),
@@ -425,7 +485,8 @@ class MailController extends Controller
                 'editConfirm' => route($this->route($this->futureType($mailType), 'edit-confirm')),
                 'update' => route($this->route($this->futureType($mailType), 'update')),
                 'cancel' => route($this->route($this->futureType($mailType), 'cancel')),
-                'past' => route($this->route($mailType, 'past')),
+                // follow/auto no tienen 過去配信 propio
+                'past' => route(in_array(self::family($mailType), ['follow', 'auto'], true) ? 'admin.promocion.mail.past' : $this->route($mailType, 'past')),
             ],
         ];
     }
@@ -441,24 +502,41 @@ class MailController extends Controller
         return $mailType === 'mycoupon' ? 'mail' : $mailType;
     }
 
-    /** Prefijo de rutas de la familia: mail (mail_mag), deco (decomail) o coupons.mail (mycoupon) */
+    /** Prefijo de rutas de la familia: mail (mail_mag), deco (decomail), coupons.mail (mycoupon), follow o auto */
     public static function family(string $mailType): string
     {
         return match ($mailType) {
             'deco' => 'deco',
             'mycoupon' => 'coupons.mail',
+            'follow', 'followdeco' => 'follow',
+            'auto', 'autodeco' => 'auto',
             default => 'mail',
         };
     }
 
-    /** Bloque del menú lateral: メルマガ管理 (.ac1), デコメール管理 (.ac9) o マイクーポン管理 (.ac7) */
+    /** Bloque del menú lateral: メルマガ (.ac1), デコメール (.ac9), マイクーポン (.ac7), フォロー (.ac10) o 自動 (.ac11) */
     public static function activeAc(string $mailType): string
     {
-        return match ($mailType) {
+        return match (self::family($mailType)) {
             'deco' => '.ac9',
-            'mycoupon' => '.ac7',
+            'coupons.mail' => '.ac7',
+            'follow' => '.ac10',
+            'auto' => '.ac11',
             default => '.ac1',
         };
+    }
+
+    /**
+     * follow/auto: el envoltorio legacy toma `mail_type` del formulario (テキストのみ o デコメール: follow/followdeco,
+     * auto/autodeco); cualquier otro valor vuelve al de la ruta.
+     */
+    public static function resolveType(Request $request, string $mailType): string
+    {
+        if (in_array($mailType, ['follow', 'auto'], true) && $request->input('mail_type') === $mailType.'deco') {
+            return $mailType.'deco';
+        }
+
+        return $mailType;
     }
 
     /** $tool_name['mail_tool_name'] (getMailmagazineName): お知らせ con la app activa, si no メール */
