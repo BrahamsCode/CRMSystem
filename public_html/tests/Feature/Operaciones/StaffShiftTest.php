@@ -75,6 +75,22 @@ it('日別シフト管理: tablero de la tienda, guardado del día y lectura con
         ->assertSee('name="sch[0]" class="sch0" value="20_'.$start.'_'.$end.'"', false);
 });
 
+it('un turno fuera del horario del tablero (el JS manda «undefined») no borra el que había', function () {
+    seedShiftBoard();
+    loginAs('master', 'secreto1');
+    $start = CarbonImmutable::create(2026, 3, 5, 8, 0, 0, 'Asia/Tokyo')->getTimestamp(); // antes de las 10:00 de la tienda
+    $end = $start + 3 * 3600;
+    $this->post('/admin/operaciones/shifts/day', ['shop_cd' => '2', 'd' => '20260305', 'sch' => ["20_{$start}_{$end}_3_早番"]]);
+
+    // Regresión (tercera pasada): se guardaba «undefined» y el turno se perdía
+    $this->post('/admin/operaciones/shifts/day', ['shop_cd' => '2', 'd' => '20260305', 'sch' => ['20_undefined_undefined_3_早番', "21_{$start}_{$end}__"]]);
+    $this->post('/admin/operaciones/shifts/month', ['shop_cd' => '2', 'staff_cd' => '20', 'd' => '20260301', 'sch' => ['4_'.$start.'_undefined_3_早番']]);
+
+    expect(DB::table('tb_staff_shift')->where('staff_cd', 20)->value('gaisyutu_time_5'))->toBe((string) $start)
+        ->and(DB::table('tb_staff_shift')->where('staff_cd', 20)->value('kisha_time_5'))->toBe((string) $end)
+        ->and(DB::table('tb_staff_shift')->where('staff_cd', 21)->value('gaisyutu_time_5'))->toBe((string) $start); // los demás sí se guardan
+});
+
 it('日別シフト管理: quien no es master solo ve su tienda', function () {
     seedShiftBoard();
     staffUser(5, ['shop_cd' => 1]);

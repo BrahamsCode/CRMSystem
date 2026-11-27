@@ -128,3 +128,4 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
   - **Integraciones:** passcode de la tienda móvil por tienda (uno con cero inicial).
   - **Staff:** no crea ninguno (es de S1).
 - 2026-11-27 — Tercera pasada, fase B (primera vuelta en :8081). 2 fallos corregidos con prueba: ログインID vacía en スタッフ登録 (`管理者用ID@else` no compilaba) y error de JS en 勤怠一覧 day2 (comillas sin escapar). Detalle en `Doc/qa/regresion.md`. Pendiente: claves de API en el `.env` de :8081 (S0) y segunda vuelta tras la recarga.
+- 2026-11-27 — Tercera pasada, segunda vuelta (:8081 en 738907f). Corregido: turnos con «undefined» al guardar シフト fuera del horario del tablero (21b8635). Además, g-api de appview pasa por el interruptor común `App\Support\GApi` (3528d74) y la API JWT y tool/api funcionan con las claves locales. Resumen en `Doc/qa/regresion.md`.

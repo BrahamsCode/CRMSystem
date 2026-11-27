@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
     DB::table('admin_master')->insert(['cd' => 1, 'push_api_host' => '1']);
+    config(['crm.gapi.enabled' => true]); // las llamadas se simulan con Http::fake (interruptor común, NUCLEO.md §9)
 });
 
 it('photo_gallery: muestra solo las fotos de g-api.net cuyo archivo existe en hp/uploads', function () {
@@ -41,6 +42,15 @@ it('visit_history: 来店履歴 de g-api.net por cutomer_cd (sic) y el aviso cua
 
     $empty = $this->get('http://crm.example.test/appview/visit_history.php?cutomer_cd=1000001')->getContent();
     expect($empty)->not->toContain('shop_name">')->toContain('来店履歴はありません。');
+});
+
+it('con g-api apagado (CRM_GAPI_ENABLED=false) no sale la petición y las vistas quedan sin datos', function () {
+    config(['crm.gapi.enabled' => false]);
+    Http::fake();
+
+    $this->get('http://crm.example.test/appview/visit_history.php?cutomer_cd=1000001')->assertOk()->assertSee('来店履歴はありません。');
+    $this->get('http://crm.example.test/appview/photo_gallery.php')->assertOk()->assertDontSee('rel="lightbox"', false);
+    Http::assertNothingSent();
 });
 
 it('sin fila en admin_master no se llama a g-api.net', function () {

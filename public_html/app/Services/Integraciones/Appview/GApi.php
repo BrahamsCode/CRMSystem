@@ -2,6 +2,7 @@
 
 namespace App\Services\Integraciones\Appview;
 
+use App\Support\GApi as SupportGApi;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Throwable;
@@ -9,7 +10,8 @@ use Throwable;
 /**
  * API externa de la app (g-api.net) que leen appview/photo_gallery.php y visit_history.php con
  * file_get_contents (GET, 3 s): b.g-api.net si admin_master.push_api_host = 1, si no b-develop.g-api.net.
- * Sin fila en admin_master no se llama. La respuesta va decodificada como objetos (json_decode del legacy).
+ * Sin fila en admin_master, o con el interruptor común apagado (App\Support\GApi, CRM_GAPI_ENABLED), no se llama.
+ * La respuesta va decodificada como objetos (json_decode del legacy).
  */
 class GApi
 {
@@ -20,9 +22,11 @@ class GApi
             return null;
         }
         $domain = self::looseEqualsOne($master->push_api_host) ? 'b.g-api.net' : 'b-develop.g-api.net';
+        $url = 'http://'.$domain.$path.'?'.$query;
 
+        // Interruptor común (NUCLEO.md §9): apagado fuera de producción, no sale la petición y la vista queda sin datos
         try {
-            $body = Http::timeout(3)->get('http://'.$domain.$path.'?'.$query)->body();
+            $body = SupportGApi::send($url, fn () => Http::timeout(3)->get($url))?->body() ?? '';
         } catch (Throwable) {
             $body = '';
         }
