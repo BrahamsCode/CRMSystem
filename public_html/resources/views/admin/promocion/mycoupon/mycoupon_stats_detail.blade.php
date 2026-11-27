@@ -31,7 +31,7 @@ $(document).ready(function() {
 @foreach ($rows as $i => $row)
 @php
 	$detail = Route::has('admin.clientes.show')
-		? route('admin.clientes.show', ['kaiin_cd' => $row->cd, 'wintype' => 'no_headers'])
+		? route('admin.clientes.show', ['customer' => $row->cd, 'wintype' => 'no_headers'])
 		: '/system/category1/inc/customer_detail.php?kaiin_cd=' . $row->cd . '&wintype=no_headers';
 @endphp
 	<tr @if ($i % 2 != 0) class="tableBg" @endif>
