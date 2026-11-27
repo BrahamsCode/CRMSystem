@@ -147,3 +147,30 @@ it('renderiza legacy-popup y legacy con y sin wrapClass y body_class', function 
     expect($layout)->toContain('<div class="wrap yoyakuWrap">')
         ->and($layout)->toContain('<body id="pTop" class="pageCategory0">');
 });
+
+it('no deja pasar a master en las condiciones (*.enabled, nucleo.*), sí en los permisos', function () {
+    seedNucleo();
+    Gate::define('prueba.app.enabled', fn (Staff $staff) => false);
+    Gate::define('prueba.app-y-permiso.enabled', fn (Staff $staff) => Gate::forUser($staff)->allows('kengen.1035.1'));
+    Gate::define('prueba.permiso', fn (Staff $staff) => false);
+
+    $master = Gate::forUser(Staff::find(1));
+    expect($master->allows('prueba.app.enabled'))->toBeFalse()
+        ->and($master->allows('prueba.app-y-permiso.enabled'))->toBeTrue()
+        ->and($master->allows('prueba.permiso'))->toBeTrue()
+        ->and($master->allows('nucleo.support'))->toBeFalse();
+});
+
+it('calcula etiquetas del menú con label_from y title_from', function () {
+    seedNucleo();
+    config(['menu.prueba' => ['category' => 0, 'blocks' => [[
+        'title' => 'Fijo', 'title_from' => [\Tests\Feature\Nucleo\MenuText::class, 'title'],
+        'links' => [['label' => 'オススメ管理', 'label_from' => [\Tests\Feature\Nucleo\MenuText::class, 'empty'], 'url' => '/a'],
+                    ['label' => 'x', 'label_from' => [\Tests\Feature\Nucleo\MenuText::class, 'title'], 'url' => '/b']],
+    ]]]]);
+
+    $menu = app(\App\Services\Nucleo\LegacyUi::class)->menu('prueba', Staff::find(1));
+
+    expect($menu['blocks'][0]['title'])->toBe('おすすめ')
+        ->and(array_column($menu['blocks'][0]['links'], 'label'))->toBe(['オススメ管理', 'おすすめ']);
+});

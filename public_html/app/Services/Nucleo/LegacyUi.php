@@ -128,6 +128,17 @@ class LegacyUi
     }
 
     /**
+     * Texto calculado del menú (`label_from` / `title_from` = [Clase::class, 'metodo']): el resultado, o
+     * el texto fijo si devuelve vacío. Ej.: オススメ管理 titulado con el nombre de tb_mobile_navi.
+     */
+    private static function dynamicText(array $callable, string $default): string
+    {
+        $text = is_callable($callable) ? (string) call_user_func($callable) : '';
+
+        return $text !== '' ? $text : $default;
+    }
+
+    /**
      * Menú lateral de un módulo desde `config/menu/<clave>.php` (ver NUCLEO.md), filtrado por
      * hijo activo (`tb_base_system_child`), nieto activo y permisos. Null si la clave no existe.
      *
@@ -155,7 +166,11 @@ class LegacyUi
             $links = collect($block['links'] ?? [])
                 ->filter(fn ($link) => $allowed($link['can'] ?? null))
                 ->filter(fn ($link) => ! isset($link['grandchild']) || BaseSystemGrandchild::activeLike($link['grandchild']))
+                ->map(fn ($link) => isset($link['label_from']) ? ['label' => self::dynamicText($link['label_from'], $link['label'] ?? '')] + $link : $link)
                 ->values()->all();
+            if (isset($block['title_from'])) {
+                $block['title'] = self::dynamicText($block['title_from'], $block['title'] ?? '');
+            }
 
             // Los bloques ligados a un hijo siguen el orden de tb_base_system_child (rank, cd), como left_navi1
             $order = isset($block['child']) ? $children->search($block['child']) : $i;
