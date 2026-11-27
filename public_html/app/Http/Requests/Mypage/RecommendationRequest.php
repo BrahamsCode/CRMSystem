@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Mypage;
 
 use App\Services\Mypage\MypageShop;
+use App\Services\Mypage\RecommendationService;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -12,9 +13,10 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class RecommendationRequest extends FormRequest
 {
-    public function authorize(): bool
+    /** Alta (act=new) con 1016 新規; modificación (act=up) con 1016 編集. Sin el permiso, 403 */
+    public function authorize(MypageShop $shop): bool
     {
-        return true;
+        return $shop->can(RecommendationService::KENGEN, $this->input('act') === 'up' ? MypageShop::EDIT : MypageShop::CREATE);
     }
 
     public function rules(): array
