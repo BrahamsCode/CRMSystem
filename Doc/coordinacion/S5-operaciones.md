@@ -9,7 +9,7 @@ Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archiv
 
 ## Próximo paso — Diseño (sin código)
 
-> **Ahora (2026-11-27, S0):** diseño aprobado; pasos 1-4, 8-10 y 12 hechos; `appview` lotes A y B hechos. Siguiente: `appview` lote C2 (member_regist y customerUpdate sobre `class/Customer.php`, paquete crm).
+> **Ahora (2026-11-27, S0):** diseño aprobado; pasos 1-4 y 8-12 hechos (`appview` terminado). Pendiente solo lo ⏸ a la espera de Antony (勤怠, shukei, air).
 
 > **2026-11-26, cambio de base (Antony):** misma BD y misma UI que el legacy (`CONVENCIONES.md`, sección 0). Si ya escribiste tu diseño con tablas nuevas, rehaz la parte de esquema y UI. — **rehecho sobre la BD legacy el 2026-11-27, esperando revisión de S0**
 
@@ -82,6 +82,8 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 
 - **appview (2026-11-27):** vistas PHP planas con la plantilla del legacy (CRLF) para comparar byte a byte; sin autenticación por `customer_cd` (contrato, anotado para Japón). `introduction.php` y `detail_view.php` descartados: leen la BD `admin` (`shop`, `news`, `blog`, `good_count`), fuera de alcance. Con `domain`, solo el paquete «crm» (*.crm-s.net, *.crm-tis.jp) usa esta BD; los dominios del POS responden «接続できませんでした». Las pantallas de cupones/sellos usan `MobileTheme` (colores y bandas de `hp/inc_m`; `emoji()` vacío, como en smartphone).
 
+- **member_regist / customerUpdate (2026-11-27):** solo el paquete crm (swa/rwa son BD del POS → «接続できませんでした»). Los valores que vuelven al formulario y el `domain` salen con h() (el legacy los imprimía tal cual: XSS). Cambios de comportamiento anotados para Japón: con sellos de bienvenida (`touroku_bonus` > 0) el legacy daba un fatal (`new Hatuban`; la clase es `cHatuban`) y no daba de alta: aquí sí; el push «ご登録ありがとうございます» se filtraba por `cd = <login_id>` y no llegaba a nadie: aquí va al socio nuevo; `appview/pushMessage.php` no existe y ningún push salía: con `CustomerPushService` de S3 sí salen (hasta que S0 lo integre, `AppviewPush` no envía nada). `mobile_kishu` nunca se guardaba (el legacy perdía `$ua`): igual aquí. `synchronizePRO` → `PosGateway::syncCustomers('unsynchronized')` (nulo).
+
 ## Hecho
 
 - 2026-11-26 — Diseño con tablas nuevas, aprobado por S0 (obsoleto desde el cambio de base).
@@ -107,3 +109,4 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 - 2026-11-27 — `appview` lote A (479f281): memberId, qr_code, member_init/comp/login/kiyaku/comfirm, privacyPage (20 casos grabados del legacy, `AppviewContractTest`) y photo_gallery/visit_history con `Http::fake` (`AppviewMemberTest`). `introduction`/`detail_view` descartados (BD `admin`). Suite: 595 en verde.
 - 2026-11-27 — `appview` lote B: coupon, coupon_detail, coupon_control, coupon_use, used_coupon_list y stamp (45 casos en `AppviewContractTest`; uso e impresión con `CouponService` de S3 en `AppviewCouponTest`). `MobileTheme` porta lo de `hp/inc_m` que usan.
 - 2026-11-27 — `appview` lote C1: member_complete (alta con las columnas que existen; el legacy no guardaba), anketo2 (solo la redirección sin sesión de hp/user); reservation y anketo2_register descartados (`AppviewContractTest` 50 casos, `AppviewRegistrationTest`). `setRaitenDetail`: contrato con el legacy grabado (8 casos) y orden de errores corregido (validación antes de `add_record_verify`).
+- 2026-11-27 — Pruebas intermitentes arregladas (empates de ORDER BY en las fixtures; 9633cfe). `appview` lote C2: member_regist y customerUpdate (`AppCustomer`; 60 casos en `AppviewContractTest`, efectos en `AppviewRegistrationTest`). **`appview` terminado** (24 pantallas: 20 hechas, 4 descartadas).

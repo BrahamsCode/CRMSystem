@@ -1,0 +1,41 @@
+<br />
+<b>Warning</b>:  Undefined array key -1 in <b>/var/www/public_html/appview/class/Database.php</b> on line <b>43</b><br />
+<br />
+<b>Warning</b>:  Undefined array key "HTTP_USER_AGENT" in <b>/var/www/public_html/appview/member_regist.php</b> on line <b>53</b><br />
+<br />
+<b>Deprecated</b>:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in <b>/var/www/public_html/appview/class/UserAgent.php</b> on line <b>85</b><br />
+<br />
+<b>Deprecated</b>:  preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated in <b>/var/www/public_html/appview/class/UserAgent.php</b> on line <b>99</b><br />
+<br />
+<b>Deprecated</b>:  preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated in <b>/var/www/public_html/appview/class/UserAgent.php</b> on line <b>100</b><br />
+<br />
+<b>Deprecated</b>:  preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated in <b>/var/www/public_html/appview/class/UserAgent.php</b> on line <b>150</b><br />
+<br />
+<b>Deprecated</b>:  preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated in <b>/var/www/public_html/appview/class/UserAgent.php</b> on line <b>151</b><br />
+<br />
+<b>Deprecated</b>:  preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated in <b>/var/www/public_html/appview/class/UserAgent.php</b> on line <b>152</b><br />
+<br />
+<b>Deprecated</b>:  preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated in <b>/var/www/public_html/appview/class/UserAgent.php</b> on line <b>303</b><br />
+<br />
+<b>Deprecated</b>:  preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated in <b>/var/www/public_html/appview/class/UserAgent.php</b> on line <b>309</b><br />
+<br />
+<b>Deprecated</b>:  preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated in <b>/var/www/public_html/appview/class/UserAgent.php</b> on line <b>310</b><br />
+<br />
+<b>Deprecated</b>:  preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated in <b>/var/www/public_html/appview/class/UserAgent.php</b> on line <b>311</b><br />
+<br />
+<b>Deprecated</b>:  preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated in <b>/var/www/public_html/appview/class/UserAgent.php</b> on line <b>317</b><br />
+<br />
+<b>Deprecated</b>:  preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated in <b>/var/www/public_html/appview/class/UserAgent.php</b> on line <b>174</b><br />
+<br />
+<b>Deprecated</b>:  preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated in <b>/var/www/public_html/appview/class/UserAgent.php</b> on line <b>176</b><br />
+<br />
+<b>Deprecated</b>:  preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated in <b>/var/www/public_html/appview/class/UserAgent.php</b> on line <b>183</b><br />
+<br />
+<b>Deprecated</b>:  preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated in <b>/var/www/public_html/appview/class/UserAgent.php</b> on line <b>191</b><br />
+<br />
+<b>Deprecated</b>:  preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated in <b>/var/www/public_html/appview/class/UserAgent.php</b> on line <b>200</b><br />
+<br />
+<b>Deprecated</b>:  preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated in <b>/var/www/public_html/appview/class/UserAgent.php</b> on line <b>208</b><br />
+<br />
+<b>Deprecated</b>:  preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated in <b>/var/www/public_html/appview/class/UserAgent.php</b> on line <b>221</b><br />
+解析エラーです。

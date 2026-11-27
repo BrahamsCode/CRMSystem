@@ -34,6 +34,7 @@ function normalizeSessionId(?string $location): ?string
 
 it('reproduce byte a byte las pantallas de appview grabadas del legacy', function () {
     $manifest = json_decode(file_get_contents(APPVIEW_FIXTURES.'/appview/manifest.json'), true, flags: JSON_THROW_ON_ERROR);
+    $this->travelTo('2026-11-27 12:00:00'); // fecha de la grabación (años de los selects de fechas)
 
     foreach ($manifest as $case) {
         $name = $case['name'];
@@ -54,19 +55,30 @@ it('reproduce byte a byte las pantallas de appview grabadas del legacy', functio
         }
         $uri = $host ? 'http://'.$host.$case['path'] : $case['path'];
         $this->flushSession(); // cada caso se grabó sin cookies: sesión nueva
-        $response = $this->call($case['method'], $uri, $case['form'] ?? [], [], [], $server);
+        parse_str(http_build_query($case['form'] ?? []), $params); // claves con corchetes (ext_colum[203_y]) como arrays
+        $response = $this->call($case['method'], $uri, $params, [], [], $server);
         $expected = $case['response'];
         $expectedBody = normalizeAppview(file_get_contents(APPVIEW_FIXTURES.'/appview/'.$expected['body_file']));
         $body = normalizeAppview($response->getContent());
-        if ($name === 'av_member_complete') {
+        if ($name === 'av_member_complete' || $name === 'av_regist_ok') {
             // cd del socio nuevo (createHatsuban: hora + azar); el alta se comprueba en AppviewRegistrationTest
             [$body, $expectedBody] = preg_replace('/"customer_cd":"\d+"/', '"customer_cd":"CD"', [$body, $expectedBody]);
+        }
+        if ($name === 'av_qr_demo') {
+            // «El primer socio» sin ORDER BY (como el legacy): depende del orden físico de la tabla en cada suite
+            [$body, $expectedBody] = preg_replace(['/qr_img\.php\?d=[^&]+&/', '/ID: \d+/'], ['qr_img.php?d=QR&', 'ID: N'], [$body, $expectedBody]);
         }
 
         expect($response->getStatusCode())->toBe($expected['status'], "estado de {$name}: ".$response->exception?->getMessage())
             ->and(strtolower((string) $response->headers->get('Content-Type')))->toBe(strtolower((string) $expected['content_type']), "Content-Type de {$name}")
             ->and(normalizeSessionId($response->headers->get('Location')))->toBe(normalizeSessionId($expected['location']), "Location de {$name}")
             ->and($body)->toBe($expectedBody, "cuerpo de {$name}");
+
+        if ($name === 'av_member_complete') {
+            // El legacy no guardaba este alta (columnas inexistentes): se quita para que los 会員番号 siguientes coincidan
+            DB::table('tb_customer_sub')->whereIn('tb_customer_cd', DB::table('tb_customer')->where('name', '新規 会員')->pluck('cd'))->delete();
+            DB::table('tb_customer')->where('name', '新規 会員')->delete();
+        }
     }
 });
 
