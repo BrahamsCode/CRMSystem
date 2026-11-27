@@ -19,6 +19,7 @@ S1, 2026-11-27. Comparación con Playwright entre la muestra (`https://developme
 | 端末管理 (category7) | [diferencias-terminales.md](diferencias-terminales.md) | la muestra pinta `felica/terminal_list.php` con la UI clásica |
 | 予約管理 (category9) | [diferencias-reservas.md](diferencias-reservas.md) | falta la agenda `yoyaku/time_table.php` (entrada del módulo) |
 | Permisos | [permisos.md](permisos.md) | revisión con un usuario no master |
+| Regresión | [regresion.md](regresion.md) | todos los menús en `:8081` con master y `qa_partial`: 500, 404, en blanco y errores de JS |
 | 基本情報管理 (category0) | — | revisado pantalla a pantalla al migrarlo (S1): sin diferencias |
 
 ## Núcleo: corregido en esta revisión (`7d54d3a`)

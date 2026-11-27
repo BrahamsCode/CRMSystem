@@ -12,6 +12,7 @@ require_once __DIR__ . '/helpers.php';
 
 it('muestra システム選択 con los módulos activos en orden, sin 女の子管理', function () {
     seedNucleo();
+    DB::table('tb_base_system')->insert(['cd' => 4, 'system_name' => 'ホームページ管理', 'system_flg' => '1', 'narabi' => 4]);
     loginAs('master', 'secreto1');
 
     $html = $this->get('/system/select.php')
@@ -28,6 +29,7 @@ it('muestra システム選択 con los módulos activos en orden, sin 女の子�
         ->and($html)->toContain('id="functionSelect_0"')
         ->and($html)->toContain('id="functionSelect_12"')
         ->and($html)->not->toContain('id="functionSelect_8"')
+        ->and($html)->not->toContain('id="functionSelect_4"') // ホームページ管理: descartada
         ->and($html)->not->toContain('id="functionSelect_2"')
         ->and(strpos($html, 'functionSelect_1"'))->toBeLessThan(strpos($html, 'functionSelect_3"'))
         ->and($html)->toContain('Copyright&nbsp;&copy;&nbsp;shop');

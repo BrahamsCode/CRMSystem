@@ -14,6 +14,9 @@ class BaseSystem extends LegacyModel
     /** 女の子管理: retirado, nunca se muestra */
     public const RETIRED_CD = 8;
 
+    /** ホームページ管理 (category4): descartada entera, solo alimentaba el sitio viejo `hp/` (Doc/diseno/contenido-terminales.md) */
+    public const DISCARDED_CD = 4;
+
     public const SNS_NAME = 'SNS管理';
 
     protected $table = 'tb_base_system';
