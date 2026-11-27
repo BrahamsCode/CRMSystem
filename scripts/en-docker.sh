@@ -75,11 +75,21 @@ MARCA="$ROOT/public_html/vendor/.composer-lock.md5"
 LOCK_MD5="$( [ -f "$LOCK" ] && md5sum "$LOCK" | cut -d' ' -f1 || echo sin-lock )"
 if [ "${1:-}" != "composer" ] && { [ ! -f "$ROOT/public_html/vendor/autoload.php" ] || [ "$(cat "$MARCA" 2>/dev/null)" != "$LOCK_MD5" ]; }; then
   echo "Instalando dependencias de Composer en este worktree (composer.lock nuevo o sin vendor)…"
-  MSYS_NO_PATHCONV=1 docker run --rm -i --network "$RED" -v "$ROOT/public_html:/var/www" -w /var/www "$IMAGEN" composer install --no-interaction --no-progress \
+  MSYS_NO_PATHCONV=1 docker run --rm -i --user 1000:1000 -e HOME=/tmp --network "$RED" -v "$ROOT/public_html:/var/www" -w /var/www "$IMAGEN" composer install --no-interaction --no-progress \
     && echo "$LOCK_MD5" > "$MARCA"
 fi
 
+# Una sola vez por worktree: devuelve a apache lo que crearon versiones anteriores de este script como root
+if [ ! -f "$ROOT/public_html/storage/framework/cache/.uid1000" ] && [ "$(MSYS_NO_PATHCONV=1 docker run --rm -v "$ROOT/public_html:/var/www" "$IMAGEN" sh -c 'find /var/www/vendor/pestphp /var/www/storage /var/www/bootstrap/cache -maxdepth 4 ! -user 1000 2>/dev/null | head -1')" != "" ]; then
+  echo "Corrigiendo el propietario de vendor/, storage/ y bootstrap/cache (eran de root)…"
+  MSYS_NO_PATHCONV=1 docker run --rm -v "$ROOT/public_html:/var/www" "$IMAGEN" chown -R 1000:1000 /var/www/vendor /var/www/storage /var/www/bootstrap/cache
+fi
+touch "$ROOT/public_html/storage/framework/cache/.uid1000" 2>/dev/null || true
+
+# Como apache (uid 1000), el mismo usuario que PHP-FPM: si corre como root, lo que crea en storage/
+# (subidas de seeders, caché de vistas) deja de ser escribible para la web
 MSYS_NO_PATHCONV=1 exec docker run --rm $TTY_FLAGS \
+  --user 1000:1000 -e HOME=/tmp \
   --network "$RED" \
   -v "$ROOT/public_html:/var/www" -w /var/www \
   -e DB_HOST=db -e DB_PORT=5432 -e DB_DATABASE="$DB_USO" \
