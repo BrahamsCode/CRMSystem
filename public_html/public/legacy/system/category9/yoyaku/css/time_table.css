@@ -1,0 +1,492 @@
+
+div:target {
+	background: #DBCBCE;
+}
+
+.namaeTr {
+	padding: 5px;
+	min-height:60px;
+}
+
+.contents {
+	overflow-x: scroll;
+	margin-bottom: 0;
+}
+
+.main1 {
+	background: none;
+}
+
+.yoyakuControlArea {
+	background: #D8E5F2 none repeat-x scroll 0 0;
+	border: 1px solid #9FAFB8;
+	margin: 10px 0;
+	padding: 10px 0 0;
+	text-align: center;
+	min-width: 900px;
+}
+
+
+.yoyakuField {
+	min-width: 800px;
+	min-height: 300px;
+	padding-bottom: 20px;
+}
+
+
+
+.yoyakuMenu {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	margin-bottom: 10px;
+	padding: 5px 0;
+	background: transparent url("../img/button_bg.jpg") repeat scroll 0 0;
+}
+
+
+.yoyakuMenu li {
+	display: inline-block;
+	padding: 0 3px;
+	border: 1px solid #231815;
+	
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	
+	background: -moz-linear-gradient(top, #574E4E, #231815);
+	background: -webkit-gradient(linear, left top, left bottom, from(#574E4E), to(#231815));
+	
+	-webkit-box-shadow: 0 1px 0 #AAAAAA;
+	-moz-box-shadow: 0 1px 0 #AAAAAA;
+}
+
+.yoyakuMenu li:first-child {
+	margin-left: 5px;
+}
+
+.yoyakuMenu li a:link,
+.yoyakuMenu li a:visited {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+
+
+#dateDispArea {
+	overflow: hidden;
+	display: inline-block;
+	vertical-align: top;
+}
+
+#nenDisp {
+	font-size: 35px;
+	font-weight: bold;
+	line-height: 1em;
+	color: #476A87;
+}
+
+#dateDisp {
+	height: 55px;
+	font-size: 51px;
+	font-weight: bold;
+	line-height: 1em;
+}
+
+#dateDisp a {
+	line-height: 1em;
+}
+
+#dateDisp a:link,
+#dateDisp a:visited {
+	color: #476A87;
+	text-decoration: none;
+}
+
+#dateDisp span {
+	font-size: 28px;
+}
+
+.koushinBtn {
+	
+}
+
+/*#################################################
+
+#################################################*/
+
+#dateControlArea {
+	overflow: hidden;
+	display: inline-block;
+	height: 132px;
+	padding: 10px;
+	background: url("../img/bg_button.jpg");
+	vertical-align: top;
+	font-size: 19px;
+	font-weight: bold;
+	text-align: center;
+}
+
+#dateControlArea a:link,
+#dateControlArea a:visited {
+	text-decoration: none;
+}
+
+#dateControlArea span {
+	overflow: hidden;
+	height: 31px;
+}
+
+#dateControlArea span:first-child {
+	margin-right: 5px;
+}
+
+#dateControlArea span:nth-child(5) {
+	margin-left: 5px;
+}
+
+#dateControlArea span:nth-child(1),
+#dateControlArea span:nth-child(2) {
+	display: inline-block;
+	width: 70px;
+}
+
+#dateControlArea span:nth-child(3),
+#dateControlArea span:nth-child(6) {
+	display: block;
+	width: 145px;
+	margin: 2px auto;
+	
+}
+
+#dateControlArea span:nth-child(4),
+#dateControlArea span:nth-child(5) {
+	display: inline-block;
+	width: 70px;
+}
+
+
+
+/*#################################################
+
+#################################################*/
+
+#calArea {
+	overflow: hidden;
+	width: 505px;
+	display: inline-block;
+}
+
+.smallCal {
+	display: inline-block;
+	margin: 0 5px 0;
+	vertical-align: top;
+	background: #FFFFFF;
+}
+
+.smallCal th {
+	padding: 0 5px;
+	border: 1px solid #000;
+	text-align: center;
+	font-size: 10px;
+	color: #FFFFFF;
+	background: #333333;
+}
+
+.smallCal td {
+	border: 1px solid #000;
+	text-align: center;
+	font-size: 10px;
+}
+
+.smallCal td span {
+	display: block;
+	width: 9px;
+	padding: 0 5px;
+}
+
+.smallCal:first-child td {
+	font-size: 12px;
+}
+
+.smallCal:first-child td span {
+	width: 10px;
+	padding: 0 8px;
+}
+
+.saturday a:link,
+.saturday a:visited {
+	color: #336699;
+	text-decoration: none;
+}
+
+.sunday a:link,
+.sunday a:visited {
+	color: #FF0000;
+	text-decoration: none;
+}
+
+.weekday a:link,
+.weekday a:visited {
+	color: #333333;
+	text-decoration: none;
+}
+
+.today {
+	background: #FFFF99;
+}
+
+.selectday {
+	background: #555555;
+}
+
+.selectday a:link,
+.selectday a:visited {
+	color: #FFFFFF;
+}
+
+#calendarControl {
+	display: none;
+}
+
+#newYoyakuList,
+#newRaitenList {
+	display: none;
+	height: 128px;
+	overflow-y: scroll;
+	background: #FFFFFF;
+	border: 1px solid #999999
+}
+
+#calAreaControl {
+	margin: 0 4px 2px;
+}
+
+#calAreaControl li {
+	display: inline;
+	padding: 2px;
+	background: #EEEEEE;
+	border: 1px solid #000000;
+	
+	/*radius*/
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+}
+
+#calAreaControl li a {
+	text-decoration: underline;
+}
+
+/*#################################################
+
+#################################################*/
+
+.yoyakuListTable {
+	margin: 0;
+}
+
+.yoyakuListTable th {
+	border: 1px solid #999999;
+	background: #EDF6FB;
+}
+
+.yoyakuListTable th.bg {
+	background: #DDEAF1;
+}
+
+.yoyakuListTable td {
+	border: 1px solid #999999;
+	background: transparent url(../img/timeline2.gif) scroll 0 0;
+}
+
+
+.yoyakuListTable td.bg {
+	background: transparent url(../img/timeline.gif) scroll 0 0;
+}
+
+
+.customerBarParent {
+	position: relative;
+	font-size: 12px;
+	/*background: transparent url(../img/timeline.gif) scroll -30px 0;*/
+}
+
+.customerBar {
+	overflow: hidden;
+	/*position: relative;*/
+	position: absolute;
+	margin: 2px 0;
+	background: #FFBBBB;
+	border: 1px solid #333333;
+	text-align: center;
+}
+
+.yoyakuListTable .timeBarMidashi {
+	background: #8EBBD3 url("../img/time_bg.jpg") repeat-x;
+}
+
+
+.timeBarParent {
+	position: relative;
+	height: 1.5em;
+	font-weight: normal;
+	background: #8EBBD3 url("../img/time_bg.jpg") repeat-x;
+}
+
+.timeBar {
+	position: absolute;
+	border-left: 1px solid #749FB7;
+}
+
+.yoyakuListTable td.yoyaku_none {
+	text-align: center;
+	background: #EDF6FB none;
+	border-left: 2px solid #749FB7;
+}
+
+.yoyakuListTable td.yoyaku_nonebg {
+	text-align: center;
+	background: #DDEAF1 none;
+	border-left: 2px solid #749FB7;
+}
+
+
+.yoyakuObj,
+.yoyakuObjPast {
+	display: block;
+	text-decoration: underline;
+}
+
+
+#popWindow {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	min-width: 150px;
+	max-width: 300px;
+	padding: 2px 5px;
+	background: #FFFFFF;
+	border: 1px solid #999999;
+}
+
+
+#popFormWrap {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: 10px;
+	background: #FFFFFF;
+	border: 1px solid #999999;
+}
+
+#yoyakuCustomerInfo {
+	width: 280px;
+}
+
+
+.customerInfo {
+	margin-bottom: 5px;
+	padding: 0 2px;
+	border-bottom: 1px solid #CCCCCC;
+}
+
+#startTime {
+	display: inline;
+}
+
+#endTime {
+	display: inline;
+}
+
+
+
+.yoyakuDayControlArea {
+	margin: 10px 0;
+	background: #D8E5F2;
+	border: 1px solid #9FAFB8;
+	text-align: center;
+	
+	background: -moz-linear-gradient(top, #FFFFFF, #EEEEEE);
+	background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#EEEEEE));
+}
+
+.hyoujiDate {
+	margin: 0 20px;
+	font-size: 25px;
+	font-weight: bold;
+	text-align: center;
+	vertical-align: middle;
+	color: #336699;
+}
+
+.hyoujiDate small {
+	color: #333333;
+}
+
+.tsukiNaviBtn {
+	padding: 5px;
+	background: #CCFFDD;
+	border: 1px solid #AAAAAA;
+	vertical-align: middle;
+	
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	
+	background: -moz-linear-gradient(top, #FFFFFF, #AAAAAA);
+	background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#AAAAAA));
+}
+
+a.tsukiNaviBtn:link,
+a.tsukiNaviBtn:visited {
+	color: #333333;
+	text-decoration: none;
+}
+
+div.btnBox {
+	margin: 10px 0 5px;
+}
+
+
+
+
+.yoyakuShopTable thead  th {
+	background: #8EBBD3 url("../img/time_bg.jpg") repeat-x;
+	border: 1px solid #999999;
+}
+
+
+.yoyakuShopTable tbody th {
+	background: #EDF6FB;
+	border: 1px solid #999999;
+}
+
+.yoyakuShopTable tbody th.bg {
+	background: #DDEAF1;
+}
+
+.yoyakuShopTable td {
+	background: #EDF6FB;
+	border: 1px solid #999999;
+}
+
+.yoyakuShopTable td.bg {
+	background: #DDEAF1;
+}
+
+.yoyakuShopTable td a:link,
+.yoyakuShopTable td a:visited {
+	display: block;
+	width: 100%;
+	height: 100%;
+	text-decoration: none;
+}
+
+
+
+.timeZone {
+	position: absolute;
+	border-left: 3px dotted #EE0000;
+}
+

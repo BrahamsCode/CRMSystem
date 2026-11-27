@@ -1,0 +1,40 @@
+/* ==============================================================================
+
+CSS Information
+
+ File name:	report.css
+
+ Style Info:	
+
+============================================================================== */
+
+.reportBox {
+	overflow: hidden;
+	margin: 0 auto;
+}
+
+.reportBox div {
+	float: left;
+}
+
+.reportBox div.kigou {
+	width: 5%;
+}
+
+.reportBox div.kigou p {
+	text-align: center;
+	/*font-size: 150%;*/
+	font-size: 44px;
+	line-height: 1;
+}
+
+
+
+
+
+
+
+
+
+
+
