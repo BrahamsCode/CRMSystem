@@ -26,6 +26,8 @@ Route::match(['get', 'post'], 'system/category1/inc/customer_detail.php', [\App\
 Route::match(['get', 'post'], 'system/category1/inc/ajax_connectPosData.php', [\App\Http\Controllers\Admin\Customers\CustomerController::class, 'posPurchaseHistory'])->name('clientes.pos-history');
 Route::match(['get', 'post'], 'system/category1/inc/ajax_connectPosKoubaiData.php', [\App\Http\Controllers\Admin\Customers\CustomerController::class, 'posPurchaseDetail'])->name('clientes.pos-detail');
 Route::match(['get', 'post'], 'system/category1/inc/ajax_sendPosKoubaiMemoData.php', [\App\Http\Controllers\Admin\Customers\CustomerController::class, 'posPurchaseMemo'])->name('clientes.pos-memo');
+// 有料会員 (pestaña 14): aviso de baja a MobileShop (cliente de S5)
+Route::post('system/category1/inc/ajax_changePaidMemberFlg.php', \App\Http\Controllers\Admin\Customers\PaidMemberController::class)->name('clientes.paid-member');
 // --- fin C1-b ---
 
 // --- C1-c ---
@@ -35,3 +37,21 @@ Route::match(['get', 'post'], 'system/category1/inc/customer_new.php', [\App\Htt
 // 紹介者の会員検索 (inc/js/search_kaiin.js)
 Route::match(['get', 'post'], 'system/category1/inc/ajax_search_kaiin.php', [\App\Http\Controllers\Admin\Customers\CustomerController::class, 'searchMember'])->name('clientes.search-kaiin');
 // --- fin C1-c ---
+
+// --- C2-a ---
+// Menú lateral: 登録・検索項目設定 y 顧客追加情報設定 (y los enlaces guardados a la lista de campos ?pcd=)
+Route::get('system/category1/customer/form_config.php', [\App\Http\Controllers\Admin\Customers\FieldSettingController::class, 'index'])->name('clientes.form-config');
+Route::get('system/category1/customer/search_cate_list.php', [\App\Http\Controllers\Admin\Customers\CustomCategoryController::class, 'index'])->name('clientes.search-cate-list');
+Route::get('system/category1/customer/search_form_list.php', [\App\Http\Controllers\Admin\Customers\CustomFieldController::class, 'legacyList'])->name('clientes.search-form-list');
+// --- fin C2-a ---
+
+// --- C2-b ---
+// Menú lateral (config/menu/clientes.php) y enlaces ?cd= del legacy
+Route::get('system/category1/customer/customer_group_category_new.php', [\App\Http\Controllers\Admin\Customers\CustomerGroupController::class, 'index'])->name('clientes.groups');
+Route::get('system/category1/customer/raiten_douki.php', [\App\Http\Controllers\Admin\Customers\VisitMotiveController::class, 'index'])->name('clientes.visit-motives');
+Route::get('system/category1/customer/customer_level_category_new.php', [\App\Http\Controllers\Admin\Customers\CustomerLevelController::class, 'index'])->name('clientes.levels');
+Route::get('system/category1/rank/customer_rank_list.php', [\App\Http\Controllers\Admin\Customers\RankController::class, 'index'])->name('clientes.ranks');
+Route::get('system/category1/rank/customer_rank_schedule.php', [\App\Http\Controllers\Admin\Customers\RankScheduleController::class, 'edit'])->name('clientes.rank-schedules');
+// JS de customer_rank_list.php: orden (type=rank) y casilla 表示 (type=hyouji)
+Route::post('system/category1/rank/ajax_customer_rank_list.php', [\App\Http\Controllers\Admin\Customers\RankController::class, 'legacyAjax'])->name('clientes.ranks-ajax');
+// --- fin C2-b ---

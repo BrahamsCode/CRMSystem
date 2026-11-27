@@ -1,4 +1,5 @@
-{{-- Legacy: system/inc/function.php → createform_request() (modo 'input') y createform_confirm() (modo 'confirm').
+{{-- titles/data de tb_search_form se guardan con get_form2 (entidades): se imprimen con {!! !!} (CONVENCIONES §4).
+     Legacy: system/inc/function.php → createform_request() (modo 'input') y createform_confirm() (modo 'confirm').
      Pinta UN campo personalizado (tb_search_form) según su form_type, como el legacy.
      Variables:
        $field      fila de tb_search_form (array o modelo): cd, form_type, style_class, flds_row, flds_col, titles, data, unit
@@ -35,16 +36,16 @@
 <textarea name="{{ $f }}" id="{{ $f }}" class="{{ $cls }}" rows="5" >{{ $val($f) }}</textarea>
 @break
 @case('チェックボックス')
-@for ($i = 0; $i < $rows; $i++)<label for="{{ $f }}_{{ $i }}" class="labelList"><input type="checkbox" name="{{ $f }}_{{ $i }}" id="{{ $f }}_{{ $i }}"  class="{{ $cls }}" value="{{ $data[$i] ?? '' }}"@if (($data[$i] ?? null) == $val($f.'_'.$i) && ($titles[$i] ?? '')) checked=checked @endif />{{ $titles[$i] ?? '' }}</label>@endfor
+@for ($i = 0; $i < $rows; $i++)<label for="{{ $f }}_{{ $i }}" class="labelList"><input type="checkbox" name="{{ $f }}_{{ $i }}" id="{{ $f }}_{{ $i }}"  class="{{ $cls }}" value="{!! $data[$i] ?? '' !!}"@if (($data[$i] ?? null) == $val($f.'_'.$i) && ($titles[$i] ?? '')) checked=checked @endif />{!! $titles[$i] ?? '' !!}</label>@endfor
 @break
 @case('ラジオボタン')
-@for ($i = 0; $i < $rows; $i++)<input type="radio" name="{{ $f }}" id="{{ $f }}{{ $i }}" class="{{ $cls }}" value="{{ $data[$i] ?? '' }}"@if (($data[$i] ?? null) == $val($f) && ($titles[$i] ?? '')) checked=checked @endif /><label for="{{ $f }}{{ $i }}">{{ $titles[$i] ?? '' }}</label><br />@endfor
+@for ($i = 0; $i < $rows; $i++)<input type="radio" name="{{ $f }}" id="{{ $f }}{{ $i }}" class="{{ $cls }}" value="{!! $data[$i] ?? '' !!}"@if (($data[$i] ?? null) == $val($f) && ($titles[$i] ?? '')) checked=checked @endif /><label for="{{ $f }}{{ $i }}">{!! $titles[$i] ?? '' !!}</label><br />@endfor
 @break
 @case('セレクト')
 <select name="{{ $f }}" id="{{ $f }}" class="{{ $cls }}">
 <option value="">選択して下さい</option>
 @for ($i = 0; $i < $rows; $i++)
-<option value="{{ $data[$i] ?? '' }}"@if (($data[$i] ?? null) == $val($f)) selected=selected @endif>{{ $titles[$i] ?? '' }}</option>
+<option value="{!! $data[$i] ?? '' !!}"@if (($data[$i] ?? null) == $val($f)) selected=selected @endif>{!! $titles[$i] ?? '' !!}</option>
 @endfor
 </select>
 @break
@@ -68,14 +69,14 @@
 @case('テーブル')
 {{-- Como el legacy: las filas de datos no abren <tr>, solo lo cierran --}}
 <table class="{{ $cls }}">
-<tr>@for ($i = 0; $i < $rows; $i++)<th>{{ $isSelectTitle($titles[$i] ?? '') ? $selectHeader($titles[$i]) : ($titles[$i] ?? '') }}</th>@endfor
+<tr>@for ($i = 0; $i < $rows; $i++)<th>{!! $isSelectTitle($titles[$i] ?? '') ? $selectHeader($titles[$i]) : ($titles[$i] ?? '') !!}</th>@endfor
 </tr>@for ($col = 0; $col < (int) ($field['flds_col'] ?? 0); $col++)@for ($i = 0; $i < $rows; $i++)@php $cell = $f.'_'.$col.'_'.$i; @endphp
 @if ($isSelectTitle($titles[$i] ?? ''))<td><select name="{{ $cell }}" id="{{ $cell }}">
 <option value=""></option>
 @foreach ($selectOptions($titles[$i]) as $opt)
-<option value="{{ $opt }}"@if ($val($cell) == $opt) selected="selected"@endif>{{ $opt }}</option>
+<option value="{!! $opt !!}"@if ($val($cell) == $opt) selected="selected"@endif>{!! $opt !!}</option>
 @endforeach
-</select></td>@else<td><input name="{{ $cell }}" id="{{ $cell }}" class="{{ $data[$i] ?? '' }}" value="{{ $val($cell) }}" />{{ $units[$i] ?? '' }}</td>@endif
+</select></td>@else<td><input name="{{ $cell }}" id="{{ $cell }}" class="{!! $data[$i] ?? '' !!}" value="{{ $val($cell) }}" />{{ $units[$i] ?? '' }}</td>@endif
 @endfor
 </tr>@endfor</table>
 @break
@@ -121,7 +122,7 @@
 @break
 @case('テーブル')
 <table class="{{ $cls }}">
-<tr>@for ($i = 0; $i < $rows; $i++)<th>{{ $isSelectTitle($titles[$i] ?? '') ? $selectHeader($titles[$i]) : ($titles[$i] ?? '') }}</th>@endfor
+<tr>@for ($i = 0; $i < $rows; $i++)<th>{!! $isSelectTitle($titles[$i] ?? '') ? $selectHeader($titles[$i]) : ($titles[$i] ?? '') !!}</th>@endfor
 </tr>@for ($col = 0; $col < (int) ($field['flds_col'] ?? 0); $col++)@for ($i = 0; $i < $rows; $i++)@php $cell = $f.'_'.$col.'_'.$i; @endphp<td>{{ $val($cell) }}{{ $val($cell) == '' ? '' : ($units[$i] ?? '') }}</td>@endfor
 </tr>@endfor</table>
 @break

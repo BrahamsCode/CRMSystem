@@ -36,3 +36,20 @@ El JWT de `api_auth_ok` (claims `iat`/`exp`), y `touroku_date` / `update_date` d
 - **`mpa_*`**: `mpa_corresponding` sale como `text/html` (sin `header()`), `mpa_getTopBanner`/`mpa_getCoverFlow` como `application/json; charset=utf-8` (minúsculas). Sin imágenes configuradas, las claves de imágenes (`application_main_image`…, `data`) no aparecen.
 - **`mpa_setraiten` con un socio válido**: el legacy registra la visita y luego da un **fatal (500)** en la línea 43 (`Cannot access offset of type string on string`); la segunda llamada responde el error de intervalo. Con `membership=1` (beacon) responde `{"status":"ok","customer_info":{…}}`.
 - **`mpa_albumUpdate` sin imagen**: 302 a `…myAlbumPage?domain=…&cd=…&status=err2&comment=` (`err2`, no `err1`).
+
+## tool/api y CTI (`tool/`, grabado el 2026-11-27)
+
+47 casos de `system/tool/api/**` (clave `key`) y de la ventana CTI (`system/desktop_request/*`): `tool/manifest.json` + `tool/*.body`, casos en `tools/cases-tool.json`, prueba `tests/Feature/Integraciones/ToolApiContractTest.php`.
+
+- BD **solo con datos sintéticos**: esquema + `legacy-base.sql` + `legacy-seed.sql` + `tool-seed.sql` (sin `bd-legacy.sh`: `getStaffList` devuelve `tb_staff.*`, contraseñas incluidas). `.env` del legacy con `CRM_API_KEY=fixture-key`.
+- Grabar: los mismos contenedores, recrear la BD con esos cuatro archivos y `php tools/capture.php http://s5-legacy-web <salida> tools/cases-tool.json`. `tool_add_raiten` va al final (escribe una visita).
+
+Lo que mostraron:
+- Sin `key` o con otra: 200 sin cuerpo. Todo sale como `text/html; charset=UTF-8` (sin `header()`), con el "JSON" armado como texto: valores sin escapar (un `"` o un salto de línea en los datos lo rompen), `{ "status":"…", "max":"…", "result":[ … ] }`.
+- JSONP: `h(callback)` con `double_encode = false` (`cb<x>&amp;` → `cb&lt;x&gt;&amp;`).
+- `getCustomerDetail`: `sub_info` solo trae **el último** dato personalizado (el array se reiniciaba en cada vuelta); un `cd` no numérico rompe la consulta → `NO_DATA`.
+- `getRaitenList` con fecha no válida (`strtotime` false) → `NO_DATA`. `getStaffList` incluye `disp_flg` NULL y `limit` > 100 se recorta a 100.
+- `getSearchCateFormData` / `getRaitenDetail` dependen de `admin_master.related_features` (`<?><1 ポイント|2 スタンプ><tb_search_cate.cd>`); los campos van con `rawurlencode`. El `htmlData` (createform_request) en Laravel lo genera el parcial `custom_field` de S2: la prueba lo compara sin los espacios entre etiquetas.
+- CTI: `ctiWindow` responde 302 a las URL del legacy (`customer_new.php`, `time_table.php` de la categoría 9/11 activa o `select.php`, `customer_list.php`); errores de formato como texto plano. `customerDetailHtml` con CRLF del archivo original y `nl2br(htmlentities())` del 備考.
+
+**mpa_* en Laravel (2026-11-27):** `MobileShopContractTest` repite también los `mpa_*` (con la hora congelada para que `mpa_setraiten_interval` caiga en el intervalo como al grabar); `mpa_setraiten_ok` se comprueba aparte porque Laravel responde `ok` en lugar del fatal 500.

@@ -1,6 +1,6 @@
 <?php
 // Graba respuestas del legacy (php -S en el contenedor s5-legacy-fixtures) para las pruebas de contrato.
-// Uso: php capture.php <base_url> <out_dir>
+// Uso: php capture.php <base_url> <out_dir> [<archivo de casos>]
 $base = $argv[1] ?? 'http://127.0.0.1:8000';
 $out = $argv[2] ?? '/work/fixtures';
 @mkdir($out, 0777, true);
@@ -51,7 +51,8 @@ function call(string $base, array $case, ?string $jwt): array
     ];
 }
 
-$cases = json_decode(file_get_contents(__DIR__.'/cases.json'), true);
+// Tercer argumento opcional: otro archivo de casos (p. ej. tools/cases-tool.json)
+$cases = json_decode(file_get_contents($argv[3] ?? __DIR__.'/cases.json'), true);
 $manifest = [];
 $jwt = null;
 foreach ($cases as $case) {

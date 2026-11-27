@@ -1,4 +1,5 @@
-{{-- Legacy: system/inc/function.php createform_search_form() (+ makeMenuTable() para 'メニュー項目').
+{{-- titles/data de tb_search_form se guardan con get_form2 (entidades): se imprimen con {!! !!} (CONVENCIONES §4).
+     Legacy: system/inc/function.php createform_search_form() (+ makeMenuTable() para 'メニュー項目').
      Campo del buscador para un項目 adicional (tb_search_form).
      Variables:
        $form         fila tb_search_form: 'cd', 'form_type', 'flds_row', 'titles' y 'data' (separados por '<>'), 'unit'
@@ -44,7 +45,7 @@
     $hasCheckBoxes = collect($titles)->take((int) $form['flds_row'])->contains(fn ($title) => $title != '');
 @endphp
 @if ($hasCheckBoxes)
-<div style="border:1px dashed #555555;max-height: 150px; overflow-y: auto;">@for ($i = 0; $i < (int) $form['flds_row']; $i++)@if (($titles[$i] ?? '') != '')<label for="{{ $name }}_{{ $i }}" class="labelList"><input type="checkbox" id="{{ $name }}_{{ $i }}" name="{{ $name }}_{{ $i }}" value="{{ $data[$i] ?? '' }}"@if (($data[$i] ?? null) == $v($name . '_' . $i)) checked=checked @endif /> {{ $titles[$i] }}</label>@endif @endfor</div><p>検索方法：<input type="radio" name="{{ $name }}_andor_flg" value="and"@if ($v($name . '_andor_flg') != 'or') checked @endif />&nbsp;AND&emsp;<input type="radio" name="{{ $name }}_andor_flg" value="or"@if ($v($name . '_andor_flg') == 'or') checked @endif />&nbsp;OR<br/></p>
+<div style="border:1px dashed #555555;max-height: 150px; overflow-y: auto;">@for ($i = 0; $i < (int) $form['flds_row']; $i++)@if (($titles[$i] ?? '') != '')<label for="{{ $name }}_{{ $i }}" class="labelList"><input type="checkbox" id="{{ $name }}_{{ $i }}" name="{{ $name }}_{{ $i }}" value="{!! $data[$i] ?? '' !!}"@if (($data[$i] ?? null) == $v($name . '_' . $i)) checked=checked @endif /> {!! $titles[$i] !!}</label>@endif @endfor</div><p>検索方法：<input type="radio" name="{{ $name }}_andor_flg" value="and"@if ($v($name . '_andor_flg') != 'or') checked @endif />&nbsp;AND&emsp;<input type="radio" name="{{ $name }}_andor_flg" value="or"@if ($v($name . '_andor_flg') == 'or') checked @endif />&nbsp;OR<br/></p>
 @endif
 		@break
 
@@ -54,7 +55,7 @@
 <select name="{{ $name }}">
 <option value="">選択して下さい</option>
 @for ($i = 0; $i < (int) $form['flds_row']; $i++)
-<option value="{{ $data[$i] ?? '' }}"@if (($data[$i] ?? null) == $v($name)) selected=selected @endif>{{ $titles[$i] ?? '' }}</option>
+<option value="{!! $data[$i] ?? '' !!}"@if (($data[$i] ?? null) == $v($name)) selected=selected @endif>{!! $titles[$i] ?? '' !!}</option>
 @endfor
 </select>
 		@break

@@ -1,0 +1,1 @@
+{{-- Texto plano de los correos de reservas (cuerpo ya compuesto por ReservationMailer) --}}{!! $body !!}

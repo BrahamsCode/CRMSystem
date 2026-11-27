@@ -4,3 +4,4 @@ keys/** -text
 # Datos con \r\n dentro de los valores (sales_items): deben llegar intactos a la BD de pruebas
 legacy-base.sql -text
 legacy-seed.sql -text
+tool/** -text

@@ -17,14 +17,11 @@ use Illuminate\Support\Str;
  */
 class CustomerListService
 {
-    /** Clave de sesión de la búsqueda guardada: customer_search.<uniqid> */
-    public const SESSION = 'customer_search.';
-
     /**
-     * Clave que lee 新規メール配信 de S3 (MailAudience) para 「この条件で配信する」: en el legacy ambas
-     * pantallas compartían `$_SESSION['wherestr_<uniqid>']`, así que se guarda también ahí.
+     * Clave de sesión de la búsqueda guardada: customer_search.<uniqid> (equivale a `wherestr_<uniqid>`).
+     * Es la única: la lee también 「この条件で配信する」 de S3 (acuerdo con S0).
      */
-    public const MAIL_AUDIENCE_SESSION = 'promocion.audience.';
+    public const SESSION = 'customer_search.';
 
     public function __construct(private readonly CustomerSearch $search) {}
 
@@ -47,7 +44,6 @@ class CustomerListService
         $uniqid = Str::random(16);
         session([
             self::SESSION.$uniqid => $description,
-            self::MAIL_AUDIENCE_SESSION.$uniqid => $description,
         ]);
 
         return $uniqid;
@@ -66,7 +62,7 @@ class CustomerListService
     public function forget(?string $uniqid): void
     {
         if ($uniqid) {
-            session()->forget([self::SESSION.$uniqid, self::MAIL_AUDIENCE_SESSION.$uniqid]);
+            session()->forget(self::SESSION.$uniqid);
         }
     }
 

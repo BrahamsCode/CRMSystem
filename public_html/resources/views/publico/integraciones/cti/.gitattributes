@@ -1,0 +1,2 @@
+# Plantillas PHP planas con los CRLF del legacy: sin normalizar (salida byte a byte)
+*.php -text

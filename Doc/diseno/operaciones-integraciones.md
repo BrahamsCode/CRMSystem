@@ -119,11 +119,11 @@ Todas con HTTP 200 también en error y leyendo el **cuerpo JSON incluso en GET**
 
 | Archivo legacy | URL | Ruta Laravel | Controlador@método | Tablas legacy | Estado |
 |---|---|---|---|---|---|
-| `mpa_corresponding.php` | `/api/mpa_corresponding.php` | `publico.integraciones.mpa.corresponding` | `MpaController@corresponding` | L `admin_master`, `tb_customer`, `contents_master` (`mypage_config`) + archivos `hp/uploads/c6/` | pendiente |
-| `mpa_getTopBanner.php` | `/api/mpa_getTopBanner.php` | `publico.integraciones.mpa.top-banner` | `MpaController@topBanner` | L `tb_customer`, `contents_master` + `hp/uploads/c6/aplibanner/` | pendiente (enlace con `md5(login_pass)` igual que hoy; anotado para Japón) |
-| `mpa_getCoverFlow.php` | `/api/mpa_getCoverFlow.php` | `publico.integraciones.mpa.cover-flow` | `MpaController@coverFlow` | L `tb_customer`, `contents_master` (`aplicover`) + `hp/uploads/c6/aplicover/` | pendiente |
-| `mpa_albumUpdate.php` | `POST /api/mpa_albumUpdate.php` | `publico.integraciones.mpa.album-update` | `MpaController@albumUpdate` | E `tb_photo_album`, `hatuban` + `hp/uploads/c1/photoalbum/<cd>/` | pendiente (Intervention Image o Imagick en lugar de `system('convert')`) |
-| `mpa_setraiten.php` | `/api/mpa_setraiten.php` | `publico.integraciones.mpa.set-raiten` | `MpaController@setRaiten` | E `tb_raiten_rireki` y lo que haga `raitenFunc` (sellos, puntos) o `tb_beacon_history` | pendiente |
+| `mpa_corresponding.php` | `/api/mpa_corresponding.php` | `publico.integraciones.mpa.corresponding` | `MpaController@corresponding` | L `admin_master`, `tb_customer`, `contents_master` (`mypage_config`) + archivos `hp/uploads/c6/` | hecho (contrato + pruebas con imágenes) |
+| `mpa_getTopBanner.php` | `/api/mpa_getTopBanner.php` | `publico.integraciones.mpa.top-banner` | `MpaController@topBanner` | L `tb_customer`, `contents_master` + `hp/uploads/c6/aplibanner/` | hecho (contrato + pruebas con imágenes; enlace con `md5(login_pass)` igual que hoy, anotado para Japón) |
+| `mpa_getCoverFlow.php` | `/api/mpa_getCoverFlow.php` | `publico.integraciones.mpa.cover-flow` | `MpaController@coverFlow` | L `tb_customer`, `contents_master` (`aplicover`) + `hp/uploads/c6/aplicover/` | hecho (contrato + pruebas con imágenes) |
+| `mpa_albumUpdate.php` | `POST /api/mpa_albumUpdate.php` | `publico.integraciones.mpa.album-update` | `MpaController@albumUpdate` | E `tb_photo_album`, `hatuban` + `hp/uploads/c1/photoalbum/<cd>/` | hecho (Imagick en lugar de `convert`; pruebas propias) |
+| `mpa_setraiten.php` | `/api/mpa_setraiten.php` | `publico.integraciones.mpa.set-raiten` | `MpaController@setRaiten` | E `tb_raiten_rireki` y lo que haga `raitenFunc` (sellos, puntos) o `tb_beacon_history` | hecho (contrato; con éxito responde ok en vez del fatal 500 del legacy) |
 | `mpa_customerSync.php` | `/api/mpa_customerSync.php` | — | — | — | diferido: POS fuera de alcance (`PosGateway::syncCustomers()`); al retomarlo, comando Artisan, no ruta pública |
 | `mpa_registCustomer.php` | — | — | — | — | descartado: archivo vacío |
 
@@ -168,19 +168,19 @@ Rutas `appview/<archivo>.php` idénticas, con sesión (como el legacy). Controla
 
 | Archivo legacy | URL | Ruta Laravel | Controlador@método | Tablas legacy | Estado |
 |---|---|---|---|---|---|
-| `tool/api/checkKey.php` | (fragmento) | middleware `CheckCrmApiKey` | — | — | pendiente |
+| `tool/api/checkKey.php` | (fragmento) | middleware `Integraciones\CheckCrmApiKey` | — | — | hecho |
 | `tool/api/category0/setPosdomain.php` | `/system/tool/api/category0/setPosdomain.php` | — | — | — | diferido: POS fuera de alcance (escribe `tb_shop.pos_domain`; `PosGateway::setShopDomain()`) |
-| `tool/api/category1/searchCustomerList.php` | `/system/tool/api/category1/searchCustomerList.php` | `publico.integraciones.tool.search-customer-list` | `ToolApi\CustomerController@search` | L `tb_customer(_sub)` | pendiente |
-| `tool/api/category1/getCustomerDetail.php` | `…/getCustomerDetail.php` | `publico.integraciones.tool.customer-detail` | `ToolApi\CustomerController@show` | L `tb_customer(_sub)` | pendiente |
-| `tool/api/category1/getSearchCateFormData.php` | `…/getSearchCateFormData.php` | `publico.integraciones.tool.search-form` | `ToolApi\CustomerController@searchForm` | L `tb_search_cate`, `tb_search_form` | pendiente |
-| `tool/api/category1/getRaitenList.php` | `…/getRaitenList.php` | `publico.integraciones.tool.raiten-list` | `ToolApi\RaitenController@index` | L `tb_raiten_rireki` | pendiente |
-| `tool/api/category1/getRaitenDetail.php` | `…/getRaitenDetail.php` | `publico.integraciones.tool.raiten-detail` | `ToolApi\RaitenController@show` | L `tb_raiten_rireki`, `tb_staff`, `tb_shop` | pendiente |
-| `tool/api/category1/addRaitenRecord.php` | `…/addRaitenRecord.php` | `publico.integraciones.tool.raiten-add` | `ToolApi\RaitenController@store` | E `tb_raiten_rireki`, `tb_stamp_log`, `hatuban` | pendiente |
-| `tool/api/category1/setRaitenDetail.php` | `…/setRaitenDetail.php` | `publico.integraciones.tool.raiten-set` | `ToolApi\RaitenController@update` | E `tb_raiten_rireki`, `tb_point_log`, `tb_customer_point`, `hatuban`; L `admin_master` | pendiente (708 líneas: puntos y sellos con los servicios de S2/S3) |
-| `tool/api/category5/getStaffList.php` | `…/category5/getStaffList.php` | `publico.integraciones.tool.staff-list` | `ToolApi\StaffController@index` | L `tb_staff` | pendiente |
-| `desktop_request/ctiWindow.php` | `/system/desktop_request/ctiWindow.php?tel=` | `publico.integraciones.cti.window` | `CtiController@window` | L `tb_base_system` | pendiente (redirige a las rutas nuevas de S2; el destino exige sesión) |
-| `desktop_request/customerDetailHtml.php` | `/system/desktop_request/customerDetailHtml.php` | `publico.integraciones.cti.customer-html` | `CtiController@customerHtml` | L `tb_customer`, `tb_raiten_rireki`, `tb_shop`, `tb_staff` | pendiente |
-| `desktop_request/jGetCustomerData.php` | `/system/desktop_request/jGetCustomerData.php` | `publico.integraciones.cti.customer-json` | `CtiController@customerJson` | L `tb_customer` | pendiente |
+| `tool/api/category1/searchCustomerList.php` | `/system/tool/api/category1/searchCustomerList.php` | `publico.integraciones.tool.search-customer-list` | `ToolApi\CustomerController@search` | L `tb_customer(_sub)` | hecho (contrato byte a byte) |
+| `tool/api/category1/getCustomerDetail.php` | `…/getCustomerDetail.php` | `publico.integraciones.tool.customer-detail` | `ToolApi\CustomerController@show` | L `tb_customer(_sub)` | hecho (contrato byte a byte) |
+| `tool/api/category1/getSearchCateFormData.php` | `…/getSearchCateFormData.php` | `publico.integraciones.tool.search-form` | `ToolApi\CustomerController@searchForm` | L `tb_search_cate`, `tb_search_form` | hecho (contrato byte a byte) |
+| `tool/api/category1/getRaitenList.php` | `…/getRaitenList.php` | `publico.integraciones.tool.raiten-list` | `ToolApi\RaitenController@index` | L `tb_raiten_rireki` | hecho (contrato byte a byte) |
+| `tool/api/category1/getRaitenDetail.php` | `…/getRaitenDetail.php` | `publico.integraciones.tool.raiten-detail` | `ToolApi\RaitenController@show` | L `tb_raiten_rireki`, `tb_staff`, `tb_shop` | hecho (contrato byte a byte) |
+| `tool/api/category1/addRaitenRecord.php` | `…/addRaitenRecord.php` | `publico.integraciones.tool.raiten-add` | `ToolApi\RaitenController@store` | E `tb_raiten_rireki`, `tb_stamp_log`, `hatuban` | hecho (contrato byte a byte) |
+| `tool/api/category1/setRaitenDetail.php` | `…/setRaitenDetail.php` | `publico.integraciones.tool.raiten-set` | `ToolApi\RaitenController@update` | E `tb_raiten_rireki`, `tb_point_log`, `tb_customer_point`, `hatuban`; L `admin_master` | pendiente: espera el servicio de S2 de `kanren_record_register` (来店履歴の追加・修正) |
+| `tool/api/category5/getStaffList.php` | `…/category5/getStaffList.php` | `publico.integraciones.tool.staff-list` | `ToolApi\StaffController@index` | L `tb_staff` | hecho (contrato byte a byte) |
+| `desktop_request/ctiWindow.php` | `/system/desktop_request/ctiWindow.php?tel=` | `publico.integraciones.cti.window` | `CtiController@window` | L `tb_base_system` | hecho (302 a las mismas URL del legacy, contrato byte a byte) |
+| `desktop_request/customerDetailHtml.php` | `/system/desktop_request/customerDetailHtml.php` | `publico.integraciones.cti.customer-html` | `CtiController@customerHtml` | L `tb_customer`, `tb_raiten_rireki`, `tb_shop`, `tb_staff` | hecho (contrato byte a byte) |
+| `desktop_request/jGetCustomerData.php` | `/system/desktop_request/jGetCustomerData.php` | `publico.integraciones.cti.customer-json` | `CtiController@customerJson` | L `tb_customer` | hecho (contrato byte a byte) |
 
 ### 1.10 Utilitarios (`version/`, `air/`, `ptag/`, `exp_cmd/`, `cron/`, `instagram/`, `ipad/`)
 
