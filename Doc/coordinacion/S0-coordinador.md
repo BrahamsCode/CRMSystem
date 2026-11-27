@@ -111,6 +111,10 @@
   - S5: 営業日, シフト区分, シフト日別/月別 y `setRaitenDetail`.
   `laravel13` con 587 pruebas en verde y 1 «todo» (el contrato de `setRaitenDetail`, que espera C3 de S2).
 - Siguiente de S1 (paso 7 del plan, delegado por S0): revisión visual de punta a punta con Playwright, comparando la web local con la muestra de desarrollo (solo lectura), módulo por módulo.
+- 2026-11-27 (02:00):
+  - Integrados `signage/` de S4 (CMS, reproductor `view/` y esquema mínimo, a la espera del volcado), appview lote A de S5 (20 contratos) y utilidades (shukei ⏸: escribe en la BD externa de VIZAN). `laravel13` con 651 pruebas en verde.
+  - `phpunit.xml` con `memory_limit` de 512M: la suite moría por memoria con 128M.
+  - Reparto: el módulo `ventas` (販売管理 + `karute_menu`, V1–V3, ≈10 pts) pasa de S2 a S4, que se quedó libre (solo le quedan ビーコン y GoTel/PDF, que esperan a Antony). S2 sigue con lo más largo: C3–C7 y R4–R6.
 - 2026-11-27: siguiente tarea de S1 (Antony: el login primero): modelo base y traits comunes, luego el login contra el personal del legacy, el layout idéntico y los estáticos comunes.
 
 ## Hecho
