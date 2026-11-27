@@ -3,17 +3,14 @@
 use App\Models\Terminales\SignageDisplay;
 use App\Models\Terminales\SignageMaterial;
 use App\Models\Terminales\SignageProgram;
-use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\Facades\Storage;
 
-require_once __DIR__.'/fixtures/S4TestHelpers.php';
+require_once __DIR__.'/helpers.php';
 
 /* ディスプレイ (display_*.php): pantallas, alta/edición, borrado lógico y ▲▼ */
 
 beforeEach(function () {
-    s4UseTestLayout();
-    $this->withoutMiddleware(Authenticate::class);
-    $this->withSession(['shop_cd' => 1]);
+    s4Login(); // login real de S1: master de la tienda 1
     Storage::fake('public');
 
     SignageMaterial::create([

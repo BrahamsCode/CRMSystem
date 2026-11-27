@@ -41,7 +41,9 @@ Ver diseño §5. A S0: BD `admin` de `signage/` (no está en el esquema); GoTel/
 
 ## Decisiones
 
-- マイコレ: main/thumbnail por `shop_cd` (lo que lee `mpa_corresponding`); cover se compacta moviendo imagen+enlace+banderas juntos; temporales en `hp/uploads/c6/apli_temp/`. 電子看板: 最後に追加 = max(rank)+1 y renumera; ▲▼ sin tocar `update_date`; los materiales guardan `tb_display_cd`; el borrado de un display no arrastra sus materiales (a decidir). `$siteName` provisional en `TerminalesServiceProvider` (tb_office cd=1).
+- Texto de formularios: 電子看板, 求人 y 職種 usan `get_form()` → `LegacyText::form()`; オススメ y マイコレ `get_form2()` → `LegacyText::input()`; ガチャリン `form2Db`. Pendiente de que S1 integre `LegacyText`/`LegacyCheck`. `SignageFeedBuilder` sigue escapando para XML: los textos de get_form() no llegan escapados a la BD.
+
+- マイコレ: main/thumbnail por `shop_cd` (lo que lee `mpa_corresponding`); cover se compacta moviendo imagen+enlace+banderas juntos; temporales en `hp/uploads/c6/apli_temp/`. 電子看板: 最後に追加 = max(rank)+1 y renumera; ▲▼ sin tocar `update_date`; los materiales guardan `tb_display_cd`; el borrado de un display no arrastra sus materiales: comportamiento del legacy que los deja huérfanos, se mantiene por paridad (S0) y queda para revisar en Japón.
 
 - Vistas: `content` = interior de `<div class="main">`. 電子看板 sin pantallas de confirmación (el legacy no las tiene: `processing` con meta Refresh); 放映素材 usa `layouts.legacy-popup`. マイコレ renderiza solo la sección visible. Bugs corregidos/conservados: ver resúmenes en el commit de vistas.
 

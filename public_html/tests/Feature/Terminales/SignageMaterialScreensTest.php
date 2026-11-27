@@ -2,19 +2,15 @@
 
 use App\Models\Terminales\SignageDisplay;
 use App\Models\Terminales\SignageMaterial;
-use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
-require_once __DIR__.'/fixtures/S4TestHelpers.php';
+require_once __DIR__.'/helpers.php';
 
 /* 放映素材 (screen_saver_*.php): pantallas, alta/edición con subida, borrado lógico y ▲▼ */
 
 beforeEach(function () {
-    s4UseTestLayout();
-    // Solo se salta auth:admin (aún no hay login); sesión, errores y CSRF de prueba siguen activos
-    $this->withoutMiddleware(Authenticate::class);
-    $this->withSession(['shop_cd' => 1]);
+    s4Login(); // login real de S1: master de la tienda 1
     Storage::fake('public');
 });
 
