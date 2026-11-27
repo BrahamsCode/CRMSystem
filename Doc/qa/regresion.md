@@ -37,8 +37,25 @@ El núcleo no tiene pantallas con CSV ni PDF (los helpers `LegacyCsv` y `LegacyP
 
 **Resumen S1:** 13 grupos de pantallas del núcleo probados en el navegador como master y como usuario limitado, con alta, edición, borrado, búsqueda y paginación donde existen. 4 fallos encontrados y corregidos, cada uno con su prueba: ショートカット a URL legacy (4cd2fa7), お問合せ sin migrar (4edb8f8), favicon (4edb8f8) y llamadas a g-api de producción (dc7f712). Pendientes:
 - Que S3, S4 y S5 apliquen `GApi` a sus llamadas: GApiPushTrigger, QrBaseInfo, RecommendationPush, `Appview\GApi` y PhotoAlbumUploader.
-- Volver a pasar el recorrido en `:8081` cuando S0 recargue `crmsystem2` con los datos de la fase A. Hasta entonces, la tienda de baja, el nombre largo y `taishoku01` solo se vieron en `:18081`.
+- ~~Volver a pasar el recorrido en `:8081` con los datos de la fase A~~: hecho, ver la segunda pasada abajo.
 - Observación sin corregir, porque el legacy hace lo mismo: el `<select>` de tiendas de お問い合わせ se ensancha con el nombre de 255 caracteres. Queda para el rediseño final.
+
+**Segunda pasada S1** (`:8081` en 738907f, `crmsystem2` recargada con las fases A de los 5 módulos): sin fallos nuevos.
+- Recorrido de todas las URL de category0: 200 como master, con 403 en las 4 de IP de desarrollo; 403 en todas como `qa_partial`.
+- Datos de la fase A:
+  - 6 tiendas activas, 1 de baja (心斎橋店) y 7 en total.
+  - Paginación con `kensu=5`: 5 filas en la página 1 y 難波店 en la 2.
+  - La tienda de 255 caracteres no ensancha la tabla (945 px en una ventana de 1280).
+  - Los detalles de 天王寺店, que no tiene opcionales, y de 心斎橋店 abren sin errores. 削除を取り消す no aparece sin IP de desarrollo, como en el legacy.
+- Usuarios demo: `taishoku01` (退職) no entra (※ご入力のユーザーIDは無効です); `long01` y `tencho_kyoto` entran.
+- `qa_partial` con la matriz nueva (権限管理 de QA部分権限: 1002 = 0000, 1024 = 1000):
+  - 顧客管理: sin 顧客新規登録.
+  - 販売促進管理: sin クーポン (1009) ni 新規 de メルマガ. Le salen los 新規作成 de push y リマインダ porque el legacy tampoco los controla con permisos.
+  - 業務支援管理: sin スタッフ新規登録.
+  - マイページ管理: solo オススメ y 求人情報一覧.
+- Edición de 京都店 guardada y revertida, ahora sin llamada externa: el log de `:8081` registra «g-api apagado» con `b-develop.g-api.net`, porque `push_api_host = 0`.
+- admin_master: `push_api_host = 0` y `system_mail = crm-mail@example.com`.
+- `:8081` queda limpio: sin ショートカット marcadas y sin filas QA-S1 activas.
 
 ### Clientes / ventas / reservas (S2)
 
