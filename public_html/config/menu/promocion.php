@@ -41,4 +41,18 @@ return [
             ['label' => 'クリックカウンタ', 'url' => '/system/category3/decomail/mailmag_analyze.php'],
         ],
     ],
+    [
+        'class' => 'ac7',
+        'system' => 'マイクーポン管理',
+        'title' => 'マイクーポン管理',
+        'items' => [
+            ['label' => 'クーポン新規登録', 'route' => 'admin.promocion.coupons.create', 'kengen' => [1009, 2]],
+            ['label' => 'クーポン一覧', 'route' => 'admin.promocion.coupons.index', 'kengen' => [1009, 1]],
+            ['label' => '過去クーポン配信一覧', 'url' => '/system/category3/mycoupon/mail_past.php', 'kengen' => [1005, 2]],
+            ['label' => 'テンプレート管理', 'route' => 'admin.promocion.templates.index'],
+            ['label' => '使用ランキング', 'url' => '/system/category3/mycoupon/mycoupon_ranking.php'],
+            ['label' => 'クリックカウンタ', 'url' => '/system/category3/mycoupon/mycoupon_analyze.php'],
+            ['label' => 'クーポン利用数確認', 'url' => '/system/category3/mycoupon/mycoupon_stats.php'],
+        ],
+    ],
 ];

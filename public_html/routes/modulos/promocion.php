@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Promotions\CouponController;
 use App\Http\Controllers\Admin\Promotions\MailAjaxController;
 use App\Http\Controllers\Admin\Promotions\MailController;
 use App\Http\Controllers\Admin\Promotions\MailPastController;
@@ -47,4 +48,14 @@ Route::prefix('promocion')->name('promocion.')->group(function () {
     // Imagen adjunta (staff_entry.js: rutas relativas a la carpeta de la pantalla)
     Route::post('mail_mag/inc/upload.php', [MailAjaxController::class, 'upload'])->name('mail.upload');
     Route::get('mail_mag/inc/disp_pic.php', [MailAjaxController::class, 'displayPicture'])->name('mail.picture');
+
+    // マイクーポン管理 (mycoupon)
+    Route::prefix('mycoupon')->name('coupons.')->group(function () {
+        Route::match(['get', 'post'], 'mycoupon_list', [CouponController::class, 'index'])->name('index');
+        Route::match(['get', 'post'], 'mycoupon_new', [CouponController::class, 'form'])->name('create');
+        Route::match(['get', 'post'], 'mycoupon_update', [CouponController::class, 'form'])->name('edit');
+        Route::get('mycoupon_register', [CouponController::class, 'registered'])->name('registered');
+        Route::match(['get', 'post'], 'mycoupon_detail', [CouponController::class, 'show'])->name('show');
+        Route::post('mycoupon_delete', [CouponController::class, 'destroy'])->name('destroy');
+    });
 });
