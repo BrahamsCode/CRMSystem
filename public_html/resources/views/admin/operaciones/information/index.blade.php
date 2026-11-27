@@ -1,6 +1,7 @@
 {{-- Legacy: system/category5/staff/information.php (インフォメーション管理): alta/edición arriba y los 10
      últimos avisos abajo. El master elige tienda (vacío = 全店舗) y puede modificar los de todas las tiendas;
      el resto ve los de su tienda y los de 全店舗, y solo modifica los de su tienda.
+     Textos guardados con LegacyText::input() (get_form2): se pintan con {!! !!}, como el legacy.
      Variables:
        $information        Information|null  el aviso en edición (?cd=)
        $informations       colección de Information (los 10 últimos visibles, orden update DESC)
@@ -116,13 +117,13 @@ $(document).ready(function() {
 <tr>
 <th>作成者</th>
 <td>
-<input type="text" name="staff_name" id="inputM" class="writeArea" value="{{ old('staff_name', $information?->staff_name) }}" />
+<input type="text" name="staff_name" id="inputM" class="writeArea" value="{!! old('staff_name') !== null ? e(old('staff_name')) : $information?->staff_name !!}" />
 </td>
 </tr>
 <tr>
 <th>インフォメーション内容</th>
 <td>
-<input type="text" name="comment" id="comment" class="writeArea" value="{{ old('comment', $information?->comment) }}" />
+<input type="text" name="comment" id="comment" class="writeArea" value="{!! old('comment') !== null ? e(old('comment')) : $information?->comment !!}" />
 </td>
 </tr>
 </table>
@@ -162,14 +163,14 @@ $(document).ready(function() {
 @endphp
   <tr @class(['tableBg' => $loop->index % 2 != 0])>
     <td>{{ $row->cd }}</td>
-    <td>{{ $row->comment }}</td>
+    <td>{!! $row->comment !!}</td>
     <td>
 {{ $shopName === '' ? '全店舗' : $shopName }}
-	@if ($row->belongpost && $row->shop_cd)/ @endif{{ $row->belongpost }}
-	@if ($row->employmentsystem && $row->belongpost)/ @endif{{ $row->employmentsystem }}
-	@if ($row->officialposition && $row->employmentsystem)/ @endif{{ $row->officialposition }}
+	@if ($row->belongpost && $row->shop_cd)/ @endif{!! $row->belongpost !!}
+	@if ($row->employmentsystem && $row->belongpost)/ @endif{!! $row->employmentsystem !!}
+	@if ($row->officialposition && $row->employmentsystem)/ @endif{!! $row->officialposition !!}
     </td>
-    <td>{{ $row->staff_name }}</td>
+    <td>{!! $row->staff_name !!}</td>
     <td class="textCenter" width="100">
 @if ($canEdit)
 <a href="{{ route('admin.operaciones.information.index', ['cd' => $row->cd]) }}" class="btnStyle">修正</a>
