@@ -15,6 +15,7 @@ use App\Services\Promotions\MailRenderer;
 use App\Services\Promotions\MailReplaceTags;
 use App\Services\Promotions\SearchFormData;
 use App\Services\Promotions\StaffContext;
+use App\Support\LegacyText;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -161,10 +162,12 @@ class MailController extends Controller
             if (! is_string($value)) {
                 continue;
             }
+            // Como mail_confirm_frm.php: el HTML de la デコメール se guarda tal cual (KV, ' → ’, recortado);
+            // el resto pasa por get_form() con < > en ancho completo
             if ($deco && $key === 'naiyou') {
-                $dispBody = $in[$key] = mb_convert_kana(str_replace("'", '’', $value), 'KV');
+                $dispBody = $in[$key] = LegacyText::trim(mb_convert_kana(str_replace("'", '’', $value), 'KV'));
             } else {
-                $in[$key] = str_replace(['<', '>'], ['＜', '＞'], $value);
+                $in[$key] = LegacyText::form(str_replace(['<', '>'], ['＜', '＞'], $value));
             }
         }
 

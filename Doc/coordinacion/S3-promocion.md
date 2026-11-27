@@ -7,9 +7,11 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — M2 (メルマガ / デコメール)
+## Próximo paso — M2c (予定配信, 過去配信, 詳細, 配信先, CSV, 配信解除)
 
-発行条件選択 (con `CustomerSearch` y los parciales de búsqueda de S2) → redacción (`inc/mail_frm.php`) → confirmación → registro, prueba, imagen, 例外会員, programados, pasados, detalle, destinatarios, CSV y anulación; `MailSender`, `MailRenderer` (usa `MailReplaceTags`) y `promocion:send-mail` con `SendSchedulePlanner`.
+`mail_future_list`, `mail_future` (edición, `register_type = update`), `mail_future_confirm`/`_send`, `mail_kaijo`, `mail_past`, `mail_past_shousai`, `mail_sended_list` (+ CSV), para mail_mag y decomail. Después F1.
+
+M2b terminado (2026-11-27, 651e247): 新規メール/デコメール配信 completo (`MailController`, `MailAjaxController`, `MailAudience`, `MailRegistrar`, `MailImageStore`, vistas `inc/mail_frm`, `mail_confirm_frm`, `mail_send_frm`); pruebas `M2MailFlowTest` (7). Pedido de S5 (b2ab4e3): `PointService::exchangeSalesItem`. Texto según CONVENCIONES §4 (`Form2Db` en M1, `LegacyText::form` en 確認).
 
 M2a (motor) terminado (2026-11-26): `MailRenderer` (pie, etiquetas, enlace a Mi página, ajuste デコメール), `MailSender` (envío desde `mailmag_master` como `cMailsoushin`), `PromotionMail`, `SystemDomain`, `PushTrigger`/`GApiPushTrigger` (mismo GET a g-api que `Push.php::exec`) y `promocion:send-mail` (cada minuto, con `SendSchedulePlanner`; `promocion:send-mail <cd>` envía ya). Pruebas `MailSenderTest` (9); suite 199 en verde. Sigue M2b: pantallas 発行条件選択 → redacción → confirmación → registro.
 
@@ -60,6 +62,8 @@ Detalle en `Doc/diseno/promocion.md` §5. Resumen:
 Ver `Doc/diseno/promocion.md` §6. Las principales: controladores en `Admin/Promotions` (existente) con rutas/vistas/lang/menú `promocion`; ninguna pantalla en `hecho` porque la base existente no cumple aún la paridad (textos fuera de `lang/ja`, sin Form Requests ni Policies, faltan campos); `anketo`+`anketo2` → `surveys.type`; `hyouji_flg` → `status`; históricos de envío como solo lectura (la SQL `振分配信` no se migra); saldos de puntos/sellos como movimiento inicial.
 
 ## Hecho
+
+- 2026-11-27 — M2b: 新規メール/デコメール配信; S5: `exchangeSalesItem`; M1/M2 con la convención de texto.
 
 - 2026-11-26 — M2a: motor de envío (`MailSender`, `MailRenderer`, `promocion:send-mail`, push g-api).
 

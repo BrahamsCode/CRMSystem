@@ -8,6 +8,7 @@ use App\Models\Promotions\MailTemplate;
 use App\Models\Promotions\MailTemplateCategory;
 use App\Services\Promotions\MailReplaceTags;
 use App\Services\Promotions\RankOrder;
+use App\Services\Promotions\Form2Db;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -71,9 +72,9 @@ class TemplateController extends Controller
 
             $template->fill([
                 'tb_mail_template_category_cd' => $request->integer('tb_mail_template_category_cd'),
-                'title' => (string) $request->input('title'),
+                'title' => Form2Db::clean($request->input('title')),
                 'mail_type' => (string) $request->input('mail_type', ''),
-                'naiyou' => (string) $request->input($request->input('mail_type') === MailTemplate::MAIL_TYPE_DECO ? 'naiyou_deco' : 'naiyou', ''),
+                'naiyou' => Form2Db::clean($request->input($request->input('mail_type') === MailTemplate::MAIL_TYPE_DECO ? 'naiyou_deco' : 'naiyou', '')),
                 'disp_flg' => '1',
                 'hyouji_flg' => '1',
             ]);
