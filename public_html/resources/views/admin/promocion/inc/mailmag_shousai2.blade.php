@@ -56,7 +56,7 @@ window.onload = function() {
 };
 
 $(document).ready(function() {
-	$("{{ $mailType === 'deco' ? '.ac9' : '.ac1' }}").accordion('option', 'active', 0);
+	$("{{ \App\Http\Controllers\Admin\Promotions\MailController::activeAc($mailType) }}").accordion('option', 'active', 0);
 });
 </script>
 @endsection

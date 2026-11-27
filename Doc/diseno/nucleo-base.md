@@ -25,8 +25,8 @@
 | `config/features_config.php` + `ajax_point_yukoukigen_kakunin.php` | 機能設定 | `legacy.base.features.*` | `Base\FeaturesController` | `admin_master`, `contents_master`, `tb_base_system_*`, `tb_customer` | pendiente |
 | `config/{point,stamp}_{alert,shikkou}_mail_template_*.php` | 失効予告・失効メールテンプレート | `legacy.base.mail-templates.*` | `Base\ExpiryMailTemplateController` | `admin_master` | pendiente |
 | `config/authority.php` + `ajax_group_authority*.php` | 権限管理 | `legacy.base.authority.*` | `Base\AuthorityController` | `tb_staff_group`, `tb_kengen`, `tb_kengen_contents`, `hatuban` | hecho |
-| `config/bookmark.php`, `bookmark_list.php`, `ajax_bookmark.php` | ショートカット管理 | `legacy.base.bookmarks.*` | `Base\BookmarkController` | `tb_bookmark`, `tb_base_system*`, `hatuban` | pendiente |
-| `config/area*.php` | エリア管理 | `legacy.base.areas.*` | `Base\AreaController` | `tb_area`, `hatuban` | pendiente |
+| `config/bookmark.php`, `bookmark_list.php`, `ajax_bookmark.php` | ショートカット管理 | `legacy.base.bookmarks.*` | `Base\BookmarkController` | `tb_bookmark`, `tb_base_system*`, `hatuban` | hecho |
+| `config/area*.php` | エリア管理 | `legacy.base.areas.*` | `Base\AreaController` | `tb_area`, `hatuban` | hecho |
 | `config/authority_contents*.php` | 権限項目管理 (mantenimiento) | `legacy.base.authority-contents.*` | `Base\AuthorityContentsController` | `tb_kengen_contents`, `tb_base_system` | pendiente |
 | `config/system.php` | システム管理 (mantenimiento) | `legacy.base.system.*` | `Base\SystemController` | `admin_master`, `tb_base_system*`, `tb_hp_*`, `tb_manage_words`, `contents_master` | pendiente |
 | `config/slim_list.php` | CRM端末管理 (mantenimiento) | `legacy.base.access-terminals.*` | `Base\AccessTerminalController` | `tb_access_mapping`, `tb_shop`, `hatuban` | pendiente |
@@ -52,3 +52,4 @@
 - Aviso de alta al soporte: `ShopCreatedMail` en cola, destinatario `CRM_NOTIFY_SHOP_CREATED` (por defecto el del legacy).
 - Comunes nuevos del núcleo: `Nucleo\AreaTree` (createAreaCheckUi), `LegacyHtml` (tooltip, prefOptions, areaOptions, pager, kensuOptions), `ZipController`.
 - `config.php` no copia `tb_office.pass` a la clave de `master` (trampa MANUAL-TESTS #123); en el primer acceso sí (es cuando se fija la clave). Tras el primer acceso se renueva la sesión en vez de volver a entrar con la clave en la URL. 書き直す conserva lo escrito (el legacy releía la BD).
+- ショートカット管理: el 初期化 ejecuta el SQL literal del legacy (`database/sql/nucleo/bookmark_reset.sql`, con `DB::unprepared` en una transacción); se conservan sus cd repetidos (7, 8, 58, 59 → 63 filas), porque `tb_bookmark` no tiene PK y la cabecera los muestra igual. Sin permiso propio, como el legacy (cualquier personal con sesión).

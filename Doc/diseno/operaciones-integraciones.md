@@ -19,23 +19,23 @@ Integraciones: `routes/publico/integraciones.php`, que S1 carga fuera del grupo 
 
 | Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas legacy | Estado |
 |---|---|---|---|---|---|
-| `staff_entry.php` | スタッフ新規登録 | `admin.operaciones.staff.create` | `StaffController@create` | L `tb_staff`, `tb_shop`, `tb_staff_group`, `tb_officialposition`, `tb_belongpost`, `tb_employmentsystem`, `tb_koumoku`, `tb_base_system_grandchild`, `hatuban` | pendiente |
-| `staff_entry_confirm.php` | (confirmación) | `admin.operaciones.staff.confirm` (POST) | `StaffController@confirm` | L las mismas | pendiente (sin el doble escape `O''''Neil`) |
-| `staff_entry_register.php` | スタッフ登録情報 | `admin.operaciones.staff.store` / `.update` | `StaffController@store` / `@update` | E `tb_staff`, `tb_belongpost`, `hatuban` | pendiente (sync POS → `PosGateway::syncStaff()` sin implementar) |
-| `staff_entry_complete.php` | スタッフ登録情報 | `admin.operaciones.staff.complete` | `StaffController@complete` | L `tb_staff`, `tb_shop`, `tb_staff_group` | pendiente |
-| `staff_list.php` | スタッフ一覧 | `admin.operaciones.staff.index` | `StaffController@index` | L `tb_staff`, `tb_koumoku` | pendiente |
-| `staff_detail.php` | スタッフ登録情報 | `admin.operaciones.staff.show` | `StaffController@show` | L `tb_staff`, `tb_shop`, `tb_base_system_grandchild` | pendiente |
-| `staff_delete_register.php` | スタッフ登録情報 (削除) | `admin.operaciones.staff.destroy` | `StaffController@destroy` | E `tb_staff` (`disp_flg='9'`), `tb_card`, `tb_work_time` | pendiente (ver §7: borra la asistencia del mes) |
-| `staff_recover_confirm.php` | スタッフ登録情報 (復活) | `admin.operaciones.staff.restore` | `StaffController@restore` | L/E `tb_staff` | pendiente |
-| `staff_card_delete.php` | (カード解除) | `admin.operaciones.staff.card.destroy` | `StaffCardController@destroy` | E `tb_card`, `tb_staff`, `tb_work_time` | pendiente ⏸ |
+| `staff_entry.php` | スタッフ新規登録 | `admin.operaciones.staff.create` | `StaffEntryController@create` / `@edit` / `@rewrite` | L `tb_staff`, `tb_shop`, `tb_staff_group`, `tb_officialposition`, `tb_belongpost`, `tb_employmentsystem`, `tb_base_system_grandchild` | hecho |
+| `staff_entry_confirm.php` | (confirmación) | `admin.operaciones.staff.confirm` (POST) | `StaffEntryController@confirm` | L las mismas | hecho (`LegacyCheck`; datos en crudo, sin doble escape) |
+| `staff_entry_register.php` | スタッフ登録情報 | `admin.operaciones.staff.store` | `StaffEntryController@store` | E `tb_staff`, `tb_belongpost`, `hatuban` | hecho (cd con createHatsuban, ID con createID; `PosGateway::syncStaff()` nulo) |
+| `staff_entry_complete.php` | スタッフ登録情報 | `admin.operaciones.staff.complete` | `StaffEntryController@complete` | L `tb_staff`, `tb_shop`, `tb_staff_group` | hecho |
+| `staff_list.php` | スタッフ一覧 | `admin.operaciones.staff.index` | `StaffController@index` (+ `@search`) | L `tb_staff`, `tb_koumoku` | hecho (`StaffSearch`: condiciones validadas en sesión, columnas en lista blanca) |
+| `staff_detail.php` | スタッフ登録情報 | `admin.operaciones.staff.show` | `StaffController@show` | L `tb_staff`, `tb_shop`, `tb_base_system_grandchild` | hecho (pestañas por GET `?tab=`) |
+| `staff_delete_register.php` | スタッフ登録情報 (削除) | `admin.operaciones.staff.destroy` | `StaffController@destroy` | E `tb_staff` (`disp_flg='9'`), `tb_card`, `tb_work_time` | hecho (no borra `tb_work_time`: solo vacía su `felica_no`, §7) |
+| `staff_recover_confirm.php` | スタッフ登録情報 (復活) | `admin.operaciones.staff.restore` | `StaffController@restoreConfirm` / `@restore` | L/E `tb_staff` | hecho (vuelve a comprobar ID/メール antes de restaurar) |
+| `staff_card_delete.php` | (カード解除) | `admin.operaciones.staff.card.destroy` | `StaffController@releaseCard` | E `tb_card`, `tb_staff`, `tb_work_time` | hecho (DB pura; permiso 1024/3) |
 | `staff_group.php`, `staff_group_frm.php`, `staff_group_register.php` | スタッフグループ設定 | `admin.operaciones.staff-groups.*` (index, store, update, destroy, `sort`) | `StaffGroupController` | L/E `tb_staff_group`, `hatuban` | hecho (`/admin/operaciones/staff-groups`, `/staff-fields`; pruebas en `StaffScreensTest`) |
 | `form_config.php`, `form_config_register.php` | スタッフ検索項目設定 | `admin.operaciones.staff-fields.edit` / `.update` | `StaffFieldController@edit` / `@update` | L/E `tb_koumoku` (`tb_name='tb_staff'`) | hecho (`/admin/operaciones/staff-groups`, `/staff-fields`; pruebas en `StaffScreensTest`) |
 | `information.php`, `information_register.php`, `information_delete_register.php` | インフォメーション管理 | `admin.operaciones.information.*` (index, store, destroy) | `InformationController` | L/E `tb_information`, `hatuban`; L `tb_officialposition`, `tb_shop` | hecho (`/admin/operaciones/information`; pruebas en `StaffScreensTest`) |
-| `csv_download.php`, `csv_download/csv_file_out.php` | (CSV スタッフ) | `admin.operaciones.staff.csv` | `StaffController@csv` | L `tb_staff`, `tb_koumoku`, `tb_shop` | pendiente (`StreamedResponse` SJIS-win) |
+| `csv_download.php`, `csv_download/csv_file_out.php` | (CSV スタッフ) | `admin.operaciones.staff.csv` | `StaffController@csv` | L `tb_staff`, `tb_koumoku`, `tb_shop` | hecho (`StreamedResponse` SJIS como el legacy, `text/x-csv; charset=Shift_JIS`) |
 | `csv_download/csv_file_del.php` | — | — | — | — | descartado: sin archivo temporal |
-| `zip.php` | (código postal → dirección) | endpoint común de S1 sobre la tabla `zip` | — | L `zip` | pendiente (pedido 5.1) |
-| `inc/disp_pic.php`, `inc/upload.php` | (foto) | `admin.operaciones.staff.photo` | `StaffController@photo` | E `tb_staff.pic_name` | pendiente (mismo directorio de uploads, §3) |
-| `inc/search_set1.php`, `inc/search_set2.php` | (formulario de búsqueda) | parcial Blade `admin/operaciones/staff/_search` | — | L `tb_koumoku`, `tb_shop` | pendiente |
+| `zip.php` | (código postal → dirección) | endpoint común de S1 sobre la tabla `zip` | — | L `zip` | hecho por S1 (`/system/category5/staff/zip.php`) |
+| `inc/disp_pic.php`, `inc/upload.php` | (foto) | `admin.operaciones.staff.photo.upload` / `.temp` | `StaffEntryController@uploadPhoto` / `@tempPhoto` | E `tb_staff.pic_name` | hecho (`StaffPhotoStore`: GD, EXIF, 200 px; final en `hp/uploads/c5/staff/<cd>/<cd>.jpg` del disco public) |
+| `inc/search_set1.php`, `inc/search_set2.php` | (formulario de búsqueda) | parcial Blade `admin/operaciones/staff/partials/search-fields` + `StaffSearch` | — | L `tb_koumoku`, `tb_shop` | hecho |
 
 ### 1.2 勤怠管理 — terminal de asistencia (`system/category5/kintai/`)
 
@@ -457,7 +457,7 @@ Las claves exactas de cada `result` se fijan al grabar los fixtures (paso 9).
 ## 7. Riesgos y notas para Japón
 
 - **⏸ 勤怠 sin fuente de datos:** ver el aviso del principio y §5.5.
-- **La baja de un empleado borra su `tb_work_time` del mes** (`staff_delete_register.php`) y libera su tarjeta: se reproduce igual (paridad) y se anota la pregunta para Japón.
+- **La baja de un empleado libera su tarjeta** (`staff_delete_register.php`): borra su `tb_card` y vacía `felica_no` en `tb_staff` y en todos sus `tb_work_time` (la asistencia se conserva; corregido al implementarlo, 2026-11-27).
 - **Convivencia con el legacy sobre la misma BD:** las dos aplicaciones numeran con `hatuban`; el servicio de S1 debe bloquear la fila igual que `cHatuban` para no repetir `cd`.
 - **`mobile_shop/customer` consulta N BD** (`DOMAIN_LIST`): hace falta la lista real de dominios y credenciales.
 - **Sin autenticación** en `mpa_*`, `appview` (IDOR por `customer_cd`) y CTI (`customerDetailHtml`, `jGetCustomerData`): se mantiene el contrato; propuesta para Japón: token firmado y throttle.

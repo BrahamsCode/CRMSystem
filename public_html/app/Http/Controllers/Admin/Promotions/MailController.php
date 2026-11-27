@@ -62,15 +62,15 @@ class MailController extends Controller
         return view('admin.promocion.inc.mail_customer_select_frm', $formData->for($filters) + [
             'menu' => $mailType,
             'mailType' => $mailType,
-            'title' => $mailType === 'deco' ? 'デコメール' : 'メール',
+            'title' => match ($mailType) { 'deco' => 'デコメール', 'mycoupon' => 'クーポン', default => 'メール' },
             'mode' => '発行条件選択',
-            'activeAc' => $mailType === 'deco' ? '.ac9' : '.ac1',
+            'activeAc' => self::activeAc($mailType),
             'selectAction' => route($this->route($mailType, 'select')),
             'issueAction' => route($this->route($mailType, 'create')),
             'searchFormPartial' => 'admin.promocion.inc.customer_search_form',
             'searchUniqid' => $uniqid,
             'result' => $result,
-            'carry' => $request->only(['mailmagcd', 'coupon_cd', 'hakkou_cd']),
+            'carry' => array_filter($request->only(['mailmagcd', 'coupon_cd', 'hakkou_cd', 'get_coupon_cd', 'get_coupon_text']), fn ($v) => (string) $v !== ''),
         ]);
     }
 
@@ -410,7 +410,7 @@ class MailController extends Controller
             'menu' => $mailType,
             'toolName' => $this->toolName(),
             // Bloque del menú lateral: メルマガ管理 (.ac1) o デコメール管理 (.ac9)
-            'activeAc' => $mailType === 'deco' ? '.ac9' : '.ac1',
+            'activeAc' => self::activeAc($mailType),
             'isMaster' => $this->staff->isMaster(),
             'shops' => $this->staff->shops(),
             'staffShopCd' => $this->staff->shopCd(),
@@ -420,11 +420,11 @@ class MailController extends Controller
                 'create' => route($this->route($mailType, 'create')),
                 'confirm' => route($this->route($mailType, 'confirm')),
                 'store' => route($this->route($mailType, 'store')),
-                'future' => route($this->route($mailType, 'future')),
-                'edit' => route($this->route($mailType, 'edit')),
-                'editConfirm' => route($this->route($mailType, 'edit-confirm')),
-                'update' => route($this->route($mailType, 'update')),
-                'cancel' => route($this->route($mailType, 'cancel')),
+                'future' => route($this->route($this->futureType($mailType), 'future')),
+                'edit' => route($this->route($this->futureType($mailType), 'edit')),
+                'editConfirm' => route($this->route($this->futureType($mailType), 'edit-confirm')),
+                'update' => route($this->route($this->futureType($mailType), 'update')),
+                'cancel' => route($this->route($this->futureType($mailType), 'cancel')),
                 'past' => route($this->route($mailType, 'past')),
             ],
         ];
@@ -432,7 +432,33 @@ class MailController extends Controller
 
     private function route(string $mailType, string $action): string
     {
-        return 'admin.promocion.'.($mailType === 'deco' ? 'deco' : 'mail').'.'.$action;
+        return 'admin.promocion.'.self::family($mailType).'.'.$action;
+    }
+
+    /** Los programados de cupón se listan y editan en mail_mag (mail_future_list.php incluye type_flg coupon) */
+    private function futureType(string $mailType): string
+    {
+        return $mailType === 'mycoupon' ? 'mail' : $mailType;
+    }
+
+    /** Prefijo de rutas de la familia: mail (mail_mag), deco (decomail) o coupons.mail (mycoupon) */
+    public static function family(string $mailType): string
+    {
+        return match ($mailType) {
+            'deco' => 'deco',
+            'mycoupon' => 'coupons.mail',
+            default => 'mail',
+        };
+    }
+
+    /** Bloque del menú lateral: メルマガ管理 (.ac1), デコメール管理 (.ac9) o マイクーポン管理 (.ac7) */
+    public static function activeAc(string $mailType): string
+    {
+        return match ($mailType) {
+            'deco' => '.ac9',
+            'mycoupon' => '.ac7',
+            default => '.ac1',
+        };
     }
 
     /** $tool_name['mail_tool_name'] (getMailmagazineName): お知らせ con la app activa, si no メール */

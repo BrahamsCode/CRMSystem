@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\Promotions\CouponController;
+use App\Http\Controllers\Admin\Promotions\CouponStatsController;
 use App\Http\Controllers\Admin\Promotions\MailAjaxController;
 use App\Http\Controllers\Admin\Promotions\MailController;
 use App\Http\Controllers\Admin\Promotions\MailPastController;
@@ -57,5 +58,19 @@ Route::prefix('promocion')->name('promocion.')->group(function () {
         Route::get('mycoupon_register', [CouponController::class, 'registered'])->name('registered');
         Route::match(['get', 'post'], 'mycoupon_detail', [CouponController::class, 'show'])->name('show');
         Route::post('mycoupon_delete', [CouponController::class, 'destroy'])->name('destroy');
+        Route::get('mycoupon_ranking', [CouponStatsController::class, 'ranking'])->name('ranking');
+        Route::match(['get', 'post'], 'mycoupon_stats', [CouponStatsController::class, 'index'])->name('stats');
+        Route::get('mycoupon_stats_detail', [CouponStatsController::class, 'show'])->name('stats.show');
+
+        // このクーポンを送る: 発行条件選択 → 内容設定 → 確認 → 登録 (inc/mail_*_frm.php con mail_type = mycoupon) y 過去配信
+        Route::name('mail.')->group(function () {
+            Route::match(['get', 'post'], 'mycoupon_mail_customer_select', [MailController::class, 'select'])->name('select')->defaults('mailType', 'mycoupon');
+            Route::match(['get', 'post'], 'mycoupon_mail_new', [MailController::class, 'create'])->name('create')->defaults('mailType', 'mycoupon');
+            Route::post('mycoupon_mail_new_confirm', [MailController::class, 'confirm'])->name('confirm')->defaults('mailType', 'mycoupon');
+            Route::post('mycoupon_mail_new_send', [MailController::class, 'store'])->name('store')->defaults('mailType', 'mycoupon');
+            Route::match(['get', 'post'], 'mail_past', [MailPastController::class, 'index'])->name('past')->defaults('mailType', 'mycoupon');
+            Route::get('mail_past_shousai', [MailPastController::class, 'show'])->name('show')->defaults('mailType', 'mycoupon');
+            Route::match(['get', 'post'], 'mail_sended_list', [MailPastController::class, 'recipients'])->name('recipients')->defaults('mailType', 'mycoupon');
+        });
     });
 });

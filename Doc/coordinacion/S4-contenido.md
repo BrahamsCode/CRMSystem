@@ -7,9 +7,9 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — 9 ペーパーサイネージ y 10 ICカード
+## Próximo paso — 11 ビーコン, 7 `signage/`, 8 GoTel/PDF (esperan respuestas)
 
-Hecho: submódulos 1–6 (reproductor `digitalsignage` HTML5 con el mismo contrato) y menús. Gates de condición con sufijo `.enabled` (S1 hará que master no los salte). Siguiente: ペーパーサイネージ (CRUD + QR + 集計 + CSV SJIS-win; accesos de S5) e ICカード (`tb_customer_card`, `CustomerFelicaService` de S2). Luego 11 ビーコン, 7 `signage/` (conexión `signage`) y 8 GoTel/PDF.
+Hecho: submódulos 1–6, 9 y 10. Pendientes con bloqueo: ビーコン (BD externa caída, confirmar con Antony), `signage/` (conexión `signage`, sin volcado: esquema mínimo de desarrollo en `database/schema/signage-admin.sql`), GoTel/PDF (confirmar uso). Si no hay respuesta, empezar `signage/` con el esquema mínimo.
 
 ## Tarea anterior — Diseño (sin código, hecho)
 
@@ -37,9 +37,13 @@ Implementar submódulo por submódulo en el orden del diseño: migraciones, mode
 
 ## Pedidos
 
+- S3: servicio común de QR (`qr_img.php`); S5: relación cliente en `UrlTransferData`; S1: helper común de CSV SJIS-win.
+
 Ver diseño §5. A S0: BD `admin` de `signage/` (no está en el esquema); GoTel/PDF y ビーコン (Antony). A S1: base de modelos legacy (`disp_flg`, `hatuban`, `ContentsMaster`, `AdminMaster`, `Shop`, `Terminal`), dueño de `tb_mobile_navi`, copia de JS/CSS de carpeta de módulo a `public/legacy/`, paquetes imagen/QR/PDF, conexión `beacon`, Policies.
 
 ## Decisiones
+
+- ペーパーサイネージ: título/id con form2Db (trim + mb_convert_kana KV), url con htmlspecialchars como cUrl → `{!! !!}`; editar no reactiva una tarjeta 停止. ICカード: borrado físico como el legacy, `felica_no` vía `CustomerFelicaService::detach`; ajax_del.php con una ruta por tipo y CSRF.
 
 - Menús: solo entradas vivas; ガチャリン sin entrada (comentada en left_navi6); オススメ con etiqueta fija (el legacy usa el nombre de tb_mobile_navi); ペーパーサイネージ/ICカード/ビーコン con URL legacy hasta migrarse.
 
@@ -58,6 +62,8 @@ Ver diseño §5. A S0: BD `admin` de `signage/` (no está en el esquema); GoTel/
 - Config de マイコレ y ガチャリン en `contents_master` (modelo de S1) vía servicios de S4; `mypage_config` sigue con `serialize()` (lo leen `mpa_*`).
 
 ## Hecho
+
+- 2026-11-27 ペーパーサイネージ (CRUD por `control.php`, QR con bacon, 集計 + CSV SJIS-win) e ICカード (terminales ▲▼, tarjetas, asignar con `CustomerFelicaService`, `FelicaCardService::unassign`); menú de category7 y título de オススメ desde tb_mobile_navi: suite 407 verde.
 
 - 2026-11-27 Reproductor `digitalsignage` HTML5 (player, sondeos, cupones impresos con CouponService de S3, ruleta/スロット/インフォメーション): 14 pruebas; Gates `.enabled`.
 

@@ -18,6 +18,10 @@ beforeEach(function () {
         File::put("$dir/legacy-popup.blade.php", $stub);
         View::addLocation(dirname($dir));
     }
+    if (! Illuminate\Support\Facades\Route::has('legacy.promocion.inc.ajax_search_coupon')) {
+        Illuminate\Support\Facades\Route::middleware('web')->group(base_path('routes/legacy/promocion.php'));
+        app('router')->getRoutes()->refreshNameLookups();
+    }
     $this->withoutMiddleware(Authenticate::class);
     $this->travelTo(Carbon::parse('2026-11-26 10:00:00', 'Asia/Tokyo'));
 
@@ -93,4 +97,60 @@ it('borra con disp_flg = 9 y vuelve a la lista', function () {
     $this->post(route('admin.promocion.coupons.destroy'), ['delete_flg' => 'del', 'cd' => '3', 'shop_cd' => '2', 'coupon_kubun' => '', 'page' => '1', 'kensu' => '20'])
         ->assertOk()->assertSee('削除中です。')->assertSee('mycoupon_list?shop_cd=2', false);
     expect(DB::table('tb_mycoupon_master')->where('cd', 3)->value('disp_flg'))->toBe('9');
+});
+
+it('envía la クーポン por correo con el flujo común y la lista en sus 過去配信', function () {
+    DB::table('tb_office')->insert(['cd' => 1, 'kaishamei' => '本社']);
+    DB::table('tb_base_system_child')->insert(['cd' => 32, 'system_name' => 'マイクーポン管理', 'system_flg' => '1']);
+    DB::table('hatuban')->insert(['koumoku' => 'mailmag', 'kazu' => 80]);
+    DB::table('tb_customer')->insert(['cd' => 9, 'id' => 'C9', 'name' => '客', 'email1' => 'c@example.com', 'mailmaga_email_type' => 'パソコン', 'touroku_kubun' => '2', 'disp_flg' => '1']);
+    Illuminate\Support\Facades\Bus::fake();
+
+    $this->get(route('admin.promocion.coupons.show', ['cd' => 1]))->assertSee('このクーポンを送る')->assertSee(route('admin.promocion.coupons.mail.select'), false);
+
+    $carry = ['cd' => '1', 'hakkou_cd' => '1', 'get_coupon_cd' => '1', 'get_coupon_text' => '【10%OFF】(1)', 'coupon_kubun' => ''];
+    $select = $this->post(route('admin.promocion.coupons.mail.select'), $carry)->assertOk()->assertSee('クーポン 発行条件選択')->assertSee('name="get_coupon_cd" value="1"', false);
+    $response = $this->post(route('admin.promocion.coupons.mail.select'), $carry + ['act' => 'up'])->assertOk()->assertSee('件見つかりました');
+    preg_match('/name="search_uniqid" value="(\w{16})"/', $response->getContent(), $m);
+
+    $this->post(route('admin.promocion.coupons.mail.create'), $carry + ['search_uniqid' => $m[1]])->assertOk()
+        ->assertSee('【10%OFF】(1)')->assertSee('id="get_coupon_cd" name="get_coupon_cd" value="1"', false)->assertSee(route('admin.promocion.coupons.mail.confirm'), false);
+
+    $this->post(route('admin.promocion.coupons.mail.store'), ['search_uniqid' => $m[1], 'hakkou_cd' => '1', 'get_coupon_cd' => '1', 'get_coupon_text' => '【10%OFF】(1)',
+        'title' => 'クーポン', 'naiyou' => '本文', 'tourokusya' => '1', 'send_flg' => '1', 'jikan' => '10', 'fun' => '00', 'mail_send_verify' => '5'])->assertOk()->assertSee('以下の内容で配信いたしました。');
+
+    $mail = DB::table('mailmag_master')->where('cd', 80)->first();
+    expect($mail->type_flg)->toBe('coupon')->and($mail->type_data_cd)->toBe(1);
+
+    $this->get(route('admin.promocion.coupons.mail.past'))->assertOk()->assertSee('■過去マイクーポンメール配信')->assertSee('<td>10%OFF</td>', false);
+});
+
+it('muestra el ranking de uso y las estadísticas por periodo con sus usuarios', function () {
+    DB::table('tb_customer')->insert([['cd' => 7, 'id' => 'C7', 'name' => '客A', 'disp_flg' => '1'], ['cd' => 8, 'id' => 'C8', 'name' => '客B', 'disp_flg' => '1']]);
+    $today = Carbon::parse('2026-11-26 09:00', 'Asia/Tokyo')->getTimestamp();
+    $old = Carbon::parse('2026-11-20 09:00', 'Asia/Tokyo')->getTimestamp();
+    $early = Carbon::parse('2026-11-26 04:00', 'Asia/Tokyo')->getTimestamp();
+    DB::table('tb_mycoupon_used')->insert([
+        ['cd' => 1, 'tb_mycoupon_master_cd' => 4, 'tb_customer_cd' => 7, 'tb_shop_cd' => 1, 'coupon_kubun' => '2', 'used_date' => (string) $today],
+        ['cd' => 2, 'tb_mycoupon_master_cd' => 4, 'tb_customer_cd' => 7, 'tb_shop_cd' => 1, 'coupon_kubun' => '2', 'used_date' => (string) ($today + 60)],
+        ['cd' => 3, 'tb_mycoupon_master_cd' => 1, 'tb_customer_cd' => 8, 'tb_shop_cd' => 2, 'coupon_kubun' => '', 'used_date' => (string) $old],
+        ['cd' => 4, 'tb_mycoupon_master_cd' => 1, 'tb_customer_cd' => 8, 'tb_shop_cd' => 1, 'coupon_kubun' => '', 'used_date' => (string) $early],
+    ]);
+    DB::table('mailmag_master')->insert(['cd' => 60, 'type_flg' => 'coupon', 'type_data_cd' => 1]);
+
+    $this->get(route('admin.promocion.coupons.ranking'))->assertOk()
+        ->assertSeeInOrder(['1位', '2回', 'スタンプ', '2位', '2回', '10%OFF'])->assertSee('(クーポンメルマガ配信回数：1回)');
+    $this->get(route('admin.promocion.coupons.ranking', ['shop' => '2']))->assertOk()->assertSee('10%OFF')->assertDontSee('>スタンプ</a>', false);
+    $this->get(route('admin.promocion.coupons.ranking', ['coupon_kubun' => '0']))->assertOk()->assertDontSee('>スタンプ</a>', false);
+
+    // 本日 (desde las 5:00): solo los dos usos de hoy del cupón 4; el de las 4:00 es del día anterior
+    $this->post(route('admin.promocion.coupons.stats'), ['shop_cd' => '-1'])->assertOk()
+        ->assertSee('■本日　利用されたクーポンの統計')->assertSee('<td>スタンプ</td>', false)->assertDontSee('<td>10%OFF</td>', false);
+    $this->post(route('admin.promocion.coupons.stats'), ['shop_cd' => '1', 'kikan_option' => '3'])->assertOk()
+        ->assertSee('過去一週間　本店で利用されたクーポンの統計')->assertSee('<td>10%OFF</td>', false);
+    $this->post(route('admin.promocion.coupons.stats'), ['shop_cd' => '-1', 'kikan_option' => '6', 'search_start' => '2026/11/20', 'search_end' => '2026/11/20'])->assertOk()
+        ->assertSee('2026/11/20 ～ 2026/11/20')->assertSee('<td>10%OFF</td>', false)->assertDontSee('<td>スタンプ</td>', false);
+
+    $this->get(route('admin.promocion.coupons.stats.show', ['cd' => 4, 'shop_cd' => '-1']))->assertOk()
+        ->assertSee('客A')->assertSee(date('Y/m/d H:i', $today + 60) . '<br/>' . date('Y/m/d H:i', $today), false);
 });
