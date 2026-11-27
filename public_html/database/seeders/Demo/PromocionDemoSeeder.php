@@ -43,6 +43,15 @@ class PromocionDemoSeeder extends Seeder
     /** @var array<string, bool> contadores de hatuban ya ajustados en esta ejecución */
     private array $synced = [];
 
+    /** @var array<string, bool> tablas que en esta BD ya tienen cd en formato legacy (no caben en hatuban) */
+    private array $legacyCd = [];
+
+    /** Tablas que sus pantallas numeran con createHatsuban (epoch + tienda + aleatorio), no con hatuban */
+    private const LEGACY_CD_TABLES = ['point_shikkou_alert'];
+
+    /** hatuban.kazu es integer */
+    private const HATUBAN_MAX = 2147483647;
+
     public function run(): void
     {
         $this->now = Carbon::now(LegacyTime::ZONE);
@@ -233,7 +242,7 @@ class PromocionDemoSeeder extends Seeder
     }
 
     /** Una fila de mailmag_master con los campos que pone MailRegistrar::register */
-    private function insertMail(string $type, string $title, string $body, Carbon $at, string $status, string $where, array $extra = []): int
+    private function insertMail(string $type, string $title, string $body, Carbon $at, string $status, string $where, array $extra = []): int|string
     {
         $cd = $this->nextCd('mailmag', 'mailmag_master');
         DB::table('mailmag_master')->insert($extra + [
@@ -424,7 +433,8 @@ class PromocionDemoSeeder extends Seeder
             if (count($forms) < 3) {
                 continue;
             }
-            $group = (int) DB::table("{$prefix}_sub")->max(DB::raw('CAST(NULLIF(category_inner_group, \'\') AS integer)'));
+            // Solo los grupos numéricos (y que quepan en bigint): datos reales pueden traer otros valores
+            $group = (int) DB::table("{$prefix}_sub")->max(DB::raw("CASE WHEN category_inner_group ~ '^[0-9]{1,18}$' THEN CAST(category_inner_group AS bigint) END"));
             foreach ($customers->take(12)->values() as $i => $c) {
                 $answer = $answers[($i + ($family === 'anketo2' ? 2 : 0)) % count($answers)];
                 $at = (string) $this->epoch($this->now->copy()->subDays(mt_rand(1, 40))->setTime(mt_rand(10, 21), mt_rand(0, 59)));
@@ -459,12 +469,23 @@ class PromocionDemoSeeder extends Seeder
     /**
      * Código de hatuban. Antes del primer uso en esta ejecución, el contador se adelanta por encima del cd máximo
      * de la tabla (por si hay filas que no pasaron por hatuban) para no repetir códigos.
+     * Las tablas que la pantalla numera con createHatsuban (point_shikkou_alert) y cualquier tabla cuyo cd máximo
+     * no quepa en hatuban.kazu (integer: filas con cd en formato legacy) usan Hatuban::legacyCd, como el legacy.
      */
-    private function nextCd(string $koumoku, ?string $table = null): int
+    private function nextCd(string $koumoku, ?string $table = null): int|string
     {
         $table ??= $koumoku;
+        if (in_array($table, self::LEGACY_CD_TABLES, true) || ($this->legacyCd[$table] ?? false)) {
+            return Hatuban::legacyCd($this->shopCd);
+        }
         if (! isset($this->synced[$koumoku])) {
-            $max = (int) DB::table($table)->max('cd');
+            $max = (string) (DB::table($table)->max('cd') ?? '0');
+            if (strlen($max) > 9 && (float) $max > self::HATUBAN_MAX) {
+                $this->legacyCd[$table] = true;
+
+                return Hatuban::legacyCd($this->shopCd);
+            }
+            $max = (int) $max;
             $kazu = (int) DB::table('hatuban')->where('koumoku', $koumoku)->value('kazu');
             if ($kazu <= $max) {
                 DB::table('hatuban')->updateOrInsert(['koumoku' => $koumoku], ['kazu' => $max + 1]);
