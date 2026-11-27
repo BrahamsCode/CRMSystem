@@ -9,6 +9,8 @@ Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archiv
 
 ## Próximo paso — Diseño (sin código)
 
+> **Ahora (2026-11-27, S0):** diseño aprobado; implementando スタッフ管理 → スタッフ新規登録/修正 (`staff_entry*` con foto), luego `tool/api`/CTI (paso 8) y `mpa_*` (paso 9).
+
 > **2026-11-26, cambio de base (Antony):** misma BD y misma UI que el legacy (`CONVENCIONES.md`, sección 0). Si ya escribiste tu diseño con tablas nuevas, rehaz la parte de esquema y UI. — **rehecho sobre la BD legacy el 2026-11-27, esperando revisión de S0**
 
 Escribir `Doc/diseno/operaciones-integraciones.md`:
@@ -62,6 +64,10 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 - **`mpa_setraiten` con socio válido** da fatal 500 en el legacy tras registrar la visita: Laravel responde el JSON `ok` (corrección anotada para Japón).
 - **`numbered_ticket` / クイック予約:** descartado (touchcation, S0).
 - **Modelos:** `app/Models/Operaciones|Integraciones/`; controladores públicos en `Publico\Integraciones\`; URL literales de los JS en `routes/legacy/operaciones.php` (convenciones S0).
+- **スタッフ一覧 (2026-11-27):** el WHERE no se guarda como SQL sino como condiciones validadas (`StaffSearch`) en la sesión; solo columnas reales de `tb_staff`. Los campos de texto conservan el valor buscado (el legacy los vaciaba por una variable sin asignar). Lista, paginación y 詳細 por GET; el detalle sin `cd` existente da 404.
+- **CSV de personal:** mismos bytes que el legacy (SJIS, `"	<valor>"`, CRLF, `user.csv`); `Content-Type: text/x-csv; charset=Shift_JIS` (Symfony añade charset a `text/*`).
+- **削除する / カード解除:** redirigen a la lista sin la pantalla intermedia «解除中です。» de 2 s. La baja no borra `tb_work_time` (solo vacía `felica_no`; el diseño decía lo contrario y se corrigió). カード解除 pide el permiso 1024/3 (el legacy no pedía ninguno); 削除/復元 el 1024/4; nunca se borra el cd 1.
+- **復元する:** se vuelve a comprobar que el ID y la メールアドレス1 no los use otro activo (el legacy solo avisaba en la confirmación). En la confirmación se muestran 都道府県, 雇用形態, 役職 y 携帯電話番号 (variables sin asignar en el legacy).
 
 ## Hecho
 
@@ -73,3 +79,6 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 - 2026-11-27 — Modelos sobre `tb_*` en `app/Models/Operaciones/` (`StaffGroup`, `OfficialPosition`, `BelongPost`, `EmploymentSystem`, `Information`, `StaffCard`, `FelicaMode`, `ShopWork`, `KintaiConfig`, `KintaiHiduke`, `KintaiRecord`, `WorkTime`, `StaffShift`, `StaffShiftKind`) e `Integraciones/UrlTransferData`; `LegacyMonth`, `HasDayColumns` (lista blanca de columnas por día) y `PosGateway` nulos con sus providers. 27 pruebas; suite completa en verde (59).
 - 2026-11-27 — Vistas Blade (HTML del legacy) de スタッフグループ設定, スタッフ検索項目設定 e インフォメーション管理 (sin controladores: esperan el layout y el login de S1).
 - 2026-11-27 — API JWT de la tienda móvil (`routes/publico/integraciones.php`, `Publico\Integraciones\MobileShopController`, servicios `MobileShop\*`): auth, shop, customer, point, mobile_shop/{customer, passcode, point, sales_items, fetch_paid_member, send_unpaid_member_status} y 404. Prueba de contrato contra los 53 casos grabados: todos los implementados coinciden byte a byte (verificado instalando `firebase/php-jwt` en local; la prueba queda saltada hasta que S1 lo integre). Pendientes: `point_use` y `point_exchange_item` (servicio de puntos de S3).
+- 2026-11-27 — Controladores y rutas de スタッフグループ設定, スタッフ検索項目設定 e インフォメーション管理 con su menú (`StaffScreensTest`).
+- 2026-11-27 — `point_use` y `point_exchange_item` con el `PointService` de S3 (af8dd48): la API JWT completa coincide con el legacy; `MobileShopContractTest` autosuficiente (eb92d9a). Integrado por S0 (0396404).
+- 2026-11-27 — スタッフ検索・一覧 (búsqueda de `search_set1/2`, paginación, CSV para master), スタッフ登録情報 (4 pestañas), 削除する, 削除を取り消す/復元する y カード関連付け解除 (`StaffController`, `StaffSearch`, `StaffListTest` 10 pruebas). Suite completa: 395 en verde.
