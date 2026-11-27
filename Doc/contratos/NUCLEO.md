@@ -50,6 +50,8 @@ Todo en `routes/web.php` (S1), en este orden:
 
 Una ruta legacy que en el legacy terminaba en `/` (p. ej. `/system/category1/`) se declara sin la barra: `Route::get('system/category1', …)`. Las portadas (`system/category<N>/` e `index.php`) son del núcleo: category0 (`legacy.base.index`), 1, 3, 5, 6 y 7 (`Nucleo\CategoryTopController`: imagen `coverN.gif`, menú del módulo y, en 1 y 3, los contadores de `inc/entry_counter.php`) y category9 redirige a `yoyaku/time_table.php`, como el legacy. El mapa categoría → clave de `config/menu` está en `CategoryTopController::MENUS`; si un módulo necesita otra portada, se quita su categoría de ese mapa en el mismo commit.
 
+La お問合せ de la cabecera abre `system/contact/?wintype=no_headers` (要望・お問い合わせ, `Nucleo\ContactController`, para todo el personal): formulario → confirmación → `ContactMail` en cola a `config('crm.notify.contact')`.
+
 `routes/api.php` no se carga: las URL `/api/...` del legacy van en `routes/publico/integraciones.php`.
 
 ## 4. Permisos (cKengen → Gates)

@@ -130,3 +130,12 @@ Route::name('nucleo.uploads.')->controller(\App\Http\Controllers\Admin\Nucleo\Pi
     Route::match(['get', 'post'], 'system/inc/ajax_picupload.php', 'upload')->name('picupload');
     Route::get('system/uploads/{file}', 'show')->name('show');
 });
+
+/*
+ * 要望・お問い合わせ (system/contact/): la お問合せ de la cabecera, para todo el personal (no solo master)
+ */
+Route::name('nucleo.contact.')->controller(\App\Http\Controllers\Admin\Nucleo\ContactController::class)->group(function () {
+    Route::match(['get', 'post'], 'system/contact', 'form')->name('form');
+    Route::match(['get', 'post'], 'system/contact/index.php', 'form');
+    Route::post('system/contact/contact_complete.php', 'send')->name('send');
+});
