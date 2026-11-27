@@ -190,8 +190,8 @@ return [
             'ac' => 'ac110',
             'can' => 'promocion.reminder.enabled',
             'links' => [
-                ['label' => 'リマインダメール新規作成', 'label_from' => [PromocionMenu::class, 'reminderNew'], 'url' => '/system/category3/reminder/reminder_new.php'],
-                ['label' => 'リマインダメール設定一覧', 'label_from' => [PromocionMenu::class, 'reminderList'], 'url' => '/system/category3/reminder/reminder_mail_future_list.php'],
+                ['label' => 'リマインダメール新規作成', 'label_from' => [PromocionMenu::class, 'reminderNew'], 'url' => "$p/reminder/reminder_new"],
+                ['label' => 'リマインダメール設定一覧', 'label_from' => [PromocionMenu::class, 'reminderList'], 'url' => "$p/reminder/reminder_mail_future_list"],
                 ['label' => 'テンプレート管理', 'url' => "$p/mail_mag/mail_template"],
             ],
         ],

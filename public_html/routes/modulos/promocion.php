@@ -67,6 +67,20 @@ Route::prefix('promocion')->name('promocion.')->group(function () {
         });
     }
 
+    // リマインダ (reminder/): condiciones propias y flujo común con mail_type yoyaku|remdeco (POS fuera de alcance)
+    Route::prefix('reminder')->name('reminder.')->group(function () {
+        Route::match(['get', 'post'], 'reminder_new', [RuleController::class, 'reminder'])->name('rule');
+        Route::post('reminder_new_confirm', [RuleController::class, 'reminderConfirm'])->name('rule-confirm');
+        Route::post('reminder_mail_new', [MailController::class, 'create'])->name('create')->defaults('mailType', 'yoyaku');
+        Route::post('reminder_mail_new_confirm', [MailController::class, 'confirm'])->name('confirm')->defaults('mailType', 'yoyaku');
+        Route::post('reminder_mail_new_send', [MailController::class, 'store'])->name('store')->defaults('mailType', 'yoyaku');
+        Route::match(['get', 'post'], 'reminder_mail_future_list', [MailController::class, 'future'])->name('future')->defaults('mailType', 'yoyaku');
+        Route::match(['get', 'post'], 'reminder_mail_future', [MailController::class, 'edit'])->name('edit')->defaults('mailType', 'yoyaku');
+        Route::post('reminder_mail_future_confirm', [MailController::class, 'confirm'])->name('edit-confirm')->defaults('mailType', 'yoyaku');
+        Route::post('reminder_mail_future_send', [MailController::class, 'store'])->name('update')->defaults('mailType', 'yoyaku');
+        Route::post('mail_kaijo', [MailController::class, 'cancel'])->name('cancel')->defaults('mailType', 'yoyaku');
+    });
+
     // クリックカウンタ (inc/mailmag_graph2.php) por familia: mailmag_type '', deco, coupon, anketo
     foreach (['mail' => ['mail_mag/mailmag_analyze', ''], 'deco' => ['decomail/mailmag_analyze', 'deco'],
         'coupon' => ['mycoupon/mycoupon_analyze', 'coupon'], 'anketo' => ['anketo/anketo_analyze', 'anketo']] as $key => [$uri, $type]) {

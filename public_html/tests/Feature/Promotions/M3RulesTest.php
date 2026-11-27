@@ -157,3 +157,31 @@ it('アンケート: el registro marca la encuesta emitida y la edición conserv
         ->and(\App\Http\Controllers\Admin\Promotions\MailController::activeAc('anketo2.reply'))->toBe('.ac109')
         ->and(\App\Http\Controllers\Admin\Promotions\MailController::activeAc('anketo'))->toBe('.ac8');
 });
+
+it('M6: registra una リマインダ con la SELECT de reservas y la envía a quien reservó para dentro de N días', function () {
+    DB::table('tb_staff')->insert(['cd' => 5, 'shop_cd' => 1, 'login_id' => 'staff5', 'name' => '担当', 'disp_flg' => '1']);
+    $day = DB::selectOne("SELECT TO_CHAR(timestamp 'today' + interval '2days', 'YYYY/MM/DD') AS d")->d;
+    DB::table('tb_yoyaku_uketsuke_day')->insert(['cd' => 7, 'tb_staff_cd' => 5, 'moushikomi_date' => $day]);
+    DB::table('tb_yoyaku')->insert(['cd' => 1, 'tb_customer_cd' => 1, 'tb_yoyaku_uketsuke_day_cd' => 7, 'disp_flg' => '1', 'entry_type' => '1', 'start_time' => 1000]);
+
+    $this->get(route('admin.promocion.reminder.rule'))->assertOk()->assertSee('■リマインダーメール新規作成')->assertSee('$(".ac110")', false);
+    $this->post(route('admin.promocion.reminder.rule-confirm'), ['shop_cd' => '1', 'step2_1' => '2x'])->assertRedirect(route('admin.promocion.reminder.rule'));
+
+    $confirm = $this->post(route('admin.promocion.reminder.rule-confirm'), ['shop_cd' => '1', 'mail_type' => 'remdeco', 'step2_1' => '2', 'step2_jikan' => '18', 'step2_fun' => '00', 'step2_yoyakuflg' => '1'])
+        ->assertOk()->assertSee('本店')->assertSee('デコメール')->assertSee('予約日の2日前')->assertSee('携帯予約の方にだけ配信する');
+    preg_match('/name="search_uniqid" value="(\w{16})"/', $confirm->getContent(), $m);
+    $base = ['search_uniqid' => $m[1], 'shop_cd' => '1', 'mail_type' => 'remdeco', 'step2_1' => '2', 'step2_jikan' => '18', 'step2_fun' => '00', 'step2_yoyakuflg' => '1'];
+
+    $this->post(route('admin.promocion.reminder.create'), $base)->assertOk()->assertSee('name="mail_type" value="remdeco"', false)->assertDontSee('reigai_btn', false);
+    $this->post(route('admin.promocion.reminder.store'), $base + ['title' => 'ご予約の確認', 'naiyou' => '<p>{名前}様</p>', 'tourokusya' => '1', 'mail_send_verify' => '3'])->assertOk();
+
+    $mail = DB::table('mailmag_master')->where('cd', 500)->first();
+    expect([$mail->type_flg, $mail->send_parameter, $mail->{'配信日時'}, (int) $mail->{'配信総数'}, $mail->search_display])
+        ->toBe(['remdeco', '1<><>2', '18:00', 0, '予約日の2日前になったら、お客様にメールを配信'])
+        ->and($mail->{'振分配信'})->toStartWith('SELECT')->toContain('AND tb2.shop_cd = 1')->toContain("interval '2days'")->toContain("s1.entry_type, '') IN ('1'");
+
+    $this->get(route('admin.promocion.reminder.future'))->assertOk()->assertSee('■リマインダーメール配信')->assertSee('起動中')->assertSee('※携帯予約の方にだけ配信する');
+
+    $counts = app(\App\Services\Promotions\MailSender::class)->send(500);
+    expect($counts['total'] ?? null)->toBe(1);
+});
