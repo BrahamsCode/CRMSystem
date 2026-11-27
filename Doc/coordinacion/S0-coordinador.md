@@ -155,6 +155,11 @@
   - S4: filas y `AnketoMailController` simplificado.
   - S5: `Doc/qa/para-japon.md`.
   `laravel13` con 940 pruebas en verde. Lo pendiente es casi todo lo bloqueado por Antony: 勤怠 (26), reproductores de signage (17, sin volcado), M9/F8 y GoTel/ビーコン.
+- 2026-11-27 (07:30): regresión de punta a punta (S1, `Doc/qa/regresion.md`): 132 pantallas con master y 129 con `qa_partial`, sin errores 500, páginas en blanco ni errores en el log. Corregido:
+  - Núcleo: ホームページ管理 y データベース管理.
+  - S2: el error de JS de `@json` con coma, y ポイント管理 de category1 (C8), que estaba mal marcada como de S3.
+  - S3: las URL de follow/auto push redirigen, y スマトピ queda oculto hasta que decida Antony.
+  `laravel13` con 948 pruebas en verde. Solo quedan pendientes las decisiones de Antony (`Doc/qa/para-japon.md` §3).
 - 2026-11-27: siguiente tarea de S1 (Antony: el login primero): modelo base y traits comunes, luego el login contra el personal del legacy, el layout idéntico y los estáticos comunes.
 
 ## Hecho
