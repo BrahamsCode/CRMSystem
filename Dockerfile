@@ -1,19 +1,21 @@
 # syntax=docker/dockerfile:1
 # Dockerfile optimizado para producción en Render
-FROM php:8.2-apache
+# PHP 8.5 como docker/dockerfile (desarrollo usa FPM + Apache aparte; Render, un solo contenedor con mod_php)
+FROM php:8.5-apache-trixie
 
 # Copiar Composer
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 
-# Copiar Node.js 20 para compilar assets
-COPY --from=node:20-bookworm-slim /usr/local/bin/node /usr/local/bin/node
-COPY --from=node:20-bookworm-slim /usr/local/lib/node_modules /usr/local/lib/node_modules
+# Copiar Node.js 24 para compilar assets (mismo que docker/dockerfile)
+COPY --from=node:24-trixie-slim /usr/local/bin/node /usr/local/bin/node
+COPY --from=node:24-trixie-slim /usr/local/lib/node_modules /usr/local/lib/node_modules
 RUN ln -s ../lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
     && ln -s ../lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx
 
 # Instalar extensiones PHP y dependencias del sistema
+# opcache ya viene compilado en el núcleo de PHP 8.5: no se instala aparte
 RUN --mount=type=bind,from=mlocati/php-extension-installer:2,source=/usr/bin/install-php-extensions,target=/usr/local/bin/install-php-extensions \
-    install-php-extensions pdo_pgsql pgsql pdo_mysql intl zip gd opcache pcntl exif bcmath imagick \
+    install-php-extensions pdo_pgsql pgsql pdo_mysql intl zip gd pcntl exif bcmath imagick \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
         vim git curl zip unzip \
@@ -47,7 +49,8 @@ COPY docker/php.ini /usr/local/etc/php/conf.d/zz-app.ini
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
 # Instalar dependencias de npm y compilar assets
-RUN npm ci --only=production \
+# (Vite y Tailwind están en devDependencies: con --omit=dev el build fallaba)
+RUN npm ci \
     && npm run build \
     && rm -rf node_modules
 
