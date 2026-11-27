@@ -32,6 +32,8 @@ Route::prefix('system/category3')->name('promocion.')->group(function () {
     Route::match(['get', 'post'], 'inc/ajax_search_kaiin.php', [MailAjaxController::class, 'searchCustomers'])->name('inc.ajax_search_kaiin');
     Route::get('inc/ajax_get_shop_data.php', [MailAjaxController::class, 'shopOptions'])->name('inc.ajax_get_shop_data');
     Route::post('inc/ajax_change_status.php', [MailAjaxController::class, 'changeStatus'])->name('inc.ajax_change_status');
+    // CSV de la クリックカウンタ (solo master)
+    Route::post('inc/csv_download.php', [\App\Http\Controllers\Admin\Promotions\ClickCounterController::class, 'csv'])->name('inc.csv_download');
 
     // 来店履歴管理 y DM発行 (S4): GET de las .php del legacy (menú left_navi3, enlaces entre pantallas) → pantallas nuevas
     foreach (['visit_stats2' => 'stats', 'day_visit_list' => 'day', 'store_visit_list' => 'store-list'] as $file => $name) {

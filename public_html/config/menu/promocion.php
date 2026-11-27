@@ -30,7 +30,7 @@ return [
                 ['label' => '過去配信メール一覧', 'label_from' => [PromocionMenu::class, 'mailPast'], 'url' => "$p/mail_mag/mail_past", 'can' => 'kengen.1005.1'],
                 ['label' => 'テンプレート管理', 'url' => "$p/mail_mag/mail_template"],
                 ['label' => 'テストメールアドレス管理', 'label_from' => [PromocionMenu::class, 'testAddress'], 'url' => "$p/mail_mag/test_mail_address"],
-                ['label' => 'クリックカウンタ', 'url' => '/system/category3/mail_mag/mailmag_analyze.php'],
+                ['label' => 'クリックカウンタ', 'url' => "$p/mail_mag/mailmag_analyze"],
             ],
         ],
         [
@@ -44,7 +44,7 @@ return [
                 ['label' => '過去クーポン配信一覧', 'url' => "$p/mycoupon/mail_past", 'can' => 'kengen.1005.2'],
                 ['label' => 'テンプレート管理', 'url' => "$p/mail_mag/mail_template"],
                 ['label' => '使用ランキング', 'url' => "$p/mycoupon/mycoupon_ranking"],
-                ['label' => 'クリックカウンタ', 'url' => '/system/category3/mycoupon/mycoupon_analyze.php'],
+                ['label' => 'クリックカウンタ', 'url' => "$p/mycoupon/mycoupon_analyze"],
                 ['label' => 'クーポン利用数確認', 'url' => "$p/mycoupon/mycoupon_stats"],
             ],
         ],
@@ -57,7 +57,7 @@ return [
                 ['label' => 'アンケート一覧', 'url' => '/system/category3/anketo/anketo_cate_list.php', 'can' => 'kengen.1011.1'],
                 ['label' => '過去アンケート配信一覧', 'url' => '/system/category3/anketo/anketo_cate_list.php?which=sended', 'can' => 'kengen.1011.2'],
                 ['label' => 'テンプレート管理', 'url' => "$p/mail_mag/mail_template"],
-                ['label' => 'クリックカウンタ', 'url' => '/system/category3/anketo/anketo_analyze.php'],
+                ['label' => 'クリックカウンタ', 'url' => "$p/anketo/anketo_analyze"],
             ],
         ],
         [
@@ -92,7 +92,7 @@ return [
                 ['label' => '予定配信デコメール一覧', 'url' => "$p/decomail/mail_future_list", 'can' => 'kengen.1006.1'],
                 ['label' => '過去配信メール一覧', 'url' => "$p/decomail/mail_past", 'can' => 'kengen.1006.1'],
                 ['label' => 'テンプレート管理', 'url' => "$p/mail_mag/mail_template"],
-                ['label' => 'クリックカウンタ', 'url' => '/system/category3/decomail/mailmag_analyze.php'],
+                ['label' => 'クリックカウンタ', 'url' => "$p/decomail/mailmag_analyze"],
             ],
         ],
         [

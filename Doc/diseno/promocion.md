@@ -49,7 +49,7 @@ Las familias (メルマガ, デコメール, 自動, フォロー, リマイン�
 | `mail_past.php` | 過去配信お知らせ一覧 | `mail.past` | `MC@past` | L mailmag_master | hecho |
 | `mail_past_shousai.php` | 過去配信詳細 | `mail.show` | `MC@show` | L mailmag_master, tb_mailmag_analyze | hecho |
 | `mail_sended_list.php` (+ CSV) | 配信先一覧 | `mail.recipients`, `mail.recipients.csv` | `MC@recipients`, `MC@recipientsCsv` | L mailmag_sended_log, tb_customer, admin_master | hecho |
-| `mailmag_analyze.php` | クリックカウンタ | `mail.analyze` | `AnalyzeController@index` | L tb_mailmag_analyze, mailmag_master | pendiente |
+| `mailmag_analyze.php` | クリックカウンタ | `mail.analyze` | `AnalyzeController@index` | L tb_mailmag_analyze, mailmag_master | hecho (M4) |
 | `mail_template.php` | テンプレート管理 | `templates.index` | `TC@index` | L tb_mail_template, tb_mail_template_category | hecho |
 | `mail_template_entry.php`, `mail_template_register.php` | テンプレート登録 | `templates.create/store/edit/update/destroy` | `TC@*` | E tb_mail_template, hatuban | hecho |
 | `mail_template_category.php`, `_category_register.php` | テンプレートカテゴリ管理 | `template-categories.*` | `TemplateCategoryController@*` | E tb_mail_template_category (orden por `rank`), hatuban | hecho (M1) |
@@ -76,7 +76,7 @@ Mismas pantallas con `mail_type = deco` (`$tb_base_system_child_cd = 32`); cuerp
 | `mail_new.php`, `mail_new_confirm.php`, `mail_new_send.php` | 新規デコメール | `deco.create/confirm/store` | `MC@*` | E mailmag_master, send_schedule, hatuban | hecho |
 | `mail_future_list.php`, `mail_future.php`, `mail_future_confirm.php`, `mail_future_send.php` | 予定配信デコメール一覧 | `deco.future/edit/edit.confirm/update` | `MC@*` | E mailmag_master, send_schedule | hecho |
 | `mail_past.php`, `mail_past_shousai.php`, `mail_sended_list.php` | 過去配信メール一覧 | `deco.past/show/recipients` | `MC@*` | L mailmag_master, tb_mailmag_analyze, mailmag_sended_log | hecho |
-| `mailmag_analyze.php` | クリックカウンタ | `deco.analyze` | `AnalyzeController@index` | L tb_mailmag_analyze | pendiente |
+| `mailmag_analyze.php` | クリックカウンタ | `deco.analyze` | `AnalyzeController@index` | L tb_mailmag_analyze | hecho (M4) |
 | `mail_kaijo.php` | 配信解除 | `deco.cancel` | `MC@cancel` | E mailmag_master, send_schedule | hecho |
 | `mailsoushin.php`, `mail_sche_send.php` | (CLI) | — | — | — | descartado: copia del motor; un solo `MailSender` |
 | `inc/qdmail.php` | — | — | — | — | descartado: librería sin uso |
@@ -188,7 +188,7 @@ Mismas pantallas con `mail_type = deco` (`$tb_base_system_child_cd = 32`); cuerp
 | `anketo_answer_analyze.php` | 回答解析 | `anketo.analyze` | `AA@analyze` | L tb_c3_anketo_cate, _form, _sub, mailmag_master | hecho |
 | `anketo_answer_shousai.php` | 回答一覧 (texto, popup) | `anketo.answer` | `AA@texts` | L tb_c3_anketo_sub | hecho |
 | `csv_answer_download.php` | 回答CSV | `anketo.csv` (POST) | `AA@csv` (SJIS-win, `LegacyCsv::encode`) | L tb_c3_anketo_* | hecho |
-| `anketo_analyze.php` | クリックカウンタ (menú) | — | `AnalyzeController@index` de S3 | L tb_mailmag_analyze | pendiente S3 (M4): el menú sigue a la URL del legacy |
+| `anketo_analyze.php` | クリックカウンタ (menú) | — | `AnalyzeController@index` de S3 | L tb_mailmag_analyze | hecho (M4) |
 | GET `system/category3/anketo/anketo_cate_list.php` | (menú) | `legacy.promocion.anketo.anketo_cate_list` | `AC@legacy` → `anketo.index` con su query | — | hecho |
 | `inc/page.php`, css, colorbox, `cron_schedule/cronfile` | fragmento | — | — | — | descartado: no son vistas |
 | `inc/anketo_function.php` | (tamaño de ítem) | — | `CustomFieldService::STYLE_CLASSES` de S2 | — | hecho |
@@ -247,7 +247,7 @@ Decisiones F6 (S4, 2026-11-27):
 | `mycoupon_ranking.php` | 使用ランキング | `coupons.ranking` | `CouponStatsController@ranking` | L tb_mycoupon_master, tb_mycoupon_used, tb_shop, mailmag_master | hecho |
 | `mycoupon_stats.php` | クーポン利用数確認 | `coupons.stats` | `CouponStatsController@index` | L tb_mycoupon_master, tb_mycoupon_used, tb_shop | hecho |
 | `mycoupon_stats_detail.php` | クーポン利用詳細 | `coupons.stats.show` | `CouponStatsController@show` | L tb_customer, tb_mycoupon_used, tb_shop | hecho |
-| `mycoupon_analyze.php` | クリックカウンタ | `coupons.click` | `AnalyzeController@index` | L tb_mailmag_analyze | pendiente |
+| `mycoupon_analyze.php` | クリックカウンタ | `coupons.click` | `AnalyzeController@index` | L tb_mailmag_analyze | hecho (M4) |
 | `mycoupon_mail*.php` (7) | 新規メール配信 (cupón) | `coupons.mail.*` | `MC@*` (`coupon`) | E mailmag_master; tb_mycoupon (al enviar) | hecho (F1: flujo común con mailType mycoupon) |
 | `mail_past.php`, `mail_past_shousai.php`, `mail_sended_list.php` | 過去クーポン配信一覧 / 詳細 | `coupons.mail.past/show/recipients` | `MC@*` | L mailmag_master, tb_mailmag_analyze, mailmag_sended_log | hecho |
 | `inc/page_control.php`, `js/user.js`, `cron_schedule/cronfile` | fragmento | — | — | — | descartado: no son vistas |
@@ -534,3 +534,4 @@ Orden con una sola sesión (decisión de S0): 0.1 → M1 → M2 → F1 → F2 �
 - F2 (2026-11-27): ポイント仕様管理 en `/admin/promocion/point/point_config`. El legacy reescribía `login_default_point_settings` con ceros cuando el bloque 基礎来店 no estaba en pantalla (sin ビーコン); aquí solo se guarda si llega. Los `cd` de `point_shikkou_alert` (bigint de 19 cifras) se comparan como texto validado. Las plantillas de aviso guardan con `LegacyText::db()` (form2Db, como sus register) y se imprimen escapadas. El menú de category3 pasa al formato de NUCLEO; las pantallas migradas enlazan `/admin/promocion/…` y el resto la URL del legacy.
 - F3 (2026-11-27): el borrado de ポイント発行ルール era un enlace GET; aquí el mismo enlace envía un POST con CSRF (sigue siendo borrado físico). Las fechas de 期間指定/日付指定 se interpretan en Asia/Tokyo.
 - M3 (2026-11-27): `follow/mail_future_list.php` (copia vieja que solo enlazaba el redirect relativo de mail_future_frm) queda **descartada**; los redirects van a `follow.future`/`auto.future`. El número de días de フォロー se exige solo dígitos en el servidor (el legacy lo validaba en JS y lo metía en el SQL); un `step1` de campo personalizado inexistente vuelve al formulario. 起動/停止 usa CSRF y el permiso n-4 de su tipo en lugar del id de sesión. Los títulos «…登録情報 修正» se mantienen (el legacy compara `act` con «new», que nunca llega). Las ramas `kind=followPush/autoPush` solo cambian textos y destino (push en M5).
+- M4 (2026-11-27): クリックカウンタ en `/admin/promocion/<carpeta>/<archivo>` para las cuatro familias (`ClickCounterController`, `ClickStats::forType`). La descarga CSV por Adobe AIR/Flash se cambia por el formulario normal; el CSV de deco, que en el legacy fallaba (sin caso en `csv_download.php`), exporta sus clics con el título «デコメールからアクセス数».
