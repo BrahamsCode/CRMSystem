@@ -10,7 +10,16 @@
 
 @section('title', 'DM発行 - ' . $siteName)
 
+@section('css')
+<link rel="stylesheet" type="text/css" href="{{ asset('legacy/system/plugin/ui-datepicker/ui.datepicker.css') }}" />
+<link rel="stylesheet" type="text/css" href="{{ asset('legacy/system/plugin/myflexselect/myFlexSelect.css') }}" />
+@endsection
+
 @section('js')
+{{-- El buscador de clientes (search_set1) usa datepicker y myFlexSelect (en el legacy venían de inc/head.php) --}}
+<script type="text/javascript" src="{{ asset('legacy/system/plugin/ui-datepicker/ui.datepicker-ja.js') }}"></script>
+<script type="text/javascript" src="{{ asset('legacy/system/plugin/ui-datepicker/gcalendar-holidays.js') }}"></script>
+<script type="text/javascript" src="{{ asset('legacy/system/plugin/myflexselect/myFlexSelect.js') }}"></script>
 <script type="text/javascript">
 //表示件数の制御
 function kensuSet(parts){

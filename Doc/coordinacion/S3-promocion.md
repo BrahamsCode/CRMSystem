@@ -73,6 +73,8 @@ Ver `Doc/diseno/promocion.md` §6. Las principales: controladores en `Admin/Prom
 
 ## Hecho
 
+- 2026-11-27 — Tercera pasada: fase A (casos límite en `PromocionDemoSeeder`, 登録者 = tienda) y arreglos de la fase B (絵文字 de plantillas, DM myFlexSelect, `kensu` vacío, push a g-api solo log en local). Detalle en `Doc/qa/regresion.md` «Promoción (S3)». La fase B sigue tras la recarga.
+
 - 2026-11-27 — Regresión S1: `follow_new.php` / `auto_new.php` legacy redirigen (con la query) a las pantallas migradas y el menú プッシュ通知 apunta a ellas; bloque スマトピ連携 oculto (`promocion.smatopi-f8.enabled` = false, espera a Antony F8). 新着情報 no está en el menú de category3.
 
 - 2026-11-27 — Ajustes S0: `StampService::config()` lee la fila de `tb_shop_cd = 1` (como guarda スタンプ仕様管理; respaldo cd = 1); フォロー/自動 de push (kind followPush/autoPush) siguen en `push.create` (S4) con type_flg; 過去配信 enlaza la クリック詳細 del push (`push.show?data_type=mailmaga`).
