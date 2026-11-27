@@ -128,6 +128,15 @@
   - S4: revert de su `ventas`.
   - S5: lote C1 de appview y el contrato de `setRaitenDetail`.
   `laravel13` con 781 pruebas: 780 en verde y 1 que falla solo en la suite completa (`SetRaitenDetailTest`: espera `cd` 900 y recibe 802, porque depende del estado del contador `hatuban` que dejan otras pruebas). Se integra igual, porque las ramas pasan por separado; lo arregla S5 fijando el contador en la prueba. `AppviewContractTest` también es inestable (S5).
+- 2026-11-27 (03:30): integrados:
+  - S1: `ui_version`, `Doc/qa/paridad.md` y el helper de `hatuban`.
+  - S2: C7, R6 y R7 (S2 sin filas pendientes).
+  - S3: 3e5f081 (`point_config` de tablet y `CustomerPushService`).
+  - S4: permisos de mypage, F6, F7 y M8.
+  - S5: arreglo de las pruebas con empates en ORDER BY, y appview terminado.
+  `laravel13` con 862 pruebas en verde. El M3 de S3 (c6b03e5) NO se integra: rompe `AnketoMailTest` de S4 (el flujo de `MailController` cambió). Lo arreglan S3 y S4 juntos.
+- Reparto final de S3 (el grupo con más pendiente): F4 y F5 → S2; M5 y M7 → S4. S3 se queda con M4, F1b y M6. M10 (apoyo al importador) se descarta: ya no hay importador. M9 y F8 esperan a Antony.
+- Para Japón (appview, S5): el legacy fallaba con `touroku_bonus > 0`, el push de bienvenida no llegaba y `pushMessage.php` no existía; aquí funcionan. Además se escapan con `h()` (XSS del legacy).
 - 2026-11-27: siguiente tarea de S1 (Antony: el login primero): modelo base y traits comunes, luego el login contra el personal del legacy, el layout idéntico y los estáticos comunes.
 
 ## Hecho
