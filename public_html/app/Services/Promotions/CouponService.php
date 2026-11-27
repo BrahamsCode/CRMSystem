@@ -39,9 +39,11 @@ class CouponService
     }
 
     /** Entrega el cupón a un cliente (una fila en tb_mycoupon con cd de hatuban) */
-    public function issue(MycouponMaster $master, int $customerCd, ?CarbonInterface $at = null): Mycoupon
+    public function issue(MycouponMaster $master, int $customerCd, ?CarbonInterface $at = null, ?CarbonInterface $limitFrom = null): Mycoupon
     {
         $at ??= now();
+        // $limitFrom: base del vencimiento si no es la hora de entrega (los envíos por correo cuentan desde las 23:59:59 del día)
+        $limitFrom ??= $at;
 
         return Mycoupon::create([
             'tb_mycoupon_master_cd' => $master->cd,
@@ -49,7 +51,7 @@ class CouponService
             'tb_customer_cd' => $customerCd,
             'coupon_kubun' => $master->coupon_kubun,
             'touroku_date' => (string) $at->getTimestamp(),
-            'time_limit' => ($limit = $this->timeLimit($master, $at)) === null ? null : (string) $limit,
+            'time_limit' => ($limit = $this->timeLimit($master, $limitFrom)) === null ? null : (string) $limit,
         ]);
     }
 

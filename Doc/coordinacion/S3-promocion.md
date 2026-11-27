@@ -11,6 +11,8 @@ Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archiv
 
 発行条件選択 (con `CustomerSearch` y los parciales de búsqueda de S2) → redacción (`inc/mail_frm.php`) → confirmación → registro, prueba, imagen, 例外会員, programados, pasados, detalle, destinatarios, CSV y anulación; `MailSender`, `MailRenderer` (usa `MailReplaceTags`) y `promocion:send-mail` con `SendSchedulePlanner`.
 
+M2a (motor) terminado (2026-11-26): `MailRenderer` (pie, etiquetas, enlace a Mi página, ajuste デコメール), `MailSender` (envío desde `mailmag_master` como `cMailsoushin`), `PromotionMail`, `SystemDomain`, `PushTrigger`/`GApiPushTrigger` (mismo GET a g-api que `Push.php::exec`) y `promocion:send-mail` (cada minuto, con `SendSchedulePlanner`; `promocion:send-mail <cd>` envía ya). Pruebas `MailSenderTest` (9); suite 199 en verde. Sigue M2b: pantallas 発行条件選択 → redacción → confirmación → registro.
+
 M1 terminado (2026-11-26): `TemplateController`, `TemplateCategoryController`, `TestAddressController` (Admin/Promotions), Form Requests, servicios `RankOrder`, `StaffContext`, `MailReplaceTags`; rutas `routes/modulos/promocion.php` (pantallas `admin.promocion.*`) y `routes/legacy/promocion.php` (AJAX/registros con la URL del legacy, `legacy.promocion.*`); menú `config/menu/promocion.php` (bloque メルマガ管理). Pruebas `M1TemplatesTest` (11); suite completa 190 en verde. Las pruebas montan un layout mínimo y cargan `routes/legacy/promocion.php` mientras S1 no publique layout, login del personal y carga de `routes/legacy`.
 
 ## Diseño v2 (aprobado)
@@ -58,6 +60,8 @@ Detalle en `Doc/diseno/promocion.md` §5. Resumen:
 Ver `Doc/diseno/promocion.md` §6. Las principales: controladores en `Admin/Promotions` (existente) con rutas/vistas/lang/menú `promocion`; ninguna pantalla en `hecho` porque la base existente no cumple aún la paridad (textos fuera de `lang/ja`, sin Form Requests ni Policies, faltan campos); `anketo`+`anketo2` → `surveys.type`; `hyouji_flg` → `status`; históricos de envío como solo lectura (la SQL `振分配信` no se migra); saldos de puntos/sellos como movimiento inicial.
 
 ## Hecho
+
+- 2026-11-26 — M2a: motor de envío (`MailSender`, `MailRenderer`, `promocion:send-mail`, push g-api).
 
 - 2026-11-26 — M1: plantillas, categorías y direcciones de prueba (controladores, rutas, menú, 11 pruebas).
 
