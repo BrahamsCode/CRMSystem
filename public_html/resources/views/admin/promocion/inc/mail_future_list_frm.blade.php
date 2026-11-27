@@ -1,7 +1,7 @@
 {{--
 	予約配信一覧 — legacy: system/category3/inc/mail_future_list_frm.php
-	(mail_mag, decomail; más adelante follow, auto, reminder con 起動/停止)
-	Variables: las comunes de MailController y $mails (paginador), $perPage, $pageTitle, $shopNames, $kengenNo
+	(mail_mag, decomail, follow y auto con 起動/停止)
+	Variables: las comunes de MailController y $mails (paginador), $perPage, $pageTitle, $shopNames, $kengenNo, $statusUrl
 --}}
 @extends('layouts.legacy')
 
@@ -12,6 +12,8 @@
 @php
 	$recurring = in_array($mailType, ['follow', 'followdeco', 'auto', 'autodeco'], true);
 	$canEdit = $isMaster || Gate::allows('kengen.' . $kengenNo . '.3');
+	$canStatus = $isMaster || Gate::allows('kengen.' . $kengenNo . '.4');
+	$hasStatus = in_array($mailType, ['auto', 'follow', 'reminder'], true);
 	$from = ($mails->currentPage() - 1) * $perPage;
 @endphp
 
@@ -37,6 +39,20 @@ $(document).ready(function() {
 	$("{{ $activeAc }}").accordion('option', 'active', 0);
 	window.scroll(0,0);
 });
+
+// 起動 / 停止 (ajax_change_status.php)
+function setMailStatus(cd, st) {
+	if (confirm(st+"してもよろしいですか？")) {
+		$.ajax({
+			type: "POST",
+			url: "{{ $statusUrl }}",
+			data: { cd: cd, st: st, _token: "{{ csrf_token() }}" },
+			success: function(msg){
+				location.href = "{{ $routes['future'] }}";
+			}
+		});
+	}
+}
 
 function kensuSet(parts){
 	document.form_search.kensu.value = parts.value;
@@ -81,7 +97,8 @@ function kensuSet(parts){
 	<td>{{ $m('配信日') }}
 	{{ $m('配信時間') }}</td>
 @if ($isMaster)
-	<td>{{ $shopNames[$m('登録者')] ?? '' }}</td>
+	{{-- follow/auto: tienda destino del 振分配信 (« tb_shop_cd = N») o 全店舗 --}}
+	<td>@if ($recurring){{ preg_match('/ tb_shop_cd = ([0-9]+)/', (string) $m('振分配信'), $hit) ? ($shopNames[$hit[1]] ?? '') : '全店舗' }} ／ @endif{{ $shopNames[$m('登録者')] ?? '' }}</td>
 @endif
 	<td>
 	件名：<strong>{{ $m('タイトル') }}</strong><br />
@@ -93,8 +110,21 @@ function kensuSet(parts){
 	</td>
 	<td>
 	<textarea name="naiyou" id="naiyou" class="inputM" rows="3" readonly="readonly">{{ $m('search_display') }}</textarea>
+	@if (in_array($mailType, ['auto', 'autodeco'], true))
+	@php $p = array_pad(explode('<>', (string) $m('send_parameter')), 3, ''); @endphp
+	<br/>{!! \App\Http\Controllers\Admin\Promotions\MailController::autoParameters($p[0], $p[1], $p[2], $p[0] === '2' ? $p[1] : '', '&lt;&gt;') !!}
+	@endif
 	</td>
 	<td align="center" style="width: 6em;">
+	@if ($hasStatus)
+	@if ((string) $mail->disp_flg === '')
+		<span style="color:blue;font-weight:bold;font-size:110%;">起動中</span><br/>
+		@if ($canStatus)<input type="button" class="btn btnStyleS" onclick="setMailStatus('{{ $mail->cd }}', '停止')" value="停止する" style="color: #EE0000 !important;">@endif
+	@else
+		<span style="color:red;font-weight:bold;font-size:110%;">停止中</span><br/>
+		@if ($canStatus)<input type="button" class="btn btnStyleS" onclick="setMailStatus('{{ $mail->cd }}', '起動')" value="起動する" style="color: #EE0000 !important;">@endif
+	@endif
+	@endif
 	@if ($canEdit)
 	<input type="button" class="btn btnStyleS" value="修正する" onclick="javascript:location.href='{{ $routes['edit'] }}?mailmagcd={{ $mail->cd }}';" />
 	@endif

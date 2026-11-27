@@ -149,8 +149,8 @@ return [
             'ac' => 'ac10',
             'child' => 'フォローメール管理',
             'links' => [
-                ['label' => 'フォローメール新規作成', 'label_from' => [PromocionMenu::class, 'followNew'], 'url' => '/system/category3/follow/follow_new.php', 'can' => 'kengen.1007.2'],
-                ['label' => 'フォローメール設定一覧', 'label_from' => [PromocionMenu::class, 'followList'], 'url' => '/system/category3/follow/follow_mail_future_list.php', 'can' => 'kengen.1007.1'],
+                ['label' => 'フォローメール新規作成', 'label_from' => [PromocionMenu::class, 'followNew'], 'url' => "$p/follow/follow_new", 'can' => 'kengen.1007.2'],
+                ['label' => 'フォローメール設定一覧', 'label_from' => [PromocionMenu::class, 'followList'], 'url' => "$p/follow/follow_mail_future_list", 'can' => 'kengen.1007.1'],
                 ['label' => 'テンプレート管理', 'url' => "$p/mail_mag/mail_template"],
             ],
         ],
@@ -161,8 +161,8 @@ return [
             'ac' => 'ac11',
             'child' => '自動メール管理',
             'links' => [
-                ['label' => '自動メール新規作成', 'label_from' => [PromocionMenu::class, 'autoNew'], 'url' => '/system/category3/auto/auto_new.php', 'can' => 'kengen.1008.2'],
-                ['label' => '自動メール設定一覧', 'label_from' => [PromocionMenu::class, 'autoList'], 'url' => '/system/category3/auto/auto_mail_future_list.php', 'can' => 'kengen.1008.1'],
+                ['label' => '自動メール新規作成', 'label_from' => [PromocionMenu::class, 'autoNew'], 'url' => "$p/auto/auto_new", 'can' => 'kengen.1008.2'],
+                ['label' => '自動メール設定一覧', 'label_from' => [PromocionMenu::class, 'autoList'], 'url' => "$p/auto/auto_mail_future_list", 'can' => 'kengen.1008.1'],
                 ['label' => 'テンプレート管理', 'url' => "$p/mail_mag/mail_template"],
             ],
         ],

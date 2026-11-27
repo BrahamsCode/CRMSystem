@@ -36,26 +36,26 @@ Las familias (メルマガ, デコメール, 自動, フォロー, リマイン�
 
 | Legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas (L/E) | Estado |
 |---|---|---|---|---|---|
-| `mail_customer_select.php` | 発行条件選択 (メール) | `mail.select` | `MC@select` | L tb_customer, tb_search_form, tb_search_cate, tb_koumoku | pendiente |
-| `mail_new.php` | 新規メール配信 | `mail.create` | `MC@create` | L tb_mail_template, tb_shop | pendiente |
-| `mail_new_confirm.php` | (確認) | `mail.confirm` (POST) | `MC@confirm` | L tb_customer, tb_mycoupon_master | pendiente |
-| `mail_new_send.php` | (登録) | `mail.store` | `MC@store` | E mailmag_master, send_schedule, hatuban | pendiente |
-| `mail_future_list.php` | 予定配信お知らせ一覧 | `mail.future` | `MC@future` | L mailmag_master | pendiente |
-| `mail_future.php` | 予定配信メール編集 | `mail.edit` | `MC@edit` | L mailmag_master | pendiente |
+| `mail_customer_select.php` | 発行条件選択 (メール) | `mail.select` | `MC@select` | L tb_customer, tb_search_form, tb_search_cate, tb_koumoku | hecho |
+| `mail_new.php` | 新規メール配信 | `mail.create` | `MC@create` | L tb_mail_template, tb_shop | hecho |
+| `mail_new_confirm.php` | (確認) | `mail.confirm` (POST) | `MC@confirm` | L tb_customer, tb_mycoupon_master | hecho |
+| `mail_new_send.php` | (登録) | `mail.store` | `MC@store` | E mailmag_master, send_schedule, hatuban | hecho |
+| `mail_future_list.php` | 予定配信お知らせ一覧 | `mail.future` | `MC@future` | L mailmag_master | hecho |
+| `mail_future.php` | 予定配信メール編集 | `mail.edit` | `MC@edit` | L mailmag_master | hecho |
 | `mail_future_test.php` | (編集, variante) | — | — | — | descartado: duplicado de `mail_future.php` |
-| `mail_future_confirm.php` | (確認) | `mail.edit.confirm` | `MC@confirmEdit` | L mailmag_master | pendiente |
-| `mail_future_send.php` | (登録) | `mail.update` | `MC@update` | E mailmag_master, send_schedule | pendiente |
-| `mail_kaijo.php` | 予約配信メール 配信解除 | `mail.cancel` | `MC@cancel` | E mailmag_master (DELETE físico, como el legacy), send_schedule; tb_c3_anketo_cate (anketo) | pendiente |
-| `mail_past.php` | 過去配信お知らせ一覧 | `mail.past` | `MC@past` | L mailmag_master | pendiente |
-| `mail_past_shousai.php` | 過去配信詳細 | `mail.show` | `MC@show` | L mailmag_master, tb_mailmag_analyze | pendiente |
-| `mail_sended_list.php` (+ CSV) | 配信先一覧 | `mail.recipients`, `mail.recipients.csv` | `MC@recipients`, `MC@recipientsCsv` | L mailmag_sended_log, tb_customer, admin_master | pendiente |
+| `mail_future_confirm.php` | (確認) | `mail.edit.confirm` | `MC@confirmEdit` | L mailmag_master | hecho |
+| `mail_future_send.php` | (登録) | `mail.update` | `MC@update` | E mailmag_master, send_schedule | hecho |
+| `mail_kaijo.php` | 予約配信メール 配信解除 | `mail.cancel` | `MC@cancel` | E mailmag_master (DELETE físico, como el legacy), send_schedule; tb_c3_anketo_cate (anketo) | hecho |
+| `mail_past.php` | 過去配信お知らせ一覧 | `mail.past` | `MC@past` | L mailmag_master | hecho |
+| `mail_past_shousai.php` | 過去配信詳細 | `mail.show` | `MC@show` | L mailmag_master, tb_mailmag_analyze | hecho |
+| `mail_sended_list.php` (+ CSV) | 配信先一覧 | `mail.recipients`, `mail.recipients.csv` | `MC@recipients`, `MC@recipientsCsv` | L mailmag_sended_log, tb_customer, admin_master | hecho |
 | `mailmag_analyze.php` | クリックカウンタ | `mail.analyze` | `AnalyzeController@index` | L tb_mailmag_analyze, mailmag_master | pendiente |
-| `mail_template.php` | テンプレート管理 | `templates.index` | `TC@index` | L tb_mail_template, tb_mail_template_category | pendiente |
-| `mail_template_entry.php`, `mail_template_register.php` | テンプレート登録 | `templates.create/store/edit/update/destroy` | `TC@*` | E tb_mail_template, hatuban | pendiente |
-| `mail_template_category.php`, `_category_register.php` | テンプレートカテゴリ管理 | `template-categories.*` | `TemplateCategoryController@*` | E tb_mail_template_category (orden por `rank`), hatuban | pendiente |
-| `ajax_mail_template.php`, `ajax_mail_template_category.php` | (AJAX) | `templates.ajax`, `template-categories.ajax` | `TC@ajax`, `TemplateCategoryController@ajax` | E tb_mail_template, tb_mail_template_category | pendiente |
-| `test_mail_address.php`, `test_mail_address_register.php` | テストお知らせアドレス管理 | `test-addresses.*` | `TestAddressController@*` | E tb_test_mail_address, hatuban; L tb_staff | pendiente |
-| `ajax_test_mail_address_new.php`, `ajax_test_mail_address_staff.php` | (AJAX) | `test-addresses.ajax-new`, `test-addresses.ajax-staff` | `TestAddressController@ajaxNew`, `@ajaxStaff` | E tb_test_mail_address; L tb_staff | pendiente |
+| `mail_template.php` | テンプレート管理 | `templates.index` | `TC@index` | L tb_mail_template, tb_mail_template_category | hecho |
+| `mail_template_entry.php`, `mail_template_register.php` | テンプレート登録 | `templates.create/store/edit/update/destroy` | `TC@*` | E tb_mail_template, hatuban | hecho |
+| `mail_template_category.php`, `_category_register.php` | テンプレートカテゴリ管理 | `template-categories.*` | `TemplateCategoryController@*` | E tb_mail_template_category (orden por `rank`), hatuban | hecho (M1) |
+| `ajax_mail_template.php`, `ajax_mail_template_category.php` | (AJAX) | `templates.ajax`, `template-categories.ajax` | `TC@ajax`, `TemplateCategoryController@ajax` | E tb_mail_template, tb_mail_template_category | hecho |
+| `test_mail_address.php`, `test_mail_address_register.php` | テストお知らせアドレス管理 | `test-addresses.*` | `TestAddressController@*` | E tb_test_mail_address, hatuban; L tb_staff | hecho |
+| `ajax_test_mail_address_new.php`, `ajax_test_mail_address_staff.php` | (AJAX) | `test-addresses.ajax-new`, `test-addresses.ajax-staff` | `TestAddressController@ajaxNew`, `@ajaxStaff` | E tb_test_mail_address; L tb_staff | hecho |
 | `base.php`, `base_mailmaga.php`, `base_mycolle.php`, `base_point.php` | メールマガジン基本情報 / マイコレ登録用QR / メルマガ用QR | `base.show?type=` | `BaseController@show` | L tb_shop, tb_customer | pendiente |
 | `qr_img.php`, `qr_print_pdf.php` | QR / QR印刷 | `base.qr` (PNG), `base.qr-print` (PDF) | `BaseController@qr`, `@print` | — | pendiente |
 | `form_config.php`, `form_config_register.php` | 表示・検索・CSV項目設定 | — | — | — | descartado: configuración de clientes (category1), la cubre S2 |
@@ -63,7 +63,7 @@ Las familias (メルマガ, デコメール, 自動, フォロー, リマイン�
 | `mailsoushin.php` | (CLI envío inmediato) | — | `MailSender` (servicio, §3) | E mailmag_master, mailmag_sended_log, tb_customer, tb_mycoupon | descartado: no es vista; lo reemplaza el servicio |
 | `mail_sche_send.php` | (CLI cron) | — | comando `promocion:send-mail` (§3) | E send_schedule, mailmag_master | descartado: no es vista; lo reemplaza el Scheduler |
 | `send_schedule.php` | (include viejo) | — | — | — | descartado: versión antigua sin uso |
-| `inc/disp_pic.php`, `inc/upload.php`, `inc/furiwake_disp.php` | (fragmentos) | `mail.upload` | `MC@upload` | — (archivos en Storage, mismas rutas `uploads/`) | pendiente |
+| `inc/disp_pic.php`, `inc/upload.php`, `inc/furiwake_disp.php` | (fragmentos) | `mail.upload` | `MC@upload` | — (archivos en Storage, mismas rutas `uploads/`) | hecho (M2; furiwake_disp → search_display) |
 | `mail_new1/2`, `mail_future1/2/3`, `mail_past1`, `mail_list`, `mail_detail`, `mail_revise`, `mail_schedule`, `send`, `mm_add*`, `base2`, `aterna_a4_12` (mail_mag) | (varios) | — | — | — | descartado: muertos/rotos según el análisis |
 
 #### デコメール管理 — `decomail/`
@@ -72,12 +72,12 @@ Mismas pantallas con `mail_type = deco` (`$tb_base_system_child_cd = 32`); cuerp
 
 | Legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas | Estado |
 |---|---|---|---|---|---|
-| `mail_customer_select.php` | 新規デコメール配信 (発行条件選択) | `deco.select` | `MC@select` (`deco`) | L tb_customer, tb_search_* | pendiente |
-| `mail_new.php`, `mail_new_confirm.php`, `mail_new_send.php` | 新規デコメール | `deco.create/confirm/store` | `MC@*` | E mailmag_master, send_schedule, hatuban | pendiente |
-| `mail_future_list.php`, `mail_future.php`, `mail_future_confirm.php`, `mail_future_send.php` | 予定配信デコメール一覧 | `deco.future/edit/edit.confirm/update` | `MC@*` | E mailmag_master, send_schedule | pendiente |
-| `mail_past.php`, `mail_past_shousai.php`, `mail_sended_list.php` | 過去配信メール一覧 | `deco.past/show/recipients` | `MC@*` | L mailmag_master, tb_mailmag_analyze, mailmag_sended_log | pendiente |
+| `mail_customer_select.php` | 新規デコメール配信 (発行条件選択) | `deco.select` | `MC@select` (`deco`) | L tb_customer, tb_search_* | hecho |
+| `mail_new.php`, `mail_new_confirm.php`, `mail_new_send.php` | 新規デコメール | `deco.create/confirm/store` | `MC@*` | E mailmag_master, send_schedule, hatuban | hecho |
+| `mail_future_list.php`, `mail_future.php`, `mail_future_confirm.php`, `mail_future_send.php` | 予定配信デコメール一覧 | `deco.future/edit/edit.confirm/update` | `MC@*` | E mailmag_master, send_schedule | hecho |
+| `mail_past.php`, `mail_past_shousai.php`, `mail_sended_list.php` | 過去配信メール一覧 | `deco.past/show/recipients` | `MC@*` | L mailmag_master, tb_mailmag_analyze, mailmag_sended_log | hecho |
 | `mailmag_analyze.php` | クリックカウンタ | `deco.analyze` | `AnalyzeController@index` | L tb_mailmag_analyze | pendiente |
-| `mail_kaijo.php` | 配信解除 | `deco.cancel` | `MC@cancel` | E mailmag_master, send_schedule | pendiente |
+| `mail_kaijo.php` | 配信解除 | `deco.cancel` | `MC@cancel` | E mailmag_master, send_schedule | hecho |
 | `mailsoushin.php`, `mail_sche_send.php` | (CLI) | — | — | — | descartado: copia del motor; un solo `MailSender` |
 | `inc/qdmail.php` | — | — | — | — | descartado: librería sin uso |
 | `js/tiny_mce/` | — | — | — | — | descartado: no es vista; se copia tal cual a `public/legacy/` (§2b) |
@@ -86,49 +86,49 @@ Mismas pantallas con `mail_type = deco` (`$tb_base_system_child_cd = 32`); cuerp
 
 | Legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas | Estado |
 |---|---|---|---|---|---|
-| `auto_new.php` | 自動お知らせ新規作成 | `auto.create` | `RC@create` (`auto`) | L tb_office; push: push_follow_master | pendiente |
-| `auto_new_confirm.php` | (確認) | `auto.confirm` | `RC@confirm` | — | pendiente |
-| `auto_mail_customer_select.php`, `auto_mail_new.php`, `auto_mail_new_confirm.php`, `auto_mail_new_send.php` | 自動 / 配信条件選択 | `auto.mail.select/create/confirm/store` | `MC@*` (`auto`/`autodeco`) | E mailmag_master (`type_flg`, `send_parameter`), send_schedule, hatuban | pendiente |
-| `auto_mail_future_list.php` | 自動お知らせ設定一覧 | `auto.future` | `MC@future` | L mailmag_master | pendiente |
-| `auto_mail_future.php`, `_confirm.php`, `_send.php` | (編集) | `auto.edit/edit.confirm/update` | `MC@*` | E mailmag_master, send_schedule | pendiente |
-| `mail_kaijo.php` | 配信解除 | `auto.cancel` | `MC@cancel` | E mailmag_master, send_schedule | pendiente |
-| `inc/disp_pic.php`, `upload.php` | — | `mail.upload` | `MC@upload` | — | pendiente |
+| `auto_new.php` | 自動お知らせ新規作成 | `auto.create` | `RC@create` (`auto`) | L tb_office; push: push_follow_master | hecho |
+| `auto_new_confirm.php` | (確認) | `auto.confirm` | `RC@confirm` | — | hecho |
+| `auto_mail_customer_select.php`, `auto_mail_new.php`, `auto_mail_new_confirm.php`, `auto_mail_new_send.php` | 自動 / 配信条件選択 | `auto.mail.select/create/confirm/store` | `MC@*` (`auto`/`autodeco`) | E mailmag_master (`type_flg`, `send_parameter`), send_schedule, hatuban | hecho |
+| `auto_mail_future_list.php` | 自動お知らせ設定一覧 | `auto.future` | `MC@future` | L mailmag_master | hecho |
+| `auto_mail_future.php`, `_confirm.php`, `_send.php` | (編集) | `auto.edit/edit.confirm/update` | `MC@*` | E mailmag_master, send_schedule | hecho (M3) |
+| `mail_kaijo.php` | 配信解除 | `auto.cancel` | `MC@cancel` | E mailmag_master, send_schedule | hecho |
+| `inc/disp_pic.php`, `upload.php` | — | `mail.upload` | `MC@upload` | — | hecho (M3, comunes de mail_mag) |
 
 #### フォローお知らせ管理 — `follow/`
 
 | Legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas | Estado |
 |---|---|---|---|---|---|
-| `follow_new.php` | フォローお知らせ新規作成 | `follow.create` | `RC@create` (`follow`) | L tb_shop, tb_search_cate | pendiente |
-| `follow_new_confirm.php` | (確認: clientes que encajan hoy) | `follow.confirm` | `RC@confirm` | L tb_customer, tb_customer_sub, tb_raiten_rireki, tb_yoyaku | pendiente |
-| `follow_mail_*` (select, new, confirm, send) | フォロー | `follow.mail.*` | `MC@*` (`follow`/`followdeco`) | E mailmag_master, send_schedule | pendiente |
-| `follow_mail_future_list.php` | フォローお知らせ設定一覧 | `follow.future` | `MC@future` | L mailmag_master | pendiente |
+| `follow_new.php` | フォローお知らせ新規作成 | `follow.create` | `RC@create` (`follow`) | L tb_shop, tb_search_cate | hecho |
+| `follow_new_confirm.php` | (確認: clientes que encajan hoy) | `follow.confirm` | `RC@confirm` | L tb_customer, tb_customer_sub, tb_raiten_rireki, tb_yoyaku | hecho |
+| `follow_mail_*` (select, new, confirm, send) | フォロー | `follow.mail.*` | `MC@*` (`follow`/`followdeco`) | E mailmag_master, send_schedule | hecho (M3; follow no tiene 発行条件選択) |
+| `follow_mail_future_list.php` | フォローお知らせ設定一覧 | `follow.future` | `MC@future` | L mailmag_master | hecho |
 | `mail_future_list.php` (follow) | (variante antigua) | — | — | — | descartado: duplicado |
-| `follow_mail_future*.php` (3) | (編集) | `follow.edit/edit.confirm/update` | `MC@*` | E mailmag_master, send_schedule | pendiente |
-| `mail_kaijo.php`, `inc/*` | 配信解除 | `follow.cancel` | `MC@cancel` | E mailmag_master, send_schedule | pendiente |
+| `follow_mail_future*.php` (3) | (編集) | `follow.edit/edit.confirm/update` | `MC@*` | E mailmag_master, send_schedule | hecho (M3) |
+| `mail_kaijo.php`, `inc/*` | 配信解除 | `follow.cancel` | `MC@cancel` | E mailmag_master, send_schedule | hecho |
 
 #### リマインダお知らせ管理 — `reminder/`
 
 | Legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas | Estado |
 |---|---|---|---|---|---|
-| `reminder_new.php` | リマインダーメール新規作成 | `reminder.create` | `RC@create` (`yoyaku`) | L tb_shop (`pos_domain`), tb_base_system_grandchild | pendiente |
-| `reminder_new_confirm.php` | (確認: reservas afectadas) | `reminder.confirm` | `RC@confirm` | L tb_yoyaku, tb_yoyaku_uketsuke_day, tb_customer, tb_staff (vía `Reservation` de S2) | pendiente |
-| `reminder_mail_new*.php` (3), `reminder_mail_future*.php` (4), `mail_kaijo.php` | リマインダお知らせ設定一覧 / 編集 / 解除 | `reminder.mail.*`, `reminder.future/edit/update/cancel` | `MC@*` (`yoyaku`/`remdeco`) | E mailmag_master, send_schedule | pendiente |
+| `reminder_new.php` | リマインダーメール新規作成 | `reminder.create` | `RC@create` (`yoyaku`) | L tb_shop (`pos_domain`), tb_base_system_grandchild | pendiente (M6) |
+| `reminder_new_confirm.php` | (確認: reservas afectadas) | `reminder.confirm` | `RC@confirm` | L tb_yoyaku, tb_yoyaku_uketsuke_day, tb_customer, tb_staff (vía `Reservation` de S2) | pendiente (M6) |
+| `reminder_mail_new*.php` (3), `reminder_mail_future*.php` (4), `mail_kaijo.php` | リマインダお知らせ設定一覧 / 編集 / 解除 | `reminder.mail.*`, `reminder.future/edit/update/cancel` | `MC@*` (`yoyaku`/`remdeco`) | E mailmag_master, send_schedule | pendiente (M6) |
 | Variantes `posyoyaku`/`posremdeco` | (reserva en POS de tienda) | — | `Promotions\PosGateway` (implementación nula) | — | descartado: POS fuera de alcance |
 
 #### プッシュ通知 — `push/`
 
 | Legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas | Estado |
 |---|---|---|---|---|---|
-| `push_customer_select.php` | プッシュ通知 / 発行条件選択 | `push.select` | `MC@select` (`push`) | L tb_customer, tb_search_* | pendiente |
-| `push_new.php` + `push_new.js` | プッシュ通知新規作成 | `push.create` | `PushController@create` | L contents_master, tb_c1_customer, tb_c3_anketo2_cate | pendiente |
-| `ajaxSavePush.php` | (AJAX guardar) | `push.ajax-save` | `PushController@save` | E push_master / push_follow_master, hatuban | pendiente |
-| `ajaxChangeStatus.php` | (AJAX pausar/anular) | `push.ajax-status` | `PushController@status` | E push_follow_master (`disp_flg` 1/7/9) | pendiente |
-| `ajaxSearchMember.php` | (AJAX socio de prueba) | `push.ajax-member` | `PushController@searchMember` | L tb_customer | pendiente |
-| `push_complete.php` | プッシュ通知 (完了) | `push.complete` | `PushController@complete` | — | pendiente |
-| `push_follow_list.php?type_flg=scheduled\|follow\|auto` | 予定 / フォロー / 自動通知設定一覧 | `push.follow-list?type_flg=` | `PushController@followList` | L/E push_follow_master | pendiente |
-| `push_past.php` | 過去配信内容一覧 | `push.past` | `PushController@past` | L push_master, push_notifications | pendiente |
-| `push_past_shousai.php` | 過去配信詳細 | `push.show` | `PushController@show` | L push_master, push_notifications, tb_customer | pendiente |
-| `push_history.php`, `push_history_detail.php` | プッシュ履歴 | `push.history`, `push.history.show` | `PushController@history`, `@historyShow` | L push_notifications, tb_customer, tb_shop | pendiente |
+| `push_customer_select.php` | プッシュ通知 / 発行条件選択 | `push.select` | `MC@select` (`push`) | L tb_customer, tb_search_* | pendiente (M5, S4) |
+| `push_new.php` + `push_new.js` | プッシュ通知新規作成 | `push.create` | `PushController@create` | L contents_master, tb_c1_customer, tb_c3_anketo2_cate | pendiente (M5, S4) |
+| `ajaxSavePush.php` | (AJAX guardar) | `push.ajax-save` | `PushController@save` | E push_master / push_follow_master, hatuban | pendiente (M5, S4) |
+| `ajaxChangeStatus.php` | (AJAX pausar/anular) | `push.ajax-status` | `PushController@status` | E push_follow_master (`disp_flg` 1/7/9) | pendiente (M5, S4) |
+| `ajaxSearchMember.php` | (AJAX socio de prueba) | `push.ajax-member` | `PushController@searchMember` | L tb_customer | pendiente (M5, S4) |
+| `push_complete.php` | プッシュ通知 (完了) | `push.complete` | `PushController@complete` | — | pendiente (M5, S4) |
+| `push_follow_list.php?type_flg=scheduled/follow/auto` | 予定 / フォロー / 自動通知設定一覧 | `push.follow-list?type_flg=` | `PushController@followList` | L/E push_follow_master | pendiente (M5, S4) |
+| `push_past.php` | 過去配信内容一覧 | `push.past` | `PushController@past` | L push_master, push_notifications | pendiente (M5, S4) |
+| `push_past_shousai.php` | 過去配信詳細 | `push.show` | `PushController@show` | L push_master, push_notifications, tb_customer | pendiente (M5, S4) |
+| `push_history.php`, `push_history_detail.php` | プッシュ履歴 | `push.history`, `push.history.show` | `PushController@history`, `@historyShow` | L push_notifications, tb_customer, tb_shop | pendiente (M5, S4) |
 | `sendFollowPush.php` | (cron 5 min) | — | comando `promocion:send-follow-push` | E push_follow_master, push_master, contents_master | descartado: no es vista; Scheduler |
 
 #### DM発行 — `dm/`
@@ -150,18 +150,18 @@ Mismas pantallas con `mail_type = deco` (`$tb_base_system_child_cd = 32`); cuerp
 
 | Legacy | Tipo | Ruta Laravel | Controlador@método / servicio | Estado |
 |---|---|---|---|---|
-| `inc/ajax_get_template_titles.php`, `ajax_get_template_body.php` | ajax | `templates.titles`, `templates.body` | `TC@titles`, `TC@body` | pendiente |
-| `inc/ajax_search_kaiin.php`, `ajax_reigai_kaiin.php` | ajax | `mail.ajax-search`, `mail.ajax-reigai` | `MC@searchCustomer`, `MC@reigai` (`振分条件`) | pendiente |
-| `inc/ajax_search_coupon.php` | ajax | `coupons.ajax-search` | `CouponController@search` | pendiente |
-| `inc/ajax_sendTestMail.php`, `ajax_testMailList.php` | ajax | `mail.test`, `mail.test-list` | `MC@sendTest`, `MC@testList` | pendiente |
-| `inc/ajax_mail_delete.php`, `ajax_change_status.php`, `ajax_get_shop_data.php` | ajax | `mail.ajax-delete`, `mail.ajax-status`, `mail.ajax-shop` | `MC@*` | pendiente |
-| `inc/csv_download.php`, `csv_shousai_download.php`, `csv_download/csv_*.php` (+ SWF) | csv | `mail.csv`, `mail.show.csv`, `mail.analyze.csv` | `StreamedResponse` SJIS-win | pendiente |
-| `inc/customer_list.php`, `inc/customer_detail.php` | popup | `mail.customers` (popup); ficha: `admin.clientes.show` | `MC@customers` | pendiente (lista); ficha: S2 |
-| `inc/mail_customer_select_frm.php`, `mail_frm.php`, `mail_confirm_frm.php`, `mail_send_frm.php`, `mail_future_frm.php` (+ `_confirm_frm`, `_send_frm`), `mail_future_list_frm.php`, `mailmag_list.php`, `mailmag_shousai(2).php`, `mailmag_sended_list.php`, `mailmag_graph(2).php`, `push_list.php`, `push_shousai.php`; `/system/inc/ajax_picupload.php`; envoltorios `anketo_mail_*`, `anketo_reply_*`, `mycoupon_mail_*` | fragmentos | — | parciales Blade `admin/promocion/inc/*` + servicios `MailRegistrar`, `CustomerFilter` | pendiente (dentro de sus vistas) |
-| `inc/mailWordsReplace.php`, `decomailTagReplace.php`, `regextest.php` | fragmento | — | `MailRenderer` (mismas etiquetas y misma conversión デコメール) | pendiente |
+| `inc/ajax_get_template_titles.php`, `ajax_get_template_body.php` | ajax | `templates.titles`, `templates.body` | `TC@titles`, `TC@body` | hecho (M2) |
+| `inc/ajax_search_kaiin.php`, `ajax_reigai_kaiin.php` | ajax | `mail.ajax-search`, `mail.ajax-reigai` | `MC@searchCustomer`, `MC@reigai` (`振分条件`) | hecho (M2, M3) |
+| `inc/ajax_search_coupon.php` | ajax | `coupons.ajax-search` | `CouponController@search` | hecho |
+| `inc/ajax_sendTestMail.php`, `ajax_testMailList.php` | ajax | `mail.test`, `mail.test-list` | `MC@sendTest`, `MC@testList` | hecho (M2) |
+| `inc/ajax_mail_delete.php`, `ajax_change_status.php`, `ajax_get_shop_data.php` | ajax | `mail.ajax-delete`, `mail.ajax-status`, `mail.ajax-shop` | `MC@*` | hecho (M2, M3) |
+| `inc/csv_download.php`, `csv_shousai_download.php`, `csv_download/csv_*.php` (+ SWF) | csv | `mail.csv`, `mail.show.csv`, `mail.analyze.csv` | `StreamedResponse` SJIS-win | hecho (M2: CSV por enlace normal; el SWF se descarta) |
+| `inc/customer_list.php`, `inc/customer_detail.php` | popup | `mail.customers` (popup); ficha: `admin.clientes.show` | `MC@customers` | hecho (lista M2; ficha: S2 `admin.clientes.show`) |
+| `inc/mail_customer_select_frm.php`, `mail_frm.php`, `mail_confirm_frm.php`, `mail_send_frm.php`, `mail_future_frm.php` (+ `_confirm_frm`, `_send_frm`), `mail_future_list_frm.php`, `mailmag_list.php`, `mailmag_shousai(2).php`, `mailmag_sended_list.php`, `mailmag_graph(2).php`, `push_list.php`, `push_shousai.php`; `/system/inc/ajax_picupload.php`; envoltorios `anketo_mail_*`, `anketo_reply_*`, `mycoupon_mail_*` | fragmentos | — | parciales Blade `admin/promocion/inc/*` + servicios `MailRegistrar`, `CustomerFilter` | hecho (M2, M3) |
+| `inc/mailWordsReplace.php`, `decomailTagReplace.php`, `regextest.php` | fragmento | — | `MailRenderer` (mismas etiquetas y misma conversión デコメール) | hecho (M2a: MailRenderer) |
 | `inc/page_control.php`, `page_ctl.php`, `graph_sql.php`, `accordion_c3.php` | fragmento | — | parciales Blade (misma paginación y menú) | descartado: no son vistas |
-| `class/cSendSchedule.php` | cron | — | `PromocionServiceProvider` (Scheduler) | pendiente |
-| `index.php` | portada | `index` | `DashboardController@index` | pendiente |
+| `class/cSendSchedule.php` | cron | — | `PromocionServiceProvider` (Scheduler) | hecho (M2a: SendSchedulePlanner + promocion:send-mail) |
+| `index.php` | portada | `index` | `DashboardController@index` | hecho (S1: portada de category3) |
 | `process-sortable.php` | ajax | — | — | descartado: solo ordena `tb_coupon`/`tb_haikei` (cupón-imagen, descartado) |
 
 ### 1.2 Fidelización (03b)
@@ -172,14 +172,14 @@ Mismas pantallas con `mail_type = deco` (`$tb_base_system_child_cd = 32`); cuerp
 
 | Legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas | Estado |
 |---|---|---|---|---|---|
-| `anketo_cate_list.php` | アンケート一覧 | `anketo.index` (GET\|POST) | `AC@index` | L tb_c3_anketo_cate | hecho |
+| `anketo_cate_list.php` | アンケート一覧 | `anketo.index` (GET/POST) | `AC@index` | L tb_c3_anketo_cate | hecho |
 | `anketo_cate_list.php?which=sended` | 過去アンケート配信一覧 | `anketo.index?which=sended` | `AC@index` | L tb_c3_anketo_cate, tb_c3_anketo_sub, mailmag_master | hecho |
-| `anketo_cate_new.php`, `_frm`, `_errchk`, `_register` | アンケート新規登録 | `anketo.create` (GET\|POST, `act=up`) | `AC@create` + `AnketoCateRequest` + `AnketoSurveyService::save` | E tb_c3_anketo_cate, hatuban | hecho |
-| `anketo_cate_update.php` | アンケート修正 | `anketo.edit` (GET\|POST) | `AC@edit` | E tb_c3_anketo_cate | hecho |
+| `anketo_cate_new.php`, `_frm`, `_errchk`, `_register` | アンケート新規登録 | `anketo.create` (GET/POST, `act=up`) | `AC@create` + `AnketoCateRequest` + `AnketoSurveyService::save` | E tb_c3_anketo_cate, hatuban | hecho |
+| `anketo_cate_update.php` | アンケート修正 | `anketo.edit` (GET/POST) | `AC@edit` | E tb_c3_anketo_cate | hecho |
 | `anketo_cate_action.php` | (発行・削除・複製) | `anketo.action` (POST) | `AC@action` → `AnketoSurveyService::action` | E tb_c3_anketo_cate, tb_c3_anketo_form | hecho |
 | `anketo_cate_detail.php` | アンケート詳細 | `anketo.show` | `AC@show` | L tb_c3_anketo_cate | hecho (sin enlaces en el legacy) |
-| `anketo_form_list.php` | アンケート詳細 + 部品一覧 (必須, ▲▼, 発行条件, クリックカウンタ) | `anketo.forms.index` (GET\|POST `act=update`), `anketo.forms.move` (POST) | `AF@index`, `AF@move` | L/E tb_c3_anketo_form; L tb_c3_anketo_cate, _sub, tb_mycoupon_master, tb_mailmag_analyze (`ClickStats` de S3), mailmag_master | hecho |
-| `anketo_form_new.php`, `anketo_form_update.php`, `_frm`, `_errchk`, `_register` | 部品 新規 / 修正 | `anketo.forms.create`, `anketo.forms.edit` (GET\|POST) | `AF@create/edit` + `AnketoFormRequest` + `AnketoItemService::save` | E tb_c3_anketo_form (`rank`), hatuban | hecho |
+| `anketo_form_list.php` | アンケート詳細 + 部品一覧 (必須, ▲▼, 発行条件, クリックカウンタ) | `anketo.forms.index` (GET/POST `act=update`), `anketo.forms.move` (POST) | `AF@index`, `AF@move` | L/E tb_c3_anketo_form; L tb_c3_anketo_cate, _sub, tb_mycoupon_master, tb_mailmag_analyze (`ClickStats` de S3), mailmag_master | hecho |
+| `anketo_form_new.php`, `anketo_form_update.php`, `_frm`, `_errchk`, `_register` | 部品 新規 / 修正 | `anketo.forms.create`, `anketo.forms.edit` (GET/POST) | `AF@create/edit` + `AnketoFormRequest` + `AnketoItemService::save` | E tb_c3_anketo_form (`rank`), hatuban | hecho |
 | `anketo_form_delete.php` | (削除) | `anketo.forms.destroy` (POST) | `AF@destroy` | E tb_c3_anketo_form (DELETE físico, como el legacy) | hecho |
 | `anketo_form_detail.php` | 部品詳細 | `anketo.forms.show` | `AF@show` | L tb_c3_anketo_form, _cate | hecho |
 | `anketo_mail_customer_select.php`, `anketo_mail_new.php`, `anketo_mail_new_confirm.php`, `anketo_mail_new_send.php` | 発行条件選択 → 内容設定 → 確認 → 登録 | `anketo.mail.select/create/confirm/store` | `AM@*` → `MailController@*` de S3 (`mailType = anketo`) | E mailmag_master (`type_flg = anketo`, `type_data_cd`), send_schedule, tb_c3_anketo_cate (`hyouji_flg`, `attached_cd`, `hakkou_date`), hatuban | hecho |
@@ -203,7 +203,7 @@ Vistas comunes: las mismas rutas con prefijo `anketo2.` (`family = anketo2`) y l
 | `anketo_cate_list.php` (casilla 選択) | お客様アンケート一覧 | `anketo2.index` | `AC@index` | L tb_c3_anketo2_cate, contents_master | hecho |
 | `ajax_set_anketo.php` | (AJAX encuesta activa) | `legacy.promocion.anketo2.ajax_set_anketo` (POST `system/category3/anketo2/ajax_set_anketo.php`) | `AC@setActive` | E contents_master (`tb_c3_anketo2` / `set_anketo_cd`) | hecho |
 | `anketo_cate_action.php?act=登録` | (本登録) | `anketo2.action` | `AC@action` | E tb_c3_anketo2_cate (`disp_flg = 1`) | hecho |
-| `anketo_answer_list.php` | お客様アンケート回答一覧 | `anketo2.answers` (GET\|POST) | `AA@index` + `AnketoAnswerService::answers` | L tb_c3_anketo2_*, tb_customer, tb_raiten_rireki | hecho |
+| `anketo_answer_list.php` | お客様アンケート回答一覧 | `anketo2.answers` (GET/POST) | `AA@index` + `AnketoAnswerService::answers` | L tb_c3_anketo2_*, tb_customer, tb_raiten_rireki | hecho |
 | `anketo_answer_detail.php` | 回答内容詳細 (popup) | `anketo2.answers.show` | `AA@show` | L tb_c3_anketo2_*, tb_customer | hecho |
 | `anketo_reply_customer_select.php`, `anketo_reply_new.php`, `_confirm.php`, `_send.php` | 返信メール | `anketo2.reply.select/create/confirm/store` | `AM@reply*` → `MailController@*` (`mailType = mail`) | E mailmag_master, send_schedule | hecho |
 | `anketo_mail_*` (envoltorios copiados de anketo) | (発行) | — | — | — | descartado: el legacy quitó el botón 発行 de お客様アンケート (2012) y su envoltorio escribía en `tb_c3_anketo_cate`; la encuesta se reparte con `{アンケートURL[cd]}` (S3) |
@@ -233,57 +233,57 @@ Decisiones F6 (S4, 2026-11-27):
 
 | Legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas | Estado |
 |---|---|---|---|---|---|
-| `mycoupon_new.php`, `mycoupon_update.php`, `_frm`, `_errchk` | クーポン新規登録 / 修正 | `coupons.create/edit` | `CouponController@create/edit` | L tb_shop, tb_base_system_child/grandchild, contents_master | pendiente |
-| `mycoupon_register.php` | (登録) | `coupons.store/update` | `CouponController@store/update` | E tb_mycoupon_master, contents_master (premio くじ), hatuban | pendiente |
-| `mycoupon_list.php` | クーポン一覧 | `coupons.index` | `CouponController@index` | L tb_mycoupon_master, tb_shop | pendiente |
-| `mycoupon_detail.php` | クーポン詳細 | `coupons.show` | `CouponController@show` | L tb_mycoupon_master, tb_mycoupon_used, tb_customer, tb_shop, mailmag_master | pendiente |
-| `mycoupon_delete.php` | (削除) | `coupons.destroy` | `CouponController@destroy` | E tb_mycoupon_master (`disp_flg = 9`) | pendiente |
-| `mycoupon_issue.php` | クーポン発行 (発行条件選択) | `coupons.issue` | `CouponIssueController@select` | L tb_customer, tb_search_cate/_form, tb_koumoku | pendiente |
-| `mycoupon_issue_detail.php` | 発行内容確認 | `coupons.issue.confirm` | `CouponIssueController@confirm` | L tb_mycoupon_master, tb_shop | pendiente |
+| `mycoupon_new.php`, `mycoupon_update.php`, `_frm`, `_errchk` | クーポン新規登録 / 修正 | `coupons.create/edit` | `CouponController@create/edit` | L tb_shop, tb_base_system_child/grandchild, contents_master | hecho (F1) |
+| `mycoupon_register.php` | (登録) | `coupons.store/update` | `CouponController@store/update` | E tb_mycoupon_master, contents_master (premio くじ), hatuban | hecho |
+| `mycoupon_list.php` | クーポン一覧 | `coupons.index` | `CouponController@index` | L tb_mycoupon_master, tb_shop | hecho |
+| `mycoupon_detail.php` | クーポン詳細 | `coupons.show` | `CouponController@show` | L tb_mycoupon_master, tb_mycoupon_used, tb_customer, tb_shop, mailmag_master | hecho |
+| `mycoupon_delete.php` | (削除) | `coupons.destroy` | `CouponController@destroy` | E tb_mycoupon_master (`disp_flg = 9`) | hecho |
+| `mycoupon_issue.php` | クーポン発行 (発行条件選択) | `coupons.issue` | `CouponIssueController@select` | L tb_customer, tb_search_cate/_form, tb_koumoku | descartado (solo lo enlazaba la versión antigua de mycoupon_mail.php) |
+| `mycoupon_issue_detail.php` | 発行内容確認 | `coupons.issue.confirm` | `CouponIssueController@confirm` | L tb_mycoupon_master, tb_shop | descartado (ídem) |
 | `customer_list.php` | 顧客一覧 (popup) | `coupons.issue.customers` | `CouponIssueController@customers` | L tb_customer, tb_raiten_rireki | pendiente |
-| `mycoupon_hakkou.php` | クーポン発行 (実行) | `coupons.issue.store` | `CouponIssueController@store` | E tb_mycoupon, hatuban | pendiente (filtro validado en vez de `$_SESSION['wherestr']`) |
-| `mycoupon_create.php`, `mycoupon_complete.php` | クーポン発行完了 | `coupons.issue.complete` | `CouponIssueController@complete` | L tb_mycoupon | pendiente |
-| `mycoupon_rireki.php` | クーポン履歴 | `coupons.history` | `CouponStatsController@history` | L tb_mycoupon, tb_mycoupon_master, tb_mycoupon_used, tb_shop | pendiente |
-| `mycoupon_ranking.php` | 使用ランキング | `coupons.ranking` | `CouponStatsController@ranking` | L tb_mycoupon_master, tb_mycoupon_used, tb_shop, mailmag_master | pendiente |
-| `mycoupon_stats.php` | クーポン利用数確認 | `coupons.stats` | `CouponStatsController@index` | L tb_mycoupon_master, tb_mycoupon_used, tb_shop | pendiente |
-| `mycoupon_stats_detail.php` | クーポン利用詳細 | `coupons.stats.show` | `CouponStatsController@show` | L tb_customer, tb_mycoupon_used, tb_shop | pendiente |
+| `mycoupon_hakkou.php` | クーポン発行 (実行) | `coupons.issue.store` | `CouponIssueController@store` | E tb_mycoupon, hatuban | descartado (ídem) |
+| `mycoupon_create.php`, `mycoupon_complete.php` | クーポン発行完了 | `coupons.issue.complete` | `CouponIssueController@complete` | L tb_mycoupon | descartado (ídem) |
+| `mycoupon_rireki.php` | クーポン履歴 | `coupons.history` | `CouponStatsController@history` | L tb_mycoupon, tb_mycoupon_master, tb_mycoupon_used, tb_shop | descartado (ídem) |
+| `mycoupon_ranking.php` | 使用ランキング | `coupons.ranking` | `CouponStatsController@ranking` | L tb_mycoupon_master, tb_mycoupon_used, tb_shop, mailmag_master | hecho |
+| `mycoupon_stats.php` | クーポン利用数確認 | `coupons.stats` | `CouponStatsController@index` | L tb_mycoupon_master, tb_mycoupon_used, tb_shop | hecho |
+| `mycoupon_stats_detail.php` | クーポン利用詳細 | `coupons.stats.show` | `CouponStatsController@show` | L tb_customer, tb_mycoupon_used, tb_shop | hecho |
 | `mycoupon_analyze.php` | クリックカウンタ | `coupons.click` | `AnalyzeController@index` | L tb_mailmag_analyze | pendiente |
-| `mycoupon_mail*.php` (7) | 新規メール配信 (cupón) | `coupons.mail.*` | `MC@*` (`coupon`) | E mailmag_master; tb_mycoupon (al enviar) | pendiente |
-| `mail_past.php`, `mail_past_shousai.php`, `mail_sended_list.php` | 過去クーポン配信一覧 / 詳細 | `coupons.mail.past/show/recipients` | `MC@*` | L mailmag_master, tb_mailmag_analyze, mailmag_sended_log | pendiente |
+| `mycoupon_mail*.php` (7) | 新規メール配信 (cupón) | `coupons.mail.*` | `MC@*` (`coupon`) | E mailmag_master; tb_mycoupon (al enviar) | hecho (F1: flujo común con mailType mycoupon) |
+| `mail_past.php`, `mail_past_shousai.php`, `mail_sended_list.php` | 過去クーポン配信一覧 / 詳細 | `coupons.mail.past/show/recipients` | `MC@*` | L mailmag_master, tb_mailmag_analyze, mailmag_sended_log | hecho |
 | `inc/page_control.php`, `js/user.js`, `cron_schedule/cronfile` | fragmento | — | — | — | descartado: no son vistas |
 
 #### ポイント管理 — `point/` + `class/Point.php`
 
 | Legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas | Estado |
 |---|---|---|---|---|---|
-| `point_config.php` (8 formularios) | ポイント仕様管理 | `points.config`, `points.config.update?form=` | `PointConfigController@edit/update` | L/E admin_master, tb_shop (columnas serializadas), tb_customer_group, contents_master, point_shikkou_alert; L tb_customer_point, tb_customer | pendiente |
-| `ajax_point_yukoukigen_kakunin.php` | (AJAX afectados) | `points.ajax-expiry` | `PointConfigController@expiryPreview` | L tb_customer, tb_customer_point, admin_master | pendiente |
-| `point_rules_list.php` | ポイントルール一覧 | `point-rules.index` | `PointRuleController@index` | L tb_point_rules, tb_shop | pendiente |
-| `point_rules_new.php`, `point_rules_update.php`, `_frm`, `_errchk`, `_register` | ポイントルール新規 / 修正 | `point-rules.create/store/edit/update` | `PointRuleController@*` | E tb_point_rules, hatuban; L tb_kingaku_rank_master, tb_raiten_rank_master | pendiente |
-| `point_rules_delete.php` | (削除) | `point-rules.destroy` | `PointRuleController@destroy` | E tb_point_rules (DELETE físico, como el legacy) | pendiente |
-| `point_aggregate.php`, `ajax_point_aggregate.php` | ポイント集計 | `points.aggregate`, `points.aggregate.ajax` | `PointAggregateController@index/data` | L tb_point_log, tb_shop | hecho (F4, S2): el no master ve su tienda (el SQL del legacy fallaba sin espacio antes de `ORDER BY`) |
-| `csv_grant_points.php` | ポイント一括付与 | `points.grant-csv` (GET; `?mode=base_csv` = ひな形), `points.grant-csv.store` | `PointGrantController@index/store` | L tb_customer; E tb_customer_point, tb_point_log | hecho (F4, S2): con `PointService` en una transacción; una fila inválida no deja ningún punto (el legacy dejaba los de las filas anteriores) |
-| `point_alert_mail_template_entry.php`, `_register.php` | ポイント有効期限切れ前通知 テンプレート | `points.alert-template` | `PointTemplateController@alert` | L/E admin_master, contents_master | pendiente |
-| `point_shikkou_mail_template_entry.php`, `_register.php` | ポイント失効通知 テンプレート | `points.shikkou-template` | `PointTemplateController@shikkou` | L/E admin_master | pendiente |
-| `point_shikkou_alert_mail_template_entry.php`, `_register.php` | 失効前通知 テンプレート (múltiple) | `points.shikkou-alert-template` | `PointTemplateController@shikkouAlert` | L/E point_shikkou_alert | pendiente |
+| `point_config.php` (8 formularios) | ポイント仕様管理 | `points.config`, `points.config.update?form=` | `PointConfigController@edit/update` | L/E admin_master, tb_shop (columnas serializadas), tb_customer_group, contents_master, point_shikkou_alert; L tb_customer_point, tb_customer | hecho |
+| `ajax_point_yukoukigen_kakunin.php` | (AJAX afectados) | `points.ajax-expiry` | `PointConfigController@expiryPreview` | L tb_customer, tb_customer_point, admin_master | hecho |
+| `point_rules_list.php` | ポイントルール一覧 | `point-rules.index` | `PointRuleController@index` | L tb_point_rules, tb_shop | hecho |
+| `point_rules_new.php`, `point_rules_update.php`, `_frm`, `_errchk`, `_register` | ポイントルール新規 / 修正 | `point-rules.create/store/edit/update` | `PointRuleController@*` | E tb_point_rules, hatuban; L tb_kingaku_rank_master, tb_raiten_rank_master | hecho (F3) |
+| `point_rules_delete.php` | (削除) | `point-rules.destroy` | `PointRuleController@destroy` | E tb_point_rules (DELETE físico, como el legacy) | hecho |
+| `point_aggregate.php`, `ajax_point_aggregate.php` | ポイント集計 | `points.aggregate`, `points.aggregate.ajax` | `PointAggregateController@index/data` | L tb_point_log, tb_shop | pendiente (F4, S2) |
+| `csv_grant_points.php` | ポイント一括付与 | `points.grant-csv` (GET/POST), `points.grant-csv.base` | `PointGrantController@*` | L tb_customer; E tb_customer_point, tb_point_log | pendiente (F4, S2) |
+| `point_alert_mail_template_entry.php`, `_register.php` | ポイント有効期限切れ前通知 テンプレート | `points.alert-template` | `PointTemplateController@alert` | L/E admin_master, contents_master | hecho (F2: point/mail_template/alert) |
+| `point_shikkou_mail_template_entry.php`, `_register.php` | ポイント失効通知 テンプレート | `points.shikkou-template` | `PointTemplateController@shikkou` | L/E admin_master | hecho (F2: point/mail_template/shikkou) |
+| `point_shikkou_alert_mail_template_entry.php`, `_register.php` | 失効前通知 テンプレート (múltiple) | `points.shikkou-alert-template` | `PointTemplateController@shikkouAlert` | L/E point_shikkou_alert | hecho (F2: point/mail_template/shikkou_alert) |
 | `sendPointShikkouMail.php`, `sendPointShikkouAlertMail.php`, `sendPointShikkouAlertMailMultiple.php` | (cron) | — | comandos `promocion:point-*` | E tb_customer_point, tb_point_log, push_master | descartado: no son vistas; Scheduler |
-| `setRegisterPoint.php`, `setPaidMemberPoint.php` | (cron) | — | comandos `promocion:register-point`, `promocion:paid-member-point` | E tb_customer_point, tb_point_log, push_master | hecho (F4, S2): comandos `promocion:register-point` (cada 5 min, con ポイント管理 y `application_use_flg = 1`) y `promocion:paid-member-point` (10:00 Asia/Tokyo, con ポイント管理 y `app_layout_mode = 1`) en `PromocionFidelizacionServiceProvider`; clases `GrantRegisterPointsCommand`/`GrantPaidMemberPointsCommand` |
+| `setRegisterPoint.php`, `setPaidMemberPoint.php` | (cron) | — | comandos `promocion:register-point`, `promocion:paid-member-point` | E tb_customer_point, tb_point_log, push_master | descartado: no son vistas; Scheduler |
 | `mailCommon.php`, `inc/page.php` | fragmento | — | `LoyaltyMail` (Mailable) | — | descartado: no son vistas |
 
 #### スタンプ管理 — `stamp/`
 
 | Legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas | Estado |
 |---|---|---|---|---|---|
-| `stamp_pattern.php`, `stamp_pattern_register.php` | スタンプデザイン管理 | `stamps.pattern`, `stamps.pattern.update` | `StampPatternController@*` | L/E tb_stamp_pattern | hecho (F5, S2): imágenes en `/hp/uploads/c4/stamp/<cd>.gif` (no hay subida en el legacy) |
-| `stamp_config.php`, `stamp_config_register.php` | スタンプ仕様管理 | `stamps.config`, `stamps.config.update` | `StampConfigController@*` | L/E tb_stamp_config, admin_master, tb_shop, tb_customer (`stamp_yukoukigen`), hatuban | hecho (F5, S2): POST a `stamp_config_register` y vuelta con `end=1#ancla`; el crontab lo sustituye el Scheduler |
-| `ajax_stamp_shikkou_kakunin.php` | (AJAX afectados) | `stamps.ajax-expiry` | `StampConfigController@expiryPreview` | L tb_customer | hecho (F5, S2) |
-| `stamp_rules_list.php` | スタンプルール一覧 | `stamp-rules.index` | `StampRuleController@index` | L tb_stamp_rules, tb_shop | hecho (F5, S2) |
-| `stamp_rules_new.php`, `stamp_rules_update.php`, `_frm`, `_errchk`, `_register` | スタンプルール新規 / 修正 | `stamp-rules.create/store/edit/update` | `StampRuleController@*` | E tb_stamp_rules, hatuban | hecho (F5, S2) |
-| `stamp_rules_delete.php` | (削除) | `stamp-rules.destroy` | `StampRuleController@destroy` | E tb_stamp_rules | hecho (F5, S2): el enlace GET envía un POST con CSRF (borrado físico) |
-| `oshirase_coupon.php`, `ajax_oshirase_coupon.php`, `oshirase_coupon_register.php` | クーポンお知らせ機能管理 | `stamps.oshirase`, `stamps.oshirase.ajax`, `stamps.oshirase.store` | `StampOshiraseController@*` | L/E tb_stamp_oshirase_coupon; L tb_mycoupon_master, contents_master | hecho (F5, S2): datos del registro codificados por jQuery (el legacy los mandaba sin codificar); texto y títulos escapados al mostrar |
-| `stamp_alert_mail_template_entry/_register.php` | スタンプ失効前通知 テンプレート | `stamps.alert-template` | `StampTemplateController@alert` | L/E admin_master, contents_master | hecho (F5, S2): `stamps.template` `{type=alert}` |
-| `stamp_shikkou_mail_template_entry/_register.php` | スタンプ失効通知 テンプレート | `stamps.shikkou-template` | `StampTemplateController@shikkou` | L/E admin_master | hecho (F5, S2): `stamps.template` `{type=shikkou}` |
-| `sendStampShikkouMail.php`, `sendStampShikkouAlertMail.php` | (cron) | — | comandos `promocion:stamp-*` | E tb_stamp_log, tb_customer | hecho (F5, S2): comandos `promocion:stamp-shikkou` y `promocion:stamp-shikkou-alert` (`StampExpiryMailer`), cada minuto a la hora de admin_master con スタンプ管理 activo y `stamp_shikkou_sousa = '1'`; el aviso previo corrige el SQL del legacy (`> 0GROUP BY`, error en PG 18) |
+| `stamp_pattern.php`, `stamp_pattern_register.php` | スタンプデザイン管理 | `stamps.pattern`, `stamps.pattern.update` | `StampPatternController@*` | L/E tb_stamp_pattern | pendiente (F5, S2) |
+| `stamp_config.php`, `stamp_config_register.php` | スタンプ仕様管理 | `stamps.config`, `stamps.config.update` | `StampConfigController@*` | L/E tb_stamp_config, admin_master, tb_shop, tb_customer (`stamp_yukoukigen`), hatuban | pendiente (F5, S2) |
+| `ajax_stamp_shikkou_kakunin.php` | (AJAX afectados) | `stamps.ajax-expiry` | `StampConfigController@expiryPreview` | L tb_customer | pendiente (F5, S2) |
+| `stamp_rules_list.php` | スタンプルール一覧 | `stamp-rules.index` | `StampRuleController@index` | L tb_stamp_rules, tb_shop | pendiente (F5, S2) |
+| `stamp_rules_new.php`, `stamp_rules_update.php`, `_frm`, `_errchk`, `_register` | スタンプルール新規 / 修正 | `stamp-rules.create/store/edit/update` | `StampRuleController@*` | E tb_stamp_rules, hatuban | pendiente (F5, S2) |
+| `stamp_rules_delete.php` | (削除) | `stamp-rules.destroy` | `StampRuleController@destroy` | E tb_stamp_rules | pendiente (F5, S2) |
+| `oshirase_coupon.php`, `ajax_oshirase_coupon.php`, `oshirase_coupon_register.php` | クーポンお知らせ機能管理 | `stamps.oshirase`, `stamps.oshirase.ajax`, `stamps.oshirase.store` | `StampOshiraseController@*` | L/E tb_stamp_oshirase_coupon; L tb_mycoupon_master, contents_master | pendiente (F5, S2) |
+| `stamp_alert_mail_template_entry/_register.php` | スタンプ失効前通知 テンプレート | `stamps.alert-template` | `StampTemplateController@alert` | L/E admin_master, contents_master | pendiente (F5, S2) |
+| `stamp_shikkou_mail_template_entry/_register.php` | スタンプ失効通知 テンプレート | `stamps.shikkou-template` | `StampTemplateController@shikkou` | L/E admin_master | pendiente (F5, S2) |
+| `sendStampShikkouMail.php`, `sendStampShikkouAlertMail.php` | (cron) | — | comandos `promocion:stamp-*` | E tb_stamp_log, tb_customer | descartado: no son vistas; Scheduler |
 | `inc/page.php` | fragmento | — | — | — | descartado: no es vista |
 
 #### スマトピ連携 — `smatopi/`
@@ -340,7 +340,7 @@ Reglas (CONVENCIONES §0, §4): `protected $table`, `protected $primaryKey = 'cd
 | `MailmagAnalyze` | `tb_mailmag_analyze` | `mail()`, `customer()` | Clics con edad/sexo/ocupación del momento |
 | `MailTemplate` | `tb_mail_template` | `category()` belongsTo MailTemplateCategory | `hyouji_flg`, `rank`, `mail_type` |
 | `MailTemplateCategory` | `tb_mail_template_category` | `templates()` | Orden por `rank` |
-| `TestMailAddress` | `tb_test_mail_address` | `shop()` | |
+| `TestMailAddress` | `tb_test_mail_address` | `shop()` |  |
 | `PushMaster` | `push_master` | `followMaster()` belongsTo PushFollowMaster; `notifications()` hasMany PushNotification (`type_master_cd`, `type = 'push'`) | Lo lee g-api |
 | `PushFollowMaster` | `push_follow_master` | `pushes()` hasMany PushMaster | `disp_flg` 1 activo, 7 pausa, 9 borrado |
 | `PushNotification` | `push_notifications` | `customer()`; `push()` o `mail()` según `type` | `open_cnt`, `open_date` |
@@ -349,18 +349,18 @@ Reglas (CONVENCIONES §0, §4): `protected $table`, `protected $primaryKey = 'cd
 | `Anketo2Cate`, `Anketo2Form`, `Anketo2Sub` | `tb_c3_anketo2_*` | igual (las FK se llaman `tb_c3_anketo_cate_cd`/`_form_cd`, sin "2") | Trait `AnketoFamily` común |
 | `MycouponMaster` | `tb_mycoupon_master` | `issued()` hasMany Mycoupon; `used()` hasMany MycouponUsed; `shop()` | Constantes de `coupon_kubun` y `limit_flg` |
 | `Mycoupon` | `tb_mycoupon` | `master()`, `customer()`, `shop()` | Cupón entregado; al usarse se copia a `tb_mycoupon_used` y se borra (como `appview/coupon_control.php`) |
-| `MycouponUsed` | `tb_mycoupon_used` | `master()`, `customer()`, `shop()` | |
+| `MycouponUsed` | `tb_mycoupon_used` | `master()`, `customer()`, `shop()` |  |
 | `PointRule` | `tb_point_rules` | `shop()` | `type_flg` 1–5; `start_time`/`end_time` (HHMM o timestamp según tipo); rangos en texto `cd,cd` |
 | `PointLog` | `tb_point_log` | `customer()`, `shop()`, `staff()`, `terminal()`, `push()` | Constantes de `action_flg` (`crm:newRegist`, `mycolle:*`…) |
 | `CustomerPoint` | `tb_customer_point` | `customer()` (`tb_customer_cd`) | Saldo `service_point`, `point_yukoukigen` |
 | `PointShikkouAlert` | `point_shikkou_alert` | `shop()` | Avisos múltiples |
 | `KingakuRankMaster`, `RaitenRankMaster` | `tb_kingaku_rank_master`, `tb_raiten_rank_master` | — | Rangos; las tareas de rango son de S3 |
 | `CustomerGroup` | `tb_customer_group` | `customers()` (modelo de S2) | S2 lo usa en 顧客グループ設定 sin cambiarlo |
-| `StampConfig` | `tb_stamp_config` | `shop()` | |
+| `StampConfig` | `tb_stamp_config` | `shop()` |  |
 | `StampRule` | `tb_stamp_rules` | `shop()` | Mismos tipos que `tb_point_rules` |
 | `StampPattern` | `tb_stamp_pattern` | — | 79 diseños |
-| `StampLog` | `tb_stamp_log` | `customer()`, `shop()` | |
-| `StampOshiraseCoupon` | `tb_stamp_oshirase_coupon` | `coupon()` (`tb_mycoupon_master_cd`, texto) | |
+| `StampLog` | `tb_stamp_log` | `customer()`, `shop()` |  |
+| `StampOshiraseCoupon` | `tb_stamp_oshirase_coupon` | `coupon()` (`tb_mycoupon_master_cd`, texto) |  |
 | `KujibikiCount` | `tb_kujibiki_count` | `customer()` | Intentos del día (`int_data`) |
 | `KujibikiLog` | `tb_kujibiki_log` | `customer()`, `coupon()` | Tiradas |
 | `TouchMode` | `tb_touch_mode` | `shop()` | カードリーダ設定 |
@@ -409,16 +409,16 @@ Cada pantalla se pasa a Blade con el mismo HTML (clases, ids, textos japoneses) 
 | — sellos (`sendStampShikkou*`) | `promocion:stamp-shikkou`, `promocion:stamp-shikkou-alert` | |
 | — rangos (`setCustomerKingakuRank`, `setCustomerRaitenRank`) | De S2: `clientes:asignar-rangos` (decisión S0, 2026-11-27); S3 solo aporta los modelos `KingakuRankMaster`/`RaitenRankMaster` | |
 | — `push/sendFollowPush.php` (5 min) | `promocion:send-follow-push` cada 5 min si プッシュ通知 está activo | |
-| `exec(php mailsoushin.php …)` (envío inmediato en segundo plano) | El registro deja `send_schedule` con la hora actual y el Scheduler lo envía en el minuto siguiente (`QUEUE_CONNECTION=sync`: sin cola ni `exec`) | |
+| `exec(php mailsoushin.php …)` (envío inmediato en segundo plano) | El registro deja `send_schedule` con la hora actual y el Scheduler lo envía en el minuto siguiente (`QUEUE_CONNECTION=sync`: sin cola ni `exec`) |  |
 | `cMailsoushin::sendMailFromMailmagMaster` (+ copia en decomail) | `MailSender`: destinatarios con el `振分配信` guardado, filtro `mailmaga_flg`, cupón por destinatario en `tb_mycoupon` (vencimiento por `limit_flg`), `mailmag_sended_log` hasta el tope de `admin_master.mailmag_sended_log`, `error_send_cnt` y baja a los 3 errores, contadores por tipo de dirección, correo resumen メール配信完了メール + copia a `system_mail`, push espejo (`type = mailmaga`) | Un solo motor, Mailables |
-| `replaceMessage` / `mailWordsReplace` / `decomailTagReplace` | `MailRenderer` (mismas etiquetas `{ID}`…, misma conversión デコメール) | |
-| `addSimpleLogin` (`easy_login`) | Igual que el legacy: el enlace lleva `easy_login` y el contador de Mi página (S4) escribe `tb_mailmag_analyze` | |
+| `replaceMessage` / `mailWordsReplace` / `decomailTagReplace` | `MailRenderer` (mismas etiquetas `{ID}`…, misma conversión デコメール) |  |
+| `addSimpleLogin` (`easy_login`) | Igual que el legacy: el enlace lleva `easy_login` y el contador de Mi página (S4) escribe `tb_mailmag_analyze` |  |
 | Push: `class/Push.php::exec` → `GET http://{push_api_host}/api/mpa/pushMessage?domain=…&type=…&cd=…` | `GApiPushSender`: escribe `push_master`/`push_notifications` igual que el legacy y llama al mismo endpoint con `Http::get` (host de `admin_master.push_api_host`, solo si `application_use_flg = 1`). **Con la misma BD el contrato con `b.g-api.net` no se rompe**: g-api sigue leyendo `push_master`/`mailmag_master` | Antony solo confirma si se mantiene g-api |
 | `Point::setPoint` / `getPointCount` (`system/class/Point.php`) | `PointService`: alta/baja con bloqueo (`lockForUpdate` sobre `tb_customer_point`), `tb_point_log` con `shori_mae_point`/`sounyu_point`/`shouhi_point`/`action_flg`, renovación de `point_yukoukigen`. `PointRuleResolver`: prioridad 5 → 4 → 3 → 2 → 1 (día exacto antes que fin de mes), tienda antes que todas (`tb_shop_cd = -1`), `update_date DESC`, rangos por tipo, valor por defecto 1 | `PointRuleResolver` del stash, cambiando los modelos a `PointRule`/`StampRule` |
 | `cKujibiki` (sorteo) | `LotteryService::draw`: intentos del día en `tb_kujibiki_count` (con `FOR UPDATE`), probabilidad y existencias desde `contents_master` (modelos de S4), `tb_kujibiki_log`, cupón en `tb_mycoupon` | Lógica del stash adaptada |
 | Canje e impresión de cupón (`appview/coupon_control.php`, `digitalsignage/ajax_kaiin_mycoupon_print_crawl.php`) | `CouponService::markUsed` (copia a `tb_mycoupon_used` y borra de `tb_mycoupon`) y `markPrinted` (`print_flg`); los llaman S4 y S5 | |
-| `mycoupon_hakkou.php` con `$_SESSION['wherestr']` | `CouponIssueService`: filtro validado → `tb_mycoupon` por cliente con `time_limit` calculado | |
-| `振分配信` / `wherestr` como texto | Se sigue guardando como SQL (lo leen el envío y g-api), pero la arma el servidor desde un filtro validado (`CustomerFilter`); nunca llega texto del usuario | |
+| `mycoupon_hakkou.php` con `$_SESSION['wherestr']` | `CouponIssueService`: filtro validado → `tb_mycoupon` por cliente con `time_limit` calculado |  |
+| `振分配信` / `wherestr` como texto | Se sigue guardando como SQL (lo leen el envío y g-api), pero la arma el servidor desde un filtro validado (`CustomerFilter`); nunca llega texto del usuario |  |
 | Smatopi (`class/Smatopi.php`) | `SmatopiClient` con `Http::`, mismas llamadas | |
 | POS (`pos_search`, `posyoyaku`, `POS_DB_PASSWORD`) | `App\Services\Promotions\PosGateway` con implementación nula enlazada en el provider | Fuera de alcance |
 | CSV con Flash / `header('text/x-csv')` | `StreamedResponse` SJIS-win (helper de S1 o propio con la misma firma) | |
@@ -533,3 +533,4 @@ Orden con una sola sesión (decisión de S0): 0.1 → M1 → M2 → F1 → F2 �
 - Rangos de cliente (2026-11-27, decisión S0): el reparto lo hace S2 con `clientes:asignar-rangos`; se quita `promocion:customer-rank` del Scheduler de S3.
 - F2 (2026-11-27): ポイント仕様管理 en `/admin/promocion/point/point_config`. El legacy reescribía `login_default_point_settings` con ceros cuando el bloque 基礎来店 no estaba en pantalla (sin ビーコン); aquí solo se guarda si llega. Los `cd` de `point_shikkou_alert` (bigint de 19 cifras) se comparan como texto validado. Las plantillas de aviso guardan con `LegacyText::db()` (form2Db, como sus register) y se imprimen escapadas. El menú de category3 pasa al formato de NUCLEO; las pantallas migradas enlazan `/admin/promocion/…` y el resto la URL del legacy.
 - F3 (2026-11-27): el borrado de ポイント発行ルール era un enlace GET; aquí el mismo enlace envía un POST con CSRF (sigue siendo borrado físico). Las fechas de 期間指定/日付指定 se interpretan en Asia/Tokyo.
+- M3 (2026-11-27): `follow/mail_future_list.php` (copia vieja que solo enlazaba el redirect relativo de mail_future_frm) queda **descartada**; los redirects van a `follow.future`/`auto.future`. El número de días de フォロー se exige solo dígitos en el servidor (el legacy lo validaba en JS y lo metía en el SQL); un `step1` de campo personalizado inexistente vuelve al formulario. 起動/停止 usa CSRF y el permiso n-4 de su tipo en lugar del id de sesión. Los títulos «…登録情報 修正» se mantienen (el legacy compara `act` con «new», que nunca llega). Las ramas `kind=followPush/autoPush` solo cambian textos y destino (push en M5).

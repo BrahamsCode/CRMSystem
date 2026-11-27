@@ -7,9 +7,11 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — M3
+## Próximo paso — M4
 
-Siguiente (reparto S0 2026-11-27: F6, F7 y M8 son de S4): M3 → M4 (クリックカウンタ, incluye `mycoupon_analyze`) → F5 → F4 → F1b → M6 → M7 → M10 → M5 → M9 → F8.
+Siguiente (reparto S0 2026-11-27: F6, F7 y M8 son de S4): M4 (クリックカウンタ, incluye `mycoupon_analyze`) → F5 → F4 → F1b → M6 → M7 → M10 → M5 → M9 → F8.
+
+M3 terminado (2026-11-27): 自動 y フォロー (`RuleController`: auto_new/confirm con meses+días o días de la semana; follow_new/confirm con 来店後, 会員登録後, 誕生日前, 来店周期 y campos 年月日/月日, armando el `振分配信` relativo a hoy como búsqueda guardada), flujo común de envío con `mail_type` follow|followdeco / auto|autodeco (rutas `follow.*`, `auto.*`), lista de programados con tienda destino, condiciones y 起動/停止 (`ajax_change_status`), edición (cupón en `get_coupon_cd`, «<tienda> 宛») y 例外顧客 por buscador (`ajax_search_kaiin`, `ajax_get_shop_data`). Pruebas `M3RulesTest` (4).
 
 F3 terminado (2026-11-27): ポイント発行ルール (`PointRuleController`: lista por tienda con 適用, alta/modificación con errchk del legacy, rangos de 顧客ランク, «登録中です» y borrado físico); `PointService`/`PointRuleResolver` ya existían (0.1). Pruebas `F3PointRulesTest` (4); suite 662 en verde.
 
@@ -70,6 +72,10 @@ Detalle en `Doc/diseno/promocion.md` §5. Resumen:
 Ver `Doc/diseno/promocion.md` §6. Las principales: controladores en `Admin/Promotions` (existente) con rutas/vistas/lang/menú `promocion`; ninguna pantalla en `hecho` porque la base existente no cumple aún la paridad (textos fuera de `lang/ja`, sin Form Requests ni Policies, faltan campos); `anketo`+`anketo2` → `surveys.type`; `hyouji_flg` → `status`; históricos de envío como solo lectura (la SQL `振分配信` no se migra); saldos de puntos/sellos como movimiento inicial.
 
 ## Hecho
+
+- 2026-11-27 — M3 compatible con F6 de S4: `carry` acepta escalares (AnketoMailTest); pedidos S4: `family()`/`activeAc()` con `anketo` (`anketo.mail`, .ac8) y prefijo por ruta `->defaults('mailFamily', 'anketo2.reply')` (.ac109); `MailRegistrar` marca la encuesta 発行済 (alta y edición, cupón en attached_cd); la edición/actualización de un programado toma el tipo de su fila y una アンケート ya no pierde su encuesta al quitar el cupón (bug del legacy).
+
+- 2026-11-27 — M3: 自動 / フォロー (condiciones, envío, programados con 起動/停止, edición, 例外顧客).
 
 - 2026-11-27 — Pedidos S0: rama de tablet de ポイント仕様管理 (`roid.popUp` a las plantillas de category3 y `roid.windowClose`); `CustomerPushService::send()` (push a un cliente: push_master + push_notifications opcional + aviso g-api) para S5.
 

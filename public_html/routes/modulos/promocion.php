@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\Promotions\MailPastController;
 use App\Http\Controllers\Admin\Promotions\PointConfigController;
 use App\Http\Controllers\Admin\Promotions\PointRuleController;
 use App\Http\Controllers\Admin\Promotions\PointTemplateController;
+use App\Http\Controllers\Admin\Promotions\RuleController;
 use App\Http\Controllers\Admin\Promotions\TemplateCategoryController;
 use App\Http\Controllers\Admin\Promotions\TemplateController;
 use App\Http\Controllers\Admin\Promotions\TestAddressController;
@@ -46,6 +47,26 @@ Route::prefix('promocion')->name('promocion.')->group(function () {
             Route::match(['get', 'post'], 'mail_sended_list', [MailPastController::class, 'recipients'])->name('recipients')->defaults('mailType', $type);
         });
     }
+    // フォロー (follow/) y 自動 (auto/): condiciones propias y después el flujo común de envío con mail_type
+    // follow|followdeco / auto|autodeco (el formulario decide; la ruta da la familia)
+    foreach (['follow', 'auto'] as $type) {
+        Route::prefix($type)->name($type.'.')->group(function () use ($type) {
+            Route::match(['get', 'post'], $type.'_new', [RuleController::class, $type])->name('rule');
+            Route::post($type.'_new_confirm', [RuleController::class, $type.'Confirm'])->name('rule-confirm');
+            if ($type === 'auto') {
+                Route::match(['get', 'post'], 'auto_mail_customer_select', [MailController::class, 'select'])->name('select')->defaults('mailType', $type);
+            }
+            Route::post($type.'_mail_new', [MailController::class, 'create'])->name('create')->defaults('mailType', $type);
+            Route::post($type.'_mail_new_confirm', [MailController::class, 'confirm'])->name('confirm')->defaults('mailType', $type);
+            Route::post($type.'_mail_new_send', [MailController::class, 'store'])->name('store')->defaults('mailType', $type);
+            Route::match(['get', 'post'], $type.'_mail_future_list', [MailController::class, 'future'])->name('future')->defaults('mailType', $type);
+            Route::match(['get', 'post'], $type.'_mail_future', [MailController::class, 'edit'])->name('edit')->defaults('mailType', $type);
+            Route::post($type.'_mail_future_confirm', [MailController::class, 'confirm'])->name('edit-confirm')->defaults('mailType', $type);
+            Route::post($type.'_mail_future_send', [MailController::class, 'store'])->name('update')->defaults('mailType', $type);
+            Route::post('mail_kaijo', [MailController::class, 'cancel'])->name('cancel')->defaults('mailType', $type);
+        });
+    }
+
     Route::get('mail_mag/customer_list', [MailController::class, 'customers'])->name('mail.customers');
     Route::post('mail_mag/csv_shousai_download', [MailPastController::class, 'clicksCsv'])->name('mail.clicks-csv');
 
