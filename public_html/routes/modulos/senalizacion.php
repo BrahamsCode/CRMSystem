@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\Senalizacion\BillingPdfController;
+use App\Http\Controllers\Admin\Senalizacion\ContactController;
 use App\Http\Controllers\Admin\Senalizacion\ContentCategoryController;
 use App\Http\Controllers\Admin\Senalizacion\ContentController;
 use App\Http\Controllers\Admin\Senalizacion\CycleController;
@@ -68,4 +70,9 @@ Route::prefix('senalizacion')->name('senalizacion.')->group(function () {
         Route::post('/', 'store')->name('store');
         Route::post('{cd}/destroy', 'destroy')->whereNumber('cd')->name('destroy');
     });
+
+    // GoTel (PROVISIONAL, en pausa hasta que Japón confirme): mail/index.php お問い合わせ y pdf/*.php 請求書/領収書
+    Route::match(['get', 'post'], 'contact', [ContactController::class, 'form'])->name('contact');
+    Route::get('invoice', [BillingPdfController::class, 'invoice'])->name('invoice');
+    Route::get('receipt', [BillingPdfController::class, 'receipt'])->name('receipt');
 });

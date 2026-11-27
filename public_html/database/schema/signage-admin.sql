@@ -108,6 +108,7 @@ CREATE TABLE signage (
     update_date timestamp
 );
 
+-- PROVISIONAL (Antony, 2026-11-28, hasta el volcado): customer, shop y contact reconstruidas de las consultas del legacy.
 -- 顧客 (mail/index.php, pdf/invoice.php, pdf/receipt.php: SELECT * … cd, name, master_option_cd {a,b})
 CREATE TABLE customer (
     cd serial PRIMARY KEY,
@@ -118,7 +119,7 @@ CREATE TABLE customer (
     update_date timestamp
 );
 
--- 店舗 (inc/files.php: login ?s=md5(email01 || '_' || pass) con flg = 1)
+-- 店舗 (PROVISIONAL; inc/files.php: login ?s=md5(email01 || '_' || pass) con flg = 1)
 CREATE TABLE shop (
     cd serial PRIMARY KEY,
     name text,
@@ -129,7 +130,7 @@ CREATE TABLE shop (
     update_date timestamp
 );
 
--- お問い合わせ (mail/index.php: insertSQL sin RETURNING)
+-- お問い合わせ (PROVISIONAL; mail/index.php: insertSQL sin RETURNING)
 CREATE TABLE contact (
     cd serial PRIMARY KEY,
     subject text,

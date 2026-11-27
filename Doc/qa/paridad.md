@@ -7,7 +7,7 @@ S1, 2026-11-27. Resumen de las tablas de paridad de `Doc/diseno/*.md` en `larave
 - **Núcleo (S1)** y **clientes, ventas y reservas (S2)**: sin pendientes.
 - **Promoción (S3)**: 28 pendientes. 15 de ellos ya tienen ruta en el código (marcados «ruta ya existe»): sobre todo プッシュ通知 (M5, hecho por S4) y QR. Hay que confirmar si están terminados y pasarlos a «hecho» en `promocion.md`. El resto: スタンプ管理 (9), スマトピ連携 (2), 新着情報 de category3 (2), ポイント (2), マイクーポン (1).
 - **Operaciones (S5)**: 28 pendientes, 26 de ellos ⏸ de 勤怠 (`kintai/`, `working/`, カードリーダー/カード): esperan la decisión de Antony, no trabajo. 5 «otro» = diferidos por POS/SNS (fuera de alcance) o llevados por S2.
-- **Contenido y terminales (S4)**: 7 pendientes, todos ⏸ a la espera de Antony: ビーコン (4, BD externa `b-develop.g-api.net` caída) y GoTel (3: お問い合わせ, 請求書, 領収書; confirmar si sigue en uso). Actualizado por S4 el 2026-11-27: los reproductores `digitalsignage/` y las portadas category6/7 ya estaban hechos. Las 12 pantallas de `signage/` están hechas sobre el esquema mínimo de desarrollo; falta el volcado de la BD `admin` de Antony para verificarlas con datos reales.
+- **Contenido y terminales (S4)**: 4 pendientes, los de ビーコン: provisionales a la espera de Japón (BD externa `b-develop.g-api.net` caída); ya están sus modelos en la conexión `beacon`, sin pantallas. GoTel (お問い合わせ, 請求書, 領収書) hecho como provisional sobre el esquema mínimo (en pausa). Las pantallas de `signage/` están hechas sobre ese esquema mínimo de desarrollo; falta el volcado de la BD `admin` para verificarlas con datos reales. Actualizado por S4 el 2026-11-28.
 
 ## Resumen
 
@@ -16,9 +16,9 @@ S1, 2026-11-27. Resumen de las tablas de paridad de `Doc/diseno/*.md` en `larave
 | [Núcleo y 基本情報管理 (category0)](../diseno/nucleo-base.md) | S1 | 16 | 0 | 4 | 0 | 20 | 100 % |
 | [顧客管理, 売上 y 予約 (category1, ventas, category9)](../diseno/clientes-ventas-reservas.md) | S2 | 148 | 0 | 24 | 0 | 172 | 100 % |
 | [販売促進管理 (category3)](../diseno/promocion.md) | S3 | 114 | 28 | 41 | 0 | 183 | 80 % |
-| [マイページ, HP y 端末管理 (category6, category7)](../diseno/contenido-terminales.md) | S4 | 67 | 7 | 46 | 0 | 120 | 91 % |
+| [マイページ, HP y 端末管理 (category6, category7)](../diseno/contenido-terminales.md) | S4 | 70 | 4 | 46 | 0 | 120 | 95 % |
 | [業務支援管理 e integraciones (category5, API)](../diseno/operaciones-integraciones.md) | S5 | 74 | 28 | 22 | 5 | 129 | 69 % |
-| **Total** | | **419** | **63** | **137** | **5** | **624** | **86 %** |
+| **Total** | | **422** | **60** | **137** | **5** | **624** | **87 %** |
 
 ## Núcleo y 基本情報管理 (category0) — S1
 
@@ -116,19 +116,15 @@ Sin pendientes.
 | 1.1 マイページ管理 — `mypage` (category6) | 15 | 0 | 15 | 0 |
 | 1.2 ホームページ管理 — `web` (category4) | 0 | 0 | 20 | 0 |
 | 1.3 端末管理 — `terminales` (category7) | 25 | 4 | 7 | 0 |
-| 1.4 Reproductores — `senalizacion` (`signage/`, `digitalsignage/`) | 27 | 3 | 4 | 0 |
+| 1.4 Reproductores — `senalizacion` (`signage/`, `digitalsignage/`) | 30 | 0 | 4 | 0 |
 
-**Pendientes (7), todos ⏸ a la espera de Antony:**
+**Pendientes (4), provisionales a la espera de Japón:**
 
 - _1.3 端末管理 — `terminales` (category7)_
-  - `beacon/beacon_list.php` (ビーコン管理) — la BD externa `b-develop.g-api.net` (conexión `beacon`) no responde; confirmar si sigue en uso y su acceso
+  - `beacon/beacon_list.php` (ビーコン管理) — pendiente (provisional, espera a Japón): la BD externa `b-develop.g-api.net` no responde; hay modelos en la conexión `beacon` (S1), sin pantallas
   - `beacon/beacon_detail.php` + `ajax_beaconSave.php` (ビーコン詳細) — ídem
   - `beacon/terminal_list.php` (受信端末一覧) — ídem
   - `beacon/terminal_detail.php` + `ajax_terminalSave.php` (受信端末詳細) — ídem
-- _1.4 Reproductores — `senalizacion` (`signage/`, `digitalsignage/`)_
-  - `signage/mail/index.php` (GoTel管理 (お問い合わせ)) — confirmar si GoTel sigue en uso y con qué datos; si sí: Mailable en cola
-  - `signage/pdf/invoice.php` (請求書) — ídem; si sí: `LegacyPdf`
-  - `signage/pdf/receipt.php` (領収書) — ídem
 
 ## 業務支援管理 e integraciones (category5, API) — S5
 
