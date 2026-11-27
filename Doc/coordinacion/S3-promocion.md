@@ -9,7 +9,7 @@ Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archiv
 
 ## Próximo paso — esperar a S0
 
-Orden asignado terminado (reparto S0 2026-11-27: M1–M4, M6, F1, F1b, F2, F3). F4/F5 son de S2; M5/M7/F6/F7/M8 de S4; M10 descartado; M9 y F8 esperan a Antony. F4/F5 son de S2; M5/M7 de S4; M10 descartado; M9 y F8 esperan a Antony.
+Orden asignado terminado (reparto S0 2026-11-27: M1–M4, M6, F1, F1b, F2, F3). F4/F5 son de S2; M5/M7/F6/F7/M8 de S4; M10 descartado; M9 hecho (Antony: paridad); F8 espera a Antony.
 
 M3 terminado (2026-11-27): 自動 y フォロー (`RuleController`: auto_new/confirm con meses+días o días de la semana; follow_new/confirm con 来店後, 会員登録後, 誕生日前, 来店周期 y campos 年月日/月日, armando el `振分配信` relativo a hoy como búsqueda guardada), flujo común de envío con `mail_type` follow|followdeco / auto|autodeco (rutas `follow.*`, `auto.*`), lista de programados con tienda destino, condiciones y 起動/停止 (`ajax_change_status`), edición (cupón en `get_coupon_cd`, «<tienda> 宛») y 例外顧客 por buscador (`ajax_search_kaiin`, `ajax_get_shop_data`). Pruebas `M3RulesTest` (4).
 
@@ -82,6 +82,8 @@ Ver `Doc/diseno/promocion.md` §6. Las principales: controladores en `Admin/Prom
 - 2026-11-27 — F1b: `LotteryService` completo para Mi página (S4): además de `draw()` (0.1), `customerCount()`, `countData()` y `couponCount()` (getCustomerCount, getKujibikiCountData, getKujibikiCouponCount de cKujibiki).
 
 - 2026-11-27 — M4: クリックカウンタ de メルマガ, デコメール, マイクーポン y アンケート + CSV (master). Estado de promocion.md al día. Reparto S0: F4/F5 → S2, M5/M7 → S4, M10 descartado, M9/F8 esperan a Antony; quedan F1b y M6.
+
+- 2026-11-27 — M9: 新着情報 (listado, 修正, 削除, subida del archivo; URL legacy redirigida). Sin lectores externos de `tb_digital_signage`.
 
 - 2026-11-27 — M3 compatible con F6 de S4: `carry` acepta escalares (AnketoMailTest); pedidos S4: `family()`/`activeAc()` con `anketo` (`anketo.mail`, .ac8) y prefijo por ruta `->defaults('mailFamily', 'anketo2.reply')` (.ac109); `MailRegistrar` marca la encuesta 発行済 (alta y edición, cupón en attached_cd); la edición/actualización de un programado toma el tipo de su fila y una アンケート ya no pierde su encuesta al quitar el cupón (bug del legacy).
 

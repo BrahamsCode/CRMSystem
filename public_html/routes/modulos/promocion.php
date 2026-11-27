@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\Promotions\CouponStatsController;
 use App\Http\Controllers\Admin\Promotions\MailAjaxController;
 use App\Http\Controllers\Admin\Promotions\MailController;
 use App\Http\Controllers\Admin\Promotions\MailPastController;
+use App\Http\Controllers\Admin\Promotions\NewsController;
 use App\Http\Controllers\Admin\Promotions\PointConfigController;
 use App\Http\Controllers\Admin\Promotions\PointRuleController;
 use App\Http\Controllers\Admin\Promotions\PointTemplateController;
@@ -93,6 +94,15 @@ Route::prefix('promocion')->name('promocion.')->group(function () {
     // Imagen adjunta (staff_entry.js: rutas relativas a la carpeta de la pantalla)
     Route::post('mail_mag/inc/upload.php', [MailAjaxController::class, 'upload'])->name('mail.upload');
     Route::get('mail_mag/inc/disp_pic.php', [MailAjaxController::class, 'displayPicture'])->name('mail.picture');
+
+    // 新着情報 (digital_signage, M9): listado/修正, 登録, 削除 y la subida de AjaxUpload
+    Route::prefix('digital_signage')->name('news.')->group(function () {
+        Route::get('digital_signage_entry', [NewsController::class, 'index'])->name('index');
+        Route::post('digital_signage_register', [NewsController::class, 'store'])->name('store');
+        Route::post('digital_signage_delete', [NewsController::class, 'destroy'])->name('destroy');
+        Route::post('inc/upload.php', [NewsController::class, 'upload'])->name('upload');
+        Route::get('inc/disp_pic.php', [NewsController::class, 'picture'])->name('picture');
+    });
 
     // マイクーポン管理 (mycoupon)
     Route::prefix('mycoupon')->name('coupons.')->group(function () {

@@ -35,6 +35,8 @@ Route::prefix('system/category3')->name('promocion.')->group(function () {
     // URL legacy de フォロー/自動 (enlaces viejos, p. ej. プッシュ通知 con ?kind=…): a la pantalla migrada con la query
     Route::get('follow/follow_new.php', [\App\Http\Controllers\Admin\Promotions\RuleController::class, 'legacyRedirect'])->name('follow.follow_new')->defaults('target', 'admin.promocion.follow.rule');
     Route::get('auto/auto_new.php', [\App\Http\Controllers\Admin\Promotions\RuleController::class, 'legacyRedirect'])->name('auto.auto_new')->defaults('target', 'admin.promocion.auto.rule');
+    // 新着情報 (M9): URL legacy de la pantalla → pantalla migrada con la query (?cd=)
+    Route::get('digital_signage/digital_signage_entry.php', [\App\Http\Controllers\Admin\Promotions\RuleController::class, 'legacyRedirect'])->name('digital_signage.digital_signage_entry')->defaults('target', 'admin.promocion.news.index');
     // CSV de la クリックカウンタ (solo master)
     Route::post('inc/csv_download.php', [\App\Http\Controllers\Admin\Promotions\ClickCounterController::class, 'csv'])->name('inc.csv_download');
 
