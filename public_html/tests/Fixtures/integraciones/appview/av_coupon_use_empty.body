@@ -1,0 +1,64 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title></title>
+<style>
+body{
+	font-family: 'Meiryo',"ヒラギノ角ゴ Pro W3","ＭＳ Ｐゴシック","Osaka", sans-serif;
+}
+</style>
+</head>
+
+<body>
+
+<div class="hr_border"></div>
+
+<h2 bgcolor="#FF6600" color="#FFFFFF">ｸｰﾎﾟﾝ詳細</h2>
+
+<div class="textCenter" align="center">
+<span class="attention textS"><font size="-1" color="#FE0000">この画面を店員にお見せください。<br />
+<img src="../hp/user/img/spacer.gif" width="1" height="3" alt="" /><br />
+使用日時：1970/01/01 09:00:00</font></span><br />
+<img src="../hp/user/img/spacer.gif" width="1" height="10" alt="" /><br />
+
+<span class="textS"><font size="-1">会員番号：<br />
+さんのﾏｲｸｰﾎﾟﾝです。</font></span>
+</div>
+<br />
+<div class="textCenter" align="center">
+<table width="90%" bgcolor="#FF9900" cellspacing="2" style="margin: auto; background: #FF9900;">
+<tr>
+<td class="textCenter" align="center" bgcolor="#FFF5F0">
+<img src="../hp/user/img/spacer.gif" width="1" height="3" alt="" /><br />
+<font color="#0055FF"></font><br />
+
+<span class="textS"><font size="-1" color="#FF0000"></font></span>
+<br /><img src="../hp/user/img/spacer.gif" width="1" height="3" alt="" /><br />
+
+<span class="textS"><font size="-1" color="#000000">発行NO.</font></span><br />
+<span class="textS"><font size="-1" color="#000000">ｸｰﾎﾟﾝNO.</font></span>
+<br /><img src="../hp/user/img/spacer.gif" width="1" height="3" alt="" />
+
+<dl class="dlList">
+<dt><span class="textS"><font size="-1" color="#FF0000">有効期限</font></span></dt>
+<dd><span class="textS"><font size="-1" color="#FF0000">1970/01/01</font></span></dd>
+</dl><br />
+<img src="../hp/user/img/spacer.gif" width="1" height="3" alt="" />
+</td>
+</tr>
+
+
+</table>
+</div>
+
+<br /><img src="./hp/user/img/spacer.gif" width="1" height="3" alt="" /><br />
+
+
+
+<div align="right">
+<span class="textS"><font size="-1"><a href="./coupon.php?customer_cd=">一覧に戻る</a></font></span>
+</div>
+
+</body>
+</html>

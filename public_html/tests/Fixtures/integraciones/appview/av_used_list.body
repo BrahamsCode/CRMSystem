@@ -1,0 +1,38 @@
+
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+body{
+	font-family: 'Meiryo',"ヒラギノ角ゴ Pro W3","ＭＳ Ｐゴシック","Osaka", sans-serif;
+}
+</style>
+</head>
+
+<body>
+<h2 bgcolor="#FF6600" color="#FFFFFF">使用済みｸｰﾎﾟﾝ</h2>
+
+<div>
+
+<div align="right" class="textRight"><span class="textS"><font size="-1">※最新10件を表示</font></span></div>
+
+<hr />
+<img src="../hp/user/img/spacer.gif" width="1" height="3" alt="" /><br />
+カット10%OFF<br />
+<span class="textS"><font size="-1">ご来店時にこの画面をご提示ください。<br />
+他の割引と併用できません。<br />(shop)&nbsp;2023/11/15 08:13:20</font></span><br /><img src="../hp/user/img/spacer.gif" width="1" height="3" alt="" />
+
+
+
+
+<!--　ネクストバック　-->
+<div class="spPageControl">
+</div>
+
+</div>
+
+<div align="right">
+<span class="textS"><font size="-1"><a href="./coupon.php?customer_cd=1609897927001809158">一覧に戻る</a></font></span>
+</div>
+
+</body>
+</html>

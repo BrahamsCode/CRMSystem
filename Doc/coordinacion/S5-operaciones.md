@@ -9,7 +9,7 @@ Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archiv
 
 ## Próximo paso — Diseño (sin código)
 
-> **Ahora (2026-11-27, S0):** diseño aprobado; pasos 1-4, 8-10 y 12 hechos. Siguiente: `appview/*` (paso 11).
+> **Ahora (2026-11-27, S0):** diseño aprobado; pasos 1-4, 8-10 y 12 hechos; `appview` lotes A y B hechos. Siguiente: `appview` lote C (member_regist/complete, customerUpdate, anketo2*, reservation).
 
 > **2026-11-26, cambio de base (Antony):** misma BD y misma UI que el legacy (`CONVENCIONES.md`, sección 0). Si ya escribiste tu diseño con tablas nuevas, rehaz la parte de esquema y UI. — **rehecho sobre la BD legacy el 2026-11-27, esperando revisión de S0**
 
@@ -80,6 +80,8 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 
 - **Turnos (2026-11-27):** el master elige cualquier tienda (el legacy volvía siempre a la primera por un bug) y el horario es el de la tienda elegida; sin `kintai_tb_config` se usan sus valores por defecto (el legacy redirigía a 勤怠一覧, ⏸). 月別 pinta solo los días del mes (el legacy, 31 filas siempre) y solo guarda empleados activos de la tienda. Los datos del JS se emiten con `@json`.
 
+- **appview (2026-11-27):** vistas PHP planas con la plantilla del legacy (CRLF) para comparar byte a byte; sin autenticación por `customer_cd` (contrato, anotado para Japón). `introduction.php` y `detail_view.php` descartados: leen la BD `admin` (`shop`, `news`, `blog`, `good_count`), fuera de alcance. Con `domain`, solo el paquete «crm» (*.crm-s.net, *.crm-tis.jp) usa esta BD; los dominios del POS responden «接続できませんでした». Las pantallas de cupones/sellos usan `MobileTheme` (colores y bandas de `hp/inc_m`; `emoji()` vacío, como en smartphone).
+
 ## Hecho
 
 - 2026-11-26 — Diseño con tablas nuevas, aprobado por S0 (obsoleto desde el cambio de base).
@@ -102,3 +104,5 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 - 2026-11-27 — 日別シフト管理 y 月別シフト管理 (`StaffShiftController`, `ShiftBoard`, vistas con el JS/CSS del legacy) (`StaffShiftTest`). Pasos 1-4 y 8-10 hechos; suite 573 en verde.
 - 2026-11-27 — `setRaitenDetail` sobre `VisitRecordService::save` de S2 (mismas claves; errores con el formato del legacy; `add_record_verify` en sesión) (`SetRaitenDetailTest`; contrato contra el legacy `todo` hasta C3).
 - 2026-11-27 — Utilitarios: `crm_version.php` (vacío, como en crm2-php8 y development), `/ptag/<ID>`, `air/air_info_out.php` y los XML de `air/` (`UtilityTest`) (51df245). `integraciones:shukei` ⏸ (BD externa de VIZAN, llamador desconocido).
+- 2026-11-27 — `appview` lote A (479f281): memberId, qr_code, member_init/comp/login/kiyaku/comfirm, privacyPage (20 casos grabados del legacy, `AppviewContractTest`) y photo_gallery/visit_history con `Http::fake` (`AppviewMemberTest`). `introduction`/`detail_view` descartados (BD `admin`). Suite: 595 en verde.
+- 2026-11-27 — `appview` lote B: coupon, coupon_detail, coupon_control, coupon_use, used_coupon_list y stamp (45 casos en `AppviewContractTest`; uso e impresión con `CouponService` de S3 en `AppviewCouponTest`). `MobileTheme` porta lo de `hp/inc_m` que usan.

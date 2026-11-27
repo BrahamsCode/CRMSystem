@@ -1,0 +1,23 @@
+
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+body{
+	font-family: 'Meiryo',"ヒラギノ角ゴ Pro W3","ＭＳ Ｐゴシック","Osaka", sans-serif;
+}
+</style>
+</head>
+
+<body>
+<h2 bgcolor="#FF6600" color="#FFFFFF">使用済みｸｰﾎﾟﾝ</h2>
+
+<div>
+<div class="m10 p10 center">現在使用済みｸｰﾎﾟﾝはありません。</div>
+</div>
+
+<div align="right">
+<span class="textS"><font size="-1"><a href="./coupon.php?customer_cd=1610793770001489815">一覧に戻る</a></font></span>
+</div>
+
+</body>
+</html>

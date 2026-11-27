@@ -26,25 +26,40 @@ function normalizeAppview(string $body): string
     return (string) preg_replace('/name="_token" value="[0-9a-f]{32}"/', 'name="_token" value="TOKEN"', $body);
 }
 
+/** El id de sesión de las redirecciones de coupon_control.php (PHPSESSID del legacy, sesión de Laravel aquí) */
+function normalizeSessionId(?string $location): ?string
+{
+    return $location === null ? null : (string) preg_replace('/PHPSESSID=[^&]+/', 'PHPSESSID=SID', $location);
+}
+
 it('reproduce byte a byte las pantallas de appview grabadas del legacy', function () {
     $manifest = json_decode(file_get_contents(APPVIEW_FIXTURES.'/appview/manifest.json'), true, flags: JSON_THROW_ON_ERROR);
 
     foreach ($manifest as $case) {
         $name = $case['name'];
+        if ($name === 'av_coupon_control_use') {
+            // El legacy da 500 (constante `N` sin definir) sin usar el cupón; Laravel lo usa (prueba aparte). Se
+            // salta para que los casos siguientes partan del mismo estado que al grabar.
+            continue;
+        }
         $host = null;
+        $server = [];
         foreach ($case['headers'] ?? [] as $header) {
-            if (str_starts_with($header, 'Host: ')) {
-                $host = substr($header, 6);
+            [$key, $value] = explode(': ', $header, 2);
+            if ($key === 'Host') {
+                $host = $value;
+            } else {
+                $server['HTTP_'.strtoupper(str_replace('-', '_', $key))] = $value;
             }
         }
         $uri = $host ? 'http://'.$host.$case['path'] : $case['path'];
-        $response = $this->call($case['method'], $uri, $case['form'] ?? []);
+        $response = $this->call($case['method'], $uri, $case['form'] ?? [], [], [], $server);
         $expected = $case['response'];
         $expectedBody = normalizeAppview(file_get_contents(APPVIEW_FIXTURES.'/appview/'.$expected['body_file']));
 
-        expect($response->getStatusCode())->toBe($expected['status'], "estado de {$name}")
+        expect($response->getStatusCode())->toBe($expected['status'], "estado de {$name}: ".$response->exception?->getMessage())
             ->and(strtolower((string) $response->headers->get('Content-Type')))->toBe(strtolower((string) $expected['content_type']), "Content-Type de {$name}")
-            ->and($response->headers->get('Location'))->toBe($expected['location'], "Location de {$name}")
+            ->and(normalizeSessionId($response->headers->get('Location')))->toBe(normalizeSessionId($expected['location']), "Location de {$name}")
             ->and(normalizeAppview($response->getContent()))->toBe($expectedBody, "cuerpo de {$name}");
     }
 });

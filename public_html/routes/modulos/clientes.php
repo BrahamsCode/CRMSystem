@@ -76,6 +76,23 @@ Route::prefix('clientes')->name('clientes.')->group(function () {
     Route::post('rank-schedules', [\App\Http\Controllers\Admin\Customers\RankScheduleController::class, 'update'])->name('rank-schedules.update');
     // --- fin C2-b ---
 
+    // --- C3 ---
+    // 来店処理 (customer_search.php)
+    Route::get('visits', [\App\Http\Controllers\Admin\Customers\VisitController::class, 'index'])->name('visits');
+    Route::post('visits', [\App\Http\Controllers\Admin\Customers\VisitController::class, 'store'])->name('visits.store');
+    // 来店履歴の追加・修正 (pestaña 9: POST con kaiin_cd, act, related_features_cd… como el legacy)
+    Route::match(['get', 'post'], 'visit-records/create', [\App\Http\Controllers\Admin\Customers\VisitRecordController::class, 'create'])->name('visit-records.create');
+    Route::post('visit-records', [\App\Http\Controllers\Admin\Customers\VisitRecordController::class, 'store'])->name('visit-records.store');
+    Route::post('visit-records/delete', [\App\Http\Controllers\Admin\Customers\VisitRecordController::class, 'destroy'])->name('visit-records.destroy');
+    // Puntos y sellos manuales de la ficha (los JS llaman a las URL legacy; mismos métodos)
+    Route::match(['get', 'post'], 'points', [\App\Http\Controllers\Admin\Customers\CustomerLoyaltyController::class, 'points'])->name('points.store');
+    Route::match(['get', 'post'], 'stamps', [\App\Http\Controllers\Admin\Customers\CustomerLoyaltyController::class, 'stamps'])->name('stamps.store');
+    Route::match(['get', 'post'], 'stamps/use', [\App\Http\Controllers\Admin\Customers\CustomerLoyaltyController::class, 'useStamps'])->name('stamps.use');
+    // ポイント利用一覧 (point_history.php) y su CSV
+    Route::match(['get', 'post'], 'point-history', [\App\Http\Controllers\Admin\Customers\PointHistoryController::class, 'index'])->name('point-history');
+    Route::match(['get', 'post'], 'point-history/csv', [\App\Http\Controllers\Admin\Customers\PointHistoryController::class, 'csv'])->name('point-history.csv');
+    // --- fin C3 ---
+
     // --- C1-b: ficha y pestañas, borrar, recuperar (al final: captura /{customer}) ---
     Route::get('{customer}', [\App\Http\Controllers\Admin\Customers\CustomerController::class, 'show'])->whereNumber('customer')->name('show');
     Route::delete('{customer}', [\App\Http\Controllers\Admin\Customers\CustomerController::class, 'destroy'])->whereNumber('customer')->name('destroy');
