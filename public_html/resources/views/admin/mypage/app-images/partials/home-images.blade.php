@@ -2,8 +2,9 @@
     HOME メインイメージ ($home = 'main', mobile_mycolle_edit_main.php) y サムネイル
     ($home = 'thumbnail', mobile_mycolle_edit_thumbnail.php). Mismo HTML con otros nombres.
     Hueco 0 = 全店舗用 (columna izquierda); huecos 1..n = $shops en la columna 各店舗.
-    El <input type="hidden" name="pic[...]"> de una imagen existente usa el shop_cd (0 en 全店舗用),
-    pero el <input type="file" name="image<i>"> usa el índice i, como el legacy.
+    Todo va por shop_cd (0 = 全店舗用): archivo <shop_cd>.<ext>, pic[shop_cd], image<shop_cd> y el borrado
+    num=<shop_cd>, que es lo que lee la API de la app. El legacy usaba el índice i en el <input type="file">
+    y en el archivo mostrado (bug: solo funcionaba si shop_cd coincidía con el índice).
 --}}
 @php
     $isMain = $home === 'main';
@@ -44,7 +45,7 @@
 						<div>【全店舗用】</div>
 					@endif
 					<div class="imageFrame" @if (! $isMain) style="min-height: 190px;" @endif>@if ($slot['imageUrl'] !== null)<img src="{{ $slot['imageUrl'] }}" style="width:100%;"><input type="hidden" name="pic[{{ $picCd }}]" value="def">@endif</div>
-					<div><input type="file" name="image{{ $slot['index'] }}" class="{{ $inputClass }}" /></div>
+					<div><input type="file" name="image{{ $picCd }}" class="{{ $inputClass }}" /></div>
 					@if ($slot['index'] > 0)
 						<label for="mypage_config_{{ $flgKey }}_{{ $picCd }}">
 							<input type="checkbox" name="mypage_config[{{ $flgKey }}][{{ $picCd }}]" id="mypage_config_{{ $flgKey }}_{{ $picCd }}" value="1" @if ($slot['useAllShopsImage']) checked="checked" @endif> 全店舗画像を利用する

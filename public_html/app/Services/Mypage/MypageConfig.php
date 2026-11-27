@@ -91,4 +91,77 @@ class MypageConfig
     {
         $this->put($field, implode('||', $links));
     }
+
+    /**
+     * Reemplaza claves de primer nivel de `mypage_config` (como el legacy:
+     * `$mypage_config[$key] = $val` por cada clave enviada) y guarda.
+     */
+    public function mergeMypageConfig(array $values): array
+    {
+        $config = $this->mypageConfig();
+        foreach ($values as $key => $value) {
+            $config[$key] = $value;
+        }
+        $this->saveMypageConfig($config);
+
+        return $config;
+    }
+
+    /**
+     * Comentarios de la HOME de la app (`apli_home_comment`): [0 => 全店舗, shop_cd => texto].
+     * Se lee como el legacy y la API (mpa_corresponding.php): comillas simples → dobles y unserialize.
+     */
+    public function homeComments(): array
+    {
+        $raw = (string) $this->text('apli_home_comment');
+        if ($raw === '') {
+            return [];
+        }
+        $value = @unserialize(str_replace("'", '"', $raw), ['allowed_classes' => false]);
+
+        return is_array($value) ? $value : [];
+    }
+
+    /**
+     * Guarda los comentarios como mobile_mycolle_edit.php: comillas dobles del texto → simples y serialize.
+     * Al leer (pantalla y API) vuelven a ser dobles.
+     */
+    public function saveHomeComments(array $comments): void
+    {
+        $comments = array_map(fn ($text) => str_replace('"', "'", (string) $text), $comments);
+        $this->putActive('apli_home_comment', ['text_data' => serialize($comments)]);
+    }
+
+    /** 「マイコレのトップに顧客グループの表記を」: int_data = 1 (表示する) / 0 */
+    public function customerGroupDisplay(): bool
+    {
+        return (int) $this->row('apli_customer_group_disp')?->int_data === 1;
+    }
+
+    public function saveCustomerGroupDisplay(bool $display): void
+    {
+        $this->putActive('apli_customer_group_disp', ['int_data' => $display ? 1 : 0]);
+    }
+
+    /**
+     * Como el legacy para apli_home_comment / apli_customer_group_disp: UPDATE de todas las filas
+     * con disp_flg = '1' del campo; si no hay ninguna, INSERT.
+     */
+    private function putActive(string $field, array $attributes): void
+    {
+        $query = ContentsMaster::query()
+            ->where('category', self::CATEGORY)
+            ->where('field', $field)
+            ->where('disp_flg', '1');
+
+        if ($query->exists()) {
+            $query->get()->each(fn (ContentsMaster $row) => $row->fill($attributes)->save());
+
+            return;
+        }
+
+        ContentsMaster::create([
+            'category' => self::CATEGORY, 'field' => $field, 'disp_flg' => '1', 'hyouji_flg' => '1',
+        ] + $attributes);
+    }
 }

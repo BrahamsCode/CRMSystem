@@ -17,6 +17,9 @@
                                          (mensaje del Form Request sin «※», p. ej. 必須項目です。)
 
     Old input: tras un error de validación se reutilizan los valores enviados (old()).
+    Request leído directamente: tb_display_cd (alta desde el listado: va en un hidden que el legacy no tenía).
+    FLV/SWF: pic_up.php guarda su hueco (10 / 20) en la posición 0 de pic_flg y pic_extension, así que
+    los hidden pic_extension[10] y [20] llevan la posición 0 (el legacy leía la 10/20 y perdía la extensión).
 
     Rutas:
       POST admin.terminales.signage-materials.store           (alta; multipart: photo0..4, photo10, photo20)
@@ -171,7 +174,7 @@ $(document).ready(function() {
 {{-- ////////////////////////// FLV (el legacy reservaba aquí el reproductor: «プレイヤー設置予定地») --}}
     	<input type="file" name="photo10" />　flvファイル
 
-	<input type="hidden" name="pic_extension[10]" value="{{ $picExtensions[10] ?? '' }}" />
+	<input type="hidden" name="pic_extension[10]" value="{{ $picExtensions[0] ?? '' }}" />
 	表示する：<input type="radio" name="pic_flg[10]" value="1"{{ ($picFlags[0] ?? null) == '1' ? ' checked' : '' }} />
 	しない：<input type="radio" name="pic_flg[10]" value="0"{{ ($picFlags[0] ?? null) != '1' ? ' checked' : '' }} /><br />
 
@@ -187,7 +190,7 @@ $(document).ready(function() {
 
     	<input type="file" name="photo20" />　swfファイル
 
-	<input type="hidden" name="pic_extension[20]" value="{{ $picExtensions[20] ?? '' }}" />
+	<input type="hidden" name="pic_extension[20]" value="{{ $picExtensions[0] ?? '' }}" />
 	表示する：<input type="radio" name="pic_flg[20]" value="1"{{ ($picFlags[0] ?? null) == '1' ? ' checked' : '' }} />
 	しない：<input type="radio" name="pic_flg[20]" value="0"{{ ($picFlags[0] ?? null) != '1' ? ' checked' : '' }} /><br />
 
@@ -217,6 +220,8 @@ $(document).ready(function() {
 
 <div class="btnBox">
 <input type="hidden" name="cd" id="cd" value="{{ $materialCd }}" />
+{{-- No está en el legacy: sin él los materiales nuevos nunca salían en el listado filtrado por display --}}
+<input type="hidden" name="tb_display_cd" id="tb_display_cd" value="{{ old('tb_display_cd', $isNew ? request('tb_display_cd') : $material->tb_display_cd) }}" />
 <input type="hidden" name="act" id="act" value="up" />
 <input type="submit" name="send" id="send" class="btn" value="この内容で登録する" />
 </div>

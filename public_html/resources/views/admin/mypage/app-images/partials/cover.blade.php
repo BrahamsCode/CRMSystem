@@ -1,4 +1,8 @@
-{{-- マイページアプリのカバーフロー設定 (mobile_mycolle_edit_coverflow.php). Se guarda por AJAX (scripts/cover). --}}
+{{--
+    マイページアプリのカバーフロー設定 (mobile_mycolle_edit_coverflow.php). Se guarda por AJAX (scripts/cover).
+    Diferencia con el legacy: pic[] y target_url[] van con el índice del hueco (pic[n], target_url[n]) para
+    que el servidor mueva imagen, enlace y banderas juntos al compactar (en el legacy se desalineaban).
+--}}
 <div class="contents">
 	<p class="h2Title">マイページアプリのカバーフロー画像設定</p>
 
@@ -9,13 +13,13 @@
 		@foreach ($slots as $slot)
 			@php($filled = $slot['imageUrl'] !== null)
 			<div class="imageDisplay">
-				<div class="imageFrame">@if ($filled)<img src="{{ $slot['imageUrl'] }}" style="width:100%;"><input type="hidden" name="pic[]" value="def">@endif</div>
+				<div class="imageFrame">@if ($filled)<img src="{{ $slot['imageUrl'] }}" style="width:100%;"><input type="hidden" name="pic[{{ $slot['index'] }}]" value="def">@endif</div>
 				<div><input type="file" name="image{{ $slot['index'] }}" class="addImage" /></div>
 				@if (count($shops))
 					@include('admin.mypage.app-images.partials.shop-select', ['checkKey' => 'cover'])
 				@endif
 				@if ($filled)
-					<div class="url_param"><input type="text" name="target_url[]" value="{{ $slot['linkUrl'] }}" placeholder="http, mailto, telから入力" style="width:96%;"></div>
+					<div class="url_param"><input type="text" name="target_url[{{ $slot['index'] }}]" value="{{ $slot['linkUrl'] }}" placeholder="http, mailto, telから入力" style="width:96%;"></div>
 					<div class="del_pic_wrap right"><input type="button" class="deletePic" target="{{ $slot['index'] }}" value="画像を削除する" style="font-size:80%;color:red; margin-top:5px;"></div>
 				@endif
 			</div>
