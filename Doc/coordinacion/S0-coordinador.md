@@ -81,6 +81,13 @@
   - CONVENCIONES: el texto de formulario se guarda con `LegacyText::input()` (`get_form2()`) y se imprime con `{!! !!}`, como el legacy (propuesta de S1).
   - S4: al borrar un display no se borran sus 素材, igual que el legacy (los deja huérfanos).
   - El port de `Point::setPoint` para la API de S5 es de S3 (`PointService`).
+- 2026-11-27 (00:30): integrados en lote:
+  - S1: `LegacyText`/`LegacyCheck`, 店舗情報管理 y 店舗グループ, más los comunes `AreaTree::checkUi`, `LegacyHtml` y `zip.php`.
+  - S2: R2, la limpieza de los stubs y `CustomerSearchForm`.
+  - S3: M2 completo y `exchangeSalesItem`.
+  - S4: submódulos 1–5 completos y los menús de category6/7.
+  - S5: スタッフグループ, 検索項目, インフォメーション y `point_use`.
+  `laravel13` queda con 360 pruebas en verde. En los worktrees aparecen fallos sueltos (QueryException) en pruebas de otros módulos cuando varias sesiones corren pruebas a la vez o cuando `vendor/` está a medio instalar; al repetir pasan. Se integra con la corrida limpia en `CRMSystem/`.
 - 2026-11-27: siguiente tarea de S1 (Antony: el login primero): modelo base y traits comunes, luego el login contra el personal del legacy, el layout idéntico y los estáticos comunes.
 
 ## Hecho
