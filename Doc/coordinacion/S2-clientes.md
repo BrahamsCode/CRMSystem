@@ -7,7 +7,7 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — Libre (S0, 2026-11-27): sin filas pendientes según `Doc/qa/paridad.md`. Esperar errores de la regresión de punta a punta de S1 que pase S0.
+## Próximo paso — 勤怠一覧/集計 (`category5/working`, S0 2026-11-27): filas de `Doc/diseno/operaciones-integraciones.md` §1.3. W1 (calendario, día, variante, NG, corrección, 出勤区分) y W2 (mensual, 集計, 帳票, CSV) en marcha con agentes; bloques `W1`/`W2` en `routes/modulos/operaciones.php` y `routes/legacy/operaciones.php`, `W` en `config/menu/operaciones.php`; Gate `operaciones.working-report.enabled` (`config/working.php`, `CRM_WORKING_REPORT`) en `OperacionesWorkingServiceProvider`. Terminado = filas hecho, pruebas en verde, commit, push y aviso a S0.
 
 ## Tarea anterior — Diseño (sin código, HECHO)
 

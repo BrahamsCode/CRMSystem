@@ -23,6 +23,22 @@ return [
             ],
         ],
         [
+            // 勤怠管理 (ac2 de left_navi5.php). 勤怠データ一覧 (category5/kintai) es de S5
+            'title' => '勤怠管理',
+            'image' => 'ln_t5_1.gif',
+            'ac' => 'ac2',
+            'child' => '勤怠管理',
+            'links' => [
+                // --- W (S2) ---
+                // ['label' => '勤怠一覧', 'url' => '/admin/operaciones/working/monthly'], (comentado en el legacy: working_list.php)
+                ['label' => '勤怠一覧', 'url' => '/admin/operaciones/working/calendar'],
+                // ['label' => '勤怠集計一覧', 'url' => '/admin/operaciones/working/totals'], (comentado en el legacy)
+                // 帳票管理: el legacy solo lo mostraba en el servidor 202.218.51.245 (config/working.php)
+                ['label' => '帳票管理', 'url' => '/admin/operaciones/working/report', 'can' => 'operaciones.working-report.enabled'],
+                // --- fin W ---
+            ],
+        ],
+        [
             // En el legacy este bloque está vacío y los turnos cuelgan de 勤怠管理 solo en un servidor concreto
             // (SERVER_ADDR); aquí se agrupan en スケジュール管理, que es su tb_base_system_child.
             'title' => 'スケジュール管理',
