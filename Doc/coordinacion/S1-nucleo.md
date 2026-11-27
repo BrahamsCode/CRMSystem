@@ -32,8 +32,29 @@ Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archiv
 
 ## Pedidos
 
-_(ninguno)_
+Recibidos de S0 el 2026-11-26 (para la Cola, después de la Fase 1; S0 los asigna al integrar):
+
+- **Rutas públicas** `routes/publico/<modulo>.php`: fuera del grupo `admin`, sin `auth:admin`, sin CSRF, sin prefijo, nombre `publico.<modulo>.*` (reemplaza el punto 3 de la Cola). `routes/api.php` no debe capturar `/api/auth`, `/api/customer`, `/api/shop`, `/api/point`, `/api/mobile_shop/*`, `/api/mpa_*.php` antes que `routes/publico/integraciones.php`. `/appview/*` con `StartSession`. `/p/c/{uid}` (S3) con `signed`. Documentar en NUCLEO.md.
+- `GET /hp/uploads/{path}` → Storage (genérica; las rutas específicas de módulos tienen prioridad).
+- Registrar `<Modulo>ServiceProvider` en `bootstrap/providers.php` (ya: `PromocionServiceProvider`, y quitar sus líneas de `routes/console.php`).
+- `terminals`: `sort` (de `rank`), `terminal_no`, `model`, `type`, `comment` + mapeo desde `tb_terminal` (S4 §5).
+- Tabla `staff` (modelo `Staff`) con columnas de S5 (operaciones-integraciones.md §2.3); FK a maestros de S5 en migración posterior a las suyas.
+- Paquetes: `firebase/php-jwt`, `intervention/image`, PDF con fuente japonesa, editor HTML npm (TipTap u otro); servicio común de QR opcional (`bacon/bacon-qr-code` ya está).
+- Config: `services.push.host`, conexión `beacon` (`DB_BEACON_*`), integraciones (`MOBILESHOP_*`, `keys/*.pem`, `CRM_API_KEY`, `crm_version` 2.704, `DOMAIN_LIST`, URL g-api), sin valores en git.
+- Configuración global (`admin_master`): `system_mail`, `mail_footer`, `mail_send_filter`, `application_use_flg`, `smatopi_flg`, `domain_smatopi_id`, política de privacidad por tienda. Categorías de `contents_master` de un solo módulo → `<algo>_settings` del módulo.
+- Gates/Policies: `kengen` 1005/1009/1011/1014–1017/1023/1032/1035/1036, `rank=master`, `manageSignage`, `viewWorkReport`.
+- Módulos activables: プッシュ通知, ガチャリン管理, スマトピ連携, ポイント交換クーポン, 印刷, アンケート, スタンプ管理.
+- 機能設定 (category0): passcode de la tienda móvil vía `MobileShopSetting` (S5).
+- Importador: `id = cd` en `shops`, `customers`, `staff`, `visits`, productos; `legacy_cd` en tablas fundidas; resto en `legacy_id_map`; helper CSV SJIS-win; mapeo de S4 §2 (BD `admin` de `signage/`, archivos `hp/uploads/c6|c7`, `signage/upload/`).
+- `zip.php` compartido si ya existe en CRMSystem.
+- De S2 (clientes-ventas-reservas.md §5): **el núcleo empieza por `staff` + Gates**. `staff` con `commission_rate` numeric(5,2) (`tb_staff.kingaku_buai`), `id = cd`. Gates con patrón `<modulo>.<acción>` documentado en NUCLEO.md: `clientes.view`, `clientes.manage`, `clientes.tab.<pestaña>` (`myKengen[1001]`), `ventas.view`, `ventas.delete` (`[1033]`), `reservas.view`, `reservas.manage`. Quitar el grupo `customers` de `routes/web.php` cuando exista `routes/modulos/clientes.php` (C0 de S2). Cargar `routes/publico/reservas.php`. Tabla estándar `taxes` (ESTANDARES_BD §7). Paquete `mews/purifier` + decisión del editor enriquecido (PENDING 3.1). `PosGateway`: cada módulo declara la suya (no hay interfaz común).
 
 ## Decisiones
 
+- Fase 1: `config/session.php` → `serialization = json` y `config/cache.php` → `serializable_classes = false` (valores del skeleton 13; si chocan con la base de Antony con `file`, prevalece la suya). `lock_path` de la caché de archivos → `framework/cache/locks`; canal `daily` de logging `days` → `max_files` (skeleton 13).
+- `Dockerfile` (Render): `php:8.5-apache-trixie`, Node 24, sin instalar `opcache` (ya viene en el núcleo de 8.5). Se corrige `npm ci --only=production`, que omitía Vite (devDependency) y rompía el build.
+- `CSRF`: no había referencias a `VerifyCsrfToken`/`ValidateCsrfToken` en el código; nada que renombrar a `PreventRequestForgery`.
+
 ## Hecho
+
+- **Fase 1 (2026-11-26):** Laravel 12.69.3 → **13.44.1** en PHP 8.5.13. Línea base L12: 86 pruebas en verde (238 aserciones); con L13: las mismas 86 en verde. `npm ci && npm run build` OK (Vite 7). Paquetes: fortify 1.44, tinker 3.2, pest 4.7, pest-plugin-laravel 4.1, pail 1.3, pint 1.32, sail 1.71, collision 8.9.
