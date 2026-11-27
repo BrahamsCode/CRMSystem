@@ -53,14 +53,20 @@ it('reproduce byte a byte las pantallas de appview grabadas del legacy', functio
             }
         }
         $uri = $host ? 'http://'.$host.$case['path'] : $case['path'];
+        $this->flushSession(); // cada caso se grabó sin cookies: sesión nueva
         $response = $this->call($case['method'], $uri, $case['form'] ?? [], [], [], $server);
         $expected = $case['response'];
         $expectedBody = normalizeAppview(file_get_contents(APPVIEW_FIXTURES.'/appview/'.$expected['body_file']));
+        $body = normalizeAppview($response->getContent());
+        if ($name === 'av_member_complete') {
+            // cd del socio nuevo (createHatsuban: hora + azar); el alta se comprueba en AppviewRegistrationTest
+            [$body, $expectedBody] = preg_replace('/"customer_cd":"\d+"/', '"customer_cd":"CD"', [$body, $expectedBody]);
+        }
 
         expect($response->getStatusCode())->toBe($expected['status'], "estado de {$name}: ".$response->exception?->getMessage())
             ->and(strtolower((string) $response->headers->get('Content-Type')))->toBe(strtolower((string) $expected['content_type']), "Content-Type de {$name}")
             ->and(normalizeSessionId($response->headers->get('Location')))->toBe(normalizeSessionId($expected['location']), "Location de {$name}")
-            ->and(normalizeAppview($response->getContent()))->toBe($expectedBody, "cuerpo de {$name}");
+            ->and($body)->toBe($expectedBody, "cuerpo de {$name}");
     }
 });
 

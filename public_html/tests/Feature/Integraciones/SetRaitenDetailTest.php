@@ -6,11 +6,12 @@ use Illuminate\Support\Facades\DB;
 
 /*
  * tool/api/category1/setRaitenDetail.php sobre VisitRecordService de S2. La lógica de puntos, sellos y 関連情報
- * es de S2 (tarea C3): aquí se prueba el endpoint con el servicio simulado. La prueba de contrato contra el legacy
- * queda pendiente hasta C3.
+ * es de S2 (tarea C3): aquí se prueba el endpoint con el servicio simulado y, al final, el contrato grabado del
+ * legacy (tests/Fixtures/integraciones/srd, datos de tool-seed.sql) con el servicio real.
  */
 
 const SRD_URL = '/system/tool/api/category1/setRaitenDetail.php';
+const SRD_FIXTURES = __DIR__.'/../../Fixtures/integraciones';
 
 beforeEach(function () {
     config(['services.crm.api_key' => 'k']);
@@ -20,7 +21,8 @@ beforeEach(function () {
 
 it('setRaitenDetail: guarda con VisitRecordService (mismas claves, sin personal) y responde el cd', function () {
     $records = Mockery::mock(VisitRecordService::class);
-    $records->shouldReceive('save')->once()
+    // Dos llamadas: el alta y, en el reenvío con el mismo add_record_verify, la validación (transacción deshecha)
+    $records->shouldReceive('save')->twice()
         ->withArgs(fn ($customer, array $data, $staff = null) => $customer->cd === 77 && $data['kaikei'] === '3000' && $data['form101'] === 'カット'
             && ! array_key_exists('key', $data) && $staff === null)
         ->andReturn(901);
@@ -43,8 +45,9 @@ it('setRaitenDetail: errores del endpoint y de S2 con el formato del legacy (tam
     expect($this->post(SRD_URL, ['key' => 'k'])->getContent())
         ->toBe('{ "status": "error", "result": { "customer" : "顧客CD番号が空です。" } }');
 
+    // Sin add_record_verify se valida igual (sin guardar) y los errores de S2 van primero, como el legacy
     expect($this->post(SRD_URL, ['key' => 'k', 'kaiin_cd' => '77'])->getContent())
-        ->toBe('{ "status": "error", "result": { "add_record_verify": "多重登録エラーです。" } }');
+        ->toBe('{ "status": "error", "result": { "raiten" : "日付の入力をご確認ください。","101" : "必須入力項目です。" } }');
 
     expect($this->post(SRD_URL, ['key' => 'k', 'kaiin_cd' => '77', 'add_record_verify' => 'x', 'data_type' => 'jsonp', 'callback' => 'cb'])->getContent())
         ->toBe('cb({ "status": "error", "result": { "raiten" : "日付の入力をご確認ください。","101" : "必須入力項目です。" } })');
@@ -54,6 +57,26 @@ it('setRaitenDetail: errores del endpoint y de S2 con el formato del legacy (tam
         ->toBe('{ "status": "error", "result": { "relatedFeaturesConfig" : "カルテ使用設定がされていません。" } }');
 });
 
-it('setRaitenDetail: contrato byte a byte contra el legacy', function () {
-    // Grabar los casos de setRaitenDetail (tools/cases-tool.json) cuando S2 implemente VisitRecordService (C3)
-})->todo();
+it('setRaitenDetail: contrato byte a byte contra el legacy (VisitRecordService real de S2)', function () {
+    DB::table('admin_master')->delete(); // los datos del beforeEach se sustituyen por los de las fixtures
+    DB::table('tb_customer')->delete();
+    foreach (['legacy-base.sql', 'legacy-seed.sql', 'tool-seed.sql'] as $file) {
+        DB::unprepared(file_get_contents(SRD_FIXTURES.'/'.$file));
+    }
+    config(['services.crm.api_key' => 'fixture-key']);
+    $manifest = json_decode(file_get_contents(SRD_FIXTURES.'/srd/manifest.json'), true, flags: JSON_THROW_ON_ERROR);
+
+    foreach ($manifest as $case) {
+        $name = $case['name'];
+        $this->flushSession(); // grabado sin cookies
+        $response = $this->call($case['method'], $case['path'], $case['form'] ?? []);
+        $expected = file_get_contents(SRD_FIXTURES.'/srd/'.$case['response']['body_file']);
+        if ($name === 'srd_bad_date_jsonp') {
+            // JSONP de error roto en el legacy (precedencia de operadores): se emite el formato correcto
+            $expected = 'cb({ "status": "error", "result": { '.$expected.' } })';
+        }
+
+        expect($response->getStatusCode())->toBe($case['response']['status'], "estado de {$name}")
+            ->and($response->getContent())->toBe($expected, "cuerpo de {$name}");
+    }
+});

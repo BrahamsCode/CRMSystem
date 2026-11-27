@@ -11,6 +11,7 @@ use App\Services\Integraciones\ToolApi\RelatedFeatures;
 use App\Services\Integraciones\ToolApi\ToolApiOutput as Out;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 /**
  * system/tool/api/category1: getRaitenList.php, getRaitenDetail.php, addRaitenRecord.php y setRaitenDetail.php
@@ -41,18 +42,23 @@ class RaitenController extends Controller
         }
 
         $verify = Out::form2Db($request->input('add_record_verify'));
+        $data = $request->except(['key', 'data_type', 'callback']);
         $cd = '';
         if (! $errors) {
-            if ($verify === '') {
-                return Out::text('{ "status": "error", "result": { "add_record_verify": "多重登録エラーです。" } }');
-            }
-            if ($request->session()->get('tool_api.add_record_verify') !== $verify) {
-                try {
-                    $cd = (string) $records->save($customer, $request->except(['key', 'data_type', 'callback']));
+            // Como el legacy: primero los errores de validación; después add_record_verify vacío o repetido
+            $save = $verify !== '' && $request->session()->get('tool_api.add_record_verify') !== $verify;
+            try {
+                if ($save) {
+                    $cd = (string) $records->save($customer, $data);
                     $request->session()->put('tool_api.add_record_verify', $verify);
-                } catch (VisitRecordValidationException $e) {
-                    $errors = $e->errors();
+                } else {
+                    $this->validateOnly($records, $customer, $data);
                 }
+            } catch (VisitRecordValidationException $e) {
+                $errors = $e->errors();
+            }
+            if (! $errors && $verify === '') {
+                return Out::text('{ "status": "error", "result": { "add_record_verify": "多重登録エラーです。" } }');
             }
         }
 
@@ -66,6 +72,27 @@ class RaitenController extends Controller
         }
 
         return Out::jsonp($request, '{ "status": "SUCCESS", "result": "'.$cd.'" }');
+    }
+
+    /**
+     * Valida como save() sin guardar nada: VisitRecordService no expone la validación, así que se guarda dentro
+     * de una transacción que se deshace siempre (save() no tiene efectos fuera de la BD).
+     *
+     * @throws VisitRecordValidationException
+     */
+    private function validateOnly(VisitRecordService $records, Customer $customer, array $data): void
+    {
+        $rollback = new \RuntimeException('validateOnly');
+        try {
+            DB::transaction(function () use ($records, $customer, $data, $rollback) {
+                $records->save($customer, $data);
+                throw $rollback;
+            });
+        } catch (\RuntimeException $e) {
+            if ($e !== $rollback) {
+                throw $e;
+            }
+        }
     }
 
     /** Terminal con la que el legacy marcaba las visitas de tool/api (raitenFunc(..., -2, ...)) */

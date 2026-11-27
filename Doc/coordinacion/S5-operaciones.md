@@ -9,7 +9,7 @@ Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archiv
 
 ## Próximo paso — Diseño (sin código)
 
-> **Ahora (2026-11-27, S0):** diseño aprobado; pasos 1-4, 8-10 y 12 hechos; `appview` lotes A y B hechos. Siguiente: `appview` lote C (member_regist/complete, customerUpdate, anketo2*, reservation).
+> **Ahora (2026-11-27, S0):** diseño aprobado; pasos 1-4, 8-10 y 12 hechos; `appview` lotes A y B hechos. Siguiente: `appview` lote C2 (member_regist y customerUpdate sobre `class/Customer.php`, paquete crm).
 
 > **2026-11-26, cambio de base (Antony):** misma BD y misma UI que el legacy (`CONVENCIONES.md`, sección 0). Si ya escribiste tu diseño con tablas nuevas, rehaz la parte de esquema y UI. — **rehecho sobre la BD legacy el 2026-11-27, esperando revisión de S0**
 
@@ -106,3 +106,4 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 - 2026-11-27 — Utilitarios: `crm_version.php` (vacío, como en crm2-php8 y development), `/ptag/<ID>`, `air/air_info_out.php` y los XML de `air/` (`UtilityTest`) (51df245). `integraciones:shukei` ⏸ (BD externa de VIZAN, llamador desconocido).
 - 2026-11-27 — `appview` lote A (479f281): memberId, qr_code, member_init/comp/login/kiyaku/comfirm, privacyPage (20 casos grabados del legacy, `AppviewContractTest`) y photo_gallery/visit_history con `Http::fake` (`AppviewMemberTest`). `introduction`/`detail_view` descartados (BD `admin`). Suite: 595 en verde.
 - 2026-11-27 — `appview` lote B: coupon, coupon_detail, coupon_control, coupon_use, used_coupon_list y stamp (45 casos en `AppviewContractTest`; uso e impresión con `CouponService` de S3 en `AppviewCouponTest`). `MobileTheme` porta lo de `hp/inc_m` que usan.
+- 2026-11-27 — `appview` lote C1: member_complete (alta con las columnas que existen; el legacy no guardaba), anketo2 (solo la redirección sin sesión de hp/user); reservation y anketo2_register descartados (`AppviewContractTest` 50 casos, `AppviewRegistrationTest`). `setRaitenDetail`: contrato con el legacy grabado (8 casos) y orden de errores corregido (validación antes de `add_record_verify`).

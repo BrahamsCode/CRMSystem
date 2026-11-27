@@ -608,7 +608,7 @@
         "response": {
             "status": 302,
             "content_type": "text/html; charset=UTF-8",
-            "location": "coupon_print.php?PHPSESSID=uh1mb2450q2sbaqdd51olb1saa",
+            "location": "coupon_print.php?PHPSESSID=a65blm9q1gk9gs7ehtqsglnio6",
             "body_file": "av_coupon_control_print.body"
         }
     },
@@ -624,6 +624,82 @@
             "content_type": "text/html; charset=UTF-8",
             "location": null,
             "body_file": "av_coupon_list_after.body"
+        }
+    },
+    {
+        "name": "av_anketo2",
+        "method": "GET",
+        "path": "/appview/anketo2.php",
+        "response": {
+            "status": 302,
+            "content_type": "text/html; charset=UTF-8",
+            "location": "login.php?logerr=2",
+            "body_file": "av_anketo2.body"
+        }
+    },
+    {
+        "name": "av_anketo2_post",
+        "method": "POST",
+        "path": "/appview/anketo2.php?act=up",
+        "form": {
+            "anketo_cate_cd": "1"
+        },
+        "response": {
+            "status": 302,
+            "content_type": "text/html; charset=UTF-8",
+            "location": "login.php?logerr=2",
+            "body_file": "av_anketo2_post.body"
+        }
+    },
+    {
+        "name": "av_member_complete_bad_token",
+        "method": "POST",
+        "path": "/appview/member_complete.php",
+        "form": {
+            "_token": "x",
+            "regist": "1",
+            "name": "a",
+            "tel": "1",
+            "mail": "m"
+        },
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "av_member_complete_bad_token.body"
+        }
+    },
+    {
+        "name": "av_member_complete_no_regist",
+        "method": "POST",
+        "path": "/appview/member_complete.php",
+        "form": {
+            "name": "表示 <だけ>",
+            "tel": "0901",
+            "mail": "a@b.test"
+        },
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "av_member_complete_no_regist.body"
+        }
+    },
+    {
+        "name": "av_member_complete",
+        "method": "POST",
+        "path": "/appview/member_complete.php",
+        "form": {
+            "regist": "1",
+            "name": "新規 会員",
+            "tel": "09011112222",
+            "mail": "new@example.test"
+        },
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "av_member_complete.body"
         }
     }
 ]
