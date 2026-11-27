@@ -35,6 +35,7 @@ Cada módulo escribe **solo** en sus carpetas. `<Modulo>` en PascalCase inglés,
 | `routes/web.php`, `routes/api.php`, `routes/console.php` | S1 (solo incluyen los archivos de `routes/modulos/`) |
 | `routes/modulos/<modulo>.php` | El módulo. Se carga dentro del grupo `admin` (prefijo, `auth:admin`, nombre `admin.`) |
 | `routes/publico/<modulo>.php` | El módulo. Rutas de dispositivos y contratos externos (reproductores de señalización, API, app, CTI): S1 las carga **fuera** del grupo `admin`, sin `auth:admin`, sin CSRF y sin prefijo, para conservar las URL literales del legacy (con `.php`). Nombre de ruta `publico.<modulo>.*` |
+| `routes/legacy/<modulo>.php` | El módulo. URL literales del legacy dentro del sistema del personal (`/system/category<N>/…/*.php`) que llaman los JS del legacy por AJAX o en formularios, para no tocar esos JS. S1 las carga sin prefijo, con `web` + el guard del personal, y nombre `legacy.<modulo>.*`. El CSRF lo añade el layout de S1 a todas las peticiones jQuery (cabecera `X-CSRF-TOKEN` con `beforeSend`, que también funciona con jQuery 1.3.2). Las pantallas nuevas siguen en `routes/modulos/` |
 | `GET /hp/uploads/{path}` (redirección genérica a Storage) | S1. Una ruta específica de un módulo bajo `/hp/uploads/...` (p. ej. el XML de señalización de S4) tiene prioridad |
 | `app/Http/Controllers/Admin/<Modulo>/`, `app/Http/Requests/<Modulo>/` | El módulo |
 | `resources/views/admin/<modulo>/` | El módulo |

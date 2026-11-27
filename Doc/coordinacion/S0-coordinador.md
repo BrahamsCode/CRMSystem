@@ -72,6 +72,7 @@
   - `login_pass` y lo sensible se quedan como en el legacy.
   - `tb_mobile_navi` → S4.
   - `numbered_ticket` (クイック予約, solo touchcation, no está en el backup) → descartado.
+- 2026-11-27: CONVENCIONES: `routes/legacy/<modulo>.php`, URL literales `/system/category<N>/…` para los AJAX y formularios de los JS del legacy. S1 las carga sin prefijo, con el guard del personal; el layout pone `X-CSRF-TOKEN` en jQuery. Estáticos de S2 integrados (8e15561).
 - 2026-11-27: siguiente tarea de S1 (Antony: el login primero): modelo base y traits comunes, luego el login contra el personal del legacy, el layout idéntico y los estáticos comunes.
 
 ## Hecho
