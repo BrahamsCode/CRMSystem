@@ -137,7 +137,7 @@ LegacyCsv::encode(string $utf8): string                       // UTF-8 → SJIS-
 ```
 
 - `$rows`: filas (listas de celdas) o un closure que las devuelve (p. ej. `fn () => $query->cursor()->map(...)`), para que la consulta corra al enviar.
-- `$options`: `quote` = `'all'` (por defecto: cada celda entre comillas, `"` → `""`), `'minimal'` (solo si lleva `,` `"` o salto) o `'none'` (tal cual); `eol` (`"
+- `$options`: `quote` = `'all'` (por defecto: cada celda entre comillas, `"` → `""`), `'minimal'` (solo si lleva `,` `"` o salto) o `'none'` (tal cual); `eol` (`"
 "`); `content_type` (`'text/x-csv'`; algunos legacy usan `application/octet-stream`); `chunk` (500 filas).
 - Formatos especiales del legacy (tabulador inicial para que Excel no convierta números, líneas de título antes de la cabecera): se arman en la celda o con `line()` + `encode()` dentro de un `streamDownload` propio.
 
