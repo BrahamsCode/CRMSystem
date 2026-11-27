@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data>
+	<category cd="1" color="0xFBD9B6">ファッション</category>
+	<category cd="2" color="0xCCEEFF">ファッショングッズ</category>
+	<category cd="3" color="0xBEE0C5">インテリア＆ライフグッズ</category>
+	<category cd="4" color="0xFFF098">カフェ＆レストラン</category>
+	<category cd="5" color="0xFFCE00">フード＆すいーつ</category>
+	<category cd="6" color="0xFFFFFF">フードコート</category>
+	<category cd="7" color="0xFBDBEA">ヘルス＆ビューティー</category>
+	<category cd="8" color="0xFFFFFF">カルチャー</category>
+	<category cd="9" color="0xA0D9F6">サービス・その他</category>
+	<category cd="10" color="0xFFFFFF">アミューズメント</category>
+</data>

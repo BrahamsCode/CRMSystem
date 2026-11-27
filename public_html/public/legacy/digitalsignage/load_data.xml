@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data>
+
+	<!--
+
+	【仕様について】
+	
+	例）<title name="win" id="1" param="10">クーポン名#クーポンCD番号</title>
+	
+	"name"が"win"のものが当たり確率が設定できる項目です。
+	初期設定で3つに設定していますが、数を変更する場合はFlash内の設定も変更が必要です。
+	"name"が"other"のものは当たり確率を設定していない、その他の項目です。
+	こちらは数に制限はありません。
+	
+	■詳細の説明
+	"id"	　通し番号です。1～連番で付けてください。
+	"param"	　当たりの確率設定です。1～100の数字で設定して、そのまま％で確率になります。
+	
+	<title>タグ内にはクーポン名と、そのクーポンのCD番号を"#"で区切って入力してください。
+	
+	-->
+	
+	<title name="win" id="1" param="10">クーポン1・10％#1</title>
+	<title name="win" id="2" param="10">クーポン2・10％#2</title>
+	<title name="win" id="3" param="10">クーポン3・10％#3</title>
+	
+	<title name="other" id="4" param="">クーポン4#4</title>
+	<title name="other" id="5" param="">クーポン5#5</title>
+	<title name="other" id="6" param="">クーポン6#6</title>
+	<title name="other" id="7" param="">クーポン7#7</title>
+	<title name="other" id="8" param="">クーポン8#8</title>
+	<title name="other" id="9" param="">クーポン9#9</title>
+	<title name="other" id="10" param="">クーポン10#10</title>
+	<title name="other" id="11" param="">クーポン11#11</title>
+	<title name="other" id="12" param="">クーポン12#12</title>
+	<title name="other" id="13" param="">クーポン13#13</title>
+	<title name="other" id="14" param="">クーポン14#14</title>
+	<title name="other" id="15" param="">クーポン15#15</title>
+	<title name="other" id="16" param="">クーポン16#16</title>
+	<title name="other" id="17" param="">クーポン17#17</title>
+	<title name="other" id="18" param="">クーポン18#18</title>
+	<title name="other" id="19" param="">クーポン19#19</title>
+	<title name="other" id="20" param="">クーポン20#20</title>
+	<title name="other" id="21" param="">クーポン21#21</title>
+	<title name="other" id="22" param="">クーポン22#22</title>
+	<title name="other" id="23" param="">クーポン23#23</title>
+	<title name="other" id="24" param="">クーポン24#24</title>
+	<title name="other" id="25" param="">クーポン25#25</title>
+	<title name="other" id="26" param="">クーポン26#26</title>
+	<title name="other" id="27" param="">クーポン27#27</title>
+	<title name="other" id="28" param="">クーポン28#28</title>
+	<title name="other" id="29" param="">クーポン29#29</title>
+	<title name="other" id="30" param="">クーポン30#30</title>
+	<title name="other" id="31" param="">クーポン31#31</title>
+	<title name="other" id="32" param="">クーポン32#32</title>
+	<title name="other" id="33" param="">クーポン33#33</title>
+	<title name="other" id="34" param="">クーポン34#34</title>
+	<title name="other" id="35" param="">クーポン35#35</title>
+	<title name="other" id="36" param="">クーポン36#36</title>
+	<title name="other" id="37" param="">クーポン37#37</title>
+	<title name="other" id="38" param="">クーポン38#38</title>
+	<title name="other" id="39" param="">クーポン39#39</title>
+	<title name="other" id="40" param="">クーポン40#40</title>
+	<title name="other" id="41" param="">クーポン41#41</title>
+	<title name="other" id="42" param="">クーポン42#42</title>
+	<title name="other" id="43" param="">クーポン43#43</title>
+	<title name="other" id="44" param="">クーポン44#44</title>
+	<title name="other" id="45" param="">クーポン45#45</title>
+
+</data>

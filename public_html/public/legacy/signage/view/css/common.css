@@ -1,0 +1,369 @@
+@charset "utf-8";
+
+/*-----------------------------------------------------------
+全体スタイル
+-----------------------------------------------------------*/
+
+html {
+	overflow-x: hidden;
+}
+
+body {
+	width: 100% !important;
+	background: #F9FAF5;
+	color: #333333;
+	font-size: 16px;/* 文字サイズ計算＝【基本サイズ ÷ 表示したいサイズ * 100 （小数点以下切り上げ） */
+	line-height: 1.6;
+}
+
+
+/*リンク表示方法*/
+
+a:link {
+	color: #0000FF;
+	text-decoration: underline;
+
+}
+
+a:visited {
+	color: #0000FF;
+	text-decoration: underline;
+}
+
+a:active {
+	color: #0000FF;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #993300;
+	text-decoration: none;
+}
+
+img {
+	width: 100%;
+	max-width: 100%;
+	height: auto;
+}
+
+
+/*-----------------------------------------------------------
+header
+-----------------------------------------------------------*/
+
+
+/*-----------------------------------------------------------
+nav
+-----------------------------------------------------------*/
+
+
+/*-----------------------------------------------------------
+cover
+-----------------------------------------------------------*/
+
+#coverBox:after {
+    content: "";
+    clear: both;
+    display: block;
+
+}
+
+#cover1 {
+	width: 100%;
+	float: none;
+}
+
+#cover2,
+#cover3,
+#cover4
+{
+	display: none;
+}
+
+/*-----------------------------------------------------------
+contentsBox
+-----------------------------------------------------------*/
+
+#contentsBox:after {
+    content: "";
+    clear: both;
+    display: block;
+
+}
+
+
+.contents1 {
+	width: 1000px;
+	float: none;
+	margin: 0 auto;
+}
+
+.contents2,
+.contents3,
+.contents4
+{
+	display: none;
+}
+
+/*-----------------------------------------------------------
+見出し
+-----------------------------------------------------------*/
+
+.main_tit1 {
+	text-align: center;
+	color: #fff;
+	font-size: 30px;
+	background: #A43BA2;
+}
+
+.main_tit2 {
+	text-align: center;
+	color: #fff;
+	font-size: 30px;
+	background: #3E4071;
+}
+
+.main_tit3 {
+	text-align: center;
+	color: #fff;
+	font-size: 30px;
+	background: #FABA59;
+}
+
+.main_tit4 {
+	text-align: center;
+	color: #fff;
+	font-size: 30px;
+	background: #A43BA2;
+}
+
+.main_tit1 span {
+	font-size: 20px;
+}
+
+/*-----------------------------------------------------------
+アニメーション
+-----------------------------------------------------------*/
+
+.type-textbound {
+  font-size: 60px;
+  text-align: center;
+}
+ 
+.textbound1 {-webkit-animation: bound .5s ease-in-out;}
+.textbound3 {-webkit-animation: bound .7s ease-in-out;}
+.textbound2 {-webkit-animation: bound .9s ease-in-out;}
+.textbound4 {-webkit-animation: bound 1s ease-in-out;}
+ 
+@-webkit-keyframes bound {
+  0% {transform: scale(0) translate(0,-500px);}
+  50% {transform: scaleX(2) translate(0,200px);}
+  70% {transform: scaleY(.5) translate(0,-100px);}
+  90% {transform: scaleX(1.5) translate(0,50px);}
+  100% {transform: scale(1) translate(0,0);}
+}
+
+.spin_infinite {
+    width: 20%;
+	margin: 0 auto;
+    text-align: center;
+    font-size: 60px;
+}
+
+.spin_infinite:hover {
+    -moz-animation-name: 'rotate1';
+    -webkit-animation-name: 'rotate1';
+    animation-name: 'rotate1';
+    -goog-ms-animation-name: 'rotate1';
+    -moz-animation-duration: 4s;
+    -webkit-animation-duration: 4s;
+    animation-duration: 4s;
+    -goog-ms-animation-duration: 4s;
+    -moz-animation-direction: normal;
+    -webkit-animation-direction: normal;
+    animation-direction: normal;
+    -goog-ms-animation-direction: normal;
+    -moz-animation-timing-function: linear;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear;
+    -goog-ms-animation-timing-function: linear;
+    -moz-animation-iteration-count: infinite;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    -goog-ms-animation-iteration-count: infinite;
+}
+ 
+@-webkit-keyframes 'rotate1' {
+  from {
+  /* 最初の回転角 */
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+    -goog-ms-transform: rotate(0deg);
+  }
+  /* 1動作の最後 ( 1duration 後) の回転角 */
+  to {
+    -moz-transform: rotate(-360deg);
+    -webkit-transform: rotate(-360deg);
+    transform: rotate(-360deg);
+    -goog-ms-transform: rotate(-360deg);
+  }
+}
+/*-----------------------------------------------------------
+footer
+-----------------------------------------------------------*/
+
+
+
+/* ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★ */
+/* ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★ */
+
+@media screen and (min-width: 3840px) {
+
+/* ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★ */
+/* ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★ */
+
+
+/*-----------------------------------------------------------
+header
+-----------------------------------------------------------*/
+
+
+/*-----------------------------------------------------------
+cover
+-----------------------------------------------------------*/
+
+#cover2 {
+	display: block;
+}
+
+#cover1,
+#cover2
+{
+	width: 50%;
+	float: left;
+}
+
+/*-----------------------------------------------------------
+contentsBox
+-----------------------------------------------------------*/
+
+.contents2 {
+	display: block;
+}
+
+.contents1,
+.contents2
+ {
+	width: 46%;
+	float: left;
+	margin: 0 2%;
+}
+
+
+/* ☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆ */
+
+} /* min-width: 3840px ここまで */
+
+/* ☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆ */
+
+
+
+/* ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★ */
+/* ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★ */
+
+@media screen and (min-width: 5760px) {
+
+/* ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★ */
+/* ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★ */
+
+
+/*-----------------------------------------------------------
+cover
+-----------------------------------------------------------*/
+
+
+#cover3 {
+	display: block;
+}
+
+#cover1,
+#cover2,
+#cover3
+{
+	width: 33.3%;
+	float: left;
+}
+
+/*-----------------------------------------------------------
+contentsBox
+-----------------------------------------------------------*/
+
+.contents3 {
+	display: block;
+}
+
+.contents1,
+.contents2,
+.contents3
+ {
+	width: 31.3%;
+	float: left;
+	margin: 0 2%;
+
+}
+
+
+/* ☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆ */
+
+} /* min-width: 5760px ここまで */
+
+/* ☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆ */
+
+@media screen and (min-width: 7680px) {
+
+/* ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★ */
+/* ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★ */
+
+
+/*-----------------------------------------------------------
+cover
+-----------------------------------------------------------*/
+
+
+#cover4 {
+	display: block;
+}
+
+#cover1,
+#cover2,
+#cover3,
+#cover4
+{
+	width: 25%;
+	float: left;
+}
+
+/*-----------------------------------------------------------
+contentsBox
+-----------------------------------------------------------*/
+
+.contents4 {
+	display: block;
+}
+
+.contents1,
+.contents2,
+.contents3,
+.contents4
+ {
+	width: 21%;
+	float: left;
+	margin: 0 2%;
+}
+
+/* ☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆ */
+
+} /* min-width: 7680px ここまで */
+
+/* ☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆ */
