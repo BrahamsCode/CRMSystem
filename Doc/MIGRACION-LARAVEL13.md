@@ -134,7 +134,7 @@ Diferencias con crm2-php8, a propósito: `DocumentRoot /var/www/public` (Laravel
 | 1 | Subir Laravel 12 → 13 y PHP 8.5 (`composer.json`, Pest 4, Fortify, Dockerfile de Render) | Pendiente — S1 |
 | 1' | Diseño por grupo (`Doc/diseno/`) | **Hecho (2026-11-27)**: v2 sobre la BD y la UI del legacy, aprobados: S2 (84 pts), S3 (≈83), S4, S5 (63, de los que 22 esperan 勤怠) |
 | 2 | **Misma BD y misma UI que el legacy** (Antony, 2026-11-26): esquema `database/schema/pgsql-schema.sql` desde `crm2019.backup`, modelos sobre `tb_*`, mismos CSS; responsive al final. Lo construido sobre tablas nuevas se borró | **Hecho (esquema y limpieza)** |
-| 3+ | Módulos en paralelo según `Doc/planificacion/ORCHESTRATION.md` | Pendiente |
+| 3+ | Módulos en paralelo según `Doc/planificacion/ORCHESTRATION.md` | **En curso** (2026-11-27, 587 pruebas en verde): núcleo y category0 completos (S1); clientes, configuración y reservas R1–R3 (S2); promoción M1, M2 y F1 (S3); マイページ, 電子看板, digitalsignage HTML5, ペーパーサイネージ e ICカード (S4); staff, turnos, API JWT, tool/api, CTI y mpa_* (S5) |
 
 ## 8. Siguiente paso
 

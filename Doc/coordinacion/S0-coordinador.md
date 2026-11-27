@@ -106,6 +106,11 @@
 - Decisión: el reparto de rangos es de S2 (`clientes:asignar-rangos`, como `category1/rank` del legacy) y usa los modelos de rangos de S3. S3 no hace `promocion:customer-rank`.
 - Para Japón: `getStaffList` (`tool/api`) devuelve `login_pass` y CTI no tiene autenticación (contrato intacto). `F1CouponsTest` («ranking de uso», 37 s) es lenta e intermitente bajo carga.
 - 2026-11-27 (01:45): integrados S3 1031aa0 (rangos fuera; `F1CouponsTest` estable: empataba el ranking y ahora desempata por `cd`) y S1 権限項目管理 y CRM端末管理 (+ `slim_href`, que el análisis descartaba pero se necesita para el alta de terminales; 設定する guarda lo que dice la pantalla: el legacy no guardaba por un error de comillas). `laravel13` con 576 pruebas en verde.
+- 2026-11-27 (02:00): integrados:
+  - S1: category0 COMPLETO (システム管理, sin 初期化/エクスポート/upfile_fix y sin la bajada de HTTPS a HTTP de `redirectToSslPage`).
+  - S5: 営業日, シフト区分, シフト日別/月別 y `setRaitenDetail`.
+  `laravel13` con 587 pruebas en verde y 1 «todo» (el contrato de `setRaitenDetail`, que espera C3 de S2).
+- Siguiente de S1 (paso 7 del plan, delegado por S0): revisión visual de punta a punta con Playwright, comparando la web local con la muestra de desarrollo (solo lectura), módulo por módulo.
 - 2026-11-27: siguiente tarea de S1 (Antony: el login primero): modelo base y traits comunes, luego el login contra el personal del legacy, el layout idéntico y los estáticos comunes.
 
 ## Hecho
