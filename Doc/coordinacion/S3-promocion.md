@@ -7,9 +7,11 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — F3
+## Próximo paso — M3
 
-Siguiente en el orden del diseño: F3 → M3 → M4 (クリックカウンタ, incluye `mycoupon_analyze`) → F5 → F6 → F4 → F7 → F1b → M6 → M7 → M10 → M5 → M8 → M9 → F8.
+Siguiente en el orden del diseño: M3 → M4 (クリックカウンタ, incluye `mycoupon_analyze`) → F5 → F6 → F4 → F7 → F1b → M6 → M7 → M10 → M5 → M8 → M9 → F8.
+
+F3 terminado (2026-11-27): ポイント発行ルール (`PointRuleController`: lista por tienda con 適用, alta/modificación con errchk del legacy, rangos de 顧客ランク, «登録中です» y borrado físico); `PointService`/`PointRuleResolver` ya existían (0.1). Pruebas `F3PointRulesTest` (4); suite 662 en verde.
 
 F2 terminado (2026-11-27): ポイント仕様管理 (`PointConfigController`, un `act` por formulario: caducidad con aviso AJAX y renovación de saldos, 延長動作, 有効期間, hora de 失効, avisos previos 1〜10, reglas por tienda y por grupo, マイコレ serializada por tienda, 有料会員) y popups de plantillas de aviso (`PointTemplateController`: alert, shikkou —lo abre 機能設定 de category0—, shikkou_alert). Menú lateral reescrito al formato de NUCLEO §6 (todos los bloques de left_navi3, textos お知らせ/メール con `PromocionMenu`, Gates `promocion.*.enabled`). Pruebas `F2PointConfigTest` (7); suite 658 en verde.
 
@@ -68,6 +70,8 @@ Detalle en `Doc/diseno/promocion.md` §5. Resumen:
 Ver `Doc/diseno/promocion.md` §6. Las principales: controladores en `Admin/Promotions` (existente) con rutas/vistas/lang/menú `promocion`; ninguna pantalla en `hecho` porque la base existente no cumple aún la paridad (textos fuera de `lang/ja`, sin Form Requests ni Policies, faltan campos); `anketo`+`anketo2` → `surveys.type`; `hyouji_flg` → `status`; históricos de envío como solo lectura (la SQL `振分配信` no se migra); saldos de puntos/sellos como movimiento inicial.
 
 ## Hecho
+
+- 2026-11-27 — F3: ポイント発行ルール (lista, alta/modificación, borrado).
 
 - 2026-11-27 — F2: ポイント仕様管理 + plantillas de aviso de puntos; menú de category3 en formato NUCLEO.
 
