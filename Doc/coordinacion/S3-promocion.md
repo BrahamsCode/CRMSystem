@@ -73,6 +73,8 @@ Ver `Doc/diseno/promocion.md` §6. Las principales: controladores en `Admin/Prom
 
 ## Hecho
 
+- 2026-11-28 — Push a g-api con el interruptor común `GApi` (CRM_GAPI_ENABLED) de S1; fuera el `config/promocion.php` provisional. `QrBaseInfo` no hace peticiones (solo arma la URL del QR): sin cambios.
+
 - 2026-11-27 — Tercera pasada: fase A (casos límite en `PromocionDemoSeeder`, 登録者 = tienda) y arreglos de la fase B (絵文字 de plantillas, DM myFlexSelect, `kensu` vacío, push a g-api solo log en local). Detalle en `Doc/qa/regresion.md` «Promoción (S3)». La fase B sigue tras la recarga.
 
 - 2026-11-27 — Regresión S1: `follow_new.php` / `auto_new.php` legacy redirigen (con la query) a las pantallas migradas y el menú プッシュ通知 apunta a ellas; bloque スマトピ連携 oculto (`promocion.smatopi-f8.enabled` = false, espera a Antony F8). 新着情報 no está en el menú de category3.

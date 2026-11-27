@@ -18,6 +18,7 @@ beforeEach(function () {
     pushSeed();
     Storage::fake('public');
     Http::fake();
+    config(['crm.gapi.enabled' => true]); // las pruebas comprueban la llamada a g-api
 });
 
 function pushAudience($test): string

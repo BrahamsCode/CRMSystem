@@ -47,13 +47,17 @@ it('con kensu vacío (vuelta de 削除/修正) las listas muestran 20 por págin
     $this->get(route('admin.promocion.coupons.stats', ['kensu' => '']))->assertOk();
 });
 
-it('en local el aviso de push solo va al log; en producción (y pruebas) llama a g-api', function () {
-    config(['promocion.push_trigger' => 'log']);
-    expect(app(App\Services\Promotions\PushTrigger::class))->toBeInstanceOf(App\Services\Promotions\LogPushTrigger::class);
+it('el aviso de push a g-api respeta el interruptor común GApi (CRM_GAPI_ENABLED)', function () {
+    DB::table('admin_master')->insert(['cd' => 1, 'application_use_flg' => 1, 'push_api_host' => '1', 'domain' => 'shop.example.com']);
     Illuminate\Support\Facades\Http::fake();
+
+    // Apagado (fuera de producción): no sale ninguna petición
+    config(['crm.gapi.enabled' => false]);
     app(App\Services\Promotions\PushTrigger::class)->trigger('mailmaga', 1);
     Illuminate\Support\Facades\Http::assertNothingSent();
 
-    config(['promocion.push_trigger' => 'gapi']);
-    expect(app(App\Services\Promotions\PushTrigger::class))->toBeInstanceOf(App\Services\Promotions\GApiPushTrigger::class);
+    // Encendido (producción): mismo contrato que Push.php::exec
+    config(['crm.gapi.enabled' => true]);
+    app(App\Services\Promotions\PushTrigger::class)->trigger('mailmaga', 1);
+    Illuminate\Support\Facades\Http::assertSent(fn ($r) => $r->url() === 'http://b.g-api.net/api/mpa/pushMessage?domain=shop.example.com&type=mailmaga&cd=1');
 });
