@@ -1,0 +1,48 @@
+@charset "utf-8";
+* {margin: 0;padding: 0;}
+html {overflow-y: scroll;}
+body {font-family: "メイリオ", Meiryo, "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", sans-serif;}
+table, pre, code, select, input, textarea, kbd, var, ins, del, samp, h1, h2, h3, h4, h5, h6 {font-size: 100%;}
+br {vertical-align: middle;/* FFで改行あるなしで高さが微妙に変わるのを回避 */}
+address,cite,dfn,em,var {font-style: normal;}
+img {border: none; vertical-align: bottom; line-height: 1; -ms-interpolation-mode: bicubic; /* 大きい画像縮小してもキレイ */}
+table {border-spacing: 0; border-collapse: collapse;}
+ul,ol,li {list-style: none;}
+blockquote, q {quotes: none;}
+abbr,acronym {border: 0; font-variant: normal;}
+form label {cursor : pointer;}
+select option {padding : 0 5px;}
+input, textarea{margin: 1px; padding: 2px; line-height: 1;}
+textarea{overflow: auto;}
+input, button, textarea, select, optgroup, option {font-family: inherit; font-size: inherit; font-weight: inherit;}
+a {cursor: pointer;}
+.cf:after {content: ""; clear: both; display: block;}
+
+@media screen and (max-width: 960px) {
+    img {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    * {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -o-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+        box-sizing: border-box;
+        -webkit-overflow-scrolling: touch;
+        overflow-scrolling: touch;
+    }
+
+/* iphone用inputタグの初期化 */
+input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+        -webkit-appearance: none;
+        margin-bottom: 10px;
+    }
+
+}

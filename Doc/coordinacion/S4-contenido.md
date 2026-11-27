@@ -7,9 +7,9 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — Esperar a S0: diseño rehecho sobre la BD del legacy
+## Próximo paso — Modelos de los submódulos 1–5 sobre `tb_*` (cuando S0 avise que la base de S1 está integrada)
 
-Diseño `Doc/diseno/contenido-terminales.md` rehecho (2026-11-27): modelos sobre las `tb_*`, UI del legacy, XML escrito en `hp/uploads/c7/display/`. Esperando: respuesta sobre la BD `admin` de `signage/` (bloquea el submódulo 7) y el núcleo de S1 (base de modelos legacy, layout) para empezar las pantallas por マイコレ.
+Diseño v2 aprobado. Hecho: estáticos en `public/legacy/` y ruta pública del XML. Siguiente: modelos en `app/Models/Mypage|Terminales/` (`Recommendation`, `Recruit`, `RecruitCategory`, `MobileNavi`, `SignageDisplay`, `SignageProgram`, `SignageMaterial`, `SignageSystem`) con `LegacyModel`/`HasHatuban`/`LegacySoftDeletes` de S1, y servicios `MypageConfig`/`LotteryConfig` sobre `ContentsMaster`. Rutas de AJAX y formularios del personal: `routes/legacy/<modulo>.php`.
 
 ## Tarea anterior — Diseño (sin código, hecho)
 
@@ -48,6 +48,8 @@ Ver diseño §5. A S0: BD `admin` de `signage/` (no está en el esquema); GoTel/
 - Config de マイコレ y ガチャリン en `contents_master` (modelo de S1) vía servicios de S4; `mypage_config` sigue con `serialize()` (lo leen `mpa_*`).
 
 ## Hecho
+
+- 2026-11-27 Estáticos de category6/7, `digitalsignage/` y `signage/` en `public/legacy/`; ruta `publico.senalizacion.display-xml` con 4 pruebas (suite 22 verde).
 
 - 2026-11-27 Diseño rehecho sobre la BD del legacy; limpieza de la capa obsoleta; `SignageFeedBuilder` sobre `tb_*` con 8 pruebas (suite 10 verde).
 

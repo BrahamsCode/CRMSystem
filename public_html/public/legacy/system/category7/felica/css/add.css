@@ -1,0 +1,21 @@
+/* table_l ---------------«««« */
+.parts_table_l {
+	width: 100%;
+	border: none;
+	zoom: 1;
+}
+
+.parts_table_l th {
+	padding : 3px;
+	border: 1px #666666 outset;
+	background-color:#999999;
+	color:#FFF;
+	text-align:center;
+}
+
+.parts_table_l td {
+	padding : 3px;
+	border: 1px #666666 outset;
+	text-align:left;
+}
+/* table_l ---------------ªªªª */

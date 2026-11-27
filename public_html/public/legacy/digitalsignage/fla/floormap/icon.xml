@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data>
+	<map floor="1">
+		<info cd="1" type="2"></info>
+		<info cd="2" type="3"></info>
+		<info cd="3" type="4"></info>
+		<info cd="4" type="2"></info>
+		<info cd="5" type="0"></info>
+		<info cd="6" type="3"></info>
+		<info cd="7" type="2"></info>
+		<info cd="8" type="1"></info>
+		<info cd="9" type="2"></info>
+		<info cd="10" type="2"></info>
+	</map>
+	<map floor="2">
+		
+	</map>
+	<map floor="3">
+		
+	</map>
+</data>

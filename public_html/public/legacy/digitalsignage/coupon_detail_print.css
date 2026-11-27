@@ -1,0 +1,26 @@
+
+.backGround {
+	display: none;
+}
+
+#ajaxTouchPrintCouponCrawlResult {
+	display: block;
+}
+
+
+#ajaxShinkyakuPrintCouponCrawlResult {
+	display: block;
+}
+
+
+#ajaxKaiinRaitenPrintCouponCrawlResult {
+	display: block;
+}
+
+#ajaxFloormapPrintCouponCrawlResult {
+	display: block;
+}
+
+#ajaxMujyoukenPrintCouponCrawlResult {
+	display: block;
+}
