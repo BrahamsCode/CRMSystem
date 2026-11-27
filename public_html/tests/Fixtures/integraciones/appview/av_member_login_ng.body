@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="content-language" content="ja">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="robots" content="nofollow">
+<meta name="robot-control" content="deny-all">
+<meta name="robots" content="none">
+<title>会員ページ</title>
+<link rel="stylesheet" href="/admin/css/font-awesome.min.css">
+<link rel="stylesheet" href="/appview/css/default.css">
+<link rel="stylesheet" href="/appview/css/common.css">
+<link rel="stylesheet" href="/appview/css/member_inite.css?r=1">
+</head>
+<body style="background: #f1f1f1;">
+
+<main class="member_login_page">
+	
+			
+		<div>
+			<a href="./member_init.php?introducer_cd=">&lt; 戻る</a>
+		</div>
+		
+		<form action="?" method="POST" class="member_form">
+			
+							<p class="member_login_error" >
+					ログイン情報に間違いがあります。<br>
+					情報を変更の上、再度ログインをお試しください。
+				</p>
+						
+			<div>
+				<i class="fa fa-user-circle" aria-hidden="true"></i>
+				<p>ログインID : </p>
+				<input type="text" name="login_id" value="1000001">
+			</div>
+			<div>
+				<i class="fa fa-unlock-alt" aria-hidden="true"></i>
+				<p>ログインPW : </p>
+				<input type="password" name="login_pass" value="x&quot;y">
+			</div>
+			<input type="submit" value="ログイン">
+		</form>
+		
+		
+</main>
+
+</body>
+<script type="text/javascript" src="/appview/js/jquery-2.0.3.min.js"></script>
+<script>
+$(function(){
+});
+</script>
+</html>

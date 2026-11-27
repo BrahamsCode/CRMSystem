@@ -139,26 +139,26 @@ Rutas `appview/<archivo>.php` idénticas, con sesión (como el legacy). Controla
 | `coupon_control.php` | (AJAX uso) | `publico.integraciones.appview.coupon-control` | `CouponController@use` | E `tb_mycoupon`, `tb_mycoupon_used` | pendiente |
 | `used_coupon_list.php` | 利用済みクーポン | `publico.integraciones.appview.used-coupons` | `CouponController@used` | L `tb_mycoupon_used`… | pendiente |
 | `stamp.php` | スタンプ | `publico.integraciones.appview.stamp` | `StampController@show` | L `tb_customer`, `tb_stamp_config`, `admin_master` | pendiente |
-| `visit_history.php` | 来店履歴 | `publico.integraciones.appview.visit-history` | `MemberController@visitHistory` | L `admin_master` + HTTP `g-api.net` | pendiente (`cutomer_cd` sic) |
-| `qr_code.php` | (QR) | `publico.integraciones.appview.qr-code` | `MemberController@qrCode` | L `tb_customer` | pendiente |
-| `memberId.php` | (会員ID) | `publico.integraciones.appview.member-id` | `MemberController@memberId` | L `tb_customer` | pendiente |
-| `photo_gallery.php` | フォトギャラリー | `publico.integraciones.appview.photo-gallery` | `MemberController@photoGallery` | L `admin_master`, `tb_photo_album` | pendiente |
-| `member_login.php` | 会員ページ | `publico.integraciones.appview.member-login` | `MemberController@login` | L `tb_customer` | pendiente (compara `login_pass` como hoy) |
-| `member_kiyaku.php` | 顧客登録ページ | `publico.integraciones.appview.member-kiyaku` | `MemberRegistrationController@terms` | L `contents_master` | pendiente |
+| `visit_history.php` | 来店履歴 | `publico.integraciones.appview.visit-history` | `MemberController@visitHistory` | L `admin_master` + HTTP `g-api.net` | hecho (g-api.net con `Http::`, 3 s) |
+| `qr_code.php` | (QR) | `publico.integraciones.appview.qr-code` | `MemberController@qrCode` | L `tb_customer` | hecho (contrato) |
+| `memberId.php` | (会員ID) | `publico.integraciones.appview.member-id` | `MemberController@memberId` | L `tb_customer` | hecho (contrato) |
+| `photo_gallery.php` | フォトギャラリー | `publico.integraciones.appview.photo-gallery` | `MemberController@photoGallery` | L `admin_master`, `tb_photo_album` | hecho (g-api.net con `Http::`; solo fotos cuyo archivo existe) |
+| `member_login.php` | 会員ページ | `publico.integraciones.appview.member-login` | `MemberController@login` | L `tb_customer` | hecho (contrato; compara `login_pass` en claro como hoy) |
+| `member_kiyaku.php` | 顧客登録ページ | `publico.integraciones.appview.member-kiyaku` | `MemberRegistrationController@terms` | L `contents_master` | hecho (contrato; la メール nunca se validaba y sigue igual) |
 | `member_regist.php` | 新規会員登録フォーム | `publico.integraciones.appview.member-regist` | `MemberRegistrationController@form` | L `admin_master`, `tb_shop`, `tb_koumoku` | pendiente |
-| `member_comfirm.php` | 登録確認ページ | `publico.integraciones.appview.member-comfirm` | `MemberRegistrationController@confirm` | — | pendiente (`comfirm` sic en la URL) |
+| `member_comfirm.php` | 登録確認ページ | `publico.integraciones.appview.member-comfirm` | `MemberRegistrationController@confirm` | — | hecho (contrato; token en la sesión `appview.customer_regist`) |
 | `member_complete.php` | 登録完了ページ | `publico.integraciones.appview.member-complete` | `MemberRegistrationController@store` | E `tb_customer`, `tb_customer_sub`, `tb_customer_point`, `tb_point_log`, `hatuban` | pendiente |
-| `member_init.php` | 会員ページ (inicio) | `publico.integraciones.appview.member-init` | `MemberController@init` | L `tb_customer` | pendiente |
-| `member_comp.php` | 会員ページ (vinculación) | `publico.integraciones.appview.member-comp` | `MemberController@link` | E `tb_customer` | pendiente |
+| `member_init.php` | 会員ページ (inicio) | `publico.integraciones.appview.member-init` | `MemberController@init` | L `tb_customer` | hecho (contrato) |
+| `member_comp.php` | 会員ページ (vinculación) | `publico.integraciones.appview.member-comp` | `MemberController@link` | E `tb_customer` | hecho (contrato) |
 | `customerUpdate.php` | 個人情報の登録変更フォーム | `publico.integraciones.appview.customer-update` | `MemberController@updateProfile` | L/E `tb_customer`; L `tb_shop`, `admin_master` | pendiente |
 | `anketo2.php` | 問診表 | `publico.integraciones.appview.anketo2` | `SurveyController@show` | L `tb_c3_anketo2*` | pendiente |
 | `anketo2_register.php` | 問診表 (registro) | `publico.integraciones.appview.anketo2-register` | `SurveyController@store` | E `tb_c3_anketo2_sub`, `tb_anketo_present`, `tb_mycoupon`, `tb_customer`, `hatuban` | pendiente |
 | `reservation.php` | (予約) | `publico.integraciones.appview.reservation` | `ReservationController@show` | — (contenedor de `r/`, de S2) | pendiente |
 | `quick_reservation.php` | (クイック予約) | — | — | — | descartado: クイック予約 es de touchcation y `numbered_ticket` no está en el backup (S0, 2026-11-27) |
 | `quick_reservation_register.php` | (registro, JSON) | — | — | — | descartado: ídem |
-| `privacyPage.php` | プライバシーポリシー | `publico.integraciones.appview.privacy` | `PageController@privacy` | L `contents_master`, `tb_shop` | pendiente |
-| `introduction.php` | プレビュー | `publico.integraciones.appview.introduction` | `PageController@introduction` | — | pendiente |
-| `detail_view.php` | プレビュー | `publico.integraciones.appview.detail-view` | `PageController@detailView` | — | pendiente |
+| `privacyPage.php` | プライバシーポリシー | `publico.integraciones.appview.privacy` | `PageController@privacy` | L `contents_master`, `tb_shop` | hecho (contrato; dominios del POS → «接続できませんでした») |
+| `introduction.php` | プレビュー | — | — | — | descartado: lee la BD `admin` (tablas `shop`, `news`, `blog`, `good_count`) y sus enlaces salen de `admin/api`, fuera de alcance |
+| `detail_view.php` | プレビュー | — | — | — | descartado: lee la BD `admin` (tablas `shop`, `news`, `blog`, `good_count`) y sus enlaces salen de `admin/api`, fuera de alcance |
 | `ms_paid_member_regist.php`, `ms_paid_member_test.php` | (prueba) | — | — | — | descartado: código de prueba con cliente fijo |
 | `class/*` | — | servicios | — | — | descartado como archivos: su lógica pasa a servicios (``Util::` de オススメ) |
 
@@ -187,11 +187,11 @@ Rutas `appview/<archivo>.php` idénticas, con sesión (como el legacy). Controla
 | Archivo legacy | URL | Ruta Laravel | Controlador@método | Tablas legacy | Estado |
 |---|---|---|---|---|---|
 | `version/pos/v.php`, `version/android3/v.php`, `version/sharp/v.php` y los 6 `.apk` | `/version/<canal>/v.php` | — | — | — | descartado: touchcation fuera de alcance (las 6 APK son `jp.CrmShWeb`; S0, 2026-11-26) |
-| `version/crm_version.php` | `/version/crm_version.php` | `publico.integraciones.version.crm` | `VersionController@crm` | — | pendiente (`text/plain` `2.704`, sin salto de línea) |
-| `ptag/.htaccess`, `ptag/index.php` | `/ptag/<ID>` | `publico.integraciones.ptag` | `PtagController@redirect` | L `tb_url_list`, `tb_customer`; E `url_transfer_data` | pendiente |
-| `air/update-info.xml`, `air/crossdomain.xml` | `/air/*.xml` | archivos estáticos en `public/air/` | — | — | pendiente (condicional: mientras exista el cliente AIR) |
-| `air/air_info_out.php` | `/air/air_info_out.php` | `publico.integraciones.air.info` | `AirController@info` | L `tb_information`, `tb_staff` | pendiente (condicional, confirmar uso con Japón) |
-| `exp_cmd/cron/get_shukei_data.php`, `get_shukei_data2.php` | `/exp_cmd/cron/get_shukei_data*.php` | comando `integraciones:shukei {year?} {month?}` | `App\Console\Commands\Integraciones\ShukeiCommand` | L `tb_hp_domain`, `tb_shop` y ventas | pendiente (prioridad baja; llamador desconocido) |
+| `version/crm_version.php` | `/version/crm_version.php` | `publico.integraciones.version.crm` | `UtilityController@crmVersion` | — | hecho (200 sin cuerpo: el archivo está vacío en crm2-php8 y en development; el análisis decía `2.704`) |
+| `ptag/.htaccess`, `ptag/index.php` | `/ptag/<ID>` | `publico.integraciones.ptag` | `UtilityController@ptag` | L `tb_url_list`, `tb_customer`; E `url_transfer_data` | hecho (cookie UID leída de la cabecera, sin el cifrado de Laravel) |
+| `air/update-info.xml`, `air/crossdomain.xml` | `/air/*.xml` | archivos estáticos en `public/air/` | — | — | hecho (copiados byte a byte; uso del cliente AIR por confirmar con Japón) |
+| `air/air_info_out.php` | `/air/air_info_out.php` | `publico.integraciones.air.info` | `UtilityController@airInfo` | L `tb_information`, `tb_staff` | hecho (mismas condiciones; uso por confirmar con Japón) |
+| `exp_cmd/cron/get_shukei_data.php`, `get_shukei_data2.php` | `/exp_cmd/cron/get_shukei_data*.php` | comando `integraciones:shukei {year?} {month?}` | `App\Console\Commands\Integraciones\ShukeiCommand` | L `tb_hp_domain`, `tb_shop`, `tb_customer`, `mailmag_master`, `tb_login_rireki`; E `tb_crm_check_operation` en una BD externa de VIZAN | pendiente ⏸ (escribe en otro servidor, 203.183.91.218, con la clave del POS, y no se sabe quién lo llama: confirmar con Japón antes de portarlo) |
 | `exp_cmd/verUp/*` (11) | CLI | — | — | — | descartado: actualizadores históricos de esquema |
 | `cron/regenerateCronJob.php` | `/cron/regenerateCronJob.php` | — | — | — | descartado: lo reemplaza el Scheduler (cada módulo registra sus tareas en su ServiceProvider) |
 | `instagram/index.php` | `/instagram/index.php` | — | — | — | descartado: API de Instagram retirada |

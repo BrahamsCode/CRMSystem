@@ -1,0 +1,38 @@
+<?php
+/*
+ * Legacy: appview/member_init.php. Vista PHP plana (no Blade): salida byte a byte la del legacy (CRLF).
+ * $h = h() del legacy (htmlspecialchars sin doble codificación); $req = parámetros de la petición.
+ */
+?>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="content-language" content="ja">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="robots" content="nofollow">
+<meta name="robot-control" content="deny-all">
+<meta name="robots" content="none">
+<title>会員ページ</title>
+<link rel="stylesheet" href="/admin/css/font-awesome.min.css">
+<link rel="stylesheet" href="/appview/css/default.css">
+<link rel="stylesheet" href="/appview/css/common.css">
+<link rel="stylesheet" href="/appview/css/member_inite.css">
+</head>
+<body>
+
+<main class="member_init_page">
+	<ul class="member_init_link">
+		<li><a href="./member_regist.php?touroku_kubun=2&introducer_cd=<?=$h(($req["introducer_cd"] ?? null))?>"><i class="fa fa-user-circle-o"></i> 会員登録ページ</a></li>
+		<li><a href="./member_login.php?introducer_cd=<?=$h(($req["introducer_cd"] ?? null))?>"><i class="fa fa-sign-in"></i> ログインページ</a></li>
+	</ul>
+</main>
+
+</body>
+<script type="text/javascript" src="/appview/js/jquery-2.0.3.min.js"></script>
+<script>
+$(function(){
+});
+</script>
+</html>

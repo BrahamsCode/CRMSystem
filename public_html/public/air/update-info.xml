@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<update xmlns="http://ns.adobe.com/air/framework/update/description/1.0">
+  <version>1.0.13</version>
+  <url>http://extlink.crm-s.net/air/crm.air</url>
+  <description><![CDATA[
+以下の新機能が追加されます。:
+    1) アップデート機能の実装
+    
+  ]]></description>
+</update>

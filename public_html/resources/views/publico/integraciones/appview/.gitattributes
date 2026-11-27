@@ -1,0 +1,2 @@
+# Plantillas del legacy (CRLF): la salida se compara byte a byte con las fixtures
+*.php -text

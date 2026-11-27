@@ -1,0 +1,70 @@
+<?php
+/*
+ * Legacy: appview/memberId.php. Vista PHP plana (no Blade): salida byte a byte la del legacy (CRLF).
+ * $h = h() del legacy (htmlspecialchars sin doble codificación); $req = parámetros de la petición.
+ */
+?>
+<!DOCTYPE html>
+<html lang="jp">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title></title>
+		<meta charset="utf-8">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<style type="text/css">
+			* { margin: 0; padding: 0; }
+			body {
+				font:14px/1.231 "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+				background-color: #f39b10;
+				color: #3B6BA5;
+			}
+			li { list-style-type: none; }
+			.logo {
+				margin: 10px 20px;
+			}
+			.qrWrapper {
+				margin: 10px 20px;
+				padding: 10px;
+				background: #FFFFFF url(img/memberId_02.png) repeat ;
+			}
+			.qrWrapperInner {
+				padding-bottom: 20px;
+				background: #FFFFFF;
+			}
+			.qr_image_wrapper {
+				padding: 10px;
+			}
+			.qr_image {
+				border: 1px solid #EEEEEE;
+			}
+			.id_area {
+				margin: 0 auto;
+				background: #F4F4F4;
+				font-size: 28px;
+				width: 80%;
+			}
+			.id_explain {
+				margin-top: 30px;
+				font-size: 12px;
+			}
+		</style>
+	</head>
+	<body>
+		<div style="text-align:center;">
+			<div class="logo">
+				<img src="img/memberId_01.png" width="100%">
+			</div>
+			<div class="qrWrapper">
+				<div class="qrWrapperInner">
+					<div class="qr_image_wrapper">
+						<img class="qr_image" src="/system/category3/mail_mag/qr_img.php?d=http://yahoo.co.jp" width="250" height="250" alt="">
+					</div>
+					<div class="id_area">ID: <?=$customer_array['login_id']?></div>
+					<div class="id_explain">こちらの画面を係にご提示ください</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,136 @@
+[
+ {
+  "name": "av_member_id",
+  "method": "GET",
+  "path": "/appview/memberId.php?customer_cd=1609897927001809158"
+ },
+ {
+  "name": "av_member_id_error",
+  "method": "GET",
+  "path": "/appview/memberId.php?customer_cd=12a"
+ },
+ {
+  "name": "av_member_id_missing",
+  "method": "GET",
+  "path": "/appview/memberId.php?customer_cd=999"
+ },
+ {
+  "name": "av_qr",
+  "method": "GET",
+  "path": "/appview/qr_code.php?customer_cd=1609897927001809158",
+  "headers": [
+   "Host: crm.example.test"
+  ]
+ },
+ {
+  "name": "av_qr_demo",
+  "method": "GET",
+  "path": "/appview/qr_code.php?customer_cd=%5Bcustomer_cd%5D&demo=1",
+  "headers": [
+   "Host: crm.example.test"
+  ]
+ },
+ {
+  "name": "av_qr_error",
+  "method": "GET",
+  "path": "/appview/qr_code.php"
+ },
+ {
+  "name": "av_member_init",
+  "method": "GET",
+  "path": "/appview/member_init.php?introducer_cd=a%22%3Cb%3E"
+ },
+ {
+  "name": "av_member_comp_empty",
+  "method": "GET",
+  "path": "/appview/member_comp.php"
+ },
+ {
+  "name": "av_member_comp",
+  "method": "GET",
+  "path": "/appview/member_comp.php?kaiincd=1700000000001000004"
+ },
+ {
+  "name": "av_member_comp_again",
+  "method": "GET",
+  "path": "/appview/member_comp.php?kaiincd=1700000000001000004"
+ },
+ {
+  "name": "av_member_comfirm",
+  "method": "POST",
+  "path": "/appview/member_comfirm.php",
+  "form": {
+   "name": "山田 <太郎>",
+   "mail": "t@example.test",
+   "tel": "0901234"
+  }
+ },
+ {
+  "name": "av_member_login",
+  "method": "GET",
+  "path": "/appview/member_login.php?introducer_cd=7"
+ },
+ {
+  "name": "av_member_login_ng",
+  "method": "POST",
+  "path": "/appview/member_login.php",
+  "form": {
+   "login_id": "1000001",
+   "login_pass": "x\"y"
+  }
+ },
+ {
+  "name": "av_member_login_ok",
+  "method": "POST",
+  "path": "/appview/member_login.php",
+  "form": {
+   "login_id": " 1000001 ",
+   "login_pass": "pass1"
+  }
+ },
+ {
+  "name": "av_kiyaku_error",
+  "method": "GET",
+  "path": "/appview/member_kiyaku.php?tel=09a&mail=bad"
+ },
+ {
+  "name": "av_kiyaku_empty",
+  "method": "GET",
+  "path": "/appview/member_kiyaku.php"
+ },
+ {
+  "name": "av_kiyaku_ok",
+  "method": "POST",
+  "path": "/appview/member_kiyaku.php",
+  "form": {
+   "name": "山田",
+   "tel": "0901234",
+   "mail": "bad mail",
+   "shop_cd": "2"
+  }
+ },
+ {
+  "name": "av_privacy_no_domain",
+  "method": "GET",
+  "path": "/appview/privacyPage.php",
+  "headers": [
+   "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  ]
+ },
+ {
+  "name": "av_privacy_unknown",
+  "method": "GET",
+  "path": "/appview/privacyPage.php?domain=example.test",
+  "headers": [
+   "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  ]
+ },
+ {
+  "name": "av_privacy_crm",
+  "method": "GET",
+  "path": "/appview/privacyPage.php?domain=test.crm-s.net",
+  "headers": [
+   "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  ]
+ }
+]

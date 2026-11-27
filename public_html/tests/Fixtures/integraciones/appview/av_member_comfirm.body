@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="content-language" content="ja">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="robots" content="nofollow">
+<meta name="robot-control" content="deny-all">
+<meta name="robots" content="none">
+<title>登録確認ページ</title>
+<link rel="stylesheet" href="/appview/css/default.css">
+<link rel="stylesheet" href="/appview/css/common.css">
+</head>
+<body>
+
+<main>
+	<h2 class="tit01">登録確認</h2>
+	<form action="./member_complete.php" method="post">
+		<input type="hidden" name="regist" value="1">
+		<input type="hidden" name="_token" value="977c25f33a34a198521491d0010b1e26">
+		<input type="hidden" name="name" value="山田 &lt;太郎&gt;">
+		<input type="hidden" name="mail" value="t@example.test">
+		<input type="hidden" name="tel" value="0901234">
+		<dl class="dl_list04">
+			<dt>名前</dt>
+				<dd>山田 &lt;太郎&gt;</dd>
+			<dt>メールアドレス</dt>
+				<dd>t@example.test</dd>
+			<dt>電話番号</dt>
+				<dd>0901234</dd>
+		</dl>
+		
+		<ul class="bt_list01">
+			<li><input type="submit" value="登録"></li>
+			<li><a href="#" onclick="javascript:window.history.back(-1);return false;">戻る</a></li>
+		</ul>
+	</form>
+</main>
+
+</body>
+</html>

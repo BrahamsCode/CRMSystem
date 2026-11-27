@@ -5,3 +5,4 @@ keys/** -text
 legacy-base.sql -text
 legacy-seed.sql -text
 tool/** -text
+appview/** -text

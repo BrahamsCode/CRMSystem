@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\Publico\Integraciones\Appview;
 use App\Http\Controllers\Publico\Integraciones\CtiController;
 use App\Http\Controllers\Publico\Integraciones\MobileShopController;
 use App\Http\Controllers\Publico\Integraciones\MpaController;
 use App\Http\Controllers\Publico\Integraciones\ToolApi;
+use App\Http\Controllers\Publico\Integraciones\UtilityController;
 use App\Http\Middleware\Integraciones\CheckCrmApiKey;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Support\Facades\Route;
@@ -56,6 +58,25 @@ Route::name('publico.integraciones.')
             Route::any('category1/addRaitenRecord.php', [ToolApi\RaitenController::class, 'store'])->name('raiten-add');
             Route::any('category1/setRaitenDetail.php', [ToolApi\RaitenController::class, 'update'])->name('raiten-set');
             Route::any('category5/getStaffList.php', [ToolApi\StaffController::class, 'index'])->name('staff-list');
+        });
+
+        // Utilitarios (§1.10): versión, enlaces de seguimiento y cliente Adobe AIR (los .xml de /air son estáticos en public/air)
+        Route::any('version/crm_version.php', [UtilityController::class, 'crmVersion'])->name('version.crm');
+        Route::any('ptag/{id?}', [UtilityController::class, 'ptag'])->where('id', '.*')->name('ptag');
+        Route::any('air/air_info_out.php', [UtilityController::class, 'airInfo'])->name('air.info');
+
+        // WebView de la app del socio (appview/*.php, §1.8): sin autenticación, como el legacy; estáticos en public/appview
+        Route::prefix('appview')->name('appview.')->group(function () {
+            Route::any('memberId.php', [Appview\MemberController::class, 'memberId'])->name('member-id');
+            Route::any('qr_code.php', [Appview\MemberController::class, 'qrCode'])->name('qr-code');
+            Route::any('member_init.php', [Appview\MemberController::class, 'init'])->name('member-init');
+            Route::any('member_comp.php', [Appview\MemberController::class, 'link'])->name('member-comp');
+            Route::any('member_login.php', [Appview\MemberController::class, 'login'])->name('member-login');
+            Route::any('photo_gallery.php', [Appview\MemberController::class, 'photoGallery'])->name('photo-gallery');
+            Route::any('visit_history.php', [Appview\MemberController::class, 'visitHistory'])->name('visit-history');
+            Route::any('member_kiyaku.php', [Appview\MemberRegistrationController::class, 'terms'])->name('member-kiyaku');
+            Route::any('member_comfirm.php', [Appview\MemberRegistrationController::class, 'confirm'])->name('member-comfirm');
+            Route::any('privacyPage.php', [Appview\PageController::class, 'privacy'])->name('privacy');
         });
 
         // Ventana CTI (system/desktop_request): sin autenticación, como el legacy
