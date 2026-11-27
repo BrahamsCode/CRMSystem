@@ -229,3 +229,19 @@ it('ptag: registra accesos en url_transfer_data, tabla sin clave primaria', func
         ->and($rows->first()->data_id)->toBe('CRM000000001')
         ->and($rows->pluck('tb_customer_cd')->all())->toContain(1609897927001809158);
 });
+
+it('ptag: cada acceso conoce a su socio (customer) y el visitante sin cuenta no tiene', function () {
+    DB::table('tb_customer')->insert(['cd' => 1609897927001809158, 'id' => '1000001', 'name' => '山田', 'disp_flg' => '1']);
+    UrlTransferData::record('CRM000000001', 1609897927001809158);
+    UrlTransferData::record('CRM000000001', null);
+
+    $rows = UrlTransferData::with('customer')->orderBy('tb_customer_cd')->get();
+
+    expect($rows->first()->customer->name)->toBe('山田')
+        ->and($rows->last()->customer)->toBeNull();
+});
+
+it('MobileShopClient: interfaz enlazada a la implementación HTTP (la usa también S2)', function () {
+    expect(app(\App\Services\Integraciones\MobileShop\MobileShopClient::class))
+        ->toBeInstanceOf(\App\Services\Integraciones\MobileShop\HttpMobileShopClient::class);
+});
