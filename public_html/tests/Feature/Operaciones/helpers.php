@@ -10,6 +10,8 @@ function seedOperaciones(): void
     seedNucleo();
     DB::table('tb_base_system')->insert(['cd' => 5, 'system_name' => '業務支援管理', 'system_flg' => '1', 'narabi' => 5]);
     DB::table('tb_base_system_child')->insert(['cd' => 50, 'tb_base_system_cd' => 5, 'system_name' => 'スタッフ管理', 'system_flg' => '1', 'rank' => 1]);
+    // Contenidos de permisos de スタッフ管理 e インフォメーション (sin filas en tb_kengen: todo permitido)
+    DB::table('tb_kengen_contents')->insert([['cd' => 1024, 'hyouji_flg' => '1'], ['cd' => 1025, 'hyouji_flg' => '1']]);
 }
 
 /** Empleado que no es master (sin filas en tb_kengen: todos los permisos, como el legacy) */

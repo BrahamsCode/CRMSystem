@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\Operaciones\InformationController;
 use App\Http\Controllers\Admin\Operaciones\StaffController;
+use App\Http\Controllers\Admin\Operaciones\StaffEntryController;
 use App\Http\Controllers\Admin\Operaciones\StaffFieldController;
 use App\Http\Controllers\Admin\Operaciones\StaffGroupController;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +20,17 @@ Route::prefix('operaciones')->name('operaciones.')->group(function () {
         Route::put('staff-groups/{cd}', [StaffGroupController::class, 'update'])->whereNumber('cd')->name('staff-groups.update');
         Route::delete('staff-groups/{cd}', [StaffGroupController::class, 'destroy'])->whereNumber('cd')->name('staff-groups.destroy');
     });
+
+    // スタッフ新規登録 / 修正 (staff_entry.php → _confirm → _register → _complete, foto de inc/upload.php).
+    // confirm/rewrite/store comprueban el permiso según act (new: 1024/2, up: 1024/3).
+    Route::get('staff/create', [StaffEntryController::class, 'create'])->middleware('can:kengen.1024.2')->name('staff.create');
+    Route::get('staff/{cd}/edit', [StaffEntryController::class, 'edit'])->whereNumber('cd')->middleware('can:kengen.1024.3')->name('staff.edit');
+    Route::post('staff/confirm', [StaffEntryController::class, 'confirm'])->name('staff.confirm');
+    Route::post('staff/rewrite', [StaffEntryController::class, 'rewrite'])->name('staff.rewrite');
+    Route::post('staff/store', [StaffEntryController::class, 'store'])->name('staff.store');
+    Route::get('staff/{cd}/complete', [StaffEntryController::class, 'complete'])->whereNumber('cd')->name('staff.complete');
+    Route::post('staff/photo', [StaffEntryController::class, 'uploadPhoto'])->name('staff.photo.upload');
+    Route::get('staff/photo/{token}', [StaffEntryController::class, 'tempPhoto'])->whereNumber('token')->name('staff.photo.temp');
 
     // スタッフ検索・一覧 (staff_list.php + csv_download.php) y スタッフ登録情報 (staff_detail.php)
     Route::get('staff', [StaffController::class, 'index'])->name('staff.index');

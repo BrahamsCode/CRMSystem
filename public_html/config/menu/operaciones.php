@@ -15,6 +15,7 @@ return [
             'ac' => 'ac1',
             'child' => 'スタッフ管理',
             'links' => [
+                ['label' => 'スタッフ新規登録', 'url' => '/admin/operaciones/staff/create', 'can' => 'kengen.1024.2'],
                 ['label' => 'スタッフ検索・一覧', 'url' => '/admin/operaciones/staff'],
                 ['label' => 'スタッフグループ設定', 'url' => '/admin/operaciones/staff-groups', 'can' => 'nucleo.master'],
                 ['label' => 'スタッフ検索項目設定', 'url' => '/admin/operaciones/staff-fields'],

@@ -235,7 +235,7 @@ function submitChk2 () {
 <div class="btnBox">
 @if (! $staff->isLegacyDeleted())
 @can('kengen.1024.3')
-<form method="get" name="form1" id="form1" class="form" action="{{ url('/admin/operaciones/staff/'.$staff->cd.'/edit') }}">
+<form method="get" name="form1" id="form1" class="form" action="{{ route('admin.operaciones.staff.edit', $staff->cd) }}">
 <input type="submit" id="act" class="btnStyle" value="修正する" />
 </form>
 @endcan
