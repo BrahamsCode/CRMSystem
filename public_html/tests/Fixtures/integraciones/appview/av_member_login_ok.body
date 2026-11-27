@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="content-language" content="ja">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="robots" content="nofollow">
+<meta name="robot-control" content="deny-all">
+<meta name="robots" content="none">
+<title>会員ページ</title>
+<link rel="stylesheet" href="/admin/css/font-awesome.min.css">
+<link rel="stylesheet" href="/appview/css/default.css">
+<link rel="stylesheet" href="/appview/css/common.css">
+<link rel="stylesheet" href="/appview/css/member_inite.css?r=1">
+</head>
+<body style="background: #f1f1f1;">
+
+<main class="member_login_page">
+	
+			
+		<script>
+		myFunction = function() {
+			
+			var message = {"action":"appCloseDialog", "customer_cd":"1609897927001809158", "touroku_kubun":"2"};
+			try {
+				if (typeof androidCallback.postMessage == 'function') { 
+					androidCallback.postMessage( JSON.stringify(message) );
+				}
+				else { 
+					webkit.messageHandlers.callbackHandler.postMessage( message );
+				}
+			}
+			catch (e) {
+				webkit.messageHandlers.callbackHandler.postMessage( message );
+			}
+			
+		}
+		myFunction();
+		</script>
+		
+		
+</main>
+
+</body>
+<script type="text/javascript" src="/appview/js/jquery-2.0.3.min.js"></script>
+<script>
+$(function(){
+});
+</script>
+</html>

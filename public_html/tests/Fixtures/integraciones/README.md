@@ -53,3 +53,14 @@ Lo que mostraron:
 - CTI: `ctiWindow` responde 302 a las URL del legacy (`customer_new.php`, `time_table.php` de la categoría 9/11 activa o `select.php`, `customer_list.php`); errores de formato como texto plano. `customerDetailHtml` con CRLF del archivo original y `nl2br(htmlentities())` del 備考.
 
 **mpa_* en Laravel (2026-11-27):** `MobileShopContractTest` repite también los `mpa_*` (con la hora congelada para que `mpa_setraiten_interval` caiga en el intervalo como al grabar); `mpa_setraiten_ok` se comprueba aparte porque Laravel responde `ok` en lugar del fatal 500.
+
+## appview (`appview/`, grabado el 2026-11-27)
+
+Pantallas HTML del WebView de la app: `appview/manifest.json` + `appview/*.body`, casos en `tools/cases-appview.json`, prueba `tests/Feature/Integraciones/AppviewContractTest.php`. En Laravel son vistas PHP planas (`resources/views/publico/integraciones/appview/*.php`, CRLF) con la plantilla del legacy tal cual.
+
+- BD: esquema + `legacy-base.sql` + `legacy-seed.sql` + `appview-seed.sql` (sintéticos). Las pantallas con `domain` (`privacyPage`, registro) conectan por `class/Database.php` a `localhost/crm2019`: en la copia del legacy usada para grabar se apuntó a la BD de fixtures (solo en la copia, marcado `FIXTURES S5`). Hace falta también `hp/user/inc/path_config.php` en la copia (`member_comfirm`, `member_kiyaku`).
+- Grabar: `php tools/capture.php http://s5-legacy-web <salida> tools/cases-appview.json` (los casos con `Host:` se repiten en Laravel con esa URL).
+- La prueba quita del legacy los avisos de PHP 8.5 que crm2-php8 imprime (`class/Customer.php` hace `ini_set('display_errors', 1)`) y el token aleatorio de `member_comfirm`.
+- No se graban `photo_gallery` ni `visit_history`: llaman a `g-api.net` real. Se prueban con `Http::fake()` (`AppviewMemberTest`).
+
+Lo que mostraron: `memberId`/`qr_code` responden `error` (texto) si `customer_cd` no son dígitos; un `cd` inexistente muestra `ID: ` vacío. `member_comp` sin `kaiincd` → `エラー`; ya vinculado → `既に登録済みか、顧客の情報が正しくありません。`. `privacyPage` sin `domain` → `不正なリクエストです`; dominio no reconocido → `解析エラーです。`. `member_kiyaku` nunca valida la メール (`$tmp_tel` sin asignar).

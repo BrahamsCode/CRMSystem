@@ -139,26 +139,26 @@ Rutas `appview/<archivo>.php` idénticas, con sesión (como el legacy). Controla
 | `coupon_control.php` | (AJAX uso) | `publico.integraciones.appview.coupon-control` | `CouponController@use` | E `tb_mycoupon`, `tb_mycoupon_used` | pendiente |
 | `used_coupon_list.php` | 利用済みクーポン | `publico.integraciones.appview.used-coupons` | `CouponController@used` | L `tb_mycoupon_used`… | pendiente |
 | `stamp.php` | スタンプ | `publico.integraciones.appview.stamp` | `StampController@show` | L `tb_customer`, `tb_stamp_config`, `admin_master` | pendiente |
-| `visit_history.php` | 来店履歴 | `publico.integraciones.appview.visit-history` | `MemberController@visitHistory` | L `admin_master` + HTTP `g-api.net` | pendiente (`cutomer_cd` sic) |
-| `qr_code.php` | (QR) | `publico.integraciones.appview.qr-code` | `MemberController@qrCode` | L `tb_customer` | pendiente |
-| `memberId.php` | (会員ID) | `publico.integraciones.appview.member-id` | `MemberController@memberId` | L `tb_customer` | pendiente |
-| `photo_gallery.php` | フォトギャラリー | `publico.integraciones.appview.photo-gallery` | `MemberController@photoGallery` | L `admin_master`, `tb_photo_album` | pendiente |
-| `member_login.php` | 会員ページ | `publico.integraciones.appview.member-login` | `MemberController@login` | L `tb_customer` | pendiente (compara `login_pass` como hoy) |
-| `member_kiyaku.php` | 顧客登録ページ | `publico.integraciones.appview.member-kiyaku` | `MemberRegistrationController@terms` | L `contents_master` | pendiente |
+| `visit_history.php` | 来店履歴 | `publico.integraciones.appview.visit-history` | `MemberController@visitHistory` | L `admin_master` + HTTP `g-api.net` | hecho (g-api.net con `Http::`, 3 s) |
+| `qr_code.php` | (QR) | `publico.integraciones.appview.qr-code` | `MemberController@qrCode` | L `tb_customer` | hecho (contrato) |
+| `memberId.php` | (会員ID) | `publico.integraciones.appview.member-id` | `MemberController@memberId` | L `tb_customer` | hecho (contrato) |
+| `photo_gallery.php` | フォトギャラリー | `publico.integraciones.appview.photo-gallery` | `MemberController@photoGallery` | L `admin_master`, `tb_photo_album` | hecho (g-api.net con `Http::`; solo fotos cuyo archivo existe) |
+| `member_login.php` | 会員ページ | `publico.integraciones.appview.member-login` | `MemberController@login` | L `tb_customer` | hecho (contrato; compara `login_pass` en claro como hoy) |
+| `member_kiyaku.php` | 顧客登録ページ | `publico.integraciones.appview.member-kiyaku` | `MemberRegistrationController@terms` | L `contents_master` | hecho (contrato; la メール nunca se validaba y sigue igual) |
 | `member_regist.php` | 新規会員登録フォーム | `publico.integraciones.appview.member-regist` | `MemberRegistrationController@form` | L `admin_master`, `tb_shop`, `tb_koumoku` | pendiente |
-| `member_comfirm.php` | 登録確認ページ | `publico.integraciones.appview.member-comfirm` | `MemberRegistrationController@confirm` | — | pendiente (`comfirm` sic en la URL) |
+| `member_comfirm.php` | 登録確認ページ | `publico.integraciones.appview.member-comfirm` | `MemberRegistrationController@confirm` | — | hecho (contrato; token en la sesión `appview.customer_regist`) |
 | `member_complete.php` | 登録完了ページ | `publico.integraciones.appview.member-complete` | `MemberRegistrationController@store` | E `tb_customer`, `tb_customer_sub`, `tb_customer_point`, `tb_point_log`, `hatuban` | pendiente |
-| `member_init.php` | 会員ページ (inicio) | `publico.integraciones.appview.member-init` | `MemberController@init` | L `tb_customer` | pendiente |
-| `member_comp.php` | 会員ページ (vinculación) | `publico.integraciones.appview.member-comp` | `MemberController@link` | E `tb_customer` | pendiente |
+| `member_init.php` | 会員ページ (inicio) | `publico.integraciones.appview.member-init` | `MemberController@init` | L `tb_customer` | hecho (contrato) |
+| `member_comp.php` | 会員ページ (vinculación) | `publico.integraciones.appview.member-comp` | `MemberController@link` | E `tb_customer` | hecho (contrato) |
 | `customerUpdate.php` | 個人情報の登録変更フォーム | `publico.integraciones.appview.customer-update` | `MemberController@updateProfile` | L/E `tb_customer`; L `tb_shop`, `admin_master` | pendiente |
 | `anketo2.php` | 問診表 | `publico.integraciones.appview.anketo2` | `SurveyController@show` | L `tb_c3_anketo2*` | pendiente |
 | `anketo2_register.php` | 問診表 (registro) | `publico.integraciones.appview.anketo2-register` | `SurveyController@store` | E `tb_c3_anketo2_sub`, `tb_anketo_present`, `tb_mycoupon`, `tb_customer`, `hatuban` | pendiente |
 | `reservation.php` | (予約) | `publico.integraciones.appview.reservation` | `ReservationController@show` | — (contenedor de `r/`, de S2) | pendiente |
 | `quick_reservation.php` | (クイック予約) | — | — | — | descartado: クイック予約 es de touchcation y `numbered_ticket` no está en el backup (S0, 2026-11-27) |
 | `quick_reservation_register.php` | (registro, JSON) | — | — | — | descartado: ídem |
-| `privacyPage.php` | プライバシーポリシー | `publico.integraciones.appview.privacy` | `PageController@privacy` | L `contents_master`, `tb_shop` | pendiente |
-| `introduction.php` | プレビュー | `publico.integraciones.appview.introduction` | `PageController@introduction` | — | pendiente |
-| `detail_view.php` | プレビュー | `publico.integraciones.appview.detail-view` | `PageController@detailView` | — | pendiente |
+| `privacyPage.php` | プライバシーポリシー | `publico.integraciones.appview.privacy` | `PageController@privacy` | L `contents_master`, `tb_shop` | hecho (contrato; dominios del POS → «接続できませんでした») |
+| `introduction.php` | プレビュー | — | — | — | descartado: lee la BD `admin` (tablas `shop`, `news`, `blog`, `good_count`) y sus enlaces salen de `admin/api`, fuera de alcance |
+| `detail_view.php` | プレビュー | — | — | — | descartado: lee la BD `admin` (tablas `shop`, `news`, `blog`, `good_count`) y sus enlaces salen de `admin/api`, fuera de alcance |
 | `ms_paid_member_regist.php`, `ms_paid_member_test.php` | (prueba) | — | — | — | descartado: código de prueba con cliente fijo |
 | `class/*` | — | servicios | — | — | descartado como archivos: su lógica pasa a servicios (``Util::` de オススメ) |
 

@@ -1,0 +1,40 @@
+<br />
+<b>Deprecated</b>:  pg_escape_string(): Automatic fetching of PostgreSQL connection is deprecated in <b>/var/www/public_html/appview/privacyPage.php</b> on line <b>17</b><br />
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>プライバシーポリシー</title>
+		<link href="bower_components/bootswatch-dist/css/bootstrap.min.css" rel="stylesheet">
+		<script src="bower_components/jquery/dist/jquery.min.js"></script>
+		<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+		<script src="bower_components/bootstrap-validator/dist/validator.min.js"></script>
+		<style>pre{margin-bottom:40px} p{margin: 100px 0px 20px}</style>
+	</head>
+	<body>
+		<div class="col-xs-12 col-xs-offset-0 well">
+			<div class="text-left">
+				<a href="./member_regist.php?domain=test.crm-s.net">&laquo; 新規会員登録ページへ</a>
+			</div>
+			<h3>プライバシーポリシー</h3>
+			<pre>当社及び共同企業は今回ご登録頂きます会員情報を
+当社ならびに共同企業の取り扱い商品等のご案内、その他、各社のプライバシーポリシー
+に定める目的の範囲内で利用いたします。当社及び共同企業(以下、「当社等」といいます。)
+は、今回ご登録頂いたお客様情報(個人情報を含みます。)を、以下の場合において利用するものとします。
+
+1.当社等が取り扱う各種商材に関する案内をする場合。
+2.当社等がキャンペーンやアンケートを実施する場合。
+3.マーケティングデータの調査、分析、新たなサービス開発を行う場合。
+4.当社等及び業務定期企業に提供する統計資料の作成を行う場合。
+5.法令の規定に基づく場合。
+
+
+会員への登録が上記への同意とさせて頂きます。
+
+共同企業：アース㈱、㈱エアー、㈱アイディ、モバイルステーション㈱</pre>			<div class="text-left">
+				<a href="./member_regist.php?domain=test.crm-s.net">&laquo; 新規会員登録ページへ</a>
+			</div>
+		</div>
+	</body>
+</html>

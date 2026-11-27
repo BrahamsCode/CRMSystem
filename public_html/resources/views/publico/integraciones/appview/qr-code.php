@@ -1,0 +1,33 @@
+<?php
+/*
+ * Legacy: appview/qr_code.php. Vista PHP plana (no Blade): salida byte a byte la del legacy (CRLF).
+ * $h = h() del legacy (htmlspecialchars sin doble codificación); $req = parámetros de la petición.
+ */
+?>
+<!DOCTYPE html>
+<html lang="jp">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title></title>
+		<meta charset="utf-8">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="./css/iphone.css">
+		<style type="text/css">
+			* { margin: 0; padding: 0; }
+			body { font:14px/1.231 "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif; }
+			li { list-style-type: none; }
+		</style>
+	</head>
+	<body>
+		<div style="text-align:center;">
+			<img src="./images/qr_title.png" width="200" style="margin: 30px 0 20px;">
+			<p style="font-size: 16px; margin: 10px 0 15px;">会員用QRコード</p>
+			<div>
+				<img src="/system/category3/mail_mag/qr_img.php?d=<?=$enc?>&e=Q&s=6" style="border: 2px solid #CCCCCC" />
+			</div>
+			<p style="font-size: 30px;">ID: <?=$custmer_array['login_id']?></p>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="content-language" content="ja">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="robots" content="nofollow">
+<meta name="robot-control" content="deny-all">
+<meta name="robots" content="none">
+<title>顧客登録ページ</title>
+<link rel="stylesheet" href="/appview/css/default.css">
+<link rel="stylesheet" href="/appview/css/common.css">
+</head>
+<body>
+
+	<main>
+	
+		<em class="attention03">
+		
+	</em>
+	
+	<div style="background: #ffc1c1;  padding: 10px; color: red; margin-bottom: 10px; border: 1px solid red;">
+		名前を必ず入力ください。<br>電話番号を数字のみで入力ください。<br>	</div>
+	
+	<form action="./member_kiyaku.php" method="post">
+		<dl class="dl_list03">
+			<dt>名前 <small>(必須)</small></dt>
+				<dd><input type="text" name="name" value=""></dd>
+			<dt>電話番号 <small>(必須)</small></dt>
+				<dd><input type="text" name="tel" value="09a"></dd>
+			<dt>メールアドレス</dt>
+				<dd><input type="text" name="mail" value="bad"></dd>
+		</dl>
+		<p class="bt02">
+		<input type="submit" value="登録確認">
+		</p>
+	</form>
+	
+	</main>
+
+</body>
+</html>
