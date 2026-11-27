@@ -49,7 +49,7 @@ $(document).ready(function() {
 <title>@yield('title')</title>
 </head>
 
-<body id="pTop" class="pageCategory{{ $category }}{{ $__env->hasSection('body_class') ? ' ' . trim($__env->yieldContent('body_class')) : '' }}">
+<body id="pTop" class="pageCategory{{ $legacyUi->pageCategory($category) }}{{ $__env->hasSection('body_class') ? ' ' . trim($__env->yieldContent('body_class')) : '' }}">
 
 <div id="container">
 

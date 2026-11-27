@@ -41,7 +41,7 @@ Todo en `routes/web.php` (S1), en este orden:
 | `GET /hp/uploads/{path}` | Genérica: archivo del disco `public` de Storage en `hp/uploads/<path>`. Va después de `routes/publico`, así una ruta específica de un módulo gana | `publico.nucleo.hp-uploads` |
 | `GET /{path}.(css|js|png|…)` | Estáticos del legacy (sección 6). Siempre la última | `nucleo.legacy-asset` |
 
-Una ruta legacy que en el legacy terminaba en `/` (p. ej. `/system/category1/`) se declara sin la barra: `Route::get('system/category1', …)`. La portada de cada categoría la hace su módulo (la de category0 ya existe: `legacy.base.index`).
+Una ruta legacy que en el legacy terminaba en `/` (p. ej. `/system/category1/`) se declara sin la barra: `Route::get('system/category1', …)`. Las portadas (`system/category<N>/` e `index.php`) son del núcleo: category0 (`legacy.base.index`), 1, 3, 5, 6 y 7 (`Nucleo\CategoryTopController`: imagen `coverN.gif`, menú del módulo y, en 1 y 3, los contadores de `inc/entry_counter.php`) y category9 redirige a `yoyaku/time_table.php`, como el legacy. El mapa categoría → clave de `config/menu` está en `CategoryTopController::MENUS`; si un módulo necesita otra portada, se quita su categoría de ese mapa en el mismo commit.
 
 `routes/api.php` no se carga: las URL `/api/...` del legacy van en `routes/publico/integraciones.php`.
 
@@ -73,6 +73,8 @@ Una ruta legacy que en el legacy terminaba en `/` (p. ej. `/system/category1/`) 
 - El layout pone: `<head>` de `Base::createHead` según `admin_master.base_system_version_flg` (2 = CRM2 con `mainStyle.css`, 1 = clásica con `import.css`), jQuery 1.3.2 + compat + jQuery UI 1.7.2 (dialog, accordion, tabs, datepicker, sortable, draggable), la cabecera (logo, お問合せ, サポート en dominios crm-s, 総合トップ, ログアウト, pestañas de módulos con el actual seleccionado, 仕入れ, accesos directos `tb_bookmark` con su permiso), el menú lateral con LOGIN NAME y el pie. `body` = `pageCategory<N>`, con `<N>` sacado de la URL `system/category<N>` o del `category` del menú.
 - Acordeones del menú: se inicializan cerrados (como `inc/ac.php`) y se abre el bloque que contiene un enlace a la URL actual. Si la pantalla necesita abrir otro, lo hace en su `js` (`$(".ac2").accordion('option', 'active', 0);`).
 - No replicado a propósito: la "ページカスタマイズ" de `tb_base_system.sys_*` (scripts inyectados en las portadas de categoría) queda pendiente para cuando una portada la necesite.
+
+- La clase del `<body>` es `pageCategory` + el segundo tramo de la URL sin "category" (`Base::getSelectCategoryNo`: `/system/category1/…` → `pageCategory1`, `/system/select.php` → `pageCategoryselect.php`); en las URL `/admin/…`, la categoría del menú (`config/menu/<clave>.php` → `category`, o la de `CategoryTopController::MENUS` si falta).
 
 ## 6. Menú lateral: `config/menu/<modulo>.php`
 

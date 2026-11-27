@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Route;
  */
 Route::name('base.')->group(function () {
     Route::get('system/category0', IndexController::class)->name('index');
+    Route::get('system/category0/index.php', IndexController::class);
 
     // 店舗情報管理
     Route::prefix('system/category0/shop')->name('shops.')->controller(ShopController::class)->group(function () {
@@ -105,4 +106,16 @@ Route::name('nucleo.zip.')->group(function () {
 Route::name('nucleo.graph.')->controller(GraphController::class)->group(function () {
     Route::get('system/inc/graph_pie.php', 'pie')->name('pie');
     Route::get('system/inc/graph_bar.php', 'bar')->name('bar');
+});
+
+/*
+ * Portadas de los módulos (system/category<N>/index.php); la de category0 está arriba y category9 redirige a su agenda
+ */
+Route::name('nucleo.category-top.')->controller(\App\Http\Controllers\Admin\Nucleo\CategoryTopController::class)->group(function () {
+    foreach (array_keys(\App\Http\Controllers\Admin\Nucleo\CategoryTopController::MENUS) as $category) {
+        Route::get("system/category{$category}", 'show')->name((string) $category)->defaults('category', $category);
+        Route::get("system/category{$category}/index.php", 'show')->defaults('category', $category);
+    }
+    Route::get('system/category9', 'reservations')->name('9');
+    Route::get('system/category9/index.php', 'reservations');
 });
