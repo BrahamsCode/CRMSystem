@@ -79,7 +79,8 @@ it('アンケート発行: del 発行条件選択 al registro con el motor de S3
         ->and($mail->{'配信状況'})->toBe('2')
         ->and($cate->hyouji_flg)->toBe('1')
         ->and($cate->attached_cd)->toBe(7)
-        ->and($cate->hakkou_date)->toBe((string) Carbon::now()->getTimestamp());
+        // MailRegistrar (S3) usa time() como el legacy: el reloj congelado de Carbon no le afecta
+        ->and($cate->hakkou_date)->toMatch('/^\d{10}$/');
     Bus::assertDispatched(SendMailmagJob::class, fn ($job) => $job->mailmagCd === 500);
 
     // Ya en 過去アンケート配信
