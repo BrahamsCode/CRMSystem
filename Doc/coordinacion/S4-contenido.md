@@ -7,7 +7,11 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — Diseño (sin código)
+## Próximo paso — Esperar revisión de S0 del diseño (`Doc/diseno/contenido-terminales.md`)
+
+Diseño entregado (2026-11-26). Mientras S0 revisa: factories y seeders del grupo (datos de prueba de señalización). Pedidos: sección 5 del diseño.
+
+## Tarea anterior — Diseño (sin código, hecho)
 
 Escribir `Doc/diseno/contenido-terminales.md`:
 1. **Tabla de paridad:** una fila por cada vista del análisis (`Doc/analisis-legacy/04-web-y-mypage.md`; en `05-operaciones-terminales-reservas.md` solo la sección de category7 (端末管理) **sin** 情報端末管理 (`kiosk/`); en `08-quiosco-y-senalizacion.md` solo signage y digitalsignage): archivo legacy, título (ja), ruta Laravel (`admin.<modulo>.*`), controlador@método, tablas nuevas, estado (`pendiente` / `descartado: motivo`).
@@ -32,8 +36,14 @@ Implementar submódulo por submódulo en el orden del diseño: migraciones, mode
 
 ## Pedidos
 
-_(ninguno)_
+Ver `Doc/diseno/contenido-terminales.md` §5 (rutas públicas de dispositivos, redirección `hp/uploads`, columnas de `terminals`, paquetes imagen/QR/PDF, `push.host`, conexión `beacon`, Policies; a S2 `customers.felica_no`).
 
 ## Decisiones
 
+- S0 (2026-11-26): touchcation y `category7/kiosk` fuera de alcance (no se usan). La AppKey `md5(host<>rank)` era de `signageApp` (touchcation): ya no aplica a S4.
+- category4 entero y lo de category6 que solo leía `hp/`: descartado: sin consumidor. Vivo: マイコレ, 2 opciones de app, オススメ, 求人, ガチャリン.
+- Tablas pivote en vez de listas `<>`; `legacy_cd` para el importador; XML del reproductor servido por Laravel en la misma URL.
+
 ## Hecho
+
+- 2026-11-26 Diseño `Doc/diseno/contenido-terminales.md` (paridad, esquema con mapeo, servicios, orden 60 pts, pedidos).
