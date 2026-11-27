@@ -83,6 +83,8 @@ Respuestas del 2026-11-27 (`coordinacion/S0-coordinador.md` y `MIGRACION-LARAVEL
 - **Volcado de la BD `admin`** de `signage/` (producción) — S4/S0.
 - **¿`b.g-api.net` sigue activo en producción?** De eso dependen el push (S3) y las llamadas de `appview` a g-api (S5).
 - **¿Qué módulos usan los clientes reales?** Decide lo que se prueba primero y lo que queda oculto.
+- **勤怠 集計: ¿qué deben mostrar 普通残業, 休日残業 y 休日出勤?** El legacy nunca los calculó — S2, `coordinacion/S2-clientes.md`.
+- **勤怠 帳票: ¿休出勤合計 sigue siendo 外出×休憩?** (fórmula del legacy). Mientras tanto, 帳票 queda apagado por defecto (`CRM_WORKING_REPORT`) — S2, `coordinacion/S2-clientes.md`.
 
 ### Siguen pendientes
 
