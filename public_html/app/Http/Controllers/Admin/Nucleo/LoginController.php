@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Nucleo;
 
 use App\Http\Controllers\Controller;
+use App\Models\Office;
 use App\Services\Nucleo\StaffLogin;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -42,8 +43,10 @@ class LoginController extends Controller
             ? Cookie::make(self::REMEMBER_COOKIE, $loginId, 60 * 24 * (int) config('crm.remember_login_id_days'))
             : Cookie::forget(self::REMEMBER_COOKIE);
 
-        // El legacy manda a config.php si tb_office.kaishamei está vacío (primer acceso): pendiente con 基本情報管理
-        return redirect('/system/select.php')->withCookie($cookie);
+        // Primer acceso (tb_office sin kaishamei): al asistente 基本情報登録, como el legacy
+        $target = (string) Office::current()->kaishamei === '' ? '/system/config.php' : '/system/select.php';
+
+        return redirect($target)->withCookie($cookie);
     }
 
     public function logout(Request $request, StaffLogin $staffLogin): RedirectResponse

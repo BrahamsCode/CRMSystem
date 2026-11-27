@@ -3,7 +3,7 @@
 
 @section('title', $title)
 
-@section('menu', 'base')
+@section('menu', $menu ?? 'base')
 
 @section('css')
 <meta http-equiv="Refresh" content="{{ $seconds ?? 2 }}; URL={{ $refresh }}">
@@ -12,7 +12,7 @@
 @section('js')
 <script type="text/javascript">
 $(document).ready(function() {
-	$(".ac2").accordion('option', 'active', 0);
+	$(".{{ $ac ?? 'ac2' }}").accordion('option', 'active', 0);
 });
 </script>
 @endsection

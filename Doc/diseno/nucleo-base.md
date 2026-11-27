@@ -20,8 +20,8 @@
 | `shop/shop_new.php` → `_confirm` → `_register` → `_complete` | 店舗登録情報 | `legacy.base.shops.form/confirm/register/complete` | `Base\ShopController` | `tb_shop`, `hatuban`, `tb_area`, `tb_shop_category`, `admin_master` | hecho |
 | `shop/shop_delete_register.php` | 店舗削除 / 取り消し | `legacy.base.shops.delete` | `Base\ShopController@delete` | `tb_shop`, `tb_staff`, `tb_customer` | hecho |
 | `shop/shop_category*.php` | 店舗グループ | `legacy.base.shop-categories` | `Base\ShopCategoryController` | `tb_shop_category`, `hatuban` | hecho |
-| `config/config.php` → `_confirm` → `_register` → `_complete` | 基本情報確認・変更 | `legacy.base.config.*` | `Base\OfficeController` | `tb_office`, `tb_shop`, `tb_staff` | pendiente |
-| `system/config.php` → … (primer acceso) | 基本情報登録 | `legacy.base.setup.*` | `Base\SetupController` | `tb_office`, `tb_shop`, `tb_staff` | pendiente |
+| `config/config.php` → `_confirm` → `_register` | 基本情報確認・変更 | `legacy.base.config.*` | `Base\OfficeController` | `tb_office`, `tb_staff` | hecho (`config_complete.php`: descartado, el flujo del legacy no llega a él) |
+| `system/config.php` → `_confirm` → `_register` (primer acceso) | 基本情報登録 | `legacy.base.setup.*` | `Base\OfficeController` (setup) | `tb_office`, `tb_shop`, `tb_staff` | hecho |
 | `config/features_config.php` + `ajax_point_yukoukigen_kakunin.php` | 機能設定 | `legacy.base.features.*` | `Base\FeaturesController` | `admin_master`, `contents_master`, `tb_base_system_*`, `tb_customer` | pendiente |
 | `config/{point,stamp}_{alert,shikkou}_mail_template_*.php` | 失効予告・失効メールテンプレート | `legacy.base.mail-templates.*` | `Base\ExpiryMailTemplateController` | `admin_master` | pendiente |
 | `config/authority.php` + `ajax_group_authority*.php` | 権限管理 | `legacy.base.authority.*` | `Base\AuthorityController` | `tb_staff_group`, `tb_kengen`, `tb_kengen_contents`, `hatuban` | pendiente |
@@ -51,4 +51,4 @@
 - 店舗: el alta exige `nucleo.shop-create` y el borrado `nucleo.developer` en el servidor (el legacy solo ocultaba los botones); la edición guarda `update_date` (el legacy lo dejaba vacío).
 - Aviso de alta al soporte: `ShopCreatedMail` en cola, destinatario `CRM_NOTIFY_SHOP_CREATED` (por defecto el del legacy).
 - Comunes nuevos del núcleo: `Nucleo\AreaTree` (createAreaCheckUi), `LegacyHtml` (tooltip, prefOptions, areaOptions, pager, kensuOptions), `ZipController`.
-- `config.php` no copia `tb_office.pass` a la clave de `master` (trampa MANUAL-TESTS #123).
+- `config.php` no copia `tb_office.pass` a la clave de `master` (trampa MANUAL-TESTS #123); en el primer acceso sí (es cuando se fija la clave). Tras el primer acceso se renueva la sesión en vez de volver a entrar con la clave en la URL. 書き直す conserva lo escrito (el legacy releía la BD).

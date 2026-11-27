@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\Base\IndexController;
+use App\Http\Controllers\Admin\Base\OfficeController;
 use App\Http\Controllers\Admin\Base\ShopCategoryController;
 use App\Http\Controllers\Admin\Base\ShopController;
 use App\Http\Controllers\Admin\Nucleo\ZipController;
@@ -23,6 +24,16 @@ Route::name('base.')->group(function () {
         Route::get('shop_new_complete.php', 'complete')->name('complete');
         Route::post('shop_delete_register.php', 'delete')->name('delete');
     });
+    // 基本情報確認・変更 y 基本情報登録 de primer acceso (mismo controlador, setup = true)
+    foreach (['system/category0/config' => 'config.', 'system' => 'setup.'] as $dir => $name) {
+        Route::name($name)->controller(OfficeController::class)->group(function () use ($dir, $name) {
+            $setup = $name === 'setup.';
+            Route::match(['get', 'post'], "{$dir}/config.php", 'form')->name('form')->defaults('setup', $setup);
+            Route::post("{$dir}/config_confirm.php", 'confirm')->name('confirm')->defaults('setup', $setup);
+            Route::post("{$dir}/config_register.php", 'register')->name('register')->defaults('setup', $setup);
+        });
+    }
+
     Route::match(['get', 'post'], 'system/category0/shop/shop_category.php', ShopCategoryController::class)->name('shop-categories');
 });
 
