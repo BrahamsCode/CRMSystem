@@ -45,7 +45,7 @@ out.append(f"| **Total** | | **{tot['hecho']}** | **{tot['pendiente']}** | **{to
 for n in ORDER:
     rows = data[n]
     out.append(f"## {META[n][0]} — {META[n][1]}\n")
-    if n == 'promocion':
+    if n == 'promocion' and cnt(rows)['hecho'] == 0:
         vivos = [r for r in rows if r['k'] != 'descartado']
         hits = [r for r in vivos if route_hit(r)]
         out.append(f"> **Ojo:** la columna Estado de `promocion.md` no está al día (todo figura como pendiente; el avance real está en su registro del final: F1, F2…). Cruzando su columna «Ruta Laravel» con las rutas que existen hoy en el código, **{len(hits)} de {len(vivos)}** filas no descartadas ya tienen ruta (marcadas abajo con «ruta ya existe»). S3 debe actualizar la columna para el cierre; hasta entonces el % de promoción no es real.\n")
