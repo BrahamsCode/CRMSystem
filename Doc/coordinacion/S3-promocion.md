@@ -7,7 +7,16 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — Esperar la revisión de S0 del diseño v2 (`Doc/diseno/promocion.md`, sobre la BD legacy)
+## Próximo paso — Bloque 0.1 en cuanto S0 avise de que la base de S1 está integrada
+
+Modelos §2.1 con relaciones y pruebas de lectura, `PromocionServiceProvider` (Scheduler, `PosGateway` nulo) y la lógica del stash `obsoleto: tablas nuevas` (`PointRuleResolver`, `LotteryService`, `CouponIssuer` → `CouponService`, `SendParameterConverter`, `PointLogConverter`) sobre las `tb_*`, con pruebas. Terminado: pruebas en verde, commit, push (junto con los commits locales de vistas) y aviso a S0.
+
+Hecho mientras tanto (2026-11-26):
+- Estáticos de category3 en `public/legacy/system/category3/` (`d6aacc9`, subido).
+- Vistas Blade de M1 (`mail_template`, `ajax_mail_template`, `mail_template_entry`, `mail_template_category`, `ajax_mail_template_category`, `test_mail_address`, `ajax_test_mail_address_new`) y de 発行条件選択 común (`inc/mail_customer_select_frm`), commits locales `175c6e8` y `278713e` **sin push** (S0: subirlas con los modelos). Faltan controladores y rutas.
+- M2 redacción/confirmación/registro (`inc/mail_frm.php` y siguientes) sin empezar: va con sus servicios.
+
+## Diseño v2 (aprobado)
 
 2026-11-26: diseño rehecho sobre la BD y la UI del legacy: paridad con tablas `tb_*` por vista, un modelo por tabla en `App\Models\Promotions\`, §2b UI (CSS/JS por submódulo), §3 servicios reaprovechando el stash, orden (≈ 83 pts) y pedidos. Al implementar, recuperar la lógica con `git stash show -p` del stash `obsoleto: tablas nuevas`.
 
