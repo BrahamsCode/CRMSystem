@@ -119,6 +119,30 @@ return [
             'sslmode' => env('DB_SSLMODE', 'prefer'),
         ],
 
+        /*
+         * ビーコン (category7/beacon, beacon_db.php del legacy): BD externa del servicio de beacons. En pausa
+         * (provisional, Antony 2026-11-27): solo modelos, sin pantallas. Sin valores por defecto de la principal:
+         * vacía no apunta a ninguna BD. Laravel conecta en la primera consulta, así la app y las pruebas
+         * arrancan aunque la BD externa no responda; ATTR_TIMEOUT corta el intento de conexión (segundos).
+         */
+        'beacon' => [
+            'driver' => 'pgsql',
+            'url' => env('DB_BEACON_URL'),
+            'host' => env('DB_BEACON_HOST'),
+            'port' => env('DB_BEACON_PORT', '5432'),
+            'database' => env('DB_BEACON_DATABASE'),
+            'username' => env('DB_BEACON_USERNAME'),
+            'password' => env('DB_BEACON_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'search_path' => 'public',
+            'sslmode' => env('DB_BEACON_SSLMODE', 'prefer'),
+            'options' => extension_loaded('pdo_pgsql') ? [
+                PDO::ATTR_TIMEOUT => (int) env('DB_BEACON_TIMEOUT', 5),
+            ] : [],
+        ],
+
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DB_URL'),

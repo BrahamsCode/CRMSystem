@@ -136,6 +136,7 @@ Las condiciones que no encajen (dominio, `admin_master.*_use_flg`…) se expresa
 - `config('services.mobileshop.*')` y `config('services.crm.api_key')` (S5). `firebase/php-jwt` 7.2.
 - `bootstrap/providers.php` registra solo cualquier `app/Providers/*ServiceProvider.php`.
 - Conexión `signage` (`config/database.php`): `pgsql` con `DB_SIGNAGE_HOST/PORT/DATABASE/USERNAME/PASSWORD` (en producción, la BD `admin` del legacy); si faltan, toma los de la conexión principal. `search_path` = `DB_SIGNAGE_SCHEMA` (por defecto `signage`): en desarrollo y pruebas las tablas viven en el esquema `signage` de la misma BD (las crea `database/schema/signage-admin.sql`, de S4). Uso: `DB::connection('signage')` o `protected $connection = 'signage'`.
+- Conexión `beacon` (`config/database.php`): `pgsql` con `DB_BEACON_HOST/PORT/DATABASE/USERNAME/PASSWORD`, la BD externa de ビーコン (`category7/beacon/beacon_db.php` del legacy). Vacías en `.env.example` y sin valores por defecto de la principal; los reales solo en el `.env` local o de producción. Perezosa: Laravel conecta en la primera consulta, así la app y las pruebas arrancan aunque la BD no responda (`DB_BEACON_TIMEOUT`, 5 s por defecto, corta el intento). ビーコン en pausa (provisional): solo modelos de S4 con `protected $connection = 'beacon'`, sin pantallas.
 
 ## 10. CSV de descarga: `App\Support\LegacyCsv`
 
