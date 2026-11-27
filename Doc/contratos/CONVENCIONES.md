@@ -87,6 +87,13 @@ Un modelo que necesitan varios módulos (por ejemplo `Customer`) lo **lee** cual
 - Autorización: Policies/Gates según el nivel de permiso que defina S1 (equivalente a `cKengen` / `ACCESS_LEVEL_*`).
 - **Contrato del layout** (S1 lo implementa; los módulos lo usan desde ya): `@extends('layouts.legacy')` con las secciones `title` (el `<title>` del legacy), `css` (los `<link>` propios de la pantalla), `js` (los `<script>` propios) y `content` (lo que el legacy pone dentro del área principal, después de `left_navi`). El menú lateral se elige con `@section('menu', '<modulo>')`. Las pantallas sin menú (popups, `yoyaku_navi`) usan `@extends('layouts.legacy-popup')` con las mismas secciones, sin `menu`. Los estáticos se referencian con `asset('legacy/...')` o con la ruta que fije S1 en NUCLEO.md.
 - Cada pantalla nueva lleva al menos una prueba Pest de "carga con sesión" y una del flujo principal (alta/edición).
+- **Datos de demostración** (S0, 2026-11-27): `database/seeders/DemoSeeder.php` (de S0) llama en orden a `database/seeders/Demo/<Modulo>DemoSeeder.php` (cada módulo el suyo: `Nucleo`, `Clientes`, `Promocion`, `Contenido`, `Operaciones`). Se carga con `bash scripts/en-docker.sh php artisan db:seed --class=DemoSeeder` sobre una BD con `migrate` + `bd-legacy.sh`. Reglas:
+  - Escribe en las `tb_*` con los modelos del módulo (o `DB::table` si no hay modelo), con códigos de `Hatuban` y los formatos del legacy (fechas epoch, banderas, `disp_flg`), para que las pantallas los muestren igual que datos reales.
+  - Textos realistas en japonés: `\Faker\Factory::create('ja_JP')` con semilla fija (resultado reproducible). Nada de correos o teléfonos reales: correos `@example.com`, teléfonos `090-0000-xxxx`; ningún push ni correo se envía al sembrar.
+  - Idempotente: si ya sembró (p. ej. existe un registro marcador suyo), no duplica. Nunca vacía tablas ni toca datos que no creó.
+  - No depende del orden de desarrollo: usa las tiendas y el staff que haya (`tb_shop`, `tb_staff` activos); el de núcleo añade más, pero los demás funcionan también con la única tienda del backup.
+  - Fechas alrededor de hoy (últimos 12 meses y próximas 2 semanas), para que 集計, listas y 予約表 salgan llenos.
+  - Una prueba Pest en `tests/Feature/<Modulo>/DemoSeederTest.php`: siembra, comprueba conteos y que una segunda ejecución no duplica.
 
 ## 5. Paridad
 
