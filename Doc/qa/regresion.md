@@ -109,10 +109,16 @@ Datos (fase A): `ContenidoDemoSeeder` añade casos límite: bajas (`disp_flg`/`f
 | 放映素材 `/admin/terminales/signage-materials` | Lista vacía: filtra por el primer display (como el legacy) y los 素材 de la demo no tenían `tb_display_cd` | El seeder los asigna al primer display; `DemoSeederTest` (assertSee ランチメニュー) | (este) |
 | オススメ `/admin/mypage/recommendations` | La demo guardaba 全店舗 como `tb_shop_cd = 0` (tienda inexistente); el legacy usa vacío/NULL | Seeder con NULL; `DemoSeederTest` | (este) |
 | signage/ reproductor `/signage/view?cd=` (también dentro de `/admin/senalizacion`, 端末一覧, パッケージ) | El sondeo `view/ajax.php` iba con `type: "GETT"` (errata del legacy, Apache lo aceptaba): **405** cada pocos segundos | `type: "GET"` en las 13 vistas `signage-view/*`; `SignagePlayerTest` (assertSee `type: "GET"`) | (este) |
+| オススメ push (`RecommendationPush`) y appview フォトギャラリー/来店履歴 (`Appview\GApi`) | Llamaban a g-api.net sin el interruptor común: :8081 podía avisar al servidor real | Pasan por `App\Support\GApi` (apagado: no sale nada; appview muestra 「来店履歴はありません。」); `RecommendationsTest` y `AppviewMemberTest` con el interruptor apagado/encendido | (este) |
+| `DemoSeederTest` (inestable junto con otras pruebas) | 求人 se ordena por `update_date` y la demo siembra todo en el mismo segundo: el empate decidía qué fila caía en la página 2 | La prueba pide la lista con `kensu=50`; 4/4 en verde con `--filter='Nucleo\|Base\|Demo'` | (este) |
 
 Probado en :8081 como master: alta/edición/borrado con imagen de オススメ, 求人 y 求人職種 (全店舗 sale en todas las tiendas); ガチャリン (valor no numérico rechazado); 放映素材, 放映プログラム (selección de 素材 → XML) y ディスプレイ, y el reproductor `digitalsignage/index2.php` con telop e imagen; ペーパーサイネージ (alta, 停止, edición, borrado, QR, `/ptag/` 302, 集計, CSV SJIS); ICカード (búsqueda 全/未/済 = legacy); マイコレ カバーフロー (subida y borrado); signage/ 端末 (alta/edición/borrado) y GoTel (入力→確認→送信). Como `qa_partial` (matriz vieja): マイコレ, 求人新規, 求人職種 y signage/ dan 403; 端末管理 abre (sin kengen, como el legacy).
 
 Ajenos a S4 (vistos en :8081): accesos directos de cabecera `tb_bookmark` a `/system/category3/mycoupon/mycoupon_list.php` y `/system/category5/staff/staff_list.php` dan 404, y お問合せ `/system/contact/` también (S1/S3/S5).
+
+Tras la recarga (:8081 en 738907f): 40 URL de S4 como master en 200 con datos y página 2 (solo 404 esperados: `paper-cards/aggregate` sin `cd` y `pdf_icon.png`, que tampoco existe en el legacy), sin 405 del sondeo; `qa_partial` / qa12345: listas en solo lectura, 403 en マイコレ, 求人新規, 求人職種 y signage/, 求人 limitado a 梅田店.
+
+**Resumen S4:** 41 pantallas probadas (master y qa_partial); 5 fallos encontrados y corregidos (放映素材 sin display, 全店舗 = NULL, `GETT` → 405, g-api sin interruptor, `DemoSeederTest` inestable); pendiente: comparar el HTML con development.crm-s.net (solo lectura) y las 4 filas de ビーコン, que esperan a Japón.
 
 ### Operaciones / 勤怠 / integraciones (S5)
 

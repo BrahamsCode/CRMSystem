@@ -118,7 +118,7 @@ it('siembra casos límite: bajas, japonés al máximo, varias tiendas, paginaci�
     s4Login();
     $this->get('/admin/terminales/signage-materials')->assertOk()->assertSee('ランチメニュー')->assertSee('次へ');
     $this->get('/admin/terminales/signage-programs')->assertOk()->assertSee('デモ 限界 プログラム')->assertSee('次へ');
-    $this->get('/admin/mypage/recruits')->assertOk()->assertSee('任意項目なしの求人')->assertDontSee('削除済みの求人');
+    $this->get('/admin/mypage/recruits?kensu=50')->assertOk()->assertSee('任意項目なしの求人')->assertDontSee('削除済みの求人');
     $this->get('/admin/terminales/paper-cards')->assertOk()->assertSee('demo-edge-10')->assertDontSee('demo-edge-06');
 });
 
@@ -130,7 +130,7 @@ it('el reproductor y las pantallas muestran los datos sembrados', function () {
         ->assertOk()->assertSee('本日もご来店ありがとうございます。');
 
     s4Login();
-    $this->get('/admin/mypage/recruits?page=2')->assertOk()->assertSee('未経験歓迎！ホールスタッフ募集');
+    $this->get('/admin/mypage/recruits?kensu=50')->assertOk()->assertSee('未経験歓迎！ホールスタッフ募集');
     $this->get('/admin/terminales/paper-cards?page=2')->assertOk()->assertSee('demo-coupon');
     $this->get(route('admin.senalizacion.index'))->assertOk()->assertSee('端末番号 : '.SignageWebTerminal::query()->min('cd'));
     $this->get(route('admin.senalizacion.terminals.index'))->assertOk()->assertSee('入口')->assertSee('デモ ロビー');
