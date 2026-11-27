@@ -42,6 +42,7 @@
 - **Actualizar a los demás:** `git -C ../CRMSystem-<otro> merge laravel13` (los trabajadores tienen el merge bloqueado) y avisarles si el cambio les afecta.
 - **Conflictos:** resolver solo los triviales (docs, estados); en código, devolverlos a la sesión dueña.
 - **Migraciones:** después de cada merge, `bash scripts/en-docker.sh php artisan migrate` en `CRMSystem/` para que la web (`http://localhost:8081`) quede al día.
+- **Caché de rutas** (Antony, 2026-11-27): después de cada merge en `CRMSystem/`, `docker exec -u apache crmsystem2-app-1 php artisan route:cache`. Si una ruta nueva da 404, repetirlo. **Nunca** `config:cache` ni `optimize`: con la config en caché, las pruebas ignoran la BD de testing y borran `crmsystem2`. **Nunca** `docker exec` como root para artisan, seeders o pruebas: usar `en-docker.sh` (corre como apache, uid 1000) o `docker exec -u apache`.
 - **Nunca** `push --force`, ni push a `main` o `brahamscode/*`.
 
 **Nunca:** escribir código en módulos; editar estados de otras sesiones (se pide por mensaje).
