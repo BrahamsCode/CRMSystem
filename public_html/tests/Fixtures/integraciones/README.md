@@ -51,3 +51,5 @@ Lo que mostraron:
 - `getRaitenList` con fecha no válida (`strtotime` false) → `NO_DATA`. `getStaffList` incluye `disp_flg` NULL y `limit` > 100 se recorta a 100.
 - `getSearchCateFormData` / `getRaitenDetail` dependen de `admin_master.related_features` (`<?><1 ポイント|2 スタンプ><tb_search_cate.cd>`); los campos van con `rawurlencode`. El `htmlData` (createform_request) en Laravel lo genera el parcial `custom_field` de S2: la prueba lo compara sin los espacios entre etiquetas.
 - CTI: `ctiWindow` responde 302 a las URL del legacy (`customer_new.php`, `time_table.php` de la categoría 9/11 activa o `select.php`, `customer_list.php`); errores de formato como texto plano. `customerDetailHtml` con CRLF del archivo original y `nl2br(htmlentities())` del 備考.
+
+**mpa_* en Laravel (2026-11-27):** `MobileShopContractTest` repite también los `mpa_*` (con la hora congelada para que `mpa_setraiten_interval` caiga en el intervalo como al grabar); `mpa_setraiten_ok` se comprueba aparte porque Laravel responde `ok` en lugar del fatal 500.
