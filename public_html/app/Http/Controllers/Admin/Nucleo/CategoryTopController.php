@@ -8,6 +8,7 @@ use App\Models\Staff;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 use Illuminate\View\View;
 
 /**
@@ -34,9 +35,10 @@ class CategoryTopController extends Controller
         ]);
     }
 
+    /** category9/index.php: a la agenda; la del módulo de reservas si ya está migrada, si no la URL del legacy */
     public function reservations(): RedirectResponse
     {
-        return redirect('/system/category9/yoyaku/time_table.php');
+        return redirect(Route::has('admin.reservas.timetable') ? route('admin.reservas.timetable') : '/system/category9/yoyaku/time_table.php');
     }
 
     /**

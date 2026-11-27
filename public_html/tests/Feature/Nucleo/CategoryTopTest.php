@@ -47,7 +47,13 @@ it('販売促進管理 cuenta los 不達 y fija su título; 5, 6 y 7 solo llevan
 });
 
 it('category9 redirige a la agenda de reservas', function () {
-    $this->get('/system/category9/')->assertRedirect('/system/category9/yoyaku/time_table.php');
+    if (! Route::has('admin.reservas.timetable')) {
+        $this->get('/system/category9/')->assertRedirect('/system/category9/yoyaku/time_table.php');
+        Route::get('admin/reservas/timetable', fn () => 'agenda')->name('admin.reservas.timetable');
+        Route::getRoutes()->refreshNameLookups();
+    }
+    // con la agenda del módulo de reservas migrada, va a ella
+    $this->get('/system/category9/index.php')->assertRedirect(route('admin.reservas.timetable'));
 });
 
 it('pageCategory sigue el segundo tramo de la URL o la categoría del menú', function () {
