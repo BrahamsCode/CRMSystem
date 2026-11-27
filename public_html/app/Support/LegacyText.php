@@ -41,6 +41,20 @@ class LegacyText
         return (string) preg_replace('/^[ 　]*(.*?)[ 　]*$/us', '$1', $value);
     }
 
+    /**
+     * form2Db() (inc/db.php), que el legacy aplica a todo `$_REQUEST`: 半角カナ → 全角 y recorte de espacios.
+     * Sin la bandera `s`, como el legacy: un texto con saltos de línea queda sin recortar.
+     */
+    public static function db(mixed $value): string
+    {
+        if (is_array($value) || $value === null) {
+            return '';
+        }
+        $value = mb_convert_kana((string) $value, 'KV');
+
+        return (string) (preg_replace('/^[ 　]*(.*?)[ 　]*$/u', '$1', $value) ?? $value);
+    }
+
     /** Aplica input() a cada clave indicada de un array (las que falten quedan como '') */
     public static function inputs(array $data, array $keys): array
     {

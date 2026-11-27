@@ -124,3 +124,19 @@ Las condiciones que no encajen (dominio, `admin_master.*_use_flg`…) se expresa
 - `.env`: `SESSION_DRIVER=file`, `CACHE_STORE=file`, `QUEUE_CONNECTION=sync`; `STAGE` vacío en producción; `CRM_DEVELOPER_IPS`; `RELATION_LOGIN_PASS`, `SUPPORT_MASTER_PASS`, `CRM_SUPPORT_API_HOST`.
 - `config('services.mobileshop.*')` y `config('services.crm.api_key')` (S5). `firebase/php-jwt` 7.2.
 - `bootstrap/providers.php` registra solo cualquier `app/Providers/*ServiceProvider.php`.
+- Conexión `signage` (`config/database.php`): `pgsql` con `DB_SIGNAGE_HOST/PORT/DATABASE/USERNAME/PASSWORD` (en producción, la BD `admin` del legacy); si faltan, toma los de la conexión principal. `search_path` = `DB_SIGNAGE_SCHEMA` (por defecto `signage`): en desarrollo y pruebas las tablas viven en el esquema `signage` de la misma BD (las crea `database/schema/signage-admin.sql`, de S4). Uso: `DB::connection('signage')` o `protected $connection = 'signage'`.
+
+## 10. CSV de descarga: `App\Support\LegacyCsv`
+
+SJIS-win, `text/x-csv`, CRLF, `StreamedResponse` que convierte y envía por bloques (CONVENCIONES §4). Los helpers propios de los módulos deben pasar a esta firma:
+
+```php
+LegacyCsv::download(string $filename, iterable|Closure $rows, ?array $header = null, array $options = []): StreamedResponse
+LegacyCsv::line(array $cells, array $options = []): string   // una línea UTF-8 con su fin de línea
+LegacyCsv::encode(string $utf8): string                       // UTF-8 → SJIS-win
+```
+
+- `$rows`: filas (listas de celdas) o un closure que las devuelve (p. ej. `fn () => $query->cursor()->map(...)`), para que la consulta corra al enviar.
+- `$options`: `quote` = `'all'` (por defecto: cada celda entre comillas, `"` → `""`), `'minimal'` (solo si lleva `,` `"` o salto) o `'none'` (tal cual); `eol` (`"\r\n"`); `content_type` (`'text/x-csv'`; algunos legacy usan `application/octet-stream`); `chunk` (500 filas).
+- Formatos especiales del legacy (tabulador inicial para que Excel no convierta números, líneas de título antes de la cabecera): se arman en la celda o con `line()` + `encode()` dentro de un `streamDownload` propio.
+
