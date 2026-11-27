@@ -106,6 +106,62 @@ class MailRegistrar
         return $mail;
     }
 
+    /**
+     * Edición de un envío programado (inc/mail_future_send_frm.php): mismo registro con la búsqueda
+     * guardada; search_display no cambia. Vuelve a programar en send_schedule.
+     */
+    public function update(MailmagMaster $mail, string $mailType, array $in, string $uniqid, string $shopId): MailmagMaster
+    {
+        $excluded = MailAudience::cds($in['reigai_kaiin_cds'] ?? null);
+        $counts = $this->audience->counts($uniqid, $excluded);
+        $hour = sprintf('%02d', (int) ($in['jikan'] ?? 0));
+        $minute = sprintf('%02d', (int) ($in['fun'] ?? 0));
+
+        $row = [
+            '店id' => $shopId,
+            'タイトル' => (string) ($in['title'] ?? ''),
+            'pc内容' => (string) ($in['naiyou'] ?? ''),
+            'pc配信数' => $counts['pc'],
+            'docomo配信数' => $counts['docomo'],
+            'au配信数' => $counts['au'],
+            'vodafone配信数' => $counts['softbank'],
+            'その他配信数' => $counts['other'],
+            '配信総数' => $counts['total'],
+            '登録者' => (string) ($in['tourokusya'] ?? ''),
+            '備考' => (string) ($in['bikou'] ?? ''),
+            '受付メールアドレス' => 'なし',
+            '振分配信' => $this->audience->whereSql($uniqid, $excluded),
+            '振分条件' => (string) ($in['reigai_kaiin_cds'] ?? ''),
+        ];
+
+        if (in_array($mailType, array_merge(self::FOLLOW_TYPES, self::AUTO_TYPES), true)) {
+            $row += ['配信日時' => "$hour:$minute", '配信時間' => "$hour:$minute"];
+        } else {
+            $day = sprintf('%04d/%02d/%02d', (int) ($in['nen'] ?? 0), (int) ($in['tuki'] ?? 0), (int) ($in['hi'] ?? 0));
+            $row += ['配信日時' => "$day $hour:$minute:00", '配信日' => $day, '配信時間' => "$hour:$minute:00"];
+        }
+
+        if (($in['p_name_b'] ?? '') === 'delete') {
+            $row += ['画像有無' => '0', '画像名大' => '', '画像名小' => '', '画像拡張子' => '', '画像タイプ' => '', '画像サイズ大' => '', '画像サイズ小' => '', '画像表示有無' => '0'];
+        } elseif ((string) ($in['p_name_b'] ?? '') !== '') {
+            $row += $this->imageColumns($in);
+        }
+
+        if (array_key_exists('get_coupon_cd', $in) && (string) $in['get_coupon_cd'] === '') {
+            $row['type_data_cd'] = null;
+        } elseif ($mailType !== 'anketo' && (string) ($in['get_coupon_cd'] ?? '') !== '') {
+            $row['type_data_cd'] = (int) $in['get_coupon_cd'];
+        } elseif ((string) ($in['hakkou_cd'] ?? '') !== '') {
+            $row['type_data_cd'] = (int) $in['hakkou_cd'];
+        }
+
+        DB::transaction(fn () => MailmagMaster::query()->whereKey($mail->cd)->update($row));
+        $mail->refresh();
+        $this->schedule($mail);
+
+        return $mail;
+    }
+
     /** cSendSchedule::addSchedule: una fila por envío con el 配信日時 (no para los anulados con disp_flg) */
     public function schedule(MailmagMaster $mail): void
     {
