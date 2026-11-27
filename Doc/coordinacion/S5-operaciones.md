@@ -58,9 +58,16 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 - **`version/<canal>/v.php` y APK:** descartados (touchcation, S0); `crm_version.php` se mantiene.
 - **Rutas de integración** en `routes/publico/integraciones.php`, nombre `publico.integraciones.*` (convención S0).
 - **`tool/api`:** su JSON se arma como texto en el legacy; se reproduce con plantillas, no con `LegacyJson`.
+- **Sin cabecera `Authorization`** la API del legacy da 500 sin cuerpo: Laravel responde igual (fixture).
+- **`mpa_setraiten` con socio válido** da fatal 500 en el legacy tras registrar la visita: Laravel responde el JSON `ok` (corrección anotada para Japón).
+- **`numbered_ticket` / クイック予約:** descartado (touchcation, S0).
+- **Modelos:** `app/Models/Operaciones|Integraciones/`; controladores públicos en `Publico\Integraciones\`; URL literales de los JS en `routes/legacy/operaciones.php` (convenciones S0).
 
 ## Hecho
 
 - 2026-11-26 — Diseño con tablas nuevas, aprobado por S0 (obsoleto desde el cambio de base).
 - 2026-11-27 — `LegacyJson` (json_encode sin flags y filas como texto) con 8 pruebas unitarias (557be46, 6425449).
 - 2026-11-27 — Diseño rehecho sobre la BD y la UI del legacy (`Doc/diseno/operaciones-integraciones.md`): paridad completa, modelos por `tb_*` con dueño, UI y estáticos por pantalla, servicios, orden (63 puntos, 22 ⏸), pedidos y contratos con los mismos `cd` y columnas. **Esperando revisión de S0.**
+- 2026-11-27 — Estáticos de category5 (`public/legacy/system/category5/`) y de `appview` (`public/appview/`, más `public/admin/{css,fonts}` con el font-awesome que usa `appview`).
+- 2026-11-27 — Fixtures de contrato: 53 casos de `/api/*` y `mpa_*` grabados del legacy con Apache + FPM sobre la BD legacy + `tests/Fixtures/integraciones/legacy-seed.sql` (README con hallazgos); `LegacyJson` reproduce byte a byte todos los cuerpos JSON.
+- 2026-11-27 — Modelos sobre `tb_*` en `app/Models/Operaciones/` (`StaffGroup`, `OfficialPosition`, `BelongPost`, `EmploymentSystem`, `Information`, `StaffCard`, `FelicaMode`, `ShopWork`, `KintaiConfig`, `KintaiHiduke`, `KintaiRecord`, `WorkTime`, `StaffShift`, `StaffShiftKind`) e `Integraciones/UrlTransferData`; `LegacyMonth`, `HasDayColumns` (lista blanca de columnas por día) y `PosGateway` nulos con sus providers. 27 pruebas; suite completa en verde (59).
