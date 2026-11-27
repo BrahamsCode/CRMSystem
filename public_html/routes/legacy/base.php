@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Base\AuthorityController;
 use App\Http\Controllers\Admin\Base\IndexController;
 use App\Http\Controllers\Admin\Base\OfficeController;
 use App\Http\Controllers\Admin\Base\ShopCategoryController;
@@ -33,6 +34,13 @@ Route::name('base.')->group(function () {
             Route::post("{$dir}/config_register.php", 'register')->name('register')->defaults('setup', $setup);
         });
     }
+
+    // 権限管理 (la matriz y el guardado van por AJAX; el guardado llega por GET con $.ajax, como el legacy)
+    Route::prefix('system/category0/config')->name('authority.')->controller(AuthorityController::class)->group(function () {
+        Route::get('authority.php', 'index')->name('index');
+        Route::get('ajax_group_authority.php', 'group')->name('group');
+        Route::match(['get', 'post'], 'ajax_group_authority_register.php', 'register')->name('register');
+    });
 
     Route::match(['get', 'post'], 'system/category0/shop/shop_category.php', ShopCategoryController::class)->name('shop-categories');
 });
