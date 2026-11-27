@@ -78,7 +78,7 @@ class PointRuleResolver
             return $query;
         }
 
-        $customer = (array) $customer;
+        $customer = is_object($customer) && method_exists($customer, 'getAttributes') ? $customer->getAttributes() : (array) $customer;
         [$amountEnabled, $visitEnabled] = $this->rankSystems();
 
         foreach ([[$amountEnabled, 'tb_kingaku_rank_master_cds', 'kingaku_rank_now'], [$visitEnabled, 'tb_raiten_rank_master_cds', 'raiten_rank_now']] as [$enabled, $listColumn, $customerColumn]) {
