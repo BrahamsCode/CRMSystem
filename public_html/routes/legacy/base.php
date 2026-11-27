@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\Base\IndexController;
 use App\Http\Controllers\Admin\Base\OfficeController;
 use App\Http\Controllers\Admin\Base\ShopCategoryController;
 use App\Http\Controllers\Admin\Base\ShopController;
+use App\Http\Controllers\Admin\Base\SystemController;
 use App\Http\Controllers\Admin\Nucleo\GraphController;
 use App\Http\Controllers\Admin\Nucleo\ZipController;
 use Illuminate\Support\Facades\Route;
@@ -63,6 +64,10 @@ Route::name('base.')->group(function () {
             Route::match(['get', 'post'], 'slim_href.php', 'registered')->name('registered');
             Route::match(['get', 'post'], 'slim_del_href.php', 'deleted')->name('deleted');
         });
+
+    // システム管理 (mantenimiento)
+    Route::match(['get', 'post'], 'system/category0/config/system.php', SystemController::class)
+        ->middleware('can:nucleo.maintenance')->name('system');
 
     // エリア管理
     Route::prefix('system/category0/config')->name('areas.')->controller(AreaController::class)->group(function () {

@@ -45,6 +45,26 @@ class ContentsMaster extends LegacyModel
         return static::entryRow($category, $field)?->int_data ?? $default;
     }
 
+    /**
+     * Guardado de features_config.php / system.php: si hay fila, UPDATE de text_data en todas las que coinciden;
+     * si no, INSERT. `strict`: la existencia se mira sin disp_flg y el UPDATE solo toca disp_flg = hyouji_flg = '1';
+     * si no, ambos miran disp_flg = '1'. `intData` acota por int_data (valores por tienda).
+     */
+    public static function putLegacy(string $category, string $field, string $text, bool $strict = false, ?int $intData = null): void
+    {
+        $base = fn () => static::query()->where('category', $category)->where('field', $field)
+            ->when($intData !== null, fn ($q) => $q->where('int_data', $intData));
+        $exists = $strict ? $base()->exists() : $base()->where('disp_flg', '1')->exists();
+
+        if (! $exists) {
+            static::create(['category' => $category, 'field' => $field, 'text_data' => $text, 'int_data' => $intData, 'disp_flg' => '1', 'hyouji_flg' => '1']);
+
+            return;
+        }
+        $base()->where('disp_flg', '1')->when($strict, fn ($q) => $q->where('hyouji_flg', '1'))
+            ->toBase()->update(['text_data' => $text, 'update_date' => time()]);
+    }
+
     /** Crea o actualiza el valor de texto (como features_config_register: UPDATE si existe, si no INSERT) */
     public static function put(string $category, string $field, ?string $text): static
     {
