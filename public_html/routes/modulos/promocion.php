@@ -176,22 +176,28 @@ Route::prefix('promocion')->name('promocion.')->group(function () {
             Route::post('csv_answer_download', [$a, 'csv'])->name('csv')->defaults('family', $anketoFamily);
         });
     }
-    Route::prefix('anketo')->name('anketo.mail.')->controller(\App\Http\Controllers\Admin\Promotions\AnketoMailController::class)->group(function () {
-        // アンケート発行: 発行条件選択 → 内容設定 → 確認 → 登録 (motor de envío de S3, mail_type = anketo)
-        Route::match(['get', 'post'], 'anketo_mail_customer_select', 'select')->name('select');
-        Route::match(['get', 'post'], 'anketo_mail_new', 'create')->name('create');
-        Route::post('anketo_mail_new_confirm', 'confirm')->name('confirm');
-        Route::post('anketo_mail_new_send', 'store')->name('store');
+    Route::prefix('anketo')->name('anketo.mail.')->controller(\App\Http\Controllers\Admin\Promotions\MailController::class)->group(function () {
+        // アンケート発行: 発行条件選択 → 内容設定 → 確認 → 登録, directo al motor de S3 (mail_type = anketo)
+        Route::match(['get', 'post'], 'anketo_mail_customer_select', 'select')->name('select')->defaults('mailType', 'anketo');
+        Route::match(['get', 'post'], 'anketo_mail_new', 'create')->name('create')->defaults('mailType', 'anketo');
+        Route::post('anketo_mail_new_confirm', 'confirm')->name('confirm')->defaults('mailType', 'anketo');
+        Route::post('anketo_mail_new_send', 'store')->name('store')->defaults('mailType', 'anketo');
     });
     Route::prefix('anketo2')->name('anketo2.')->group(function () {
         // お客様アンケート: 回答一覧, 回答詳細 y 返信メール (mail_type = mail)
         Route::match(['get', 'post'], 'anketo_answer_list', [\App\Http\Controllers\Admin\Promotions\AnketoAnswerController::class, 'index'])->name('answers')->defaults('family', 'anketo2');
         Route::get('anketo_answer_detail', [\App\Http\Controllers\Admin\Promotions\AnketoAnswerController::class, 'show'])->name('answers.show')->defaults('family', 'anketo2');
-        Route::controller(\App\Http\Controllers\Admin\Promotions\AnketoMailController::class)->name('reply.')->group(function () {
-            Route::match(['get', 'post'], 'anketo_reply_customer_select', 'replySelect')->name('select');
-            Route::match(['get', 'post'], 'anketo_reply_new', 'replyCreate')->name('create');
-            Route::post('anketo_reply_new_confirm', 'replyConfirm')->name('confirm');
-            Route::post('anketo_reply_new_send', 'replyStore')->name('store');
+        // 返信メール (mail_type = mail, rutas y menú de anketo2.reply): select y create tienen lógica propia; el resto, el motor de S3
+        $reply = \App\Http\Controllers\Admin\Promotions\AnketoMailController::class;
+        $mail = \App\Http\Controllers\Admin\Promotions\MailController::class;
+        Route::name('reply.')->group(function () use ($reply, $mail) {
+            Route::match(['get', 'post'], 'anketo_reply_customer_select', [$reply, 'replySelect'])->name('select');
+            Route::match(['get', 'post'], 'anketo_reply_new', [$reply, 'replyCreate'])->name('create')
+                ->defaults('mailType', 'mail')->defaults('mailFamily', 'anketo2.reply');
+            Route::post('anketo_reply_new_confirm', [$mail, 'confirm'])->name('confirm')
+                ->defaults('mailType', 'mail')->defaults('mailFamily', 'anketo2.reply');
+            Route::post('anketo_reply_new_send', [$mail, 'store'])->name('store')
+                ->defaults('mailType', 'mail')->defaults('mailFamily', 'anketo2.reply');
         });
     });
 

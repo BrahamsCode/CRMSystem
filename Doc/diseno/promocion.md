@@ -56,8 +56,8 @@ Las familias (メルマガ, デコメール, 自動, フォロー, リマイン�
 | `ajax_mail_template.php`, `ajax_mail_template_category.php` | (AJAX) | `templates.ajax`, `template-categories.ajax` | `TC@ajax`, `TemplateCategoryController@ajax` | E tb_mail_template, tb_mail_template_category | hecho |
 | `test_mail_address.php`, `test_mail_address_register.php` | テストお知らせアドレス管理 | `test-addresses.*` | `TestAddressController@*` | E tb_test_mail_address, hatuban; L tb_staff | hecho |
 | `ajax_test_mail_address_new.php`, `ajax_test_mail_address_staff.php` | (AJAX) | `test-addresses.ajax-new`, `test-addresses.ajax-staff` | `TestAddressController@ajaxNew`, `@ajaxStaff` | E tb_test_mail_address; L tb_staff | hecho |
-| `base.php`, `base_mailmaga.php`, `base_mycolle.php`, `base_point.php` | メールマガジン基本情報 / マイコレ登録用QR / メルマガ用QR | `base.show?type=` | `BaseController@show` | L tb_shop, tb_customer | pendiente |
-| `qr_img.php`, `qr_print_pdf.php` | QR / QR印刷 | `base.qr` (PNG), `base.qr-print` (PDF) | `BaseController@qr`, `@print` | — | pendiente |
+| `base.php`, `base_mailmaga.php`, `base_mycolle.php`, `base_point.php` | メールマガジン基本情報 / マイコレ登録用QR / メルマガ用QR | `base.show?type=` | `BaseController@show` | L tb_shop, tb_customer | hecho (S4, M7): una vista `base` con `type=base/mailmaga/mycolle/point`; descarga del QR generada al momento (el legacy servía cualquier archivo con `file_path`) |
+| `qr_img.php`, `qr_print_pdf.php` | QR / QR印刷 | `base.qr` (PNG), `base.qr-print` (PDF) | `BaseController@qr`, `@print` | — | hecho (S4, M7): `QrImage` (bacon) imita `qr_img.php`, público en `routes/publico/promocion.php` (appview lo carga sin sesión); QR印刷 en PDF A4 con `LegacyPdf` (el legacy era HTML para imprimir) |
 | `form_config.php`, `form_config_register.php` | 表示・検索・CSV項目設定 | — | — | — | descartado: configuración de clientes (category1), la cubre S2 |
 | `mag_customer_config.php` | メール配信条件選択 | — | — | — | descartado: resto solo referenciado desde category1, sin menú |
 | `mailsoushin.php` | (CLI envío inmediato) | — | `MailSender` (servicio, §3) | E mailmag_master, mailmag_sended_log, tb_customer, tb_mycoupon | descartado: no es vista; lo reemplaza el servicio |
@@ -119,16 +119,16 @@ Mismas pantallas con `mail_type = deco` (`$tb_base_system_child_cd = 32`); cuerp
 
 | Legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas | Estado |
 |---|---|---|---|---|---|
-| `push_customer_select.php` | プッシュ通知 / 発行条件選択 | `push.select` | `MC@select` (`push`) | L tb_customer, tb_search_* | pendiente (M5, S4) |
-| `push_new.php` + `push_new.js` | プッシュ通知新規作成 | `push.create` | `PushController@create` | L contents_master, tb_c1_customer, tb_c3_anketo2_cate | pendiente (M5, S4) |
-| `ajaxSavePush.php` | (AJAX guardar) | `push.ajax-save` | `PushController@save` | E push_master / push_follow_master, hatuban | pendiente (M5, S4) |
-| `ajaxChangeStatus.php` | (AJAX pausar/anular) | `push.ajax-status` | `PushController@status` | E push_follow_master (`disp_flg` 1/7/9) | pendiente (M5, S4) |
-| `ajaxSearchMember.php` | (AJAX socio de prueba) | `push.ajax-member` | `PushController@searchMember` | L tb_customer | pendiente (M5, S4) |
-| `push_complete.php` | プッシュ通知 (完了) | `push.complete` | `PushController@complete` | — | pendiente (M5, S4) |
-| `push_follow_list.php?type_flg=scheduled/follow/auto` | 予定 / フォロー / 自動通知設定一覧 | `push.follow-list?type_flg=` | `PushController@followList` | L/E push_follow_master | pendiente (M5, S4) |
-| `push_past.php` | 過去配信内容一覧 | `push.past` | `PushController@past` | L push_master, push_notifications | pendiente (M5, S4) |
-| `push_past_shousai.php` | 過去配信詳細 | `push.show` | `PushController@show` | L push_master, push_notifications, tb_customer | pendiente (M5, S4) |
-| `push_history.php`, `push_history_detail.php` | プッシュ履歴 | `push.history`, `push.history.show` | `PushController@history`, `@historyShow` | L push_notifications, tb_customer, tb_shop | pendiente (M5, S4) |
+| `push_customer_select.php` | プッシュ通知 / 発行条件選択 | `push.select` | `MC@select` (`push`) | L tb_customer, tb_search_* | hecho (S4, M5) |
+| `push_new.php` + `push_new.js` | プッシュ通知新規作成 | `push.create` | `PushController@create` | L contents_master, tb_c1_customer, tb_c3_anketo2_cate | hecho (S4, M5) |
+| `ajaxSavePush.php` | (AJAX guardar) | `push.ajax-save` | `PushController@save` | E push_master / push_follow_master, hatuban | hecho (S4, M5) |
+| `ajaxChangeStatus.php` | (AJAX pausar/anular) | `push.ajax-status` | `PushController@status` | E push_follow_master (`disp_flg` 1/7/9) | hecho (S4, M5) |
+| `ajaxSearchMember.php` | (AJAX socio de prueba) | `push.ajax-member` | `PushController@searchMember` | L tb_customer | hecho (S4, M5) |
+| `push_complete.php` | プッシュ通知 (完了) | `push.complete` | `PushController@complete` | — | hecho (S4, M5) |
+| `push_follow_list.php?type_flg=scheduled/follow/auto` | 予定 / フォロー / 自動通知設定一覧 | `push.follow-list?type_flg=` | `PushController@followList` | L/E push_follow_master | hecho (S4, M5) |
+| `push_past.php` | 過去配信内容一覧 | `push.past` | `PushController@past` | L push_master, push_notifications | hecho (S4, M5) |
+| `push_past_shousai.php` | 過去配信詳細 | `push.show` | `PushController@show` | L push_master, push_notifications, tb_customer | hecho (S4, M5) |
+| `push_history.php`, `push_history_detail.php` | プッシュ履歴 | `push.history`, `push.history.show` | `PushController@history`, `@historyShow` | L push_notifications, tb_customer, tb_shop | hecho (S4, M5) |
 | `sendFollowPush.php` | (cron 5 min) | — | comando `promocion:send-follow-push` | E push_follow_master, push_master, contents_master | descartado: no es vista; Scheduler |
 
 #### DM発行 — `dm/`
@@ -448,10 +448,10 @@ Cada pantalla se pasa a Blade con el mismo HTML (clases, ids, textos japoneses) 
 | M2 | メルマガ / デコメール: 発行条件選択 → redacción → confirmación → registro, prueba, imagen, 例外会員, programados, pasados, detalle, destinatarios, CSV, anulación; `MailSender`, `MailRenderer`, `promocion:send-mail` | 0.1; S2 modelos de filtro | 10 |
 | M3 | 自動 / フォロー (con confirmación y conteo) | M2 | 5 |
 | M4 | クリックカウンタ (gráficos por perfil y hora) y CSV | M2 | 4 |
-| M5 | Push: alta, listas, pasados, historial, `GApiPushSender`, `promocion:send-follow-push` | M2, M3 | 7 |
+| M5 | Push: alta, listas, pasados, historial, `GApiPushSender`, `promocion:send-follow-push` — **hecho (S4, 2026-11-28)** | M2, M3 | 7 |
 | M6 | リマインダ (`Reservation` de S2) | M3; S2 `Reservation` | 2 |
-| M7 | 基本情報 / QR (4 variantes) + impresión PDF | 0.1; S1 PDF | 2 |
-| M8 | DM発行 + etiquetas PDF | S1 PDF; confirmación de uso | 1,5 |
+| M7 | 基本情報 / QR (4 variantes) + impresión PDF — **hecho (S4, 2026-11-28)** | 0.1; S1 PDF | 2 |
+| M8 | DM発行 + etiquetas PDF — **hecho (S4, 2026-11-28)** | S1 PDF; confirmación de uso | 1,5 |
 | M9 | 新着情報 | confirmación de uso | 1 |
 | M10 | Portada + `promocion:clean-temp` | 0.1 | 1,5 |
 
@@ -466,7 +466,7 @@ Cada pantalla se pasa a Blade con el mismo HTML (clases, ids, textos japoneses) 
 | F4 | ポイント集計 + 一括付与 CSV + comandos de puntos y rangos | F3 | 5 |
 | F5 | Sellos: diseños, 仕様, reglas, クーポンお知らせ, plantillas, comandos | 0.1, F1 | 6 |
 | F6 | アンケート y お客様アンケート (dos familias, un juego de controladores): cabecera, ítems, prueba, emisión, análisis, CSV, respuestas por cliente, encuesta activa, 返信メール — **hecho (S4, 2026-11-27)**, salvo la クリックカウンタ (M4 de S3) | 0.1, M2 | 9 |
-| F7 | 来店履歴 (lista, día, tienda, CSV) + カードリーダ設定 | 0.1; S2 visitas | 3,5 |
+| F7 | 来店履歴 (lista, día, tienda, CSV) + カードリーダ設定 — **hecho (S4, 2026-11-28)** | 0.1; S2 visitas | 3,5 |
 | F8 | スマトピ (opcional) | confirmación de uso | 3 |
 
 Orden con una sola sesión (decisión de S0): 0.1 → M1 → M2 → F1 → F2 → F3 → M3 → M4 → F5 → F6 → F4 → F7 → F1b → M6 → M7 → M10 → M5 → M8 → M9 → F8.
