@@ -50,7 +50,7 @@ return [
         'file' => [
             'driver' => 'file',
             'path' => storage_path('framework/cache/data'),
-            'lock_path' => storage_path('framework/cache/data'),
+            'lock_path' => storage_path('framework/cache/locks'),
         ],
 
         'memcached' => [
@@ -113,5 +113,17 @@ return [
     */
 
     'prefix' => env('CACHE_PREFIX', Str::slug((string) env('APP_NAME', 'laravel')).'-cache-'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Clases serializables (Laravel 13)
+    |--------------------------------------------------------------------------
+    |
+    | Clases PHP que se pueden deserializar desde la caché. false = ninguna
+    | (se guardan arrays y escalares). Si un módulo cachea objetos, listarlos.
+    |
+    */
+
+    'serializable_classes' => false,
 
 ];
