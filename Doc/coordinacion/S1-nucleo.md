@@ -73,6 +73,7 @@ Recibidos de S0 el 2026-11-26 (para la Cola, después de la Fase 1; S0 los asign
 
 ## Hecho
 
+- **Revisión de permisos (2026-11-27):** usuario no master `qa_partial` (grupo 900, BD local) por menús y URL directas de todos los módulos; menús iguales al legacy. Núcleo: category0 solo master en el servidor. Módulos en `Doc/qa/permisos-*.md` (mypage sin comprobaciones de página). Portada de category9 → `admin.reservas.timetable` si existe (`f9ec252`).
 - **Revisión visual de punta a punta (2026-11-27):** menús, cabecera, pie y una pantalla principal por módulo contra la muestra con Playwright (`Doc/qa/`). Núcleo corregido: portadas de category1/3/5/6/7 + redirección de 9, clase `pageCategory` como `getSelectCategoryNo`, categoría por defecto del menú (`7d54d3a`). Diferencias de módulo en `Doc/qa/diferencias-<modulo>.md`.
 - **基本情報管理: システム管理 (2026-11-27), category0 completo:** bloques de ajustes de `system.php` con `nucleo.maintenance` (sin 初期化 ni エクスポート), igual a la muestra con Playwright; `ContentsMaster::putLegacy()`, `crm.version`. `tests/Feature/Base/SystemTest.php`. Suite: 581 en verde.
 - **基本情報管理: CRM端末管理 (2026-11-27):** `slim_list.php` (mapeo シリアル → tienda, 設定する que sí guarda) y la vuelta del popup de ac.crm-s.jp (`slim_href.php`, `slim_del_href.php`), con `nucleo.maintenance`. `tests/Feature/Base/AccessTerminalTest.php`. Suite: 572 en verde.
