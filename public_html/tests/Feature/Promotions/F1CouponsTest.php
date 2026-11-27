@@ -151,6 +151,13 @@ it('muestra el ranking de uso y las estadísticas por periodo con sus usuarios',
     $this->post(route('admin.promocion.coupons.stats'), ['shop_cd' => '-1', 'kikan_option' => '6', 'search_start' => '2026/11/20', 'search_end' => '2026/11/20'])->assertOk()
         ->assertSee('2026/11/20 ～ 2026/11/20')->assertSee('<td>10%OFF</td>', false)->assertDontSee('<td>スタンプ</td>', false);
 
+    // La ficha de S2 es admin/clientes/{customer}; se define aquí si C1 aún no está integrado
+    if (! Illuminate\Support\Facades\Route::has('admin.clientes.show')) {
+        Illuminate\Support\Facades\Route::get('admin/clientes/{customer}', fn () => '')->name('admin.clientes.show');
+        app('router')->getRoutes()->refreshNameLookups();
+    }
+
     $this->get(route('admin.promocion.coupons.stats.show', ['cd' => 4, 'shop_cd' => '-1']))->assertOk()
+        ->assertSee(route('admin.clientes.show', ['customer' => 7, 'wintype' => 'no_headers']), false)
         ->assertSee('客A')->assertSee(date('Y/m/d H:i', $today + 60) . '<br/>' . date('Y/m/d H:i', $today), false);
 });

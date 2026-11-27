@@ -161,3 +161,31 @@ it('guarda las miniaturas de la imagen y las borra con 画像を削除', functio
     $this->put(route('admin.reservas.menus.update', $cd), menuFormData(['img_del_flg' => '1']))->assertRedirect();
     Storage::disk('public')->assertMissing(["{$dir}/1_m.jpg", "{$dir}/1_s.jpg"]);
 });
+
+it('guarda 名前 y 内容 con get_form2() como yoyaku_koumoku_register.php y los imprime sin escapar dos veces', function () {
+    // get_form2(): recorte 半角/全角 + htmlspecialchars(ENT_COMPAT): la BD guarda entidades; ' no se toca
+    $this->post(route('admin.reservas.menus.store'), menuFormData([
+        'name' => "　<b>\"カット\"</b> 'A' & B　", 'naiyou' => "<i>説明</i>\n2行目",
+    ]))->assertRedirect();
+
+    $menu = ReservationMenu::firstOrFail();
+    expect($menu->name)->toBe("&lt;b&gt;&quot;カット&quot;&lt;/b&gt; 'A' &amp; B")
+        ->and($menu->naiyou)->toBe("&lt;i&gt;説明&lt;/i&gt;\n2行目");
+
+    $this->post(route('admin.reservas.menus.list'), ['shop_cd' => 1])
+        ->assertOk()
+        ->assertSee("&lt;b&gt;&quot;カット&quot;&lt;/b&gt; 'A' &amp; B</span>", false)
+        ->assertSee('&lt;i&gt;説明&lt;/i&gt;<br />', false)
+        ->assertDontSee('&amp;lt;', false)
+        ->assertDontSee('<b>"カット"', false);
+
+    $this->get(route('admin.reservas.menus.index', ['cd' => $menu->cd]))
+        ->assertSee("value=\"&lt;b&gt;&quot;カット&quot;&lt;/b&gt; 'A' &amp; B\"", false)
+        ->assertSee("rows=\"6\">&lt;i&gt;説明&lt;/i&gt;\n2行目</textarea>", false);
+
+    // Si la validación falla, old() trae el texto crudo y se escapa
+    $this->from(route('admin.reservas.menus.index', ['shop' => 1]))
+        ->post(route('admin.reservas.menus.store'), menuFormData(['name' => '<x>"y"', 'shoyou_time' => '']));
+    $this->get(route('admin.reservas.menus.index', ['shop' => 1]))
+        ->assertSee('value="&lt;x&gt;&quot;y&quot;"', false);
+});

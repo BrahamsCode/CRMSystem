@@ -29,7 +29,8 @@ it('prepara los datos de los parciales del buscador', function () {
         ->and($data['applicationUseFlg'])->toBeTrue()
         ->and($data['minYear'])->toBe(2019)
         ->and($data['cellTag'])->toBe('th')
-        ->and($data['filters'])->toBe(['name' => '山田']);
+        ->and($data['filters'])->toBe(['name' => '山田'])
+        ->and($data['areaCheckUi'])->toContain('tb_shop_cd[]')->toContain('本店');
 });
 
 it('limita la tienda para el personal que no es master', function () {
@@ -41,7 +42,8 @@ it('limita la tienda para el personal que no es master', function () {
     expect($data['isMaster'])->toBeFalse()
         ->and($data['shopCd'])->toBe(2)
         ->and($data['shopName'])->toBe('支店')
-        ->and($data['customSearchCategories'])->toHaveCount(0);
+        ->and($data['customSearchCategories'])->toHaveCount(0)
+        ->and($data['areaCheckUi'])->toBe('');
 });
 
 it('los parciales del buscador se pintan con esos datos', function () {

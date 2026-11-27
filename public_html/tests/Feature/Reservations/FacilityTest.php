@@ -52,3 +52,16 @@ it('valida 名称 y 数量 con los textos del legacy', function () {
 it('responde 404 a un cd inexistente (el legacy: 不正アクセス)', function () {
     $this->get(route('admin.reservas.facilities.index', ['cd' => 999]))->assertNotFound();
 });
+
+it('guarda 名称 con form2Db() como setsubi_register.php y lo imprime escapado', function () {
+    // form2Db(): 半角カナ → 全角 y recorte de espacios 半角/全角; comillas y <> quedan tal cual (texto plano)
+    $this->post(route('admin.reservas.facilities.store'), ['shop_cd' => 1, 'name' => "　ｺｼﾂ <b>\"A\" 'B'</b>　", 'quantity' => '2'])
+        ->assertRedirect();
+
+    expect(Facility::firstOrFail()->name)->toBe("コシツ <b>\"A\" 'B'</b>");
+
+    $this->get(route('admin.reservas.facilities.index', ['shop' => 1]))
+        ->assertOk()
+        ->assertSee("<td>コシツ &lt;b&gt;&quot;A&quot; &#039;B&#039;&lt;/b&gt;</td>", false)
+        ->assertDontSee('<b>"A"', false);
+});

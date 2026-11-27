@@ -153,9 +153,10 @@
 		<td ><span style="color: #115599; font-weight: bold;">端末登録有</span>
 			<form method="post" name="felica_separate" id="felica_separate" class="form" action="{{ route('admin.clientes.felica.destroy', $customer->cd) }}">
 			@csrf
+			@method('DELETE')
 			<input type="button" name="felica_separate_form" id="felica_separate_form" class="btnStyle" value="関連付けを解除する" onclick="submitChk2();" />
 				{{-- POSTデータを全て返す (como el legacy, para volver a la misma ficha) --}}
-				@foreach (request()->except('_token') as $key => $val)
+				@foreach (request()->except(['_token', '_method']) as $key => $val)
 				@continue(is_array($val))
 				<input type="hidden" name="{{ $key }}" value="{{ $val }}" />
 				@endforeach

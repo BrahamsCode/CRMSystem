@@ -58,13 +58,13 @@
 				<tr{!! $bgStyle !!}>
 					<td>@if (blank($menu->tb_yoyaku_koumoku_category_cd) || $menu->category_name === null)カテゴリ設定なし@else{{ $menu->category_name }}@if ($menu->category_hyouji_flg == '9')<br /><span style="color:red;font-weight:bold;font-size:90%;">※非表示</span>@endif @endif</td>
 					<td>
-					<span style="font-weight:bold;">{{ $menu->name }}</span>
+					<span style="font-weight:bold;">{!! $menu->name !!}</span>
 
 @if ((string) $menu->tb_shop_cd === '-1')
 <small>(全店舗表示メニュー)</small>
 @endif
 
-					<div style="padding-left:10px; font-size:90%;">{!! nl2br(e($menu->naiyou)) !!}</div>
+					<div style="padding-left:10px; font-size:90%;">{!! nl2br($menu->naiyou) !!}</div>
 					</td>
 					<td><input type="text" class="input2S" name="shoyou_time[{{ $menu->cd }}]" value="{{ $shoyouTime }}" />分</td>
 

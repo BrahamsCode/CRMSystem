@@ -20,7 +20,8 @@ class ReservationMenuCategoryService
 
         // Como el legacy: guardar también vuelve a 表示 (hyouji_flg = '1')
         $category->fill([
-            'name' => $name,
+            // form2Db() de yoyaku_koumoku_category_register.php (半角カナ → 全角 y recorte); texto plano
+            'name' => ReservationInput::form2Db($name),
             'disp_flg' => ReservationMenuCategory::ACTIVE_FLAG,
             'hyouji_flg' => ReservationMenuCategory::VISIBLE,
         ])->save();

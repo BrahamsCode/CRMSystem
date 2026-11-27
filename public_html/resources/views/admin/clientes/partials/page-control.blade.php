@@ -8,7 +8,9 @@
     $maxpage = $paginator->lastPage();
     $kensu = $paginator->perPage();
     // URL de la página $p de la ficha con los mismos parámetros que el legacy (?page=N&…&kensu=K)
-    $pageUrl = fn ($p) => route('admin.clientes.show', array_merge([$customer->cd, 'page' => $p], $params, ['kensu' => $kensu]));
+    // La ventana emergente (?wintype=no_headers) se conserva al paginar
+    $wintype = request('wintype') === 'no_headers' ? ['wintype' => 'no_headers'] : [];
+    $pageUrl = fn ($p) => route('admin.clientes.show', array_merge([$customer->cd, 'page' => $p], $params, ['kensu' => $kensu], $wintype));
 @endphp
 @if ($paginator->total() > 0)
 @if ($page != 1 && $kensu < $paginator->total())

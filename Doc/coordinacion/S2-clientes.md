@@ -7,7 +7,7 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — C1 (controladores y rutas de 顧客一覧・検索, ficha, alta/edición) en cuanto S1 publique el layout `layouts.legacy`, el Gate `kengen` y la carga de `routes/legacy/`; mientras, R2 (受付日: franjas y su estado)
+## Próximo paso — C2 (configuración de clientes: form_config, 追加情報, grupos, motivos, rangos + comando de rangos) y en paralelo R3 (flujo de reserva)
 
 ## Tarea anterior — Diseño (sin código, HECHO)
 
@@ -66,7 +66,13 @@ Ver `Doc/diseno/clientes-ventas-reservas.md` §5 (S1: `staff`, Gates, rutas púb
 
 - 2026-11-26 (R1): `ajax_yoyaku_config.php`, `ajax_yoyaku_koumoku_new.php`, `ajax_yoyaku_koumoku_category.php`, `ajax_menu.php` y `ajax_free_yoyaku_rank.php` solo los usan sus pantallas: pasan a rutas `admin.reservas.*` y el JS inline llama a esas rutas. Los guardados redirigen (PRG) con el mismo mensaje. No-master: el servidor fuerza la tienda de la sesión. Categoría vacía de menú = NULL (el legacy guardaba 0 y los ocultaba).
 
+- 2026-11-27 (C1): `tb_customer.cd` del alta se numera como `createHatsuban()` del legacy (epoch + tienda + 6 cifras al azar), no con el contador `hatuban`, igual que `customer_new_register.php`; `id` (会員番号) = `createID()` de `system/inc/function.php`. Los modelos con `HasHatuban` respetan un `cd` ya puesto.
+- 2026-11-27 (C1): la búsqueda guardada (`describe()`) va en la sesión `customer_search.<uniqid>` y se copia en `promocion.audience.<uniqid>` para el 「この条件で配信する」 de S3 (en el legacy compartían `wherestr_<uniqid>`). Pedido a S0: acordar una sola clave.
+- 2026-11-27 (C1): permisos comprobados en el servidor (alta 1001/2, edición 1001/3, borrar/recuperar 1001/4, CSV 1002/1); el legacy solo ocultaba botones. Recuperar comprueba el correo duplicado como `customer_recover_confirm.php`. ポイント管理/履歴 del menú con el Gate `clientes.ext-shop` (= `isExtShopDomain`).
+
 ## Hecho
+
+- 2026-11-27 C1: 顧客一覧・検索 + CSV (standard, DM用), ficha con las 14 pestañas + personalizadas, borrar/recuperar/liberar tarjeta/borrar マイクーポン, alta/edición/confirmación/書き直す, 会員検索 de 紹介者; menú lateral `config/menu/clientes.php`; URL legacy en `routes/legacy/clientes.php`. 50 pruebas de pantalla; suite 442/442.
 
 - 2026-11-26 R1: 予約設定 (tienda, formulario, funciones, 注釈), 予約項目, 予約項目カテゴリ, 設備, スタッフ施術管理, フリー予約: controladores, Form Requests, servicios, vistas del legacy, rutas en `routes/modulos/reservas.php`. 33 pruebas de pantalla con layout y usuario de prueba (`tests/Feature/Reservations/ScreenSetup.php`, se quita cuando S1 publique layout, login y Gate). Suite 212/212. Imágenes de menú en el disco `public` (`hp/uploads/c9/yoyaku_koumoku/`).
 

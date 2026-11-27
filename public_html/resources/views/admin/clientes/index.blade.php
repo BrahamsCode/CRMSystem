@@ -253,7 +253,10 @@ SoftBank：{{ $carrierCounts['softbank'] }}</span>件
 @can('kengen', [1001, 1])
 @php
     // 2011.12.1 tablet用にボタンスクリプトを分岐
-    $shousaiUrl = route('admin.clientes.show', [$customer['cd'], 'wintype' => 'no_headers']);
+    // La ficha (C1-b) puede no estar registrada todavía: entonces la URL del legacy
+    $shousaiUrl = Route::has('admin.clientes.show')
+        ? route('admin.clientes.show', [$customer['cd'], 'wintype' => 'no_headers'])
+        : url('system/category1/inc/customer_detail.php?kaiin_cd=' . $customer['cd'] . '&wintype=no_headers');
 @endphp
 @if ($isTablet)
 <input class="btn btnStyle" type="button" value="詳細" onclick="roid.popUp('{{ $shousaiUrl }}')" />
