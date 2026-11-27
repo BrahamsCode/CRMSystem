@@ -127,7 +127,7 @@ var first_flg = false;
 
 function dateDisp2(){
 	$.ajax({
-		type: "GETT",
+		type: "GET", // el legacy enviaba "GETT" (errata): Apache+PHP lo aceptaba, Laravel responde 405
 		url: "<?=($_base_url ?? null)?>/view/ajax.php?packages_cd=<?=\App\Services\Senalizacion\LegacyHtml::h(($_request['cd'] ?? null))?>",
 		dataType: 'json',
 		success: function(j_data){

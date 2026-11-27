@@ -108,3 +108,4 @@ Ver diseño §5. A S0: BD `admin` de `signage/` (no está en el esquema); GoTel/
 - 2026-11-27 Diseño rehecho sobre la BD del legacy; limpieza de la capa obsoleta; `SignageFeedBuilder` sobre `tb_*` con 8 pruebas (suite 10 verde).
 
 - 2026-11-26 Diseño `Doc/diseno/contenido-terminales.md` (paridad, esquema con mapeo, servicios, orden 60 pts, pedidos).
+- **Tercera pasada, fase A y primeros fallos (2026-11-27):** casos límite en `ContenidoDemoSeeder` (bajas, caducados, japonés al máximo, 3 tiendas, paginación, periodos de fin de mes/año/29-02 en signage/, ICカード 端末); corregidos 放映素材 sin `tb_display_cd`, オススメ 全店舗 = NULL y el `GETT` del sondeo de signage/view (405). Detalle en `Doc/qa/regresion.md`. Fase B: pantallas de master recorridas; queda volver a comprobar tras la recarga.

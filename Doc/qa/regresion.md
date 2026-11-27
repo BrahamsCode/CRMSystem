@@ -40,6 +40,18 @@ Probado en :8081 hasta ahora: recorrido de 145 pantallas como master y 131 como 
 
 ### マイページ / 端末 / señalización (S4)
 
+Datos (fase A): `ContenidoDemoSeeder` añade casos límite: bajas (`disp_flg`/`flg` 9), ガチャリン caducadas, ペーパーサイネージ 停止 y de baja, japonés al máximo (100/400/1000), opcionales vacíos, kana de ancho medio, 3 tiendas, 11–20 filas más por lista (paginan), 12 ICカード 端末, ICカード sin socio, perdidas y de tipo oculto, y en signage/ ciclos por periodo que acaban a fin de mes, a fin de año, el 29-02, uno caducado, dos solapados y uno diario. Prueba: `tests/Feature/Contenido/DemoSeederTest.php`.
+
+| Pantalla (URL) | Fallo | Corrección + prueba Pest | Commit |
+|---|---|---|---|
+| 放映素材 `/admin/terminales/signage-materials` | Lista vacía: filtra por el primer display (como el legacy) y los 素材 de la demo no tenían `tb_display_cd` | El seeder los asigna al primer display; `DemoSeederTest` (assertSee ランチメニュー) | (este) |
+| オススメ `/admin/mypage/recommendations` | La demo guardaba 全店舗 como `tb_shop_cd = 0` (tienda inexistente); el legacy usa vacío/NULL | Seeder con NULL; `DemoSeederTest` | (este) |
+| signage/ reproductor `/signage/view?cd=` (también dentro de `/admin/senalizacion`, 端末一覧, パッケージ) | El sondeo `view/ajax.php` iba con `type: "GETT"` (errata del legacy, Apache lo aceptaba): **405** cada pocos segundos | `type: "GET"` en las 13 vistas `signage-view/*`; `SignagePlayerTest` (assertSee `type: "GET"`) | (este) |
+
+Probado en :8081 como master: alta/edición/borrado con imagen de オススメ, 求人 y 求人職種 (全店舗 sale en todas las tiendas); ガチャリン (valor no numérico rechazado); 放映素材, 放映プログラム (selección de 素材 → XML) y ディスプレイ, y el reproductor `digitalsignage/index2.php` con telop e imagen; ペーパーサイネージ (alta, 停止, edición, borrado, QR, `/ptag/` 302, 集計, CSV SJIS); ICカード (búsqueda 全/未/済 = legacy); マイコレ カバーフロー (subida y borrado); signage/ 端末 (alta/edición/borrado) y GoTel (入力→確認→送信). Como `qa_partial` (matriz vieja): マイコレ, 求人新規, 求人職種 y signage/ dan 403; 端末管理 abre (sin kengen, como el legacy).
+
+Ajenos a S4 (vistos en :8081): accesos directos de cabecera `tb_bookmark` a `/system/category3/mycoupon/mycoupon_list.php` y `/system/category5/staff/staff_list.php` dan 404, y お問合せ `/system/contact/` también (S1/S3/S5).
+
 ### Operaciones / 勤怠 / integraciones (S5)
 
 Recorrido en :8081 con los datos de fe7296c (antes de la recarga) como `master`, `tencho_umeda` (店長), `umeda01` y `qa_partial` (matriz vieja). Lo creado lleva «QA-S5» y se borró al terminar, salvo el empleado `QA-S5 試験 太郎` (梅田店), que se queda para la segunda vuelta. Muestra consultada en solo lectura.

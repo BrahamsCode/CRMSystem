@@ -152,7 +152,10 @@ it('pinta las 13 pantallas de diseño del reproductor sin errores', function (st
     $this->get('/signage/view?cd='.$f['terminal']->cd)
         ->assertOk()
         ->assertSee('<title>デジタルサイネージ</title>', false)
-        ->assertSee('cycle_group1', false);
+        ->assertSee('cycle_group1', false)
+        // QA :8081: el sondeo iba con type "GETT" (errata del legacy) y Laravel respondía 405
+        ->assertSee('type: "GET"', false)
+        ->assertDontSee('type: "GETT"', false);
 })->with(['h_1_1', 'h_1_2', 'h_1_3', 'h_1_4', 'h_2_1', 'h_2_2', 'h_3_1', 'h_4_1', 'h_4_2', 'v_1_1', 'v_1_2', 'v_2_1', 'v_2_2']);
 
 it('pinta los 16 diseños de marco en la pantalla de ciclos', function (string $type) {
