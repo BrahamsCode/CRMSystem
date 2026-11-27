@@ -115,21 +115,21 @@
 
 <div class="btnBox" style="clear: both;">
 
-<form method="get" name="add_record_form" id="add_record_form" class="form" action="{{ route('admin.clientes.photos.create', $customer->cd) }}">
+<form method="get" name="add_record_form" id="add_record_form" class="form" action="{{ $pendingRoute('admin.clientes.photos.create', $customer->cd) }}">
 <input type="submit" name="add_record" id="add_record" class="btn btnStyleM" value="アルバムを追加する" />
 <input type="hidden" name="kaiin_cd" id="kaiin_cd" class="btn" value="{{ $customer->cd }}">
 <input type="hidden" name="tab" id="tab" value="{{ request('tab') }}">
 <input type="hidden" name="page" id="page" value="{{ request('page') }}" />
 </form>
 @if ($albumSelected)
-<form method="get" name="update_record_form" id="add_record_form" class="form" action="{{ route('admin.clientes.photos.edit', [$customer->cd, $albumSelected->cd]) }}">
+<form method="get" name="update_record_form" id="add_record_form" class="form" action="{{ $pendingRoute('admin.clientes.photos.edit', [$customer->cd, $albumSelected->cd]) }}">
 <input type="submit" name="add_record" id="add_record" class="btn btnStyleM" value="アルバムを修正する" />
 <input type="hidden" name="kaiin_cd" id="kaiin_cd" class="btn" value="{{ $customer->cd }}">
 <input type="hidden" name="tab" id="tab" value="{{ request('tab') }}">
 <input type="hidden" name="photoalbum_cd" id="photoalbum_cd" class="btn" value="{{ $albumSelected->cd }}">
 <input type="hidden" name="page" id="page" value="{{ request('page') }}" />
 </form>
-<form method="post" name="delete_record_form" id="delete_record_form" class="form" action="{{ route('admin.clientes.photos.destroy', [$customer->cd, $albumSelected->cd]) }}">
+<form method="post" name="delete_record_form" id="delete_record_form" class="form" action="{{ $pendingRoute('admin.clientes.photos.destroy', [$customer->cd, $albumSelected->cd]) }}">
 @csrf
 <input type="button" name="add_record" id="add_record" class="btn btnStyleM" value="アルバムを削除する" onclick="submitChk(document.delete_record_form);" />
 <input type="hidden" name="kaiin_cd" id="kaiin_cd" class="btn" value="{{ $customer->cd }}">

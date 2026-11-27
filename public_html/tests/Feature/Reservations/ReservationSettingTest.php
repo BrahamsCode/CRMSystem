@@ -180,3 +180,34 @@ it('muestra y guarda 注釈設定 en tb_manage_words', function () {
         ->and($words['mobile_yoyaku[V2予約のスタッフ選択箇所]']->hyouji_flg)->toBe('1')
         ->and($words['mobile_yoyaku[V2予約のスタッフ選択箇所]']->update_date)->not->toBeEmpty();
 });
+
+it('guarda el nombre de la フリー項目 con form2Db() como yoyaku_form_config.php y lo imprime escapado', function () {
+    DB::table('tb_koumoku')->insert([
+        'cd' => 5, 'system_cate' => '9', 'tb_name' => 'tb_yoyaku', 'tb_koumoku' => 'free_koumoku_1',
+        'tb_koumoku_name' => '備考', 'koumoku_disp' => '', 'koumoku_check' => '', 'koumoku_select' => '', 'rank' => 1,
+    ]);
+
+    $this->post(route('admin.reservas.settings.form.update'), [
+        'free_koumoku_cd' => ['5'], 'free_koumoku_name_5' => "　ﾋﾞｺｳ <b>\"A\" 'B'</b>　", 'act' => 'reg', 'enter' => '確定',
+    ])->assertRedirect();
+
+    expect(DB::table('tb_koumoku')->where('cd', 5)->value('tb_koumoku_name'))->toBe("ビコウ <b>\"A\" 'B'</b>");
+
+    $this->get(route('admin.reservas.settings.form'))
+        ->assertOk()
+        ->assertSee('name="free_koumoku_name_5" value="ビコウ &lt;b&gt;&quot;A&quot; &#039;B&#039;&lt;/b&gt;"', false)
+        ->assertDontSee('<b>"A"', false);
+});
+
+it('guarda el 注釈 con form2Db() como yoyaku_comment_config.php y lo imprime escapado', function () {
+    $this->post(route('admin.reservas.settings.comment.update'), [
+        'comment_9' => "　ﾃﾝﾎﾟ <b>\"A\" 'B'</b>　", 'act' => 'reg', 'enter' => '確定',
+    ])->assertRedirect();
+
+    expect(DB::table('tb_manage_words')->where('cd', 9)->value('naiyou'))->toBe("テンポ <b>\"A\" 'B'</b>");
+
+    $this->get(route('admin.reservas.settings.comment'))
+        ->assertOk()
+        ->assertSee('rows="3">テンポ &lt;b&gt;&quot;A&quot; &#039;B&#039;&lt;/b&gt;</textarea>', false)
+        ->assertDontSee('<b>"A"', false);
+});

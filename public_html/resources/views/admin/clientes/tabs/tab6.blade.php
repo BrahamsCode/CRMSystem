@@ -56,6 +56,8 @@ function deleteMyCoupon( cd ) {
 
 <form method="post" class="displayNone" name="delete_mycoupon_form" id="delete_mycoupon_form" action="{{ route('admin.clientes.coupons.destroy', $customer->cd) }}">
 	@csrf
+	@method('DELETE')
+	@if (request('wintype') === 'no_headers')<input type="hidden" name="wintype" value="no_headers" />@endif
 	<input type="hidden" name="tab" value="{{ request('tab') }}" />
 	<input type="hidden" name="kaiin_cd" value="{{ $customer->cd }}" />
 	<input type="hidden" name="coupon_cd" value="" />

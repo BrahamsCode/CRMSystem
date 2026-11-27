@@ -127,7 +127,7 @@
 
 	<div class="btnBox" style="clear: both;">
 
-		<form method="post" name="add_record_form" id="add_record_form" class="form" action="{{ route('admin.clientes.custom-records.create') }}">
+		<form method="post" name="add_record_form" id="add_record_form" class="form" action="{{ $pendingRoute('admin.clientes.custom-records.create') }}">
 		@csrf
 		<input type="submit" name="add_record" id="add_record" class="btn btnStyleM" value="{{ $searchCateData['name'] }}を追加する" />
 		<input type="hidden" name="kaiin_cd" id="kaiin_cd" class="btn" value="{{ $customer->cd }}">
@@ -137,7 +137,7 @@
 		<input type="hidden" name="page" id="page" value="{{ request('page') }}" />
 		</form>
 		@if ($fukusuGroupCd)
-		<form method="post" name="update_record_form" id="add_record_form" class="form" action="{{ route('admin.clientes.custom-records.create') }}">
+		<form method="post" name="update_record_form" id="add_record_form" class="form" action="{{ $pendingRoute('admin.clientes.custom-records.create') }}">
 		@csrf
 		<input type="submit" name="add_record" id="add_record" class="btn btnStyleM" value="{{ $searchCateData['name'] }}を修正する" />
 		<input type="hidden" name="kaiin_cd" id="kaiin_cd" class="btn" value="{{ $customer->cd }}">
@@ -147,7 +147,7 @@
 		<input type="hidden" name="search_cate_cd" id="search_cate_cd" class="btn" value="{{ $searchCateData['cd'] }}">
 		<input type="hidden" name="page" id="page" value="{{ request('page') }}" />
 		</form>
-		<form method="post" name="delete_record_form" id="delete_record_form" class="form" action="{{ route('admin.clientes.custom-records.destroy') }}">
+		<form method="post" name="delete_record_form" id="delete_record_form" class="form" action="{{ $pendingRoute('admin.clientes.custom-records.destroy') }}">
 		@csrf
 		<input type="button" name="add_record" id="add_record" class="btn btnStyleM" value="{{ $searchCateData['name'] }}を削除する" @if ($kanrenCd) disabled @else onclick="submitChk(document.delete_record_form);" @endif />
 		<input type="hidden" name="kaiin_cd" id="kaiin_cd" class="btn" value="{{ $customer->cd }}">

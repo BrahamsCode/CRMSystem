@@ -5,6 +5,7 @@ namespace App\Services\Customers;
 use App\Models\AdminMaster;
 use App\Models\ContentsMaster;
 use App\Models\Staff;
+use App\Services\Nucleo\AreaTree;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -42,8 +43,10 @@ class CustomerSearchForm
             'shopCd' => $shopCd,
             'shopName' => $shopCd ? $shops->firstWhere('cd', $shopCd)['kaishamei'] ?? '' : '',
             'shops' => $shops,
-            // TODO(S1): componente común del árbol de áreas (Area::createAreaCheckUi); vacío hasta que exista
-            'areaCheckUi' => '',
+            // Area::createAreaCheckUi del legacy (search_set1.php, solo master): casillas `tb_shop_cd[]`
+            'areaCheckUi' => $isMaster
+                ? (string) app(AreaTree::class)->checkUi($this->shopRows(), array_map('intval', (array) ($filters['tb_shop_cd'] ?? [])), 'tb_shop_cd[]')
+                : '',
             'searchItems' => DB::table('tb_koumoku')->where('tb_name', 'tb_customer')->where('mail_mag_select', '1')
                 ->orderBy('rank')->orderBy('cd')->get(['cd', 'tb_koumoku', 'tb_koumoku_name'])->map(fn ($r) => (array) $r),
             'jobs' => DB::table('tb_job')->whereRaw("COALESCE(disp_flg, '') <> '9'")->orderBy('rank')->orderBy('cd')->pluck('name'),
@@ -70,6 +73,12 @@ class CustomerSearchForm
     {
         return DB::table('tb_shop')->whereRaw("COALESCE(disp_flg, '') <> '9'")->orderBy('cd')->get(['cd', 'kaishamei'])
             ->map(fn ($r) => ['cd' => (int) $r->cd, 'kaishamei' => $r->kaishamei, 'name' => $r->kaishamei]);
+    }
+
+    /** Filas de tienda que necesita el árbol de áreas (cd, area_cd, kaishamei, is_closed) */
+    private function shopRows(): Collection
+    {
+        return DB::table('tb_shop')->whereRaw("COALESCE(disp_flg, '') <> '9'")->orderBy('cd')->get(['cd', 'area_cd', 'kaishamei', 'is_closed']);
     }
 
     private function cdName(string $table, string $where, array $order): Collection
