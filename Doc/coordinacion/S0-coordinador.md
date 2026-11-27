@@ -182,6 +182,10 @@
   - Regresión 2 sobre :8081: 134/131 pantallas, 0 errores 500, 0 páginas en blanco y 0 errores de JS, con el log limpio. Solo dan 404 las 3 URL pendientes de decisión.
   - `laravel13` con 989 pruebas en verde. Todo está integrado y las 5 sesiones quedan libres.
 - 2026-11-27: siguiente tarea de S1 (Antony: el login primero): modelo base y traits comunes, luego el login contra el personal del legacy, el layout idéntico y los estáticos comunes.
+- 2026-11-27: Antony pide **datos de demostración** porque la BD sale vacía (0 clientes, visitas, reservas, cupones y envíos). Repartido así:
+  - `DemoSeeder` (S0, en 63302f5) llama en orden a `database/seeders/Demo/<Modulo>DemoSeeder.php`: S1 Nucleo → S2 Clientes → S3 Promocion → S4 Contenido → S5 Operaciones.
+  - Reglas en CONVENCIONES §4: ja_JP con semilla fija, idempotente y que no dependa del orden de desarrollo.
+  - Integración: hago merge de cada rama cuando esté en verde y luego `db:seed --class=DemoSeeder` sobre `crmsystem2` (:8081). La comprobación final es revisar a ojo con master que las listas tengan datos.
 
 ## Hecho
 
