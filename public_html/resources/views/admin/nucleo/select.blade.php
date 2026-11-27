@@ -8,7 +8,7 @@
 @section('js')
 <script type="text/javascript">
 $(document).ready(function() {
-@if ($legacyUi->versionFlg() === '2')
+@if ($legacyUi->uiVersion() === '2')
 	$('.functionSelect li a, .functionSelect2 li a').vRippleEffect({ color: '#FFFFFF' });
 @endif
 });

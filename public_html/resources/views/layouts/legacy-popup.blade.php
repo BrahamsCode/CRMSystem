@@ -4,6 +4,8 @@
 --}}
 @php
     $legacyUi = app(\App\Services\Nucleo\LegacyUi::class);
+    // @section('ui_version', '1'|'2'): fuerza la UI clásica o la 2 solo en esta pantalla (NUCLEO.md §5)
+    $legacyUi->forceUiVersion(trim($__env->yieldContent('ui_version')) ?: null);
     $category = $legacyUi->categoryFromUrl();
 @endphp
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

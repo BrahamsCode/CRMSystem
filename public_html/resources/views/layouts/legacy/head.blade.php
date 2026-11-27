@@ -18,7 +18,7 @@
     $jquery = trim($__env->yieldContent('jquery')) ?: 'jquery-1.3.2.min.js';
     $jqueryUi = trim($__env->yieldContent('jquery_ui')) ?: 'jquery-ui-1.7.2.custom.min.js';
 @endphp
-@if (app(\App\Services\Nucleo\LegacyUi::class)->versionFlg() === '2')
+@if (app(\App\Services\Nucleo\LegacyUi::class)->uiVersion() === '2')
 <link href="/system/css/mainStyle.css" rel="stylesheet" type="text/css" media="all" />
 <link href="/system/css/vRippleEffect.css" rel="stylesheet" type="text/css" media="all" />
 <link href="/system/css/jquery.alerts.css" rel="stylesheet" type="text/css" media="all" />

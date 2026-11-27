@@ -31,6 +31,23 @@ class LegacyUi
         return (string) $this->adminMaster()->base_system_version_flg === '2' ? '2' : '1';
     }
 
+    /** Versión de UI forzada por la vista con `@section('ui_version', '1'|'2')` (null = la de admin_master) */
+    private ?string $forcedUi = null;
+
+    public function forceUiVersion(?string $version): void
+    {
+        $this->forcedUi = in_array($version, ['1', '2'], true) ? $version : null;
+    }
+
+    /**
+     * Versión visual de esta petición (head con mainStyle.css o import.css, partes de cabecera y menú). Solo cambia
+     * el aspecto: los módulos visibles siguen versionFlg() (dato de admin_master).
+     */
+    public function uiVersion(): string
+    {
+        return $this->forcedUi ?? $this->versionFlg();
+    }
+
     public function adminMaster(): AdminMaster
     {
         return $this->adminMaster ??= AdminMaster::current();
@@ -69,7 +86,7 @@ class LegacyUi
     /** Partes HTML que cambian entre la UI 1 (imágenes) y la 2 (texto): Base::createHtmlPart */
     public function part(string $name, array $data = []): string
     {
-        $v2 = $this->versionFlg() === '2';
+        $v2 = $this->uiVersion() === '2';
         $e = fn ($s) => e((string) $s);
 
         return match ($name) {
