@@ -1,0 +1,23 @@
+<?php
+
+/*
+ * URL literales del legacy que llaman los JS de 予約管理 (S2, system/category9/yoyaku/*.php).
+ * S1 las carga sin prefijo, con web + auth:admin. Nombre: legacy.reservas.*  (NUCLEO.md §3)
+ */
+
+use Illuminate\Support\Facades\Route;
+
+// --- R3 ---
+// Popup y arrastre del 予約表 (timetable_js: $.get con sess / cd / newStaff / objs / reserveDate / startTime)
+Route::match(['get', 'post'], 'system/category9/yoyaku/ajax_yoyaku_register.php', [\App\Http\Controllers\Admin\Reservations\ReservationController::class, 'ajaxRegister'])->name('reservas.ajax-register');
+Route::match(['get', 'post'], 'system/category9/yoyaku/ajax_move_objs.php', [\App\Http\Controllers\Admin\Reservations\ReservationController::class, 'move'])->name('reservas.move');
+// 顧客関連づけ (ventana y su AJAX, que responde '1')
+Route::get('system/category9/yoyaku/related_customer.php', [\App\Http\Controllers\Admin\Reservations\ReservationController::class, 'relatedCustomer'])->name('reservas.related-customer');
+Route::post('system/category9/yoyaku/ajax_related_customer.php', [\App\Http\Controllers\Admin\Reservations\ReservationController::class, 'storeRelatedCustomer'])->name('reservas.related-customer.store');
+// AJAX de apoyo con la misma respuesta HTML
+Route::match(['get', 'post'], 'system/category9/yoyaku/ajax_yoyaku_menu.php', [\App\Http\Controllers\Admin\Reservations\ReservationOptionController::class, 'menus'])->name('reservas.options.menus');
+Route::match(['get', 'post'], 'system/category9/yoyaku/ajax_staff.php', [\App\Http\Controllers\Admin\Reservations\ReservationOptionController::class, 'staff'])->name('reservas.options.staff');
+Route::match(['get', 'post'], 'system/category9/yoyaku/ajax_search_kaiin.php', [\App\Http\Controllers\Admin\Reservations\ReservationOptionController::class, 'members'])->name('reservas.options.members');
+Route::match(['get', 'post'], 'system/category9/yoyaku/ajax_menu.php', [\App\Http\Controllers\Admin\Reservations\StaffWorkController::class, 'menu'])->name('reservas.options.staff-works-menu');
+Route::match(['get', 'post'], 'system/category9/yoyaku/ajax_yoyaku_koumoku_category.php', [\App\Http\Controllers\Admin\Reservations\ReservationOptionController::class, 'menuCategories'])->name('reservas.options.menu-categories');
+// --- fin R3 ---

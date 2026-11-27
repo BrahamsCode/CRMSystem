@@ -7,7 +7,7 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — C2 (configuración de clientes: form_config, 追加情報, grupos, motivos, rangos + comando de rangos) y en paralelo R3 (flujo de reserva)
+## Próximo paso — C3 (visitas, puntos y sellos: 来店処理, `kanren_record_*` con servicio para S5, pestañas 8/9/10, ポイント履歴) y R4 (予約表)
 
 ## Tarea anterior — Diseño (sin código, HECHO)
 
@@ -70,7 +70,11 @@ Ver `Doc/diseno/clientes-ventas-reservas.md` §5 (S1: `staff`, Gates, rutas púb
 - 2026-11-27 (C1): la búsqueda guardada (`describe()`) va en la sesión `customer_search.<uniqid>` y se copia en `promocion.audience.<uniqid>` para el 「この条件で配信する」 de S3 (en el legacy compartían `wherestr_<uniqid>`). Pedido a S0: acordar una sola clave.
 - 2026-11-27 (C1): permisos comprobados en el servidor (alta 1001/2, edición 1001/3, borrar/recuperar 1001/4, CSV 1002/1); el legacy solo ocultaba botones. Recuperar comprueba el correo duplicado como `customer_recover_confirm.php`. ポイント管理/履歴 del menú con el Gate `clientes.ext-shop` (= `isExtShopDomain`).
 
+- 2026-11-27 (C2/R3): búsqueda guardada solo en `customer_search.<uniqid>` (quitada la copia a `promocion.audience.*`, acuerdo con S0/S3). Grupo y 来店動機 numeran con `createHatsuban` como el legacy; 顧客レベル con `hatuban`. El reparto de rangos suma `tb_point_log` + `tb_stamp_log` como el script legacy; S3 tenía previsto `promocion:customer-rank` para lo mismo: decidir uno (pedido a S0). El alta de reserva comprueba el aforo de la franja (`people`) con `lockForUpdate`; mover/cambiar desde el 予約表 no, como el legacy. Correo de reserva sin `md5(login_pass)`: enlace firmado a `publico.mypage.login` solo si S4 publica esa ruta.
+
 ## Hecho
+
+- 2026-11-27 C2: 表示・検索・CSV項目設定, 顧客追加情報設定 (categorías y campos), 顧客グループ, 来店動機, 顧客レベル, 顧客ランク設定 y 振り分け + comando `clientes:asignar-rangos` programado desde `admin_master`. R3: 予約 (alta en 3 pasos + correo), 時間選択, 顧客情報入力, `ajax_yoyaku_register`/`ajax_move_objs` (servicio `ReservationService`), AJAX de apoyo, 顧客関連づけ. 有料会員 (`ajax_changePaidMemberFlg`) con `MobileShopClient` de S5. Suite 546/547 (el fallo es una prueba de S3, `F1CouponsTest`, que pasa sola).
 
 - 2026-11-27 C1: 顧客一覧・検索 + CSV (standard, DM用), ficha con las 14 pestañas + personalizadas, borrar/recuperar/liberar tarjeta/borrar マイクーポン, alta/edición/confirmación/書き直す, 会員検索 de 紹介者; menú lateral `config/menu/clientes.php`; URL legacy en `routes/legacy/clientes.php`. 50 pruebas de pantalla; suite 442/442.
 
