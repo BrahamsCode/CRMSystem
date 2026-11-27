@@ -166,4 +166,5 @@ LegacyPdf::downloadView(string $filename, string $view, array $data = [], array 
 
 - `$config` pisa las opciones de mPDF (`format` 'A4-L' o `[ancho, alto]` en mm, `margin_*`…). `inline: true` = `Output(..., 'I')`; por defecto descarga (`'D'`).
 - Fuentes propias (IPAex, Noto): dejar los `.ttf` en `config('crm.pdf.font_dir')` (`CRM_PDF_FONT_DIR`, por defecto `storage/fonts`), declararlos en `crm.pdf.fonts` (ya están `ipaexg`/`ipaexm`) y elegir con `CRM_PDF_DEFAULT_FONT`. Solo se registran si el archivo existe; los archivos no van en git.
+- **IPAex para nombres** (decisión S0, 2026-11-27): la fuente por defecto (Sun-ExtA) sirve para todo el texto, pero en caracteres de nombres como 髙 (U+9AD9) o 﨑 no se distingue bien de 高/崎 (ver `Doc/qa/README.md`, «PDF con japonés»). Para etiquetas DM, 請求書/領収書 u otros PDF con nombres de clientes, instalar IPAex (ゴシック `ipaexg.ttf` / 明朝 `ipaexm.ttf`, licencia IPA, descarga en moji.or.jp) en `storage/fonts` del servidor y poner `CRM_PDF_DEFAULT_FONT=ipaexm` (o `ipaexg`) en su `.env`. El valor por defecto no cambia.
 - Temporales en `storage/framework/cache/mpdf`.
