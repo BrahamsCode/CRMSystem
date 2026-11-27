@@ -2,6 +2,7 @@
 
 namespace App\Services\Nucleo;
 
+use App\Http\Controllers\Admin\Nucleo\CategoryTopController;
 use App\Models\AdminMaster;
 use App\Models\BaseSystem;
 use App\Models\BaseSystemChild;
@@ -49,6 +50,20 @@ class LegacyUi
     public function categoryFromUrl(): ?int
     {
         return preg_match('#^system/category(\d+)(/|$)#', request()->path(), $m) ? (int) $m[1] : null;
+    }
+
+    /**
+     * Sufijo de la clase `pageCategory` del <body>, como Base::getSelectCategoryNo: el segundo tramo de la URL sin
+     * "category" (`/system/category1/…` → "1", `/system/select.php` → "select.php"). Las URL nuevas (`/admin/…`)
+     * usan la categoría del menú del módulo (`$fallback`).
+     */
+    public function pageCategory(?int $fallback = null): string
+    {
+        $segments = explode('/', request()->path());
+
+        return ($segments[0] ?? '') === 'system' && isset($segments[1])
+            ? str_replace('category', '', $segments[1])
+            : (string) $fallback;
     }
 
     /** Partes HTML que cambian entre la UI 1 (imágenes) y la 2 (texto): Base::createHtmlPart */
@@ -150,7 +165,8 @@ class LegacyUi
         if (! is_array($config)) {
             return null;
         }
-        $category = $config['category'] ?? null;
+        // Sin 'category' en el config, la del mapa de portadas (system/category<N>/index.php)
+        $category = $config['category'] ?? (array_search($key, CategoryTopController::MENUS, true) ?: null);
         $children = $category === null ? collect() : BaseSystemChild::query()->active((int) $category)->pluck('system_name')->values();
         $gate = $staff ? Gate::forUser($staff) : null;
         $allowed = fn ($can) => $can === null || ($gate && collect((array) $can)->contains(fn ($ability) => $gate->allows($ability)));
