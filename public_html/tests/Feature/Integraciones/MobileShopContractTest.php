@@ -36,6 +36,7 @@ beforeEach(function () {
         'services.mobileshop.domain_list' => 'test',
         'services.mobileshop.test_database' => null,
         'services.mobileshop.extlink_url' => 'http://127.0.0.1:9',
+        'services.mobileshop.extlink_enabled' => true, // encendido: la petición «sale» y Http::fake la hace fallar
         'services.mobileshop.extlink_pass' => '',
     ]);
 

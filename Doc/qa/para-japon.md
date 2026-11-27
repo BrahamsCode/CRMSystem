@@ -58,6 +58,7 @@ Base común (Antony, 2026-11-26): misma BD (`crm2019`) y misma UI que el legacy;
 - `member_complete.php` acepta el alta sin token si no hay sesión (`null == null`) — S5, `tests/Fixtures/integraciones/README.md` · **Propuesta:** exigir el token siempre.
 - El QR de socio solo está ofuscado (`LegacyPassword`, clave fija «わたしのかぎ»), no cifrado — S5, `app/Services/Integraciones/Appview/LegacyPassword.php` · **Propuesta:** firma HMAC si se cambian los lectores.
 - `tool/api` autentica con una clave fija (`CRM_API_KEY`) por parámetro — S5, `diseno/operaciones-integraciones.md` §6.4 · **Propuesta:** rotarla y pasarla por cabecera.
+- La API extlink de la tienda móvil (有料会員) se llama sin verificar el certificado TLS (`withoutVerifying()`, como `CURLOPT_SSL_VERIFYPEER false` del legacy). Fuera de producción no sale ninguna petición (interruptor `MOBILESHOP_EXTLINK_ENABLED`) — S5, `app/Services/Integraciones/MobileShop/HttpMobileShopClient.php` · **Propuesta:** verificar el certificado en cuanto se confirme que el servidor de extlink tiene uno válido.
 - `signage/view` (reproductor) es público — S4, `diseno/contenido-terminales.md` · **Propuesta:** limitar por terminal registrado.
 - Al borrar un display de 電子看板 sus materiales quedan huérfanos (como el legacy) — S4/S0, `coordinacion/S4-contenido.md`.
 

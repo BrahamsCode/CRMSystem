@@ -39,6 +39,8 @@ return [
         'api_user' => env('MOBILESHOP_API_USER'),
         'api_pass' => env('MOBILESHOP_API_PASS'),
         'extlink_url' => env('MOBILE_SHOP_EXTLINK_API_URL'),
+        // Interruptor de la API extlink (有料会員): apagado fuera de producción no sale ninguna petición (solo log)
+        'extlink_enabled' => (bool) env('MOBILESHOP_EXTLINK_ENABLED', env('APP_ENV') === 'production'),
         'extlink_pass' => env('MOBILESHOP_EXTLINK_PASS'),
         'domain_list' => env('MOBILESHOP_LIST'),
         'private_key_path' => env('MOBILESHOP_PRIVATE_KEY', base_path('../keys/private.pem')),

@@ -100,15 +100,29 @@ class HttpMobileShopClient implements MobileShopClient
         return ($this->domains->systemKey() ?? '').sprintf('%09d', (int) $customerId);
     }
 
+    /**
+     * URL de extlink, o '' si no hay o si el interruptor está apagado (`services.mobileshop.extlink_enabled`,
+     * MOBILESHOP_EXTLINK_ENABLED, por defecto solo en producción). Apagado se comporta como sin URL: no sale ninguna
+     * petición, no se toca tb_customer y solo queda en el log, igual que el interruptor común de g-api (App\Support\GApi).
+     */
     private function baseUrl(): string
     {
-        return (string) config('services.mobileshop.extlink_url');
+        $url = (string) config('services.mobileshop.extlink_url');
+        if ($url !== '' && ! config('services.mobileshop.extlink_enabled')) {
+            Log::info('extlink apagado (MOBILESHOP_EXTLINK_ENABLED): no se envía', ['url' => $url]);
+
+            return '';
+        }
+
+        return $url;
     }
 
     /** POST JSON; cualquier error de red o respuesta no JSON da null, como json_decode del error de cURL */
     private function post(string $url, array $data, ?string $token = null): ?object
     {
         try {
+            // Sin verificar el certificado, como el cURL del legacy (CURLOPT_SSL_VERIFYPEER false): se mantiene por
+            // paridad con el servidor de extlink; anotado en Doc/qa/para-japon.md
             $request = Http::timeout(30)->withoutVerifying()->asJson();
             if ($token !== null) {
                 $request = $request->withToken($token);
