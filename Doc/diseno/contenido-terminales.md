@@ -1,7 +1,7 @@
 # Diseño S4 — Contenido y terminales
 
-> Sesión S4 · rama `l13/contenido` · 2026-11-26. Módulos: `mypage` (マイページ管理), `web` (ホームページ管理), `terminales` (端末管理, category7), `senalizacion` (reproductores `signage/` y `digitalsignage/`).
-> Fuentes: `Doc/analisis-legacy/04-web-y-mypage.md`, `05-…` (category7), `08-…` (signage, digitalsignage); columnas legacy leídas con `pg_restore -s` de `crm2-php8/db/crm2019.backup`.
+> Sesión S4 · rama `l13/contenido` · 2026-11-26, rehecho el 2026-11-27 sobre la BD y la UI del legacy (CONVENCIONES §0). Módulos: `mypage` (マイページ管理), `web` (ホームページ管理), `terminales` (端末管理, category7), `senalizacion` (reproductores `signage/` y `digitalsignage/`).
+> Fuentes: `Doc/analisis-legacy/04-web-y-mypage.md`, `05-…` (category7), `08-…` (signage, digitalsignage); columnas en `public_html/database/schema/pgsql-schema.sql`.
 > **Alcance (S0, 2026-11-26):** touchcation y `system/category7/kiosk/` (`tb_nextouch_*`) **fuera**: no se usan. `hp/` no se migra: el contenido que solo leía `hp/` queda `descartado: sin consumidor`.
 
 ## 0. Criterios aplicados
@@ -9,26 +9,27 @@
 - **Vivo** = lo lee algo que sigue: la app (`api/mpa_*`, `appview`), los reproductores (`signage/view`, `digitalsignage`) o código interno (`cKujibiki`, cupones). Todo lo demás de category4/6 solo lo leía `hp/` → descartado.
 - Un solo código para lo que el legacy repite (las 5 pantallas マイコレ → un controlador por sección).
 - Los `*_register`, `*_delete_register`, AJAX e includes no son filas propias: se listan dentro de la fila de su pantalla (columna «Archivo legacy»).
-- Rutas de administración: `routes/modulos/<modulo>.php`, nombre `admin.<modulo>.*`. Rutas de dispositivos (reproductores): fuera del grupo `admin` (ver Pedidos).
+- Rutas de administración: `routes/modulos/<modulo>.php`, nombre `admin.<modulo>.*`. Rutas de dispositivos (reproductores): `routes/publico/senalizacion.php`.
+- Misma BD y misma UI que el legacy: modelos sobre las `tb_*` (§2), HTML y CSS del legacy (§2b).
 
 ## 1. Tabla de paridad
 
-> **Avance (2026-11-27):** capa de datos de los submódulos 1–5 hecha (migraciones `…_mypage_*` y `…_terminales_*`, modelos, enums, factories, `MypageSeeder`/`TerminalesSeeder` y `SignageFeedBuilder` con pruebas). Las pantallas siguen `pendiente` hasta que estén el layout y las rutas de admin de S1. Rutas de los reproductores: `routes/publico/senalizacion.php`, nombre `publico.senalizacion.*`.
+> Rutas de los reproductores: `routes/publico/senalizacion.php` (`publico.senalizacion.*`), fuera del grupo `admin`. Columna «Tablas»: las `tb_*` del legacy que lee o escribe la pantalla.
 
 ### 1.1 マイページ管理 — `mypage` (category6)
 
-| Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas nuevas | Estado |
+| Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas (legacy) | Estado |
 |---|---|---|---|---|---|
 | `category6/index.php`, `inc/page_control.php`, `inc/left_navi6.php` | マイページ管理 | `admin.mypage.index` | `Mypage\MenuController@index` | — | pendiente (menú en `config/menu/mypage.php`) |
-| `user_hp/mobile_mycolle_edit.php` + `ajax_apliFileUpload.php` | マイコレ管理 | `admin.mypage.app-images.edit` (`?section=`) | `Mypage\AppImageController@edit/update/upload/destroy` | `app_images`, `app_image_shop` | pendiente |
+| `user_hp/mobile_mycolle_edit.php` + `ajax_apliFileUpload.php` | マイコレ管理 | `admin.mypage.app-images.edit` (`?section=`) | `Mypage\AppImageController@edit/update/upload/destroy` | `contents_master` (`tb_c6_user_hp`: `aplicover`, `aplibanner`, `mainimage`, `apli_home_thumbnail`, `mypage_config`) + archivos `hp/uploads/c6/<carpeta>/` | pendiente |
 | `user_hp/mobile_mycolle_edit_coverflow.php` | カバーフロー画像設定管理 | `admin.mypage.app-images.edit` `section=cover` | ídem | ídem | pendiente |
 | `user_hp/mobile_mycolle_edit_banner.php` | バナー画像設定管理 | ídem `section=banner` | ídem | ídem | pendiente |
 | `user_hp/mobile_mycolle_edit_main.php` | HOMEメインイメージ管理 | ídem `section=main` | ídem | ídem | pendiente |
 | `user_hp/mobile_mycolle_edit_thumbnail.php` | サムネイル画像管理 | ídem `section=thumbnail` | ídem | ídem | pendiente |
-| `user_hp/mobile_hp_edit.php` (+ `ajax_change_pattern/pic`, `ajax_picupload`, `pic_config_function`, `base_color_function`) | マイページデザイン管理 | `admin.mypage.app-settings.edit` | `Mypage\AppSettingController@edit/update` | `app_settings` (solo `customer_group_display_flg`, `home_comment`) | pendiente **parcial**: solo la opción 「アプリで顧客グループを表示」 (`apli_customer_group_disp`, la lee `appview`) y el comentario HOME (`apli_home_comment`, `mpa_corresponding`). Plantillas/colores/imágenes de diseño: descartado: sin consumidor (`hp/user`) |
+| `user_hp/mobile_hp_edit.php` (+ `ajax_change_pattern/pic`, `ajax_picupload`, `pic_config_function`, `base_color_function`) | マイページデザイン管理 | `admin.mypage.app-settings.edit` | `Mypage\AppSettingController@edit/update` | `contents_master` (`apli_customer_group_disp`, `apli_home_comment`), `admin_master` (L) | pendiente **parcial**: solo la opción 「アプリで顧客グループを表示」 (`apli_customer_group_disp`, la lee `appview`) y el comentario HOME (`apli_home_comment`, `mpa_corresponding`). Plantillas/colores/imágenes de diseño: descartado: sin consumidor (`hp/user`) |
 | `user_hp/config.php`, `config_register.php` | ユーザーマイページ設定 | — | — | — | descartado: sin consumidor (`tb_hp_color` solo `hp/`) |
 | `user_hp/topics.php`, `topics_register.php`, `topics_delete_register.php`, `inc/upload_topics.php` | トピックス管理 | — | — | — | descartado: sin consumidor |
-| `user_hp/recommend.php`, `recommend_register.php`, `recommend_delete_register.php` | オススメ管理 | `admin.mypage.recommendations.*` (resource) | `Mypage\RecommendationController@index/store/update/destroy` | `recommendations` | pendiente (lo lee `appview/Util`; push en cola) |
+| `user_hp/recommend.php`, `recommend_register.php`, `recommend_delete_register.php` | オススメ管理 | `admin.mypage.recommendations.*` (resource) | `Mypage\RecommendationController@index/store/update/destroy` | `tb_hp_recommend`, `tb_mobile_navi` (L), `tb_shop` (L), `hatuban` | pendiente (lo lee `appview/Util`; push al host de `admin_master`) |
 | `user_hp/header.php`, `header_register.php`, `header_delete_register.php` | ヘッダ画像管理 | — | — | — | descartado: sin consumidor |
 | `user_hp/my_freepage_list.php` | フリーページ管理 | — | — | — | descartado: sin consumidor |
 | `user_hp/my_freepage.php`, `my_freepage_register.php`, `my_freepage_delete_register.php` | フリーページ記事管理 | — | — | — | descartado: sin consumidor |
@@ -42,19 +43,19 @@
 | `digital_catalog/digital_catalog_new.php` + `_frm`, `_register` | フォトギャラリー 新規登録 | — | — | — | descartado: sin consumidor (`hp/user/sc/digital_catalog`; `appview/photo_gallery` no lee estas tablas) |
 | `digital_catalog/digital_catalog_list.php` + `ajax_check_star`, `ajax_check_hyouji`, `_update`, `_delete` | 掲載一覧 | — | — | — | descartado: sin consumidor |
 | `digital_catalog/digital_catalog_tag.php` + `ajax_tag`, `ajax_search_tags` | カテゴリ管理 | — | — | — | descartado: sin consumidor |
-| `recruit/recruit_new.php` + `recruit_register.php`, `ajax_category.php` | 求人情報新規登録 | `admin.mypage.job-postings.create/store` | `Mypage\JobPostingController@create/store` | `job_postings` | pendiente (lo leen los XML de `digital_signage`: `floormap.xml`) |
-| `recruit/recruit_list.php` | 求人情報一覧 | `admin.mypage.job-postings.index` | `…@index` | ídem | pendiente |
+| `recruit/recruit_new.php` + `recruit_register.php`, `ajax_category.php` | 求人情報新規登録 | `admin.mypage.job-postings.create/store` | `Mypage\JobPostingController@create/store` | `tb_recruit`, `tb_recruit_category` (L), `tb_shop` (L), `hatuban` | pendiente (lo leen los XML de `digital_signage`: `floormap.xml`) |
+| `recruit/recruit_list.php` | 求人情報一覧 | `admin.mypage.job-postings.index` | `…@index` | `tb_recruit` | pendiente |
 | `recruit/recruit_detail.php` | 求人情報詳細 | `admin.mypage.job-postings.show` | `…@show` | ídem | pendiente |
 | `recruit/recruit_update.php`, `recruit_complete.php` | 求人情報修正 / 完了 | `admin.mypage.job-postings.edit/update` | `…@edit/update` | ídem | pendiente (el 完了 es el flash tras guardar) |
 | `recruit/recruit_delete.php` | 求人情報削除 | `admin.mypage.job-postings.destroy` | `…@destroy` | ídem | pendiente |
-| `recruit/recruit_category.php`, `_register`, `_delete` | 求人職種管理 | `admin.mypage.job-categories.*` | `Mypage\JobCategoryController@index/store/update/destroy` | `job_categories` | pendiente |
-| `kujibiki/kujibiki_config.php` | ガチャリン管理 各種設定 | `admin.mypage.lottery.edit/update` | `Mypage\LotterySettingController@edit/update` | `lottery_settings`, `lottery_prizes` | pendiente (lo lee `cKujibiki` / `category3/mycoupon`, S3) |
+| `recruit/recruit_category.php`, `_register`, `_delete` | 求人職種管理 | `admin.mypage.job-categories.*` | `Mypage\JobCategoryController@index/store/update/destroy` | `tb_recruit_category`, `hatuban` | pendiente |
+| `kujibiki/kujibiki_config.php` | ガチャリン管理 各種設定 | `admin.mypage.lottery.edit/update` | `Mypage\LotterySettingController@edit/update` | `contents_master` (`tb_c6_kujibiki`) | pendiente (lo lee `cKujibiki` / `category3/mycoupon`, S3) |
 
 ### 1.2 ホームページ管理 — `web` (category4)
 
 Todo category4 solo alimentaba `hp/` (sitio PC) → el módulo `web` queda **vacío** (sin rutas ni menú).
 
-| Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas nuevas | Estado |
+| Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas (legacy) | Estado |
 |---|---|---|---|---|---|
 | `category4/index.php` | ホームページ管理 | — | — | — | descartado: sin consumidor |
 | `contents/sitemap.php`, `sitemap_edit.php`, `sitemap_confirm.php`, `sitemap_register.php` | サイトマップ管理 | — | — | — | descartado: sin consumidor |
@@ -79,34 +80,34 @@ Todo category4 solo alimentaba `hp/` (sitio PC) → el módulo `web` queda **vac
 
 ### 1.3 端末管理 — `terminales` (category7)
 
-| Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas nuevas | Estado |
+| Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas (legacy) | Estado |
 |---|---|---|---|---|---|
 | `category7/index.php`, `inc/*` | 端末管理 | `admin.terminales.index` | `Terminales\MenuController@index` | — | pendiente |
-| `beacon/beacon_list.php` | ビーコン管理 | `admin.terminales.beacons.index` | `Terminales\BeaconController@index` | — (BD externa, conexión `beacon`) | pendiente — **bloqueado**: BD externa `b-develop.g-api.net` no responde |
+| `beacon/beacon_list.php` | ビーコン管理 | `admin.terminales.beacons.index` | `Terminales\BeaconController@index` | BD externa (conexión `beacon`) | pendiente — **bloqueado**: BD externa `b-develop.g-api.net` no responde |
 | `beacon/beacon_detail.php` + `ajax_beaconSave.php` | ビーコン詳細 | `admin.terminales.beacons.show/update` | `…@show/update` | — | pendiente (bloqueado, ídem) |
 | `beacon/terminal_list.php` | 受信端末一覧 | `admin.terminales.beacon-receivers.index` | `Terminales\BeaconReceiverController@index` | — | pendiente (bloqueado, ídem) |
 | `beacon/terminal_detail.php` + `ajax_terminalSave.php` | 受信端末詳細 | `admin.terminales.beacon-receivers.show/update` | `…@show/update` | — | pendiente (bloqueado, ídem) |
-| `card_signage/list.php` (+ `cPageControl`, descarga QR) | ペーパーサイネージ (カード管理) | `admin.terminales.paper-cards.index`, `…qr` | `Terminales\PaperCardController@index/qr` | `paper_cards` | pendiente |
+| `card_signage/list.php` (+ `cPageControl`, descarga QR) | ペーパーサイネージ (カード管理) | `admin.terminales.paper-cards.index`, `…qr` | `Terminales\PaperCardController@index/qr` | `tb_url_list`, `hatuban` | pendiente |
 | `card_signage/new.php` + `control.php` (`insert`) | ペーパーサイネージ 新規 | `admin.terminales.paper-cards.create/store` | `…@create/store` | ídem | pendiente |
 | `card_signage/edit.php` + `control.php` (`update`, `hyoujiOff`, `delete`) | ペーパーサイネージ 編集 | `admin.terminales.paper-cards.edit/update/stop/destroy` | `…@edit/update/stop/destroy` | ídem | pendiente |
-| `card_signage/aggregate.php` | 集計 | `admin.terminales.paper-cards.stats` | `Terminales\PaperCardStatsController@index` | — (lee `customers`) | pendiente |
+| `card_signage/aggregate.php` | 集計 | `admin.terminales.paper-cards.stats` | `Terminales\PaperCardStatsController@index` | `tb_url_list`, `url_transfer_data` (S5), `tb_customer` (L) | pendiente |
 | `card_signage/csv_output.php` | 集計CSV | `admin.terminales.paper-cards.stats.csv` | `…@csv` (StreamedResponse) | — | pendiente |
-| `digital_signage/screen_saver_list.php` | 放映素材管理 | `admin.terminales.signage-materials.index` | `Terminales\SignageMaterialController@index` | `signage_materials` | pendiente |
+| `digital_signage/screen_saver_list.php` | 放映素材管理 | `admin.terminales.signage-materials.index` | `Terminales\SignageMaterialController@index` | `tb_screensaver`, `tb_display` (L), `hatuban` | pendiente |
 | `digital_signage/screen_saver_new.php` + `_frm`, `_register`, `pic_up.php` | 放映素材 新規登録 | `…signage-materials.create/store` (+ `upload`) | `…@create/store/upload` | ídem | pendiente |
 | `digital_signage/screen_saver_detail.php` | 放映素材 詳細 | `…signage-materials.show` | `…@show` | ídem | pendiente (sin vista previa `.swf`) |
 | `digital_signage/screen_saver_update.php` | 放映素材 修正 | `…signage-materials.edit/update` | `…@edit/update` | ídem | pendiente |
 | `digital_signage/screen_saver_delete.php`, `_delete_complete.php` | 放映素材 削除 / 完了 | `…signage-materials.destroy` | `…@destroy` | ídem | pendiente |
-| `digital_signage/movie_program_list.php` | 放映プログラム管理 | `admin.terminales.signage-programs.index` | `Terminales\SignageProgramController@index` | `signage_programs`, `signage_material_signage_program`, `coupon_signage_program` | pendiente |
+| `digital_signage/movie_program_list.php` | 放映プログラム管理 | `admin.terminales.signage-programs.index` | `Terminales\SignageProgramController@index` | `tb_c7_movie_program`, `tb_screensaver` (L), `tb_dispaly_systems` (L), `tb_mycoupon_master` (L), `hatuban` + XML `hp/uploads/c7/display/<cd>.xml` | pendiente |
 | `digital_signage/movie_program_new.php` + `_frm`, `_register`, `xml_up.php` | 放映プログラム 新規登録 | `…signage-programs.create/store` | `…@create/store` | ídem | pendiente (corrige 最後に追加, ver Decisiones) |
 | `digital_signage/movie_program_detail.php` | 放映プログラム 詳細 | `…signage-programs.show` | `…@show` | ídem | pendiente |
 | `digital_signage/movie_program_update.php` | 放映プログラム 修正 | `…signage-programs.edit/update` (botón 「…選択中のディスプレイに反映する」) | `…@edit/update` | ídem | pendiente |
 | `digital_signage/movie_program_delete.php` | 放映プログラム 削除 | `…signage-programs.destroy` | `…@destroy` | ídem | pendiente |
-| `digital_signage/display_list.php` | ディスプレイ管理 | `admin.terminales.signage-displays.index` | `Terminales\SignageDisplayController@index` | `signage_displays`, `signage_display_signage_system`, `coupon_signage_display` | pendiente (tablas y modelos hechos) |
+| `digital_signage/display_list.php` | ディスプレイ管理 | `admin.terminales.signage-displays.index` | `Terminales\SignageDisplayController@index` | `tb_display`, `tb_c7_movie_program` (L), `tb_dispaly_systems` (L), `tb_mycoupon_master` (L), `hatuban` | pendiente |
 | `digital_signage/display_new.php` + `_frm`, `_register` | ディスプレイ 新規登録 | `…signage-displays.create/store` | `…@create/store` | ídem | pendiente |
 | `digital_signage/display_detail.php` | ディスプレイ 詳細 | `…signage-displays.show` | `…@show` | ídem | pendiente |
 | `digital_signage/display_update.php` | ディスプレイ 修正 | `…signage-displays.edit/update` | `…@edit/update` | ídem | pendiente |
 | `digital_signage/display_delete.php` | ディスプレイ 削除 | `…signage-displays.destroy` | `…@destroy` | ídem | pendiente |
-| `digital_signage/xml_info_up.php` | (floormap.xml) | — (servicio) | `Services\Terminales\SignageFeedBuilder::floormap()` | — (lee `job_postings`) | pendiente |
+| `digital_signage/xml_info_up.php` | (floormap.xml) | — (servicio) | `Services\Terminales\SignageFeedBuilder::floormap()` | `tb_shop`, `tb_recruit`, `tb_recruit_category` (L) → `floormap.xml` | pendiente |
 | `kiosk/movie_program_*` (7) | 映像管理 | — | — | — | descartado: touchcation fuera de alcance |
 | `kiosk/movie_program.php`, `ajax_movie_program.php`, `movie_program_frm_rAJAX.php` | 映像 editor | — | — | — | descartado: touchcation fuera de alcance |
 | `kiosk/movie_program_popPre.php` | プレビュー | — | — | — | descartado: touchcation fuera de alcance |
@@ -114,29 +115,29 @@ Todo category4 solo alimentaba `hp/` (sitio PC) → el módulo `web` queda **vac
 | `kiosk/screen_saver_*` (7) | 素材 | — | — | — | descartado: touchcation fuera de alcance |
 | `kiosk/pic_up.php`, `inc/*`, `xml_up.php`, `xml_info_up.php` | — | — | — | — | descartado: touchcation fuera de alcance |
 | `kiosk/obi_sample.php`, `wait_time_sample.php` | 帯/待ち時間サンプル | — | — | — | descartado: touchcation fuera de alcance |
-| `felica/terminal_list.php` + `ajax_del.php` (`tbNo=terminal`) | 端末管理 (FeliCa) | `admin.terminales.felica-terminals.index/sort/destroy` | `Terminales\FelicaTerminalController@index/sort/destroy` | — (usa `terminals` de S1) | pendiente |
-| `felica/card_list.php` + `ajax_del.php` (`tbNo=customer_card`) | カード管理 | `admin.terminales.felica-cards.index/assign/unassign/destroy` | `Terminales\FelicaCardController@…` | `felica_cards` | pendiente |
+| `felica/terminal_list.php` + `ajax_del.php` (`tbNo=terminal`) | 端末管理 (FeliCa) | `admin.terminales.felica-terminals.index/sort/destroy` | `Terminales\FelicaTerminalController@index/sort/destroy` | `tb_terminal` (modelo de S1) | pendiente |
+| `felica/card_list.php` + `ajax_del.php` (`tbNo=customer_card`) | カード管理 | `admin.terminales.felica-cards.index/assign/unassign/destroy` | `Terminales\FelicaCardController@…` | `tb_customer_card`, `tb_customer` (vía servicio de S2) | pendiente |
 | `felica/ajax_search_kaiin.php` | (búsqueda de socio) | `admin.terminales.felica-cards.customers` (JSON) | `…@searchCustomers` | — | pendiente |
 
 ### 1.4 Reproductores — `senalizacion` (`signage/`, `digitalsignage/`)
 
 **`signage/` (CMS web + reproductor).** Gestión dentro del admin; el reproductor conserva su URL.
 
-| Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas nuevas | Estado |
+| Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas (legacy) | Estado |
 |---|---|---|---|---|---|
 | `signage/index.php` | ホーム (現在表示中のサイネージ) | `admin.senalizacion.index` | `Senalizacion\HomeController@index` | — | pendiente |
-| `signage/list/terminal.php` | 端末一覧 | `admin.senalizacion.terminals.*` | `Senalizacion\TerminalController@index/store/update/destroy` | `web_signage_terminals` | pendiente |
-| `signage/list/packages.php` | パッケージ一覧 | `admin.senalizacion.packages.*` | `Senalizacion\PackageController@…` (crea los ciclos de cada marco) | `web_signage_packages` | pendiente |
-| `signage/list/cycle.php` | サイネージ管理 (ciclos) | `admin.senalizacion.cycles.edit/update` | `Senalizacion\CycleController@edit/update` | `web_signage_cycles` | pendiente |
-| `signage/list/contents_category.php` | 画像サイズ別一覧 | `admin.senalizacion.content-categories.*` | `Senalizacion\ContentCategoryController@…` | `web_signage_content_categories` | pendiente |
-| `signage/list/contents.php`, `contents_detail.php` | サイネージ管理 (画像) | `admin.senalizacion.contents.*` (`kind=image`) | `Senalizacion\ContentController@…` | `web_signage_contents` | pendiente |
+| `signage/list/terminal.php` | 端末一覧 | `admin.senalizacion.terminals.*` | `Senalizacion\TerminalController@index/store/update/destroy` | BD `admin`: `terminal` | pendiente |
+| `signage/list/packages.php` | パッケージ一覧 | `admin.senalizacion.packages.*` | `Senalizacion\PackageController@…` (crea los ciclos de cada marco) | BD `admin`: `packages`, `cycle` | pendiente |
+| `signage/list/cycle.php` | サイネージ管理 (ciclos) | `admin.senalizacion.cycles.edit/update` | `Senalizacion\CycleController@edit/update` | BD `admin`: `cycle`, `contents` | pendiente |
+| `signage/list/contents_category.php` | 画像サイズ別一覧 | `admin.senalizacion.content-categories.*` | `Senalizacion\ContentCategoryController@…` | BD `admin`: `contents_category` | pendiente |
+| `signage/list/contents.php`, `contents_detail.php` | サイネージ管理 (画像) | `admin.senalizacion.contents.*` (`kind=image`) | `Senalizacion\ContentController@…` | BD `admin`: `contents` / `movie_contents` | pendiente |
 | `signage/list/movie_contents.php`, `movie_contents_detail.php`, `movie_contents_category.php` | サイネージ管理 (動画) | `admin.senalizacion.contents.*` (`kind=video`) | ídem | ídem | pendiente (corrige el borrado de categoría, ver Decisiones) |
-| `signage/list/signage.php` | サイネージ管理 (ファイル) | `admin.senalizacion.files.store/destroy` | `Senalizacion\FileController@store/destroy` | `web_signage_files` | pendiente (lista blanca sin `swf`) |
+| `signage/list/signage.php` | サイネージ管理 (ファイル) | `admin.senalizacion.files.store/destroy` | `Senalizacion\FileController@store/destroy` | BD `admin`: `signage` | pendiente (lista blanca sin `swf`) |
 | `signage/list/inc/*`, `inc_flame_cd/*`, `inc_js/*` | (17 diseños de marco) | — | componentes Blade `resources/views/admin/senalizacion/layouts/*` | — | pendiente (fragmentos) |
 | `signage/view/index.php` + `view/h_*`, `v_*` | (pantalla) | `GET /signage/view/` y `/signage/view/index.php` (`?cd=`) — **público** | `Senalizacion\PlayerController@show` | — | pendiente |
 | `signage/view/ajax.php` | (sondeo de cambios) | `/signage/view/ajax.php` — público, JSON | `…@poll` | — | pendiente |
 | `signage/view/packages.php` | (vista previa de paquete) | `admin.senalizacion.packages.preview` | `Senalizacion\PackageController@preview` | — | pendiente |
-| `signage/mail/index.php` | GoTel管理 (お問い合わせ) | `admin.senalizacion.contact.create/store` | `Senalizacion\ContactController@create/store` | `web_signage_contacts` | pendiente (confirmar uso; Mailable en cola) |
+| `signage/mail/index.php` | GoTel管理 (お問い合わせ) | `admin.senalizacion.contact.create/store` | `Senalizacion\ContactController@create/store` | BD `admin`: `contact`, `customer` | pendiente (confirmar uso; Mailable en cola) |
 | `signage/pdf/invoice.php` | 請求書 | `admin.senalizacion.invoices.show` | `Senalizacion\BillingPdfController@invoice` | — | pendiente (confirmar uso; PDF del paquete de S1) |
 | `signage/pdf/receipt.php` | 領収書 | `admin.senalizacion.receipts.show` | `…@receipt` | — | pendiente (ídem) |
 | `signage/inc/*`, `basic_authentication.php` | (núcleo, login `?s=`) | — | sesión del admin + Gate `manageSignage` | — | pendiente (reemplazado) |
@@ -145,225 +146,156 @@ Todo category4 solo alimentaba `hp/` (sitio PC) → el módulo `web` queda **vac
 
 **`digitalsignage/` (Flash → HTML5, mismo contrato).**
 
-| Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas nuevas | Estado |
+| Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas (legacy) | Estado |
 |---|---|---|---|---|---|
-| `digitalsignage/index.php` → `index2.php` | digital signage | `GET /digitalsignage/`, `/digitalsignage/index.php`, `/index2.php` (`?shop_cd=&display_cd=`) — público | `Senalizacion\DigitalPlayerController@show` | — (lee `signage_*`) | pendiente (reproductor HTML5 que lee el mismo XML; orientación por `terminal_type`) |
+| `digitalsignage/index.php` → `index2.php` | digital signage | `GET /digitalsignage/`, `/digitalsignage/index.php`, `/index2.php` (`?shop_cd=&display_cd=`) — público | `Senalizacion\DigitalPlayerController@show` | `tb_display`, `tb_c7_movie_program` (L) | pendiente (reproductor HTML5 que lee el mismo XML; orientación por `terminal_type`) |
 | `hp/uploads/c7/display/<cd>.xml` (generado por `xml_up.php`) | (programa XML) | `GET /hp/uploads/c7/display/{cd}.xml` — público | `Senalizacion\DigitalFeedController@program` | — | pendiente (misma forma XML `<p cd time title …>`) |
 | `ajax_xml_check.php`, `ajax_xml_check_2.php` | (sondeo XML) | mismas URL — público | `Senalizacion\DigitalPollController@xml` | — | pendiente (responde `<script>` igual que hoy) |
 | `ajax_display_config_check.php`, `_2.php` | (sondeo config) | mismas URL | `…@displayConfig` | — | pendiente |
 | `ajax_network_check.php` | (red) | misma URL | `…@network` (texto `確認できました`) | — | pendiente |
-| `ajax_print_coupon_crawl.php`, `ajax_print_coupon_craw_2l.php` | (cupón impreso por visita) | mismas URL | `Senalizacion\CouponCrawlController@visit` | — (lee `visits`, `coupons`, `shops`) | pendiente |
+| `ajax_print_coupon_crawl.php`, `ajax_print_coupon_craw_2l.php` | (cupón impreso por visita) | mismas URL | `Senalizacion\CouponCrawlController@visit` | `tb_raiten_rireki`, `tb_mycoupon_master`, `tb_shop` (L) | pendiente |
 | `ajax_touch_print_coupon_crawl*.php` | (cupón táctil) | mismas URL | `…@touch` | — | pendiente |
 | `ajax_shinkyaku_print_coupon_crawl*.php` | (cupón cliente nuevo) | mismas URL | `…@newCustomer` | — | pendiente |
 | `ajax_kaiin_raiten_print_coupon_crawl.php` | (cupón socio por visita) | misma URL | `…@memberVisit` | — | pendiente |
 | `ajax_Mujyouken_print_coupon_crawl_2.php` | (cupón sin condición) | misma URL | `…@unconditional` | — | pendiente |
-| `ajax_kaiin_mycoupon_print_crawl.php` | (cupón del socio, marca impreso/usado) | misma URL | `…@memberCoupon` | — (escribe `coupon_customer` de S3 vía su servicio) | pendiente |
+| `ajax_kaiin_mycoupon_print_crawl.php` | (cupón del socio, marca impreso/usado) | misma URL | `…@memberCoupon` | `tb_mycoupon*` vía `CouponIssuer` de S3 | pendiente |
 | `roulette.php` (+ `.swf`, `tig_game/`) | ルーレット | `/digitalsignage/roulette.php` | `Senalizacion\DigitalGameController@roulette` | — | pendiente (rehacer en HTML5/Canvas) |
 | `slot.php` (+ `.swf`) | スロット | `/digitalsignage/slot.php` | `…@slot` | — | pendiente (ídem) |
-| `fla/floormap/ajax_print_crawl.php` | (mapa de planta + 求人) | misma URL | `Senalizacion\DigitalFeedController@floormap` | — (lee `job_postings`, `coupons`) | pendiente |
+| `fla/floormap/ajax_print_crawl.php` | (mapa de planta + 求人) | misma URL | `Senalizacion\DigitalFeedController@floormap` | `tb_recruit*`, `tb_mycoupon_master`, `tb_shop` (L) | pendiente |
 | `fla/immovables/getFlash.php`, `html/immovables/*` (6) | 不動産 | — | — | — | descartado: micro-sitio de otro sistema (`tb_madori`, `tb_item` no están en el CRM) y `index.php` roto en el legacy |
 | `html/recipe/index.php`, `recipe_detail.php` | レシピ | — | — | — | descartado: contenido estático de demostración, sin datos; se rehace solo si el cliente lo pide |
 
-## 2. Esquema (tablas nuevas)
+## 2. Datos: tablas del legacy y modelos
 
-Todas: `id()` (bigserial), `text` en vez de `varchar`, `smallint` con comentario + enum en vez de booleanos, `status` default 1, `timestamps()`, `softDeletes()` (reemplaza `disp_flg='9'`). Códigos legacy (CONVENCIONES §4): `id = cd` en las tablas cuyo `cd` sale en un contrato (`signage_displays`, `signage_programs`, `signage_materials`, `web_signage_terminals`); `legacy_cd` + discriminador solo en `web_signage_contents` (fusiona dos tablas); el resto se resuelve con `legacy_id_map` del importador de S1. `tb_shop_cd` nulo/0 = 全店舗 → `shop_id` nulo. Fechas texto/epoch → `timestamp`/`date` con Carbon al importar. `hyouji_flg` (表示/非表示, 停止) → `status` (`0` inactivo, `1` activo); no hay `display_flg`.
+Base (CONVENCIONES §0 y §4): **la BD es la del legacy** (`database/schema/pgsql-schema.sql`), sin tablas nuevas, sin mapeo ni importador. Un modelo Eloquent por tabla: `$table` = la `tb_*`, `$primaryKey = 'cd'`, `$timestamps = false` (las fechas son `touroku_date`/`update_date` en texto o epoch, se escriben como el legacy), columnas con su nombre legacy, numeración con `hatuban` (servicio de S1) y borrado lógico `disp_flg = '9'` (scope/trait de S1, no SoftDeletes). Banderas (`hyouji_flg`, `pic_flg`, `disp_conf`…) con sus valores legacy, nombradas con constantes. Las listas `<>` y `||` se siguen guardando igual; los modelos dan accesores que las parten y las unen.
 
-### 2.1 `mypage`
+### 2.1 Modelos de S4
 
-**`app_images`** — reemplaza `contents_master` `aplicover|aplibanner|mainimage|apli_home_thumbnail` + archivos numerados en `hp/uploads/c6/<campo>/` + `mypage_config` serializado.
+| Modelo (`app/Models/`) | Tabla | Claves y columnas relevantes | Relaciones | Lo leen además |
+|---|---|---|---|---|
+| `Recommendation` | `tb_hp_recommend` | `cd`; `tb_shop_cd` (0/null = 全店舗), `disp_date` (`Y/m/d` texto), `title`, `naiyou`, `link`, `link_type`, `img_flg`, `img_type`, `pic_link`, `hyouji_flg` (`1` 表示; `9` se excluye en la app), `update`, `disp_flg` | `shop()` → `Shop` (`tb_shop_cd`) | S5 (`appview`: últimos 20, `tb_shop_cd IN (tienda, 0)`) |
+| `Recruit` | `tb_recruit` | `cd`; `tb_shop_cd`, `boshu_headline`, `boshu_shokushu` (→ `tb_recruit_category.cd`), `shigoto_naiyou`, `koyou_keitai`, `oubo_shikaku`, `kinmu_chi`, `kinmu_jikan`, `kyuyo`, `kyuka`, `taigu`, `pic_flg1`, `pic_flg2`, `kaisha_name`, `add`, `tel`, `fax`, `jigyou_naiyou`, `oubo_houhou`, `mensetsuchi`, `tantou`, `touroku_date`, `update_date`, `disp_flg` | `shop()`, `category()` → `RecruitCategory` | `SignageFeedBuilder` (floormap) |
+| `RecruitCategory` | `tb_recruit_category` | `cd`; `tb_shop_cd`, `shokushu`, `disp_flg` (`1` vigente), fechas | `recruits()` | — |
+| `SignageDisplay` | `tb_display` | `cd` (= `display_cd` del reproductor); `tb_shop_cd`, `name`, `comment`, `terminal_id`, `terminal_type` (`<>`), `disp_conf`, `tb_c7_movie_program_cds` (el formulario elige uno), `tb_dispaly_systems_cds`, `tb_mycoupon_master_cds` (`<>`), `act_flg`, `kaiin_flg`, `rank`, `update_date` (lo sondea el reproductor), `disp_flg` | `program()` (primer cd de `tb_c7_movie_program_cds`), `materials()` (`tb_screensaver.tb_display_cd`) | reproductor `digitalsignage` |
+| `SignageProgram` | `tb_c7_movie_program` | `cd` (= nombre del XML); `tb_shop_cd`, `name`, `comment`, `terminal_id`, `terminal_type`, `disp_conf` (`1` 放映ファイル選択, `2` システム内蔵), `tb_screensaver_cds` (`<>`, orden de reproducción), `tb_dispaly_systems_cds`, `tb_mycoupon_master_cds`, `feli_…`, `mypage_…`, `system_tb_mycoupon_master_cds`, `act_flg`, `kaiin_flg`, `feli_act_flg`, `mypage_act_flg`, `telop_comment`, `vertical_setting`, `rank`, fechas, `disp_flg` | `materials()` (por `tb_screensaver_cds` en orden) | `SignageFeedBuilder`, reproductor |
+| `SignageMaterial` | `tb_screensaver` | `cd` (sale en el XML); `tb_shop_cd`, `tb_display_cd`, `title`, `comment`, `filetype` (texto: 画像ファイル / FLVファイル / SWFファイル), `pic_flg` y `pic_extension` (`<>` por hueco), `play_frame_sec`, `type_flg`, `data`, `select_flg`, `categorize_value_0`, `rank` (先頭に追加 = 0, 最後に追加 = max+1 por display), fechas, `disp_flg` | `display()` | `SignageFeedBuilder` |
+| `SignageSystem` | `tb_dispaly_systems` (sic) | `cd`; `tb_shop_cd`, `name`, `system_type`, `system_flg`, `non_coupon_flg`, `rank`, `disp_flg` | — | — |
+| `PaperCard` | `tb_url_list` | `cd` (integer); `id` (código único entre `disp_flg = '1'`; vacío → `CRM` + cd en 9 dígitos), `url`, `title`, `hyouji_flg` (`hyoujiOff` = 停止), `disp_flg` | `accesses()` → `PaperCardAccess` de S5 | S5 (`ptag`: busca por `id`, solo con `hyouji_flg` activo) |
+| `FelicaCard` | `tb_customer_card` | `cd`; `tb_shop_cd`, `tb_terminal_cd`, `tb_customer_cd`, `tb_staff_cd`, `cid` (IDm), `typ`, `typ_exp`, `type` (`PHP_SELF` del lector), `terminal_no`, `flg`, `point`, `lost`, `comment`, fechas. `name` existe pero ningún código lo escribe: el filtro 会員名 busca en `tb_customer` | `customer()` → `Customer` (S2), `terminal()` → `Terminal` (S1), `shop()` | S2 (UID解除 llama a `FelicaCardService::unassign`) |
+| `BeaconHistory` | `tb_beacon_history` | `cd`; `beacon_cd`, `tb_customer_id`, `tb_shop_cd`, `touroku_date` | — | S5 (`mpa_setraiten`) |
 
-| Columna | Tipo | Origen legacy |
+Beacons y sus terminales receptores: modelos `Beacon` y `BeaconReceiver` con `$connection = 'beacon'` sobre la BD externa (tablas por confirmar cuando haya acceso).
+
+### 2.2 Tablas de otros dueños que S4 usa
+
+| Tabla | Modelo (dueño) | Uso en S4 |
 |---|---|---|
-| `section` | smallint | `1` cover (`aplicover`), `2` banner (`aplibanner`), `3` main (`mainimage`, `home_image_flg`), `4` thumbnail (`apli_home_thumbnail`, `home_thum_flg`) — enum `AppImageSection` |
-| `position` | integer | índice del hueco (nº de archivo / posición en `text_data` separado por `||`) |
-| `path` | text | ruta en `Storage::disk('public')` (`mypage/app-images/<section>/<position>.<ext>`) |
-| `link_url` | text null | `text_data` (`||`) del hueco |
-| `banner_mode` | smallint null | solo banner: `1` デフォルト選択, `2` 自由選択 (`cell_status`) |
-| `all_shops_flg` | smallint | `mypage_config[sección][hueco][0]` (`1` = 全店舗) |
-| `status`, timestamps, softDeletes | | |
+| `contents_master` | `ContentsMaster` (S1) | Config de マイコレ (`category='tb_c6_user_hp'`, `field` = `aplicover`, `aplibanner`, `mainimage`, `apli_home_thumbnail`: enlaces `||` en `text_data`; `mypage_config`: `serialize()` de `[sección][hueco][shop_cd] = 1`, `cell_status`, `cell_img`, `comment_flg`, `home_image_flg`, `home_thum_flg`; `apli_home_comment`, `apli_customer_group_disp`) y de ガチャリン (`category='tb_c6_kujibiki'`: `kujibiki_disp_flg`, `_max`, `_limit_flg`, `_dia/gold/silver/bronze_num|rate`, `prize_count`, `_enter`, `_form`…). Lectura y escritura a través de un servicio de S4 (`MypageConfig`, `LotteryConfig`) sobre el modelo de S1. `mypage_config` se lee con `unserialize(…, ['allowed_classes' => false])` y se guarda con `serialize()` como el legacy (lo leen `mpa_*`) |
+| `admin_master` | `AdminMaster` (S1) | `application_use_flg`, `push_api_host` (push de オススメ) |
+| `tb_shop` | `Shop` (S1) | Filtro por tienda; `floor_name`, `service_kubun`, `kaishamei`, `kaishamei_kana`, `kaisha_data` para `floormap.xml` |
+| `tb_terminal` | `Terminal` (S1) | Lista ICカード 端末管理: orden `rank` (▼▲) y borrado |
+| `tb_customer` | `Customer` (S2) | Asignar/quitar tarjeta: `CustomerFelicaService::attach/detach` (nunca se escribe `felica_no` directo); búsqueda de socio; 集計 |
+| `tb_mycoupon_master` | `Coupon` (S3) | Cupones de programas/displays y cupones impresos (`CouponIssuer::markPrinted/markUsed`) |
+| `tb_raiten_rireki` | `Visit` (S2) | Sondeo de cupones impresos por visita (`digitalsignage`) |
+| `url_transfer_data` | `PaperCardAccess` (S5) | 集計 de ペーパーサイネージ |
+| `tb_mobile_navi` | (S1 o S4, ver Pedidos) | Nombre del menú de オススメ |
+| `hatuban` | servicio de numeración (S1) | Alta de todos los registros |
 
-**`app_image_shop`** (`app_image_id`, `shop_id`, `id`) — `mypage_config[sección][hueco][shop_cd] = 1`.
+### 2.3 Archivos
 
-**`app_settings`** (fila única, `id = 1`): `customer_group_display_flg` smallint (`apli_customer_group_disp`), `home_comment` text (`apli_home_comment`), `home_comment_flg` smallint (`mypage_config['comment_flg']`). Tabla del módulo (CONVENCIONES §4: configuración por módulo).
+Imágenes y XML en el disco `public` de Storage con **la misma ruta relativa que el legacy** (`hp/uploads/c6/<carpeta>/<archivo>`, `hp/uploads/c6/user_hp/recommend/<cd>/`, `hp/uploads/c7/...`, `hp/uploads/c7/display/<cd>.xml`, `floormap.xml`); los sirve la redirección genérica `/hp/uploads/{path}` de S1. Así no cambian las URL que devuelven `mpa_*`/`appview` (con `?r=<mtime>`) ni las que lee el reproductor.
 
-**`recommendations`** ← `tb_hp_recommend`
+### 2.4 `signage/` (BD `admin`)
 
-| Columna | Tipo | Origen |
-|---|---|---|
-| `shop_id` | bigint null FK | `tb_shop_cd` (0/null → null) |
-| `published_on` | date | `disp_date` (`Y/m/d` texto) |
-| `title` | text | `title` |
-| `body` | text null | `naiyou` |
-| `link_url` | text null | `link` (admite `tel:`) |
-| `link_type` | smallint null | `link_type` |
-| `image_path` | text null | `img_flg` + archivo `hp/uploads/c6/user_hp/recommend/{cd}/` |
-| `image_type` | smallint null | `img_type` |
-| `image_link_url` | text null | `pic_link` |
-| `push_flg` | smallint | (formulario `push`; no se guardaba) `0`/`1` |
-| `status` | smallint | `hyouji_flg` (`1` 表示, otro → `0`); `disp_flg='9'` → softDelete |
-| `updated_at` | | `update` |
+Las tablas de `signage/` (`terminal`, `packages`, `cycle`, `contents`, `contents_category`, `movie_contents`, `signage`, `customer`, `shop`, `contact`) viven en otra BD (`admin`, no `crm2019`) y **no están** en `pgsql-schema.sql`. **Pregunta a S0:** ¿conexión adicional `admin` (esquema de esa BD) o se agregan sus tablas al esquema? Hasta la respuesta, el submódulo 7 queda bloqueado. Sus modelos serían `SignageWebTerminal`, `SignageWebPackage`, `SignageWebCycle` (`img_path_ary`/`action_ary` con `serialize()`: se leen con `allowed_classes => false`), `SignageWebContent`, `SignageWebContentCategory`, `SignageWebMovieContent`, `SignageWebFile`, `SignageWebContact`.
 
-**`job_categories`** ← `tb_recruit_category`: `shop_id` (`tb_shop_cd`), `name` (`shokushu`), `created_at` (`touroku_date`), `updated_at` (`update_date`), `deleted_at` (`disp_flg='9'`).
+## 2b. UI
 
-**`job_postings`** ← `tb_recruit`
+Mismo HTML (mismas clases e ids) y mismos CSS que el legacy, copiados al Blade (`resources/views/admin/<modulo>/`), dentro del layout de S1 con la cabecera y el menú lateral del legacy. Estáticos comunes desde `public/legacy/` (S1). JS por pantalla, con jQuery 3.7.1 + compat del legacy:
 
-| Columna | Origen | Columna | Origen |
-|---|---|---|---|
-| `shop_id` | `tb_shop_cd` | `holidays` | `kyuka` |
-| `status` | `disp_flg` (`9` → softDelete) | `benefits` | `taigu` |
-| `job_category_id` | `boshu_shokushu` (vía `legacy_id_map`) | `image1_path`, `image2_path` | `pic_flg1`, `pic_flg2` + archivo |
-| `headline` | `boshu_headline` | `company_name` | `kaisha_name` |
-| `description` | `shigoto_naiyou` | `street_address` | `add` |
-| `employment_type` | `koyou_keitai` (texto libre) | `tel` | `tel` |
-| `requirements` | `oubo_shikaku` | `fax` | `fax` |
-| `work_location` | `kinmu_chi` | `business_description` | `jigyou_naiyou` |
-| `work_hours` | `kinmu_jikan` | `how_to_apply` | `oubo_houhou` |
-| `salary` | `kyuyo` (texto) | `interview_location` | `mensetsuchi` |
-| `contact_person` | `tantou` | `created_at` / `updated_at` / `deleted_at` | `touroku_date` / `update_date` / `disp_flg='9'` |
-
-**`lottery_settings`** (fila única) ← `contents_master` `category='tb_c6_kujibiki'`: `enabled_flg` (`kujibiki_disp_flg`), `max_tries` (`kujibiki_max`), `limit_flg` (`kujibiki_limit_flg`), `prize_count` (`prize_count`), `name` (`kujibiki_name`), `image_path` (`kujibiki_img`), más las variantes de entrada `enabled_on_enter_flg`, `max_tries_on_enter`, `limit_on_enter_flg`, `rate_on_enter`, `limit_on_form_flg`, `rate_on_form` (`*_enter`, `*_form`). **`lottery_prizes`**: `rank` smallint (enum `LotteryRank` existente: 1 diamante…4 bronce), `quantity` (`kujibiki_<r>_num`), `rate` numeric(5,2) (`kujibiki_<r>_rate`). La probabilidad de ハズレ se calcula (complemento), no se guarda. `kujibiki_count`/`kujibiki_log` son registros de uso: los lleva S3 (sorteo).
-
-### 2.2 `terminales`
-
-**`paper_cards`** ← `tb_url_list`: `code` text (`id`; único entre no borrados; vacío → `CRM` + `cd` 9 dígitos), `url`, `title`, `status` (`hyouji_flg`; `hyoujiOff` = 停止 = `0`; `ptag` de S5 solo redirige con `status = 1`), `deleted_at` (`disp_flg='9'`). Índice único parcial `code WHERE deleted_at IS NULL`. S5 crea `paper_card_accesses` (FK a `paper_cards`); el 集計 une `paper_card_accesses` con `customers` (modelo `PaperCardAccess` de S5) y su CSV sale en SJIS-win.
-
-**`felica_cards`** ← `tb_customer_card`
-
-| Columna | Origen |
+| Pantallas | JS / CSS del legacy |
 |---|---|
-| `shop_id` / `terminal_id` | `tb_shop_cd` / `tb_terminal_cd` (FK a tablas de S1) |
-| `customer_id` | `tb_customer_cd` (unique parcial: un socio = una tarjeta) |
-| `staff_id` | `tb_staff_cd` (sin FK hasta que S1 tenga `staff`) |
-| `felica_no` | `cid` (IDm que escribe el lector; `tid` está comentado en el legacy) |
-| `card_id`, `card_type`, `card_type_expiry`, `card_status` | `cid`, `typ`, `typ_exp`, `sts` |
-| `comment` | `comment` |
-| `point`, `lost_flg` | `point`, `lost` |
-| `source_path` | `type` (el legacy guarda ahí `PHP_SELF` del lector, texto) |
-| `expires_on` | `limit_date` |
-| `terminal_no` | `terminal_no` (androidId del lector) |
-| `created_at`/`updated_at` | `touroku_date`/`update_date` |
+| マイコレ (5) | `category6/user_hp/js/imageselect.js`, diálogos jQuery UI (`/system/js/jquery-ui-dialog-compat.js`), subida AJAX (endpoint JSON que reemplaza `ajax_apliFileUpload.php`) |
+| マイページデザイン管理 (parcial) | `pic_upload.js` no hace falta: solo quedan dos opciones de formulario |
+| オススメ | `category6/user_hp/js/staff_entry.js`, `/system/js/ajaxupload-3.5.js`, `/system/js/jquery.snspost.js` |
+| 求人 | `category6/recruit/js/item_entry.js`, `/system/js/ajaxupload-3.5.js` (AJAX de 職種) |
+| ガチャリン | `/system/plugin/ui-datepicker/` (`ui.datepicker.css`, `ui.datepicker-ja.js`, `gcalendar-holidays.js`) |
+| ペーパーサイネージ | `/system/js/popupwindow-1.8_vizan.js` + `/system/css/popupwindow.css`; 集計: `/system/js/highcharts.js` |
+| 電子看板 (素材, プログラム, ディスプレイ) | `category7/digital_signage/js/drag_io.js`, `user.js`, `jquery-ui-1.8rc3.custom.min.js` (sortable; usar el jQuery UI común si el compat alcanza), `/system/js/popupwindow-1.8_vizan.js`, `/system/js/query-image-preview.js` + `.css` |
+| ICカード | `category7/felica/js/drag_io.js`, `user.js`, `jquery.colorbox.js` + `css/colorbox.css`, `css/add.css` |
+| `digitalsignage` (reproductor) | HTML5 nuevo en lugar de `digitalsignage.swf` (ruleta y tragaperras en Canvas); mismo polling JS a `ajax_xml_check*.php` / `ajax_display_config_check*.php` |
+| `signage/` | CSS/JS propios de `signage/` (`list/inc_js/*`, diseños `view/h_*`, `v_*`) |
 
-`tb_customer_card.name` no se migra: ningún código lo escribe (el lector solo inserta `cd` y actualiza `cid`, `typ`, `typ_exp`, `terminal_no`, `type`); el filtro 会員名 de カード管理 busca por el nombre del socio (`customers.last_name`/`first_name`). El borrado legacy es físico: aquí softDelete y `CustomerFelicaService::detach()` de S2 (nunca se escribe `customers.felica_no` directo). `FelicaCardService::unassign()` lo publica S4 para el UID解除 de la ficha de S2.
-
-**`signage_systems`** ← `tb_dispaly_systems` (catálogo de 「システム」 que muestra la pantalla): `shop_id`, `name`, `system_type` smallint, `system_flg` smallint, `non_coupon_flg`, `sort` (`rank`).
-
-**`signage_materials`** ← `tb_screensaver`
-
-| Columna | Origen |
-|---|---|
-| `id` | `cd` (sale en el XML: `<p cd=…>`) |
-| `shop_id` | `tb_shop_cd` |
-| `title`, `comment` | `title`, `comment` |
-| `file_type` | smallint `filetype` (texto japonés: 1 画像ファイル, 2 FLVファイル, 3 SWFファイル) — enum `SignageFileType`, que devuelve el texto para el XML |
-| `images` | jsonb `[{flg, ext, path}]` desde `pic_flg`/`pic_extension` (`<>`) → Storage `signage/materials/` |
-| `material_type`, `data`, `select_flg` | `type_flg`, `data`, `select_flg` |
-| `duration_seconds` | integer `play_frame_sec` |
-| `select_flg` | `select_flg` |
-| `category_value` | `categorize_value_0` |
-| `sort` | `rank` |
-| `signage_display_id` | `tb_display_cd` (null si 0) |
-
-**`signage_programs`** ← `tb_c7_movie_program`: `id` = `cd` (nombre del XML), `shop_id`, `name`, `comment`, `terminal_code` (`terminal_id`), `terminal_types` jsonb (`terminal_type` `<>`), `sort` (`rank`), `action_flg` (`act_flg`), `member_flg` (`kaiin_flg`), `felica_action_flg` (`feli_act_flg`), `mypage_action_flg` (`mypage_act_flg`), `content_mode` (`disp_conf`: 1 放映ファイル選択 → XML con materiales, 2 システム内蔵 → XML vacío), `ticker_text` (`telop_comment`), `vertical_setting`, timestamps (`touroku_date`/`update_date`; `updated_at` es lo que sondea el reproductor).
-
-**`signage_material_signage_program`** (pivote) ← `tb_screensaver_cds` (`<>`): `signage_program_id`, `signage_material_id`, `position` (orden de la lista), `id`. **`signage_program_signage_system`** ← `tb_dispaly_systems_cds` del programa.
-
-**`coupon_signage_program`** (pivote) ← `tb_mycoupon_master_cds`, `feli_…`, `mypage_…`, `system_…` (`<>`): `coupon_id`, `signage_program_id`, `usage` smallint (`1` general, `2` felica, `3` mypage, `4` system), `position`.
-
-**`signage_displays`** ← `tb_display`: `id` = `cd` (`display_cd` del reproductor), `shop_id`, `signage_program_id` (`tb_c7_movie_program_cds`: el formulario elige un solo programa), `name`, `comment`, `terminal_code` (`terminal_id`), `terminal_types` jsonb (`terminal_type` `<>`), `sort` (`rank`), `content_mode` (`disp_conf`), `action_flg`, `member_flg`, timestamps. Pivotes **`signage_display_signage_system`** (`tb_dispaly_systems_cds`) y cupones en `coupon_signage_display` (`tb_mycoupon_master_cds`).
-`tb_master_cd` (todas): no se usa en ninguna pantalla vigente → no se migra.
-
-**FeliCa / terminales:** `tb_terminal` → `terminals` (S1). Columnas que necesito (pedido): `sort` (`rank`), `terminal_no`, `model`, `type`, `comment`. Beacons: sin tablas (BD externa).
-
-### 2.3 `senalizacion` (`signage/`, BD `admin`)
-
-Se importan desde la BD `admin` a tablas propias del CRM (no conexión adicional).
-
-| Tabla nueva | Origen | Columnas |
-|---|---|---|
-| `web_signage_terminals` | `terminal` | `id` = `cd` (lo usa `view/?cd=`), `name`, `web_signage_package_id` (`packages_cd`), `orientation` smallint (`display_direction`: 1 縦, 2 横), `screen_count` (`display_number`), `layout` text (`display_type` = nombre del diseño `h_*`/`v_*`), `status` (`flg`) |
-| `web_signage_packages` | `packages` | `name`, `orientation`, `screen_count`, `layout` |
-| `web_signage_cycles` | `cycle` | `web_signage_package_id`, `frame_no` (`flame_cd`), `items` jsonb (`img_path_ary` + `action_ary` **unserialize en el importador, con `allowed_classes=false`** → `[{content_id, action}]`), `repeat_type` smallint (`schedule_repeat_type`: 1 siempre, 2 franja diaria, 3 rango de fechas), `starts_at`/`ends_at` (`schedule_start_time`/`_end_time`; tipo 2 se guarda como `time`: columnas `daily_start`, `daily_end`), `status` |
-| `web_signage_content_categories` | `contents_category` | `width`, `height`, `name` |
-| `web_signage_contents` | `contents` + `movie_contents` | `legacy_cd` + `kind` (discriminador), `kind` smallint (1 imagen, 2 vídeo), `web_signage_content_category_id`, `name`, `path` (Storage `signage/web/<w>x<h>/<cd>.<ext>`) |
-| `web_signage_files` | `signage` | `name`, `path`, `mime` |
-| `web_signage_contacts` | `contact` | `customer_ref`, `body`, `sent_at` |
-
-`customer` / `shop` de la BD `admin` (datos de facturación GoTel y hash de acceso `email01`+`pass`): no se migran como tablas nuevas hasta confirmar el uso de `mail/` y `pdf/` (Pedidos a S0).
-
-### 2.4 Enums nuevos (`app/Enums/<Modulo>/`)
-
-`Mypage\AppImageSection`, `Mypage\BannerMode`, `Terminales\SignageMaterialType`, `Terminales\SignageCouponUsage`, `Terminales\SignageTerminalType`, `Senalizacion\Orientation`, `Senalizacion\RepeatType`, `Senalizacion\ContentKind`.
+Los JS de carpeta de módulo (`category6/*/js`, `category7/*/js`, `css/`) se copian a `public/legacy/system/category6|7/...` con la misma estructura (pedido a S1, dueño de `public/legacy/`).
 
 ## 3. Servicios viejos → Laravel 13
 
 | Legacy | Reemplazo |
 |---|---|
-| `hatuban` (`SELECT … FOR UPDATE` + `kazu+1`) | PK `bigserial`; `id = cd` donde hay contrato, `legacy_id_map` (S1) en el resto |
-| `disp_flg='9'` | `SoftDeletes` |
-| `hyouji_flg` | `status` |
-| `pic_flg`, banderas texto | `smallint` + enum |
-| Listas `<>` / `||` en columnas, `serialize()` | Tablas pivote con `position`; `jsonb` (sin `unserialize` en runtime) |
-| Subida a `hp/uploads/c6|c7/…` + `temp/` + `system("find … -mtime +1 -exec rm")` | `Storage::disk('public')`; comando `mypage:prune-temp-uploads` registrado en `MypageServiceProvider` (Scheduler diario); URL viejas `/hp/uploads/...` redirigidas (Pedidos) |
-| Miniaturas generadas con GD a mano | Servicio `ImageResizer` (paquete de imágenes que defina S1; mientras, GD nativo) |
-| `Push::exec` (`fsockopen` a `b.g-api.net`) | Job `App\Jobs\Mypage\SendRecommendationPush` (cola `database`, `Http::get`, host en `config/services.php` `push.host`) si `push_flg=1` y la app está activa |
-| `xml_up.php` escribe `hp/uploads/c7/display/<cd>.xml` al guardar | `SignageFeedBuilder` genera el XML al vuelo en `GET /hp/uploads/c7/display/{cd}.xml` (misma URL y forma); caché invalidada en el evento `saved` del programa/pantalla |
-| `xml_info_up.php` (`floormap.xml`) | `SignageFeedBuilder::floormap()` desde `job_postings` |
-| QR por `file_get_contents` HTTP a `qr_img.php` | Generador QR en PHP (paquete que defina S1) devuelto como descarga |
-| CSV con `header()` / Flash | `StreamedResponse` |
-| mPDF propio de `signage/pdf` + HTML con autenticación básica | Paquete PDF de S1 renderizando la vista Blade directamente (sin pedir la propia URL) |
-| `mail/index.php` con `mb_send_mail` | `Mailable` en cola |
-| `kengen->myKengen[código]` (1014-1036), `rank=='master'`, `isDevelopmentAuthorityFromIP` | Policies/Gates de S1 (`MypagePolicy`, `TerminalPolicy`, Gate `manageSignage`) |
-| `md5(session_id())` como token y `tbNo` arbitrario (`felica/ajax_del.php`) | CSRF de Laravel + rutas por modelo (lista blanca implícita) |
+| `pg_query` con SQL concatenado, `form2Db` | Modelos Eloquent / query builder con bindings |
+| `hatuban` (`SELECT … FOR UPDATE` + `kazu+1`) | Mismo `hatuban`, servicio común de S1 (en transacción) |
+| `disp_flg = '9'` | Igual (scope/trait de S1) |
+| Subida a `hp/uploads/c6|c7/…` + `temp/` + `system("find … -mtime +1 -exec rm")` | `Storage::disk('public')` en la misma ruta relativa; comando `mypage:prune-temp-uploads` en `MypageServiceProvider` (Scheduler diario) |
+| Miniaturas con GD a mano | Servicio de imágenes (paquete que defina S1; mientras, GD) |
+| `Push::exec` (`fsockopen` a `b.g-api.net`) | `Http::get` al host de `admin_master.push_api_host` (`QUEUE_CONNECTION=sync`: síncrono, como el legacy) |
+| `xml_up.php` / `xml_info_up.php` escriben el XML al guardar | `SignageFeedBuilder::writeProgram()` / `writeFloormap()` al guardar programa, display, tienda o 求人: **mismo archivo y misma ruta** (elegido por ser lo más simple: el reproductor compara la fecha del archivo) |
+| QR por `file_get_contents` HTTP a `qr_img.php` | Generador QR en PHP (paquete de S1) |
+| CSV con `header()` / Flash | `StreamedResponse` en SJIS-win |
+| mPDF de `signage/pdf` + HTML con autenticación básica | Paquete PDF de S1 renderizando el Blade |
+| `mail/index.php` con `mb_send_mail` | `Mailable` |
+| `kengen->myKengen[código]` (1014-1036), `rank=='master'`, `isDevelopmentAuthorityFromIP` | Policies/Gates de S1 |
+| `md5(session_id())` como token y `tbNo` arbitrario (`felica/ajax_del.php`) | CSRF de Laravel + una ruta por modelo (`tb_terminal` o `tb_customer_card`) |
 | `?s=<hash>` (acceso a `signage/`) | Sesión del admin + Gate `manageSignage` |
-| `beacon_db.php` (`pg_connect` externo) | Conexión `beacon` en `config/database.php`; modelos con `$connection = 'beacon'` |
-| jQuery UI (diálogos, sortable) / AJAX | Blade + Alpine/Vite del layout de S1; endpoints JSON con Form Request |
-| Polling JS del reproductor Flash | Mismo polling en el reproductor HTML5 (mismas URL `ajax_*`) |
-| `signage` franja `to_char(…,'hh24:mm')` (bug: `mm` = mes) | `SignageScheduleResolver` con comparación de horas correcta (anotado en Decisiones) |
+| `beacon_db.php` (`pg_connect` externo) | Conexión `beacon` en `config/database.php` |
+| Flash del reproductor `digitalsignage` | HTML5 con el mismo contrato |
+| `signage` franja `to_char(…,'hh24:mm')` (bug: `mm` = mes) | Comparación correcta `hh24:mi` (anotado en Decisiones) |
 
 ## 4. Orden de implementación
 
 | # | Submódulo | Contenido | Depende de | Puntos |
 |---|---|---|---|---|
-| 0 | Base del grupo | Rutas, menú, `lang/ja`, Storage, enums, factories/seeders | S1: grupo `admin`, layout, Policies | 2 |
-| 1 | `mypage` マイコレ + `app_settings` | 4 secciones en una pantalla, subida, por tienda | S1 (`shops`), S5 (`mpa_*` leerán `app_images`) | 5 |
-| 2 | `mypage` オススメ + push | CRUD + Job | S1 (`config/services.php`), S5 (`appview`) | 3 |
-| 3 | `mypage` 求人 + 職種 | CRUD | S1 (`shops`) | 4 |
-| 4 | `mypage` ガチャリン設定 | Configuración + premios | S3 (sorteo y `coupons.lottery_rank`) | 2 |
-| 5 | `terminales` 電子看板 (素材, プログラム, ディスプレイ) + feed XML | CRUD + pivotes + `SignageFeedBuilder` | S3 (`coupons`), 3 (floormap), pedido de rutas públicas | 8 |
-| 6 | `senalizacion` `digitalsignage` HTML5 | Reproductor, sondeos, cupones impresos, ruleta, tragaperras | 5; S2 (`visits`, `customers`), S3 (`coupon_customer`) | 8 |
-| 7 | `senalizacion` `signage/` | CMS (端末, パッケージ, サイクル, コンテンツ) + reproductor `view/` | pedido de rutas públicas | 14 |
-| 8 | `senalizacion` GoTel / PDF | Contacto + 請求書/領収書 | confirmación de uso (S0), paquete PDF (S1) | 3 |
-| 9 | `terminales` ペーパーサイネージ | CRUD + QR + 集計 + CSV | S2 (`customers` con referencia a la tarjeta), paquete QR (S1) | 4 |
-| 10 | `terminales` ICカード (FeliCa) | Terminales + tarjetas | S1 (`terminals` con columnas nuevas), S2 (`customers.felica_no`) | 4 |
-| 11 | `terminales` ビーコン | Lista/detalle externos | S1 (conexión `beacon`), BD externa accesible | 3 |
+| 0 | Base del grupo | Modelos de §2.1, rutas, menú, `MypageServiceProvider` | S1: layout, base de modelos legacy (`disp_flg`, `hatuban`), Policies | 2 |
+| 1 | `mypage` マイコレ + opciones de app | 4 secciones en una pantalla, subida, por tienda (`contents_master`) | S1 (`ContentsMaster`, `Shop`); S5 lee lo mismo | 5 |
+| 2 | `mypage` オススメ + push | Lista/alta/edición/borrado + push | S1 (`AdminMaster`) | 3 |
+| 3 | `mypage` 求人 + 職種 | CRUD + `floormap.xml` al guardar | S1 (`Shop`) | 4 |
+| 4 | `mypage` ガチャリン設定 | Configuración en `contents_master` | S3 (sorteo) | 2 |
+| 5 | `terminales` 電子看板 + XML | Material, programa, display; `writeProgram()` | S3 (`Coupon`) | 8 |
+| 6 | `senalizacion` `digitalsignage` HTML5 | Reproductor, sondeos, cupones impresos, ruleta, tragaperras | 5; S2 (`Visit`, `Customer`), S3 (`CouponIssuer`) | 8 |
+| 7 | `senalizacion` `signage/` | CMS + reproductor `view/` | **respuesta sobre la BD `admin`** | 14 |
+| 8 | `senalizacion` GoTel / PDF | Contacto + 請求書/領収書 | confirmación de Antony, paquete PDF (S1) | 3 |
+| 9 | `terminales` ペーパーサイネージ | CRUD + QR + 集計 + CSV | S5 (`PaperCardAccess`), paquete QR (S1) | 4 |
+| 10 | `terminales` ICカード (FeliCa) | Terminales + tarjetas | S1 (`Terminal`), S2 (`CustomerFelicaService`) | 4 |
+| 11 | `terminales` ビーコン | Lista/detalle externos + `tb_beacon_history` | conexión `beacon`, BD externa accesible, Antony | 3 |
 | | **Total** | | | **60** |
 
-(El análisis daba ~115 puntos con kiosk, touchcation y category4/6 completos; lo descartado explica la diferencia.)
+Ya hecho y sin dependencias: `SignageFeedBuilder` (XML del programa y `floormap.xml` sobre las `tb_*`) con sus pruebas.
 
 ## 5. Pedidos
 
-**A S0 / S1 (núcleo)**
-1. ~~Rutas públicas~~ **Resuelto:** `routes/publico/senalizacion.php` (nombre `publico.senalizacion.*`), fuera del grupo `admin`, sin CSRF ni prefijo. URL literales: `/signage/view/*`, `/digitalsignage/*`, `/hp/uploads/c7/display/{cd}.xml` (`floormap.xml` incluido; tiene prioridad sobre la redirección genérica).
-2. **Resuelto:** redirección genérica `GET /hp/uploads/{path}` → Storage (S1). Las imágenes de マイコレ se guardan con su nombre legacy en `hp/uploads/c6/<carpeta>/<archivo>` del disco public.
-2b. **Nuevo:** columnas de `shops` para `floormap.xml`: `floor_name` (text), `service_category` (`service_kubun`), `company_details` (jsonb `[[etiqueta, valor]]` desde `kaisha_data` `etiqueta<>valor||…`). Mientras falten, `SignageFeedBuilder::floormap()` devuelve el XML vacío.
-3. `terminals`: columnas `sort` (`rank`), `terminal_no`, `model`, `type`, `comment` (mapeo de `tb_terminal`).
-4. Paquetes: imágenes (miniaturas), QR, PDF con fuente japonesa.
-5. `config/services.php` → `push.host` (`b.g-api.net` / `b-develop.g-api.net`) y `config/database.php` → conexión `beacon` (`DB_BEACON_*`).
-6. Policies/Gates equivalentes a `kengen` 1014–1017, 1023, 1032, 1035, 1036 y al menú de category7; Gate `manageSignage`.
-7. Importador: mapeo de la sección 2 (incluida la BD `admin` de `signage/` y los archivos de `hp/uploads/c6|c7` y `signage/upload/`). Si S1 crea una tabla genérica para `contents_master`, decidir si `app_settings`/`lottery_settings` se mueven allí.
-8. Confirmar con Antony si se usan `signage/mail` (GoTel) y `signage/pdf` (請求書/領収書); y si se conserva `beacon` (servidor externo caído).
+**A S0**
+1. **BD `admin` de `signage/`:** no está en `pgsql-schema.sql`. ¿Conexión adicional o se añaden sus tablas al esquema? (bloquea el submódulo 7).
+2. Confirmación de Antony: `signage/mail` (GoTel) y `signage/pdf`; si se conserva ビーコン (servidor externo caído).
 
-**A S2 (clientes):** **resuelto**: `customers.felica_no` vía `CustomerFelicaService::attach/detach`; no hay `paper_card_id` en `customers` (el 集計 usa `paper_card_accesses` de S5); las visitas del lector, vía `VisitService`/`CustomerEntry`.
-**A S3 (promoción):** **resuelto**: el sorteo lee `LotterySetting`/`LotteryPrize` y cuenta en su `lottery_draws`; los cupones impresos/usados se marcan con `CouponIssuer::markPrinted/markUsed`.
-**A S5 (integraciones):** `mpa_getCoverFlow`, `mpa_getTopBanner`, `mpa_corresponding` y la lista de オススメ de `appview` leen `app_images` (`AppImage::url()` con `?r=<mtime>`, `mtime()`, `position`, `link_url`, scope `visibleForShop`), `app_settings` y `recommendations` (`forShop`). ビーコン (pendiente de Antony) incluirá `tb_beacon_history` para `mpa_setraiten`.
+**A S1 (núcleo)**
+1. Base de modelos legacy: scope `disp_flg <> '9'`, servicio `hatuban`, y los modelos `ContentsMaster`, `AdminMaster`, `Shop`, `Terminal`.
+2. `tb_mobile_navi`: ¿modelo de S1 (menú de la app) o de S4? Lo uso solo para leer el nombre del menú de オススメ.
+3. Copiar a `public/legacy/` los JS/CSS de carpeta de módulo de §2b (`category6/user_hp/js`, `category6/recruit/js`, `category7/digital_signage/js`, `category7/felica/js` y `css`, `/system/plugin/ui-datepicker/`).
+4. Paquetes: imágenes (miniaturas), QR, PDF con fuente japonesa; conexión `beacon` (`DB_BEACON_*`).
+5. Policies/Gates para `kengen` 1014–1017, 1023, 1032, 1035, 1036, el menú de category7 y `manageSignage`.
+6. Redirección `/hp/uploads/{path}` al disco public (ya acordada).
+
+**A S2:** resuelto: `CustomerFelicaService::attach/detach`, `VisitService`/`CustomerEntry` para lecturas del lector. S4 publica `FelicaCardService::unassign()`.
+**A S3:** resuelto: el sorteo lee la configuración de ガチャリン de `contents_master` (S4 publica `LotteryConfig` de solo lectura) y cuenta en su propia tabla; cupones impresos con `CouponIssuer::markPrinted/markUsed`.
+**A S5:** `mpa_getCoverFlow`, `mpa_getTopBanner`, `mpa_corresponding` y `appview` leen `contents_master` (vía `MypageConfig` de S4), `tb_hp_recommend` (`Recommendation`) y los archivos de `hp/uploads/c6/`; `ptag` lee `tb_url_list` (`PaperCard`); `mpa_setraiten` escribe `tb_beacon_history` (`BeaconHistory`).
 
 ## 6. Decisiones (de este diseño)
 
-- category4 completo y en category6 todo lo que solo leía `hp/` (topics, header, freepage, diseño, colores, 携帯HP, フォトギャラリー): descartado: sin consumidor. De `mobile_hp_edit.php` solo sobreviven las dos opciones que lee la app.
+- Base del legacy (Antony, 2026-11-26): misma BD y misma UI; nada de tablas nuevas. La capa de datos sobre tablas nuevas (23f14c9) se quitó (d45a652).
+- category4 entero y lo de category6 que solo leía `hp/` (topics, header, freepage, diseño, colores, 携帯HP, フォトギャラリー): descartado: sin consumidor. De `mobile_hp_edit.php` solo sobreviven las dos opciones que lee la app.
 - Módulo `web` sin pantallas.
 - `kiosk` (category7) y touchcation: descartados (S0, 2026-11-26).
-- Bugs que se corrigen: 最後に追加 en `movie_program_register` (columna inexistente) → pivote con `position`; `movie_contents_category` borraba de `contents_category`; franja `hh24:mm`; desplegable de 職種 vacío con una tienda; borrado de imagen que dejaba derivados.
-- `micro-sitios` de `digitalsignage` (inmuebles, recetas) descartados.
-- `.swf` ya no se acepta en las subidas.
-- XML de señalización: misma forma que `xml_up.php`/`xml_info_up.php` (espacios dobles incluidos), pero con los valores escapados para XML; un material borrado se omite (el legacy emitía un `<p>` vacío); 【応募資格】 sale de `requirements` (el legacy repetía 雇用形態); floormap toma el primer 求人 de cada tienda, como el legacy.
-- `tb_customer_card.name` no se migra (nunca se escribe).
+- XML de señalización: se escribe al guardar en `hp/uploads/c7/display/` como hoy (lo más simple con el mismo contrato). Misma forma que `xml_up.php`/`xml_info_up.php`, espacios dobles incluidos, pero con los valores escapados; un material borrado o inexistente se omite (el legacy emitía un `<p>` vacío); 【応募資格】 sale de `oubo_shikaku` (el legacy repetía 雇用形態); floormap toma el primer 求人 de cada tienda, como el legacy.
+- Bugs que se corrigen: 最後に追加 en `movie_program_register` (columna inexistente `tb_screensaver.tb_c7_movie_program_cd`: se usa el orden de `tb_screensaver_cds`); `movie_contents_category` borraba de `contents_category`; franja `hh24:mm`; desplegable de 職種 vacío con una tienda; borrado de imagen que dejaba derivados.
+- `tb_customer_card.name` no se usa (nadie lo escribe).
+- Micro-sitios de `digitalsignage` (inmuebles, recetas) descartados.
+- `.swf` ya no se acepta en las subidas; los materiales SWF existentes se listan pero el reproductor HTML5 los salta.

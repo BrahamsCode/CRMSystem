@@ -7,9 +7,9 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — Esperar revisión de S0 del diseño (`Doc/diseno/contenido-terminales.md`)
+## Próximo paso — Esperar a S0: diseño rehecho sobre la BD del legacy
 
-Diseño entregado (2026-11-26). Mientras S0 revisa: factories y seeders del grupo (datos de prueba de señalización). Pedidos: sección 5 del diseño.
+Diseño `Doc/diseno/contenido-terminales.md` rehecho (2026-11-27): modelos sobre las `tb_*`, UI del legacy, XML escrito en `hp/uploads/c7/display/`. Esperando: respuesta sobre la BD `admin` de `signage/` (bloquea el submódulo 7) y el núcleo de S1 (base de modelos legacy, layout) para empezar las pantallas por マイコレ.
 
 ## Tarea anterior — Diseño (sin código, hecho)
 
@@ -37,14 +37,18 @@ Implementar submódulo por submódulo en el orden del diseño: migraciones, mode
 
 ## Pedidos
 
-Ver `Doc/diseno/contenido-terminales.md` §5 (rutas públicas de dispositivos, redirección `hp/uploads`, columnas de `terminals`, paquetes imagen/QR/PDF, `push.host`, conexión `beacon`, Policies; a S2 `customers.felica_no`).
+Ver diseño §5. A S0: BD `admin` de `signage/` (no está en el esquema); GoTel/PDF y ビーコン (Antony). A S1: base de modelos legacy (`disp_flg`, `hatuban`, `ContentsMaster`, `AdminMaster`, `Shop`, `Terminal`), dueño de `tb_mobile_navi`, copia de JS/CSS de carpeta de módulo a `public/legacy/`, paquetes imagen/QR/PDF, conexión `beacon`, Policies.
 
 ## Decisiones
 
 - S0 (2026-11-26): touchcation y `category7/kiosk` fuera de alcance (no se usan). La AppKey `md5(host<>rank)` era de `signageApp` (touchcation): ya no aplica a S4.
 - category4 entero y lo de category6 que solo leía `hp/`: descartado: sin consumidor. Vivo: マイコレ, 2 opciones de app, オススメ, 求人, ガチャリン.
-- Tablas pivote en vez de listas `<>`; `legacy_cd` para el importador; XML del reproductor servido por Laravel en la misma URL.
+- Base del legacy (Antony, 2026-11-26): misma BD y UI. Capa de datos sobre tablas nuevas quitada (d45a652); `SignageFeedBuilder` reescrito sobre las `tb_*` (f7deb45).
+- XML: se escribe al guardar en `hp/uploads/c7/display/` como el legacy; forma idéntica pero escapada, materiales borrados omitidos, 【応募資格】 corregido.
+- Config de マイコレ y ガチャリン en `contents_master` (modelo de S1) vía servicios de S4; `mypage_config` sigue con `serialize()` (lo leen `mpa_*`).
 
 ## Hecho
+
+- 2026-11-27 Diseño rehecho sobre la BD del legacy; limpieza de la capa obsoleta; `SignageFeedBuilder` sobre `tb_*` con 8 pruebas (suite 10 verde).
 
 - 2026-11-26 Diseño `Doc/diseno/contenido-terminales.md` (paridad, esquema con mapeo, servicios, orden 60 pts, pedidos).
