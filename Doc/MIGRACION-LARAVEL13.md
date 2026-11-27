@@ -132,7 +132,7 @@ Diferencias con crm2-php8, a propósito: `DocumentRoot /var/www/public` (Laravel
 | 0 | Docker igual que crm2-php8 + documentación de referencia | **Hecho (2026-11-26)** |
 | 0b | Análisis vista por vista (`Doc/analisis-legacy/`, ≈ 1.020 vistas, ≈ 615 puntos) y orquestación (`Doc/planificacion/`, `INICIAR-CRM.bat`) | **Hecho (2026-11-26)** |
 | 1 | Subir Laravel 12 → 13 y PHP 8.5 (`composer.json`, Pest 4, Fortify, Dockerfile de Render) | Pendiente — S1 |
-| 1' | Diseño por grupo (`Doc/diseno/`) | Pendiente — S2 a S6 |
+| 1' | Diseño por grupo (`Doc/diseno/`) | En curso — S2 a S5. S4 (`contenido-terminales.md`, 60 puntos) **aprobado con cambios menores (2026-11-26)** |
 | 2 | Esquema: nuevo según `Doc/database/ESTANDARES_BD.md` + importador desde `tb_*` (lo que ya sigue CRMSystem) | Propuesto; S0 lo confirma al revisar los diseños |
 | 3+ | Módulos en paralelo según `Doc/planificacion/ORCHESTRATION.md` | Pendiente |
 
@@ -145,6 +145,7 @@ Diferencias con crm2-php8, a propósito: `DocumentRoot /var/www/public` (Laravel
 - Esquema de BD: nuevo con estándares o compatible con `tb_*` (afecta a integraciones que leen la BD: POS).
 - ¿Se reescriben `hp/`, `touchcation/`, `signage/` y `api/` en Laravel, o conviven con el legacy al principio?
 - Cuándo entra el POS (`category11`); SNS (`category12`) probablemente nunca. Flash CSV, CKEditor, `password_hash`.
+- Señalización (S4): ¿se usan `signage/mail` (GoTel, お問い合わせ) y `signage/pdf` (請求書/領収書)? ¿Se mantiene ビーコン管理? Su BD externa `b-develop.g-api.net` no responde. Mientras tanto, S4 deja esas partes al final.
 - Las de [legacy-crm2/PENDING.md](legacy-crm2/PENDING.md), sección 7 (servidor POS de prueba, staging con datos reales, IPs de desarrollo, `activation=1`).
 
 ## 10. Inconsistencias vistas al preparar esto

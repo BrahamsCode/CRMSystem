@@ -16,6 +16,8 @@ Cada módulo escribe **solo** en sus carpetas. `<Modulo>` en PascalCase inglés,
 |---|---|
 | `routes/web.php`, `routes/api.php`, `routes/console.php` | S1 (solo incluyen los archivos de `routes/modulos/`) |
 | `routes/modulos/<modulo>.php` | El módulo. Se carga dentro del grupo `admin` (prefijo, `auth:admin`, nombre `admin.`) |
+| `routes/publico/<modulo>.php` | El módulo. Rutas de dispositivos y contratos externos (reproductores de señalización, API, app, CTI): S1 las carga **fuera** del grupo `admin`, sin `auth:admin`, sin CSRF y sin prefijo, para conservar las URL literales del legacy (con `.php`). Nombre de ruta `publico.<modulo>.*` |
+| `GET /hp/uploads/{path}` (redirección genérica a Storage) | S1. Una ruta específica de un módulo bajo `/hp/uploads/...` (p. ej. el XML de señalización de S4) tiene prioridad |
 | `app/Http/Controllers/Admin/<Modulo>/`, `app/Http/Requests/<Modulo>/` | El módulo |
 | `resources/views/admin/<modulo>/` | El módulo |
 | `resources/views/layouts/`, `resources/views/components/` | S1. Componentes nuevos genéricos: pedirlos a S0 |
@@ -37,7 +39,7 @@ Cada módulo escribe **solo** en sus carpetas. `<Modulo>` en PascalCase inglés,
 | S2 Clientes | `clientes` (顧客管理), `ventas` (販売管理), `reservas` (予約管理: category9, `r/`, `reserve/`) | `01-clientes-y-ventas.md`, `05-…` (sección category9), `07-…` (secciones `r/` y `reserve/`) | `Customer*`, `CustomCategory`, `CustomField*`, `CustomValue`, `FieldSetting`, `Visit*`, productos y ventas, reservas |
 | S3 Promoción | `promocion` (販売促進管理: mensajería y fidelización) | `03a-promocion-mensajeria.md`, `03b-promocion-fidelizacion.md` | `Coupon*`, `Message*`, `Point*`, `Stamp*`, `Rank*`, `Survey*`, `CustomerGroup*` |
 | S4 Contenido | `mypage` (マイページ管理), `web` (ホームページ管理), `terminales` (端末管理: beacon, felica, card_signage, digital_signage de category7), `senalizacion` (`signage/`, `digitalsignage/`) | `04-web-y-mypage.md`, `05-…` (sección category7), `08-…` (secciones signage y digitalsignage) | Contenido de mypage, páginas, catálogos, displays y programas de señalización, beacons, felica |
-| S5 Operaciones | `operaciones` (業務支援管理: staff, 勤怠, turnos), `integraciones` (API tienda móvil, `mpa_*`, `appview/`, `tool/api`, CTI, `exp_cmd/`, `version/`) | `05-…` (sección category5), `07-pos-api-y-externos.md` | Asistencia, turnos, horarios; contratos externos (rutas `routes/modulos/integraciones.php` sin `auth:admin`) |
+| S5 Operaciones | `operaciones` (業務支援管理: staff, 勤怠, turnos), `integraciones` (API tienda móvil, `mpa_*`, `appview/`, `tool/api`, CTI, `exp_cmd/`, `version/`) | `05-…` (sección category5), `07-pos-api-y-externos.md` | Asistencia, turnos, horarios; contratos externos (rutas en `routes/publico/integraciones.php`) |
 
 **Fuera de alcance por ahora (Antony, 2026-11-26):** POS (`system/category11` completo, incluido `category11/yoyaku`; terminales `CRMPOS-<id>`/`pos_session.php`; conexión a los servidores POS de cada tienda: donde el legacy llama al POS, dejar una interfaz `PosGateway` sin implementación y anotarlo), SNS (`system/category12`) y touchcation completo (`touchcation/` y su gestión `system/category7/kiosk/`, tablas `tb_nextouch_*`): confirmado que no se usan.
 
@@ -47,6 +49,8 @@ Un modelo que necesitan varios módulos (por ejemplo `Customer`) lo **lee** cual
 
 - Controladores delgados; la lógica en `app/Services/<Modulo>/` o `app/Actions/<Modulo>/`. Validación en Form Requests.
 - Textos de pantalla en japonés vía `__('<modulo>.clave')`. Nada de texto japonés suelto en los controladores.
+- Configuración propia de un módulo (categorías de `contents_master`/`admin_master` que solo usa ese módulo): tabla tipada del módulo `<algo>_settings` (fila única), no una tabla genérica clave-valor. S1 solo mantiene la configuración global y su importador mapea cada categoría a la tabla del módulo según el diseño de ese módulo.
+- `hyouji_flg` (表示/非表示, 停止) → `status` (`0` inactivo, `1` activo) de `ESTANDARES_BD.md` §3; no crear un `display_flg` aparte.
 - Borrado lógico: SoftDeletes (reemplaza `disp_flg = 9`). Fechas con Carbon; **nunca** reproducir el `mktime()` que daba 1970.
 - Correo: Mailables + cola (`QUEUE_CONNECTION=database`). Envíos programados: Scheduler (`routes/console.php`, dueño S1; cada módulo registra sus tareas en un `ServiceProvider` propio en `app/Providers/<Modulo>ServiceProvider.php`).
 - CSV: `StreamedResponse` (reemplaza Flash). PDF: el paquete que defina S1.

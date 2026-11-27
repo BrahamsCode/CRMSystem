@@ -55,7 +55,11 @@
 ## Decisiones
 
 - 2026-11-26: orquestación creada (S0 + 5 trabajadores, ver ORCHESTRATION.md §7). Rama de integración `laravel13`. Todos los permisos: los trabajadores hacen commit y push de su rama, S0 integra. Fuera (confirmado que no se usan): POS (`category11`), SNS (`category12`) y touchcation con `category7/kiosk/`; `digitalsignage` se mantiene (reproductor Flash → HTML5). Análisis vista por vista en `Doc/analisis-legacy/`. `hp/` fuera de alcance (Antony).
+- 2026-11-26: arranque de S0. Fase 1 confirmada a S1 (en su cola, el grupo de rutas del quiosco pasa a ser solo para integraciones y señalización) y diseño confirmado a S2–S5, con aviso del recorte de touchcation (filas `descartado: touchcation fuera de alcance`). A S6 se le pidió detenerse sin hacer commit; la rama `l13/quiosco` y el worktree `CRMSystem-quiosco` quedan sin uso (no se borran sin Antony).
+- 2026-11-26: S6 se detuvo y cerró la sesión: worktree limpio, sin commits ni push.
+- 2026-11-26: diseño de S4 aprobado con cambios menores (`hyouji_flg` → `status`; revisar `felica_cards.name`; rutas de dispositivos en `routes/publico/senalizacion.php`). CONVENCIONES: nuevo `routes/publico/<modulo>.php` (fuera del grupo `admin`, sin CSRF ni prefijo; también para S5), redirección `/hp/uploads/*` a cargo de S1 y configuración por módulo en tablas `<algo>_settings`. Pedidos de S4 reenviados a S1, S2, S3 y S5; GoTel/PDF y ビーコン escalados a Antony.
 
 ## Hecho
 
 - 2026-11-26: Docker igual que crm2-php8 (PHP 8.5 FPM + Apache + PostgreSQL 18), documentación de referencia y análisis legacy.
+- 2026-11-26: `CRMSystem/` con Laravel 12.69.3 en el Docker nuevo: `migrate --seed` OK (121 clientes, 13 envíos de promoción); la web responde en `http://localhost:8081`.
