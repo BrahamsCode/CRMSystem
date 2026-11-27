@@ -4,6 +4,7 @@ use App\Http\Controllers\Publico\Integraciones\CtiController;
 use App\Http\Controllers\Publico\Integraciones\MobileShopController;
 use App\Http\Controllers\Publico\Integraciones\MpaController;
 use App\Http\Controllers\Publico\Integraciones\ToolApi;
+use App\Http\Controllers\Publico\Integraciones\UtilityController;
 use App\Http\Middleware\Integraciones\CheckCrmApiKey;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Support\Facades\Route;
@@ -57,6 +58,11 @@ Route::name('publico.integraciones.')
             Route::any('category1/setRaitenDetail.php', [ToolApi\RaitenController::class, 'update'])->name('raiten-set');
             Route::any('category5/getStaffList.php', [ToolApi\StaffController::class, 'index'])->name('staff-list');
         });
+
+        // Utilitarios (§1.10): versión, enlaces de seguimiento y cliente Adobe AIR (los .xml de /air son estáticos en public/air)
+        Route::any('version/crm_version.php', [UtilityController::class, 'crmVersion'])->name('version.crm');
+        Route::any('ptag/{id?}', [UtilityController::class, 'ptag'])->where('id', '.*')->name('ptag');
+        Route::any('air/air_info_out.php', [UtilityController::class, 'airInfo'])->name('air.info');
 
         // Ventana CTI (system/desktop_request): sin autenticación, como el legacy
         Route::prefix('system/desktop_request')->name('cti.')->group(function () {
