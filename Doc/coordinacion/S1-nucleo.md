@@ -9,7 +9,7 @@ Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archiv
 
 ## Próximo paso
 
-A, B y category0 completos (ver "Hecho"). Siguiente (asignado por S0 al terminar category0): revisión visual de punta a punta del menú y del layout de todos los módulos contra la muestra, con Playwright. Pendientes de la cola de S0: paquetes PDF/imagen.
+A, B, category0, QA y comunes (CSV, PDF, subidas) completos (ver "Hecho"). Esperando la siguiente tarea de S0.
 
 **A) Base legacy** (corto; subir apenas esté): traits `app/Models/Concerns/` `HasHatuban` (numeración por `koumoku`), `LegacySoftDeletes` (scope `disp_flg <> '9'`, `delete()` pone `'9'`), `LegacyTimestamps` (`touroku_date`/`update_date` epoch en texto); modelo base `LegacyModel` (`cd`, no incremental, sin timestamps, `$guarded=[]`); servicio `Hatuban`; modelos `Shop` (`tb_shop`), `Staff` (`tb_staff`), `Terminal` (`tb_terminal`), `AdminMaster`, `ContentsMaster`, con pruebas sobre el esquema legacy; registrar `<Modulo>ServiceProvider` existentes en `bootstrap/providers.php`. Terminado: pruebas en verde, commit, push, aviso.
 
@@ -73,6 +73,8 @@ Recibidos de S0 el 2026-11-26 (para la Cola, después de la Fase 1; S0 los asign
 
 ## Hecho
 
+- **Pedidos S0 tras integrar 8e0f4e2 (2026-11-27):** `Doc/qa/paridad.md` regenerada con laravel13 (83 %, `c4a66f3`); IPAex como opción documentada en NUCLEO.md §11 (`f66a663`); subida temporal común `system/inc/ajax_picupload.php` + `system/uploads/` en el núcleo (`Nucleo\PicUploadController`, `TempUploads`, limpieza `nucleo:limpiar-subidas` cada hora, NUCLEO.md §12, `aa49605`). Pendiente de S4: quitar sus dos rutas de `routes/legacy/promocion.php`. Suite: 935 en verde.
+- **Comunes previos (2026-11-27):** `LegacyPdf` (mPDF 8.3, fuentes IPAex, NUCLEO.md §11) con comprobación visual del PDF; `LegacyUi::uiVersion()`/`forceUiVersion()`, `Hatuban::fake()`/`fixCounters()`; matriz de paridad (`Doc/qa/paridad.md`, `scripts/paridad.py`) y segunda pasada de QA.
 - **Revisión de permisos (2026-11-27):** usuario no master `qa_partial` (grupo 900, BD local) por menús y URL directas de todos los módulos; menús iguales al legacy. Núcleo: category0 solo master en el servidor. Módulos en `Doc/qa/permisos-*.md` (mypage sin comprobaciones de página). Portada de category9 → `admin.reservas.timetable` si existe (`f9ec252`).
 - **Revisión visual de punta a punta (2026-11-27):** menús, cabecera, pie y una pantalla principal por módulo contra la muestra con Playwright (`Doc/qa/`). Núcleo corregido: portadas de category1/3/5/6/7 + redirección de 9, clase `pageCategory` como `getSelectCategoryNo`, categoría por defecto del menú (`7d54d3a`). Diferencias de módulo en `Doc/qa/diferencias-<modulo>.md`.
 - **基本情報管理: システム管理 (2026-11-27), category0 completo:** bloques de ajustes de `system.php` con `nucleo.maintenance` (sin 初期化 ni エクスポート), igual a la muestra con Playwright; `ContentsMaster::putLegacy()`, `crm.version`. `tests/Feature/Base/SystemTest.php`. Suite: 581 en verde.
