@@ -38,7 +38,7 @@ Abreviaturas: `Cu\` = `Admin\Customers\`, `Sa\` = `Admin\Sales\`, `Re\` = `Admin
 
 | Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas `tb_*` | Estado |
 |---|---|---|---|---|---|
-| `customer_list.php` | 顧客一覧・検索 | `admin.clientes.index`, `.search` | `Cu\CustomerController@index/search` + `CustomerSearch` | L `tb_customer`, `tb_customer_sub`, `tb_search_form`, `tb_search_cate`, `tb_raiten_rireki`, `tb_shop`, `tb_koumoku` | pendiente (103 filtros de `inc/search_set1.php`, 表示件数, 3 CSV, 郵便CSV, 配信/LINE配信 → S3) |
+| `customer_list.php` | 顧客一覧・検索 | `admin.clientes.index`, `.search` | `Cu\CustomerController@index/search` + `CustomerSearch` | L `tb_customer`, `tb_customer_sub`, `tb_search_form`, `tb_search_cate`, `tb_raiten_rireki`, `tb_shop`, `tb_koumoku` | hecho (C1-a; también `legacy.clientes.list` en la URL del legacy; búsqueda en sesión `customer_search.<uniqid>` + espejo `promocion.audience.<uniqid>` para 配信 de S3; envío LINE配信 → S3; CSV template pendiente) |
 | `customer_search.php` | 来店処理 | `admin.clientes.visits`, `.visits.store` | `Cu\VisitController@index/store` + `VisitService::register` | L/E `tb_customer`, `tb_raiten_rireki`, `hatuban`; puntos y sellos vía S3 | pendiente |
 | wrappers `customer_new*.php`, `customer_detail.php`, `customer_recover_confirm.php`, `customer_delete_register.php`, `del_record.php`, `kanren_*` (4), `add_record_*` (3), `photoalbum_*` (3) | (wrappers) | — | — | — | descartado: wrappers de 3 líneas de `inc/` (filas en `inc/`); `kanren_record_confirm.php` roto |
 | `customer_new_complete.php` | 顧客登録情報 | — | — | — | descartado: versión paralela del alta sin enlace; el alta de `inc/` la cubre |
@@ -59,10 +59,10 @@ Abreviaturas: `Cu\` = `Admin\Customers\`, `Sa\` = `Admin\Sales\`, `Re\` = `Admin
 | `point_history.php` | ポイント利用一覧 | `admin.clientes.point-history`, `.point-history.csv` | `Cu\PointHistoryController@index/csv` | L `tb_point_log` (S3), `tb_customer`, `tb_shop`, `tb_staff`, `tb_terminal` | pendiente (CSV SJIS-win) |
 | `csv_import.php` | CSVインポート | `admin.clientes.import`, `.import.store` | `Cu\CustomerImportController@create/store` + `CustomerCsvImporter` | E `tb_customer`, `hatuban`; L `tb_staff` | pendiente (`createID`, `randomPass(4)` como el legacy: ver Decisiones) |
 | `csv_export.php`, `csv_from_js.php`, `user_csv.php` | CSV de clientes | `admin.clientes.export` | `Cu\CustomerController@export` + `CustomerCsvExporter` | L `tb_customer`, `tb_customer_group`, `tb_staff`, `tb_raiten_douki_master`, `tb_koumoku` | pendiente (`csv_from_js` y `user_csv` descartados: Flash / huérfano) |
-| `csv_download.php` (+carpeta), `csv_download_ex02.php` (+), `csv_download_template.php` (+) | CSV (Flash) | `admin.clientes.export?format=standard\|ex02\|template` | `Cu\CustomerController@export` | L `tb_customer`, `tb_search_form`, `tb_customer_sub`, `tb_customer_group`, `tb_staff` | pendiente (StreamedResponse por bloques, sin Flash) |
+| `csv_download.php` (+carpeta), `csv_download_ex02.php` (+), `csv_download_template.php` (+) | CSV (Flash) | `admin.clientes.export?format=standard\|ex02\|template` | `Cu\CustomerController@export` | L `tb_customer`, `tb_search_form`, `tb_customer_sub`, `tb_customer_group`, `tb_staff` | standard y ex02 hechos (C1-a, también en sus URL legacy `csv_download*.php`); `template` pendiente |
 | `customer_export.php` | (volcado de tabla) | — | — | — | descartado: volcado arbitrario de tablas (riesgo) |
 | `customer_sumup_list.php`, `customer_sumup_list2.php` | 顧客情報集計 | `admin.clientes.statistics` | `Cu\StatisticController@index` | L `tb_customer`, `tb_job`, `tb_pref`, `tb_raiten_rireki` | pendiente (una sola versión) |
-| `customer_card_delete.php` | UID関連付け解除 | `admin.clientes.felica.destroy` | `Cu\CustomerFelicaController@destroy` | E `tb_customer.felica_no`, `tb_customer_card` (S4), `tb_user_card`, `tb_play_time` | pendiente (copia de `inc/`, una ruta) |
+| `customer_card_delete.php` | UID関連付け解除 | `admin.clientes.felica.destroy` | `Cu\CustomerFelicaController@destroy` | E `tb_customer.felica_no`, `tb_customer_card` (S4), `tb_user_card`, `tb_play_time` | hecho (C1-b: misma acción que la de `inc/`) |
 | `karute_customer_search.php` | 顧客一覧・検索 (selector) | `admin.clientes.lookup` | `Cu\CustomerLookupController` | L `tb_customer`, `tb_koumoku` | pendiente (popup selector común) |
 | `karute_frm.php`, `karute_new.php`, `karute_register.php`, `karute_update.php` | カルテ | — | — | — | descartado: copia de `inc/karute_*` |
 | `stamp_use_register.php` | (usar sello) | — | — | — | descartado: copia de `inc/stamp_use_register.php` |
@@ -73,14 +73,14 @@ Abreviaturas: `Cu\` = `Admin\Customers\`, `Sa\` = `Admin\Sales\`, `Re\` = `Admin
 
 | Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas `tb_*` | Estado |
 |---|---|---|---|---|---|
-| `customer_new.php` | 顧客新規登録 | `admin.clientes.create`, `.edit` | `Cu\CustomerController@create/edit` | L `tb_customer`, `tb_customer_sub`, `tb_search_form`, `tb_search_cate`, `tb_shop`, `tb_staff`, `contents_master` (`name_input_mode_flg`), `tb_koumoku` | pendiente |
-| `customer_new_confirm.php` | 顧客登録情報 (確認) | `admin.clientes.confirm` (POST) | `Cu\CustomerController@confirm` + `StoreCustomerRequest` | L `tb_customer`, `tb_search_form`, `tb_staff` | pendiente (misma pantalla de confirmación que el legacy) |
-| `customer_new_register.php` | 顧客登録情報 | `.store`, `.update` | `@store/update` + `CustomerRegistrationService` | E `tb_customer`, `tb_customer_sub`, `hatuban` | pendiente |
-| `customer_detail.php` | 顧客登録情報 | `admin.clientes.show` (`?tab=N`) | `Cu\CustomerController@show` + `CustomerPolicy` | L `tb_customer`, `tb_search_cate`, `tb_shop`, `admin_master`, `contents_master`, `tb_manage_words` | pendiente |
-| `customer_recover_confirm.php` | 顧客登録情報 (復元) | `admin.clientes.restore` | `@restore` | E `tb_customer` (`disp_flg` 9 → 1) | pendiente |
-| `customer_delete_register.php` | 顧客登録情報 (削除) | `admin.clientes.destroy` | `@destroy` | E `tb_customer`, `tb_customer_sub`, `tb_user_card`, `tb_play_time` (`disp_flg = 9`, libera la tarjeta) | pendiente |
-| `customer_card_delete.php` | UID関連付け解除 | `admin.clientes.felica.destroy` | `Cu\CustomerFelicaController@destroy` | E `tb_customer`, `tb_customer_card`, `tb_user_card`, `tb_play_time` | pendiente |
-| `customer_window_close.php` | 顧客登録情報 | `admin.clientes.window-close` | (vista Blade) | — | pendiente (misma UI: cierra el popup y recarga el padre) |
+| `customer_new.php` | 顧客新規登録 | `admin.clientes.create`, `.edit` | `Cu\CustomerController@create/edit` | L `tb_customer`, `tb_customer_sub`, `tb_search_form`, `tb_search_cate`, `tb_shop`, `tb_staff`, `contents_master` (`name_input_mode_flg`), `tb_koumoku` | hecho (C1) |
+| `customer_new_confirm.php` | 顧客登録情報 (確認) | `admin.clientes.confirm` (POST) | `Cu\CustomerController@confirm` + `StoreCustomerRequest` | L `tb_customer`, `tb_search_form`, `tb_staff` | hecho (C1) |
+| `customer_new_register.php` | 顧客登録情報 | `.store`, `.update` | `@store/update` + `CustomerRegistrationService` | E `tb_customer`, `tb_customer_sub`, `hatuban` | hecho (C1) |
+| `customer_detail.php` | 顧客登録情報 | `admin.clientes.show` (`?tab=N`) | `Cu\CustomerController@show` + `CustomerPolicy` | L `tb_customer`, `tb_search_cate`, `tb_shop`, `admin_master`, `contents_master`, `tb_manage_words` | hecho (C1-b: `CustomerDetailData`, un método por pestaña; URL legacy `customer/customer_detail.php` y `inc/customer_detail.php` (ventana) → `legacy.clientes.detail[-popup]`; ventana = `?wintype=no_headers`) |
+| `customer_recover_confirm.php` | 顧客登録情報 (復元) | `admin.clientes.restore` | `@restore` | E `tb_customer` (`disp_flg` 9 → 1) | hecho (C1-b: `POST {customer}/restore`; incluye la comprobación de correo duplicado de esta pantalla, que el legacy no enlazaba) |
+| `customer_delete_register.php` | 顧客登録情報 (削除) | `admin.clientes.destroy` | `@destroy` | E `tb_customer`, `tb_customer_sub`, `tb_user_card`, `tb_play_time` (`disp_flg = 9`, libera la tarjeta) | hecho (C1-b: `DELETE {customer}`; libera la tarjeta con `CustomerFelicaService::detach`; sin sincronización POS) |
+| `customer_card_delete.php` | UID関連付け解除 | `admin.clientes.felica.destroy` | `Cu\CustomerFelicaController@destroy` | E `tb_customer`, `tb_customer_card`, `tb_user_card`, `tb_play_time` | hecho (C1-b: `DELETE {customer}/felica`) |
+| `customer_window_close.php` | 顧客登録情報 | `admin.clientes.window-close` | (vista Blade) | — | descartado: el legacy ya no lo usaba (el Refresh a esta pantalla está comentado en `customer_delete_register.php`) |
 | `add_record_new.php`, `add_record_confirm.php`, `add_record_register.php` | 顧客登録情報 (追加情報) | `admin.clientes.custom-records.create/.confirm/.store` | `Cu\CustomRecordController` | L/E `tb_customer_sub` (`category_inner_group`); L `tb_search_form`, `tb_search_cate` | pendiente |
 | `del_record.php` | 顧客登録情報 | `.custom-records.destroy` | `@destroy` | E `tb_customer_sub` | pendiente |
 | `kanren_record_new.php`, `kanren_record_register.php`, `kanren_del_record.php` | 来店履歴の追加・修正 | `admin.clientes.visit-records.create/.store/.destroy` | `Cu\VisitRecordController` + `VisitService` | E `tb_raiten_rireki`, `tb_point_log`, `tb_stamp_log`, `tb_customer_point`, `tb_customer_sub`, `tb_customer`; L `tb_staff`, `tb_shop` | pendiente (transacción con `FOR UPDATE`) |
@@ -93,21 +93,21 @@ Abreviaturas: `Cu\` = `Admin\Customers\`, `Sa\` = `Admin\Sales\`, `Re\` = `Admin
 | `ajax_changePaidMemberFlg.php` | (有料会員) | `admin.clientes.paid-member.update` | `Cu\PaidMemberController@update` → `MobileShopClient` (S5) | L/E `tb_customer.paid_member_flg*` | pendiente |
 | `ajax_connectPosData.php`, `ajax_connectPosKoubaiData.php`, `ajax_sendPosKoubaiMemoData.php` | (購買履歴 POS) | — | `App\Services\Customers\PosGateway` (nulo) | — | descartado: POS fuera de alcance; queda la interfaz |
 | `ajax_search_kaiin.php`, `ajax_category.php`, `ajax_raiten_list.php`, `ajax_raiten_time_select.php`, `ajax_shop_point_config.php`, `ajax_shop_stamp_config.php` | (utilidades) | `admin.clientes.lookup`, `admin.clientes.options.*` | `Cu\CustomerLookupController`, `Cu\OptionController` | L `tb_customer`, `tb_raiten_rireki`, `tb_shop`, `tb_sejutsu_cate` | pendiente (mismas respuestas que esperan los JS del legacy) |
-| `detail_tab.php` | 顧客情報 | `.show?tab=1` | `@show` | L `tb_customer`, `tb_kingaku_rank_master`, `tb_raiten_rank_master` (S3), `tb_staff` | pendiente |
-| `detail_tab2.php` | 個人情報/法人情報 | `.show?tab=2` | `@show` | L `tb_customer` | pendiente |
-| `detail_tab3.php` | 販促用情報 | `.show?tab=3` | `@show` | L `tb_customer_group`, `tb_raiten_douki_master` | pendiente |
-| `detail_tab4.php` | 来店履歴 | `.show?tab=4` | `@show` | L `tb_raiten_rireki`, `tb_shop` | pendiente |
-| `detail_tab5.php` | カルテ | `.show?tab=5` | `@show` | L `tb_karute`, `tb_sejutsu_cate` | pendiente |
-| `detail_tab6.php` | マイクーポン | `.show?tab=6` | `@show` | L `tb_mycoupon`, `tb_mycoupon_master`, `tb_mycoupon_used` (S3) | pendiente |
-| `detail_tab7.php` | マイアルバム | `.show?tab=7` | `@show` | L `tb_photo_album` | pendiente |
-| `detail_tab8.php` | ポイント | `.show?tab=8` | `@show` | L `tb_point_log`, `tb_customer_point` (S3), `tb_staff`, `tb_terminal` | pendiente |
-| `detail_tab9.php` | 関連情報 | `.show?tab=9` | `@show` | L `tb_raiten_rireki` (`tb_point_log_cd`, `tb_stamp_log_cd`, `tb_search_cate_cd`, `tb_customer_sub_inner_group`), `tb_point_log`, `tb_stamp_log`, `tb_customer_sub`, `admin_master.related_features` | pendiente (`tb_related_features` no existe en el backup: la relación vive en `tb_raiten_rireki`) |
-| `detail_tab10.php` | スタンプ | `.show?tab=10` | `@show` | L `tb_stamp_log`, `tb_staff`, `tb_terminal` | pendiente |
-| `detail_tab11.php` | 購買履歴 | `.show?tab=11` | `@show` | L `tb_order_sub`, `tb_customer_sub`, `tb_search_form` | pendiente (la parte POS queda vacía tras `PosGateway`) |
-| `detail_tab12.php` | 予約状況 | `.show?tab=12` | `@show` | L `tb_yoyaku`, `tb_yoyaku_uketsuke_day`, `tb_yoyaku_koumoku_master`, `tb_staff_works` | pendiente |
-| `detail_tab13.php` | 紹介実績 | `.show?tab=13` | `@show` | L `tb_customer` (`shoukai_tb_customer_cd`), `tb_raiten_rireki` | pendiente |
-| `detail_tab14.php` | 有料会員状況 | `.show?tab=14` | `@show` → `MobileShopClient` (S5) | L `tb_customer` | pendiente |
-| `detail_tabcustom.php` | (categoría adicional) | `.show?tab=custom-{cd}` | `@show` | L `tb_customer_sub`, `tb_search_form` | pendiente |
+| `detail_tab.php` | 顧客情報 | `.show?tab=1` | `@show` | L `tb_customer`, `tb_kingaku_rank_master`, `tb_raiten_rank_master` (S3), `tb_staff` | hecho (C1-b) |
+| `detail_tab2.php` | 個人情報/法人情報 | `.show?tab=2` | `@show` | L `tb_customer` | hecho (C1-b) |
+| `detail_tab3.php` | 販促用情報 | `.show?tab=3` | `@show` | L `tb_customer_group`, `tb_raiten_douki_master` | hecho (C1-b) |
+| `detail_tab4.php` | 来店履歴 | `.show?tab=4` | `@show` | L `tb_raiten_rireki`, `tb_shop` | hecho (C1-b) |
+| `detail_tab5.php` | カルテ | `.show?tab=5` | `@show` | L `tb_karute`, `tb_sejutsu_cate` | hecho (C1-b) |
+| `detail_tab6.php` | マイクーポン | `.show?tab=6` | `@show` | L `tb_mycoupon`, `tb_mycoupon_master`, `tb_mycoupon_used` (S3) | hecho (C1-b; borrar マイクーポン → `admin.clientes.coupons.destroy`) |
+| `detail_tab7.php` | マイアルバム | `.show?tab=7` | `@show` | L `tb_photo_album` | hecho (C1-b) |
+| `detail_tab8.php` | ポイント | `.show?tab=8` | `@show` | L `tb_point_log`, `tb_customer_point` (S3), `tb_staff`, `tb_terminal` | hecho (C1-b) |
+| `detail_tab9.php` | 関連情報 | `.show?tab=9` | `@show` | L `tb_raiten_rireki` (`tb_point_log_cd`, `tb_stamp_log_cd`, `tb_search_cate_cd`, `tb_customer_sub_inner_group`), `tb_point_log`, `tb_stamp_log`, `tb_customer_sub`, `admin_master.related_features` | hecho (C1-b) |
+| `detail_tab10.php` | スタンプ | `.show?tab=10` | `@show` | L `tb_stamp_log`, `tb_staff`, `tb_terminal` | hecho (C1-b) |
+| `detail_tab11.php` | 購買履歴 | `.show?tab=11` | `@show` | L `tb_order_sub`, `tb_customer_sub`, `tb_search_form` | hecho (C1-b; AJAX POS en `routes/legacy` con respuestas vacías) |
+| `detail_tab12.php` | 予約状況 | `.show?tab=12` | `@show` | L `tb_yoyaku`, `tb_yoyaku_uketsuke_day`, `tb_yoyaku_koumoku_master`, `tb_staff_works` | hecho (C1-b) |
+| `detail_tab13.php` | 紹介実績 | `.show?tab=13` | `@show` | L `tb_customer` (`shoukai_tb_customer_cd`), `tb_raiten_rireki` | hecho (C1-b) |
+| `detail_tab14.php` | 有料会員状況 | `.show?tab=14` | `@show` → `MobileShopClient` (S5) | L `tb_customer` | hecho (C1-b; `MobileShopClient` (S5), sin URL configurada = estado guardado) |
+| `detail_tabcustom.php` | (categoría adicional) | `.show?tab=custom-{cd}` | `@show` | L `tb_customer_sub`, `tb_search_form` | hecho (C1-b) |
 | `search_set2.php`, `page_control.php` | (buscador de productos, paginador) | — | — | — | descartado: `tb_c2_*` borradas en 2020; paginador común |
 
 #### `biyou/` — ficha 美容 (sin enlace en el menú; tiene pantalla porque el legacy la tenía)

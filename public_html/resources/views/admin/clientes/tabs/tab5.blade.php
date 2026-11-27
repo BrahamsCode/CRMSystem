@@ -44,21 +44,21 @@
 
 <div class="btnBox">
 
-<form method="get" name="add_record_form" id="add_record_form" class="form" action="{{ route('admin.clientes.kartes.create', $customer->cd) }}">
+<form method="get" name="add_record_form" id="add_record_form" class="form" action="{{ $pendingRoute('admin.clientes.kartes.create', $customer->cd) }}">
 <input type="submit" name="add_record" id="add_record" class="btn" value="カルテを追加する" />
 <input type="hidden" name="kaiin_cd" id="kaiin_cd" class="btn" value="{{ $customer->cd }}">
 <input type="hidden" name="tab" id="tab" value="{{ request('tab') }}">
 <input type="hidden" name="page" id="page" value="{{ request('page') }}" />
 </form>
 @if ($karuteSelected)
-<form method="get" name="update_record_form" id="add_record_form" class="form" action="{{ route('admin.clientes.kartes.edit', [$customer->cd, $karuteSelected->cd]) }}">
+<form method="get" name="update_record_form" id="add_record_form" class="form" action="{{ $pendingRoute('admin.clientes.kartes.edit', [$customer->cd, $karuteSelected->cd]) }}">
 <input type="submit" name="add_record" id="add_record" class="btn" value="カルテを修正する" />
 <input type="hidden" name="kaiin_cd" id="kaiin_cd" class="btn" value="{{ $customer->cd }}">
 <input type="hidden" name="tab" id="tab" value="{{ request('tab') }}">
 <input type="hidden" name="karute_cd" id="karute_cd" class="btn" value="{{ $karuteSelected->cd }}">
 <input type="hidden" name="page" id="page" value="{{ request('page') }}" />
 </form>
-<form method="post" name="delete_record_form" id="add_record_form" class="form" action="{{ route('admin.clientes.kartes.destroy', [$customer->cd, $karuteSelected->cd]) }}" onsubmit="submitChk(this); return false;">
+<form method="post" name="delete_record_form" id="add_record_form" class="form" action="{{ $pendingRoute('admin.clientes.kartes.destroy', [$customer->cd, $karuteSelected->cd]) }}" onsubmit="submitChk(this); return false;">
 @csrf
 <input type="submit" name="add_record" id="add_record" class="btn" value="カルテを削除する" />
 <input type="hidden" name="kaiin_cd" id="kaiin_cd" class="btn" value="{{ $customer->cd }}">
