@@ -2,15 +2,14 @@
 
 namespace App\Services\Promotions;
 
+use App\Support\LegacyPdf;
+
 /**
  * 宛名ラベル A4×12 (dm/aterna_a4_12.php): PDF con 2 columnas × 6 filas de etiquetas por hoja,
  * con las mismas medidas (mm) y la misma letra de 6 pt que el legacy.
  *
- * El legacy usaba FPDF + `japanese.php` (fuente CID `KozMinPro-Regular-Acro` sin incrustar, texto en Shift_JIS).
- * S1 aún no fijó paquete PDF (CONVENCIONES §4, NUCLEO §9), así que este escritor mínimo genera el mismo
- * tipo de PDF: fuente CID japonesa estándar sin incrustar (`KozMinPro-Regular`, Adobe-Japan1, la que
- * sustituye cualquier visor) con codificación `UniJIS-UTF16-H`, así que no se pierden caracteres fuera de
- * Shift_JIS. Cuando S1 fije el paquete, basta con reimplementar render() con él.
+ * El legacy usaba FPDF + `japanese.php` (`$pdf->Text(x, y, texto)` con la línea base en (x, y) mm). Aquí, mPDF
+ * de S1 (App\Support\LegacyPdf, NUCLEO §11) sin márgenes y `WriteText()`, que coloca el texto igual que FPDF::Text().
  */
 class DmLabelPdf
 {
@@ -34,16 +33,8 @@ class DmLabelPdf
     /** Filas de etiquetas por hoja (2 por fila = 12) */
     public const ROWS_PER_PAGE = 6;
 
-    /** A4 en puntos */
-    private const PAGE_W = 595.28;
-
-    private const PAGE_H = 841.89;
-
-    /** Anchos de la letra proporcional (CID 1〜95 = ASCII 32〜126), de `$SJIS_widths` de japanese.php */
-    private const ASCII_WIDTHS = [278, 299, 353, 614, 614, 721, 735, 216, 323, 323, 449, 529, 219, 306, 219, 453, 614, 614, 614, 614,
-        614, 614, 614, 614, 614, 614, 219, 219, 529, 529, 529, 486, 744, 646, 604, 617, 681, 567, 537, 647, 738, 320, 433, 637, 566,
-        904, 710, 716, 605, 716, 623, 517, 601, 690, 668, 990, 681, 634, 578, 316, 614, 316, 529, 500, 387, 509, 566, 478, 565, 503,
-        337, 549, 580, 275, 266, 544, 276, 854, 579, 550, 578, 566, 410, 444, 340, 575, 512, 760, 503, 529, 453, 326, 380, 326, 387];
+    /** Desplazamiento (mm) de cada una de las 4 líneas respecto a la primera */
+    public const LINE_OFFSETS = [0, 3, 5.5, 8.5];
 
     /**
      * Las 4 líneas de una etiqueta, como el legacy: 〒zip / pref+add+add_number / add_build / name.
@@ -63,82 +54,53 @@ class DmLabelPdf
     }
 
     /**
+     * Textos de cada hoja con su posición (mm, línea base), en el orden de aterna_a4_12.php.
+     * Siempre al menos una hoja, como el AddPage() inicial del legacy; los textos vacíos no se escriben.
+     *
      * @param  iterable<object|array>  $customers  filas de tb_customer en el orden de impresión
-     * @return string el PDF
+     * @return list<list<array{x: float, y: float, text: string}>>
      */
-    public function render(iterable $customers): string
+    public static function layout(iterable $customers): array
     {
-        $pages = [];
-        $ops = '';
+        $pages = [[]];
         $slot = 0;
         foreach ($customers as $customer) {
             if ($slot > 0 && $slot % (self::ROWS_PER_PAGE * 2) === 0) {
-                $pages[] = $ops;
-                $ops = '';
+                $pages[] = [];
             }
             $j = intdiv($slot % (self::ROWS_PER_PAGE * 2), 2);
             $x = self::X_MA + self::YOKO_START + ($slot % 2 === 1 ? self::YOKO + self::SUKIMA : 0);
             $y = self::Y_MA + self::TATE_START + $j * self::TATE;
             foreach (self::lines($customer) as $n => $text) {
-                $ops .= $this->text($x, $y + [0, 3, 5.5, 8.5][$n], $text);
+                if ($text !== '') {
+                    $pages[array_key_last($pages)][] = ['x' => (float) $x, 'y' => (float) ($y + self::LINE_OFFSETS[$n]), 'text' => $text];
+                }
             }
             $slot++;
         }
-        $pages[] = $ops; // siempre al menos una hoja, como el AddPage() inicial del legacy
 
-        return $this->document($pages);
+        return $pages;
     }
 
-    /** Texto con la línea base en (x, y) mm desde la esquina superior izquierda, como FPDF::Text() */
-    private function text(float $x, float $y, string $text): string
+    /**
+     * @param  iterable<object|array>  $customers  filas de tb_customer en el orden de impresión
+     * @return string el PDF
+     */
+    public function render(iterable $customers): string
     {
-        if ($text === '') {
-            return '';
+        $mpdf = LegacyPdf::make(['format' => 'A4', 'margin_left' => 0, 'margin_right' => 0, 'margin_top' => 0, 'margin_bottom' => 0,
+            'margin_header' => 0, 'margin_footer' => 0]);
+        // WriteText() no cambia de fuente por idioma: la CJK de mPDF, o la fuente japonesa propia si S1 la configuró
+        $font = $mpdf->autoLangToFont ? 'sun-exta' : $mpdf->default_font;
+
+        foreach (self::layout($customers) as $texts) {
+            $mpdf->AddPage();
+            $mpdf->SetFont($font, '', self::FONT_SIZE);
+            foreach ($texts as $t) {
+                $mpdf->WriteText($t['x'], $t['y'], $t['text']);
+            }
         }
-        $k = 72 / 25.4;
-        $hex = strtoupper(bin2hex(mb_convert_encoding($text, 'UTF-16BE', 'UTF-8')));
 
-        return sprintf("BT /F1 %d Tf %.2F %.2F Td <%s> Tj ET\n", self::FONT_SIZE, $x * $k, self::PAGE_H - $y * $k, $hex);
-    }
-
-    /** @param list<string> $pages contenido de cada hoja */
-    private function document(array $pages): string
-    {
-        $objects = [];
-        $objects[1] = '<< /Type /Catalog /Pages 2 0 R >>';
-        // 2 = Pages (al final, cuando se conocen las hojas)
-        $objects[3] = '<< /Type /Font /Subtype /Type0 /BaseFont /KozMinPro-Regular-UniJIS-UTF16-H /Encoding /UniJIS-UTF16-H /DescendantFonts [4 0 R] >>';
-        $objects[4] = '<< /Type /Font /Subtype /CIDFontType0 /BaseFont /KozMinPro-Regular'
-            .' /CIDSystemInfo << /Registry (Adobe) /Ordering (Japan1) /Supplement 5 >> /FontDescriptor 5 0 R'
-            .' /DW 1000 /W [1 ['.implode(' ', self::ASCII_WIDTHS).'] 231 325 500 631 [500] 326 389 500] >>';
-        $objects[5] = '<< /Type /FontDescriptor /FontName /KozMinPro-Regular /Flags 6 /FontBBox [0 -200 1000 900]'
-            .' /ItalicAngle 0 /Ascent 800 /Descent -200 /CapHeight 800 /StemV 60 >>';
-
-        $kids = [];
-        $n = 6;
-        foreach ($pages as $content) {
-            $kids[] = "$n 0 R";
-            $objects[$n] = sprintf('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 %.2F %.2F] /Resources << /Font << /F1 3 0 R >> >> /Contents %d 0 R >>',
-                self::PAGE_W, self::PAGE_H, $n + 1);
-            $objects[$n + 1] = '<< /Length '.strlen($content)." >>\nstream\n".$content.'endstream';
-            $n += 2;
-        }
-        $objects[2] = '<< /Type /Pages /Kids ['.implode(' ', $kids).'] /Count '.count($pages).' >>';
-        ksort($objects);
-
-        $pdf = "%PDF-1.4\n%\xE2\xE3\xCF\xD3\n";
-        $offsets = [];
-        foreach ($objects as $i => $body) {
-            $offsets[$i] = strlen($pdf);
-            $pdf .= "$i 0 obj\n$body\nendobj\n";
-        }
-        $xref = strlen($pdf);
-        $pdf .= 'xref'."\n0 ".(count($objects) + 1)."\n0000000000 65535 f \n";
-        foreach ($offsets as $offset) {
-            $pdf .= sprintf("%010d 00000 n \n", $offset);
-        }
-        $pdf .= 'trailer'."\n<< /Size ".(count($objects) + 1)." /Root 1 0 R >>\nstartxref\n$xref\n%%EOF\n";
-
-        return $pdf;
+        return $mpdf->Output('', 'S');
     }
 }

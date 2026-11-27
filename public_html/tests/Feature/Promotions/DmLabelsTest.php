@@ -4,6 +4,7 @@ use App\Services\Promotions\DmLabelPdf;
 use Illuminate\Support\Facades\DB;
 
 require_once __DIR__.'/../Terminales/helpers.php';
+require_once __DIR__.'/pdf_helpers.php';
 
 /* M8 DM発行: búsqueda de clientes (customer_list) y 宛名ラベル A4×12 en PDF (aterna_a4_12) */
 
@@ -21,12 +22,6 @@ beforeEach(function () {
             'error_send_cnt' => 0, 'disp_flg' => '9', 'touroku_kubun' => '2', 'tb_shop_cd' => 1, 'touroku_date' => '1700000002'],
     ]);
 });
-
-/** Texto tal como queda en el PDF (UTF-16BE en hexadecimal) */
-function pdfHex(string $text): string
-{
-    return '<'.strtoupper(bin2hex(mb_convert_encoding($text, 'UTF-16BE', 'UTF-8'))).'>';
-}
 
 function dmUniqid($response): string
 {
@@ -81,23 +76,19 @@ it('この内容で宛名出力する: PDF A4 con las direcciones de los cliente
         ->assertHeader('Content-Type', 'application/pdf');
     $pdf = $response->getContent();
 
-    expect($pdf)->toStartWith('%PDF-1.4')->toEndWith("%%EOF\n")
-        ->toContain('/MediaBox [0 0 595.28 841.89]')
-        ->toContain('/Encoding /UniJIS-UTF16-H')
+    // PDF de mPDF (LegacyPdf): A4, una hoja, las 4 líneas de cada cliente en orden cd: 山田 (izquierda) y 佐藤 (derecha)
+    expect($pdf)->toStartWith('%PDF-')->toContain('%%EOF')
+        ->toContain('/MediaBox [0 0 595.280 841.890]')
         ->toContain('/Count 1')
-        // Orden cd: 山田 (columna izquierda) y 佐藤 (derecha), 4 líneas cada uno
-        ->toContain(pdfHex('〒530-0001'))
-        ->toContain(pdfHex('大阪府大阪市北区梅田1-1'))
-        ->toContain(pdfHex('梅田ビル101'))
-        ->toContain(pdfHex('山田太郎'))
-        ->toContain(pdfHex('東京都千代田区2-2'))
-        ->toContain(pdfHex('佐藤花子'))
-        ->not->toContain(pdfHex('削除済'));
+        ->and(pdfTextList($pdf))->toBe(['〒530-0001', '大阪府大阪市北区梅田1-1', '梅田ビル101', '山田太郎', '〒100-0001', '東京都千代田区2-2', '佐藤花子']);
 
-    // Posiciones de aterna_a4_12.php: x = 19.3 + 10 (+ 83.8 + 3.8), y = 21.5 + 10 desde arriba
+    // Posiciones de aterna_a4_12.php (FPDF::Text, línea base): x = 19.3 + 10 (+ 83.8 + 3.8), y = 21.5 + 10 desde arriba
     $k = 72 / 25.4;
-    expect($pdf)->toContain(sprintf('%.2F %.2F Td %s', 29.3 * $k, 841.89 - 31.5 * $k, pdfHex('〒530-0001')))
-        ->toContain(sprintf('%.2F %.2F Td %s', 116.9 * $k, 841.89 - 40.0 * $k, pdfHex('佐藤花子')));
+    $texts = collect(pdfTexts($pdf))->keyBy('text');
+    expect($texts['〒530-0001']['x'])->toEqualWithDelta(29.3 * $k, 0.01)
+        ->and($texts['〒530-0001']['y'])->toEqualWithDelta(841.89 - 31.5 * $k, 0.01)
+        ->and($texts['佐藤花子']['x'])->toEqualWithDelta(116.9 * $k, 0.01)
+        ->and($texts['佐藤花子']['y'])->toEqualWithDelta(841.89 - 40.0 * $k, 0.01);
 
     $this->post(route('admin.promocion.dm.labels'), ['search_uniqid' => 'nope'])->assertNotFound();
 });
@@ -107,5 +98,10 @@ it('12 etiquetas por hoja', function () {
     $pdf = app(DmLabelPdf::class)->render($customers);
 
     expect($pdf)->toContain('/Count 2')
-        ->and(substr_count($pdf, '/Type /Page '))->toBe(2);
+        ->and(pdfTextList($pdf))->toHaveCount(26) // 13 clientes × (〒 + nombre)
+        ->and(DmLabelPdf::layout($customers))->toHaveCount(2)
+        ->and(DmLabelPdf::layout($customers)[1])->toBe([
+            ['x' => 29.3, 'y' => 31.5, 'text' => '〒000-13'],
+            ['x' => 29.3, 'y' => 40.0, 'text' => '客13'],
+        ]);
 });

@@ -37,7 +37,10 @@ Implementar submódulo por submódulo en el orden del diseño: migraciones, mode
 
 ## Pedidos
 
-- S1: paquete PDF con fuente japonesa (DM, y luego signage/pdf); `@section('ui_version')` en el layout.
+- Pendiente al fusionar 567aa8d de S3: simplificar `AnketoMailController` (rutas con `->defaults('mailType','anketo')` y `->defaults('mailFamily','anketo2.reply')`) y quitar su UPDATE de emitida (ya lo hace `MailRegistrar`).
+
+- S1: `@section('ui_version')` en el layout; decidir si `/system/inc/ajax_picupload.php` y `/system/uploads/` pasan al núcleo.
+- S3: (M3) フォロー/自動 de push publican en `admin.promocion.push.create`; enlace 「クリック詳細」 de mailmag_list a `push.show?data_type=mailmaga`.
 - S3: `MailController::family()/activeAc()` con anketo y 返信メール; marcar encuesta emitida en `MailRegistrar::register()`; edición de envío programado anketo; クリックカウンタ (M4).
 
 - S1: `memory_limit` mayor para la suite (128 MB ya no alcanzan con 600+ pruebas; con 512M pasa).
@@ -47,6 +50,8 @@ Implementar submódulo por submódulo en el orden del diseño: migraciones, mode
 Ver diseño §5. A S0: BD `admin` de `signage/` (no está en el esquema); GoTel/PDF y ビーコン (Antony). A S1: base de modelos legacy (`disp_flg`, `hatuban`, `ContentsMaster`, `AdminMaster`, `Shop`, `Terminal`), dueño de `tb_mobile_navi`, copia de JS/CSS de carpeta de módulo a `public/legacy/`, paquetes imagen/QR/PDF, conexión `beacon`, Policies.
 
 ## Decisiones
+
+- `qr_img.php` en `routes/publico/promocion.php` (sin login: lo usan appview de S5). `qr_print_pdf.php` del legacy era HTML para imprimir: ahora PDF A4 con `LegacyPdf`. Push: 停止/起動/修正 solo master (en el legacy `$kengenNo` no estaba definido).
 
 - `ventas` volvió a S2 (S0): mi 0cb4201 revertido en 741543e.
 - DM: PDF con escritor mínimo propio (`DmLabelPdf`, fuente CID KozMinPro sin incrustar, como el FPDF del legacy) hasta que S1 fije paquete PDF; verificar una hoja impresa.
@@ -72,6 +77,8 @@ Ver diseño §5. A S0: BD `admin` de `signage/` (no está en el esquema); GoTel/
 - Config de マイコレ y ガチャリン en `contents_master` (modelo de S1) vía servicios de S4; `mypage_config` sigue con `serialize()` (lo leen `mpa_*`).
 
 ## Hecho
+
+- 2026-11-28 M5 プッシュ通知 (alta, listas, pasados, historial, comando follow push) y M7 QR/基本情報 (4 variantes, `QrImage`, `qr_img.php` público, QR印刷 con `LegacyPdf`); etiquetas DM con `LegacyPdf`. Suite 893 verde.
 
 - 2026-11-27 F6 (anketo/anketo2 con `AnketoFamily`, envío vía MailController de S3), F7 (来店履歴 + 3 CSV SJIS-win + カードリーダ設定), M8 (DM + PDF A4×12 propio): suite 829 verde. Permisos de mypage (1685a84).
 
