@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\AdminMaster;
+use App\Models\ContentsMaster;
+use App\Models\Staff;
 use App\Services\Customers\VisitLoyalty;
 use App\Services\Promotions\GApiPushTrigger;
 use App\Services\Promotions\NullPosGateway;
@@ -9,6 +12,8 @@ use App\Services\Promotions\PosGateway;
 use App\Services\Promotions\PromocionVisitLoyalty;
 use App\Services\Promotions\PushTrigger;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -49,6 +54,8 @@ class PromocionServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        $this->defineMenuGates();
+
         $this->callAfterResolving(Schedule::class, function (Schedule $schedule) {
             foreach (self::TASKS as $command => $frequency) {
                 if (class_exists($command)) {
@@ -56,5 +63,25 @@ class PromocionServiceProvider extends ServiceProvider
                 }
             }
         });
+    }
+
+    /**
+     * Condiciones del menú lateral (left_navi3.php), sin el pase de master (NucleoServiceProvider::isCondition).
+     */
+    private function defineMenuGates(): void
+    {
+        $admin = fn (string $col) => (string) AdminMaster::current()?->{$col} === '1';
+        $extShop = fn () => ContentsMaster::text('mycolle', 'app_layout_mode') === '1';
+
+        Gate::define('promocion.app.enabled', fn ($staff = null) => $admin('application_use_flg'));
+        Gate::define('promocion.beacon.enabled', fn ($staff = null) => $admin('beacon_use_flg'));
+        Gate::define('promocion.smatopi.enabled', fn ($staff = null) => $admin('smatopi_flg'));
+        Gate::define('promocion.ext-shop.enabled', fn ($staff = null) => $extShop());
+        Gate::define('promocion.app-ext-shop.enabled', fn ($staff = null) => $admin('application_use_flg') && $extShop());
+        // ポイントルール一覧: con ビーコン y (master o kengen 1037-3)
+        Gate::define('promocion.point-rules.enabled', fn (?Staff $staff = null) => $admin('beacon_use_flg')
+            && $staff !== null && ($staff->isMaster() || Gate::forUser($staff)->allows('kengen.1037.3')));
+        // リマインダ: fuera del bucle de hijos; sale si el sistema 9 u 11 (予約) está activo
+        Gate::define('promocion.reminder.enabled', fn ($staff = null) => DB::table('tb_base_system')->where('system_flg', '1')->whereIn('cd', [9, 11])->exists());
     }
 }

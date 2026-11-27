@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\Promotions\CouponStatsController;
 use App\Http\Controllers\Admin\Promotions\MailAjaxController;
 use App\Http\Controllers\Admin\Promotions\MailController;
 use App\Http\Controllers\Admin\Promotions\MailPastController;
+use App\Http\Controllers\Admin\Promotions\PointConfigController;
+use App\Http\Controllers\Admin\Promotions\PointTemplateController;
 use App\Http\Controllers\Admin\Promotions\TemplateCategoryController;
 use App\Http\Controllers\Admin\Promotions\TemplateController;
 use App\Http\Controllers\Admin\Promotions\TestAddressController;
@@ -72,5 +74,13 @@ Route::prefix('promocion')->name('promocion.')->group(function () {
             Route::get('mail_past_shousai', [MailPastController::class, 'show'])->name('show')->defaults('mailType', 'mycoupon');
             Route::match(['get', 'post'], 'mail_sended_list', [MailPastController::class, 'recipients'])->name('recipients')->defaults('mailType', 'mycoupon');
         });
+    });
+
+    // ポイント仕様管理 (point): una pantalla con un `act` por formulario, popups de plantillas de aviso y AJAX
+    Route::prefix('point')->name('points.')->group(function () {
+        Route::match(['get', 'post'], 'point_config', [PointConfigController::class, 'edit'])->name('config');
+        Route::post('ajax_point_yukoukigen_kakunin', [PointConfigController::class, 'expiryPreview'])->name('expiry-preview');
+        Route::get('mail_template/{type}', [PointTemplateController::class, 'edit'])->name('template')->whereIn('type', array_keys(PointTemplateController::TYPES));
+        Route::post('mail_template/{type}', [PointTemplateController::class, 'update'])->name('template.update')->whereIn('type', array_keys(PointTemplateController::TYPES));
     });
 });
