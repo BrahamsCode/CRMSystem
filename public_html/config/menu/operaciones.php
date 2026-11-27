@@ -30,6 +30,7 @@ return [
             'ac' => 'ac3',
             'child' => 'スケジュール管理',
             'links' => [
+                ['label' => '日別シフト管理', 'url' => '/admin/operaciones/shifts/day'],
                 ['label' => 'シフト区分管理', 'url' => '/admin/operaciones/shift-kinds', 'can' => 'nucleo.master'],
             ],
         ],

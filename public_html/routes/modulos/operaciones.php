@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\Operaciones\StaffController;
 use App\Http\Controllers\Admin\Operaciones\StaffEntryController;
 use App\Http\Controllers\Admin\Operaciones\StaffFieldController;
 use App\Http\Controllers\Admin\Operaciones\StaffGroupController;
+use App\Http\Controllers\Admin\Operaciones\StaffShiftController;
 use App\Http\Controllers\Admin\Operaciones\StaffShiftKindController;
 use Illuminate\Support\Facades\Route;
 
@@ -59,6 +60,10 @@ Route::prefix('operaciones')->name('operaciones.')->group(function () {
     // スタッフ検索項目設定 (form_config.php)
     Route::get('staff-fields', [StaffFieldController::class, 'edit'])->name('staff-fields.edit');
     Route::put('staff-fields', [StaffFieldController::class, 'update'])->name('staff-fields.update');
+
+    // 日別シフト管理 (schedule/staff_shift.php)
+    Route::get('shifts/day', [StaffShiftController::class, 'day'])->name('shifts.day');
+    Route::post('shifts/day', [StaffShiftController::class, 'save'])->name('shifts.save');
 
     // 営業日設定 (config/shop_work_calendar.php)
     Route::get('shop-work', [ShopWorkController::class, 'edit'])->name('shop-work.edit');
