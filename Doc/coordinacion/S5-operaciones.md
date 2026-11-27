@@ -9,7 +9,7 @@ Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archiv
 
 ## Próximo paso — Diseño (sin código)
 
-> **Ahora (2026-11-27, S0):** diseño aprobado; implementando スタッフ管理 → スタッフ新規登録/修正 (`staff_entry*` con foto), luego `tool/api`/CTI (paso 8) y `mpa_*` (paso 9).
+> **Ahora (2026-11-27, S0):** diseño aprobado; pasos 1-4, 8-10 y 12 hechos. Siguiente: `appview/*` (paso 11).
 
 > **2026-11-26, cambio de base (Antony):** misma BD y misma UI que el legacy (`CONVENCIONES.md`, sección 0). Si ya escribiste tu diseño con tablas nuevas, rehaz la parte de esquema y UI. — **rehecho sobre la BD legacy el 2026-11-27, esperando revisión de S0**
 
@@ -44,6 +44,7 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 - **S2:** modelos de `tb_customer(_sub)`, `tb_raiten_rireki`, `tb_koumoku`, `tb_search_*`, `sales_items`, `tb_photo_album`, `tb_yoyaku`, `numbered_ticket`; servicio de visitas (`raitenFunc`), búsqueda por teléfono, alta de socio, reserva rápida; rutas destino de `ctiWindow`.
 - **S3:** servicio de puntos con los campos de `setPoint`; modelos de cupones, sellos y encuestas para `appview`.
 - **S4:** modelos de `tb_url_list` y `tb_beacon_history`; imágenes y `mypage_config` de mypage en solo lectura.
+- **Antony/S0:** ⏸ ¿siguen en uso `exp_cmd/cron/get_shukei_data*.php` (escriben `tb_crm_check_operation` en la BD de VIZAN 203.183.91.218) y el cliente Adobe AIR (`air/`)?
 - **Antony/S0:** ⏸ confirmar si 勤怠 (kintai/working/lector FeliCa) se usa sin touchcation (22 de 63 puntos).
 
 ## Decisiones
@@ -100,3 +101,4 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 - 2026-11-27 — シフト区分管理 (`StaffShiftKindController`, `LegacyRanking` compartido con スタッフグループ) (`ShiftKindTest`).
 - 2026-11-27 — 日別シフト管理 y 月別シフト管理 (`StaffShiftController`, `ShiftBoard`, vistas con el JS/CSS del legacy) (`StaffShiftTest`). Pasos 1-4 y 8-10 hechos; suite 573 en verde.
 - 2026-11-27 — `setRaitenDetail` sobre `VisitRecordService::save` de S2 (mismas claves; errores con el formato del legacy; `add_record_verify` en sesión) (`SetRaitenDetailTest`; contrato contra el legacy `todo` hasta C3).
+- 2026-11-27 — Utilitarios: `crm_version.php` (vacío, como en crm2-php8 y development), `/ptag/<ID>`, `air/air_info_out.php` y los XML de `air/` (`UtilityTest`) (51df245). `integraciones:shukei` ⏸ (BD externa de VIZAN, llamador desconocido).

@@ -187,11 +187,11 @@ Rutas `appview/<archivo>.php` idénticas, con sesión (como el legacy). Controla
 | Archivo legacy | URL | Ruta Laravel | Controlador@método | Tablas legacy | Estado |
 |---|---|---|---|---|---|
 | `version/pos/v.php`, `version/android3/v.php`, `version/sharp/v.php` y los 6 `.apk` | `/version/<canal>/v.php` | — | — | — | descartado: touchcation fuera de alcance (las 6 APK son `jp.CrmShWeb`; S0, 2026-11-26) |
-| `version/crm_version.php` | `/version/crm_version.php` | `publico.integraciones.version.crm` | `VersionController@crm` | — | pendiente (`text/plain` `2.704`, sin salto de línea) |
-| `ptag/.htaccess`, `ptag/index.php` | `/ptag/<ID>` | `publico.integraciones.ptag` | `PtagController@redirect` | L `tb_url_list`, `tb_customer`; E `url_transfer_data` | pendiente |
-| `air/update-info.xml`, `air/crossdomain.xml` | `/air/*.xml` | archivos estáticos en `public/air/` | — | — | pendiente (condicional: mientras exista el cliente AIR) |
-| `air/air_info_out.php` | `/air/air_info_out.php` | `publico.integraciones.air.info` | `AirController@info` | L `tb_information`, `tb_staff` | pendiente (condicional, confirmar uso con Japón) |
-| `exp_cmd/cron/get_shukei_data.php`, `get_shukei_data2.php` | `/exp_cmd/cron/get_shukei_data*.php` | comando `integraciones:shukei {year?} {month?}` | `App\Console\Commands\Integraciones\ShukeiCommand` | L `tb_hp_domain`, `tb_shop` y ventas | pendiente (prioridad baja; llamador desconocido) |
+| `version/crm_version.php` | `/version/crm_version.php` | `publico.integraciones.version.crm` | `UtilityController@crmVersion` | — | hecho (200 sin cuerpo: el archivo está vacío en crm2-php8 y en development; el análisis decía `2.704`) |
+| `ptag/.htaccess`, `ptag/index.php` | `/ptag/<ID>` | `publico.integraciones.ptag` | `UtilityController@ptag` | L `tb_url_list`, `tb_customer`; E `url_transfer_data` | hecho (cookie UID leída de la cabecera, sin el cifrado de Laravel) |
+| `air/update-info.xml`, `air/crossdomain.xml` | `/air/*.xml` | archivos estáticos en `public/air/` | — | — | hecho (copiados byte a byte; uso del cliente AIR por confirmar con Japón) |
+| `air/air_info_out.php` | `/air/air_info_out.php` | `publico.integraciones.air.info` | `UtilityController@airInfo` | L `tb_information`, `tb_staff` | hecho (mismas condiciones; uso por confirmar con Japón) |
+| `exp_cmd/cron/get_shukei_data.php`, `get_shukei_data2.php` | `/exp_cmd/cron/get_shukei_data*.php` | comando `integraciones:shukei {year?} {month?}` | `App\Console\Commands\Integraciones\ShukeiCommand` | L `tb_hp_domain`, `tb_shop`, `tb_customer`, `mailmag_master`, `tb_login_rireki`; E `tb_crm_check_operation` en una BD externa de VIZAN | pendiente ⏸ (escribe en otro servidor, 203.183.91.218, con la clave del POS, y no se sabe quién lo llama: confirmar con Japón antes de portarlo) |
 | `exp_cmd/verUp/*` (11) | CLI | — | — | — | descartado: actualizadores históricos de esquema |
 | `cron/regenerateCronJob.php` | `/cron/regenerateCronJob.php` | — | — | — | descartado: lo reemplaza el Scheduler (cada módulo registra sus tareas en su ServiceProvider) |
 | `instagram/index.php` | `/instagram/index.php` | — | — | — | descartado: API de Instagram retirada |
