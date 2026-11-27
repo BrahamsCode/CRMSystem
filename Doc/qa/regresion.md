@@ -8,6 +8,12 @@ Cada sesión escribe solo en su subsección. Formato de cada fallo: `| pantalla 
 
 ### Núcleo / 基本情報 (S1)
 
+Recorrido con Playwright en `:8081` como master. Lo creado lleva el prefijo «QA-S1» y se borró al terminar; lo cambiado en 機能設定 y 権限管理 se dejó como estaba, comprobado en la BD (admin_master con el mismo md5 que antes). La muestra solo se abrió para comparar.
+
+| Pantalla (URL) | Fallo | Corrección + prueba Pest | Commit |
+|---|---|---|---|
+| Cabecera y ショートカット管理 (`bookmark*.php`) | Los accesos directos enlazaban la URL legacy de `tb_bookmark`. Las pantallas movidas a `/admin/…` daban 404: スタッフ一覧, クーポン一覧, メルマガ y otras; 27 de los 60 accesos de fábrica | `Bookmark::targetUrl()`: usa la URL legacy si conserva su ruta, si no la de Laravel (`/admin/promocion/<dir>/<archivo>` en category3 y un mapa para スタッフ, マイページ y 求人). Los accesos a pantallas descartadas (携帯HP, トピックス, フォトギャラリー) y a kiosk no se ofrecen. `BookmarkTest`: la cabecera enlaza la ruta nueva y cada URL de `bookmark_reset.sql` resuelve a una ruta existente | (este) |
+
 ### Clientes / ventas / reservas (S2)
 
 ### Promoción (S3)

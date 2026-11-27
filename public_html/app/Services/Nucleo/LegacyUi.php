@@ -147,11 +147,14 @@ class LegacyUi
         return (explode('.', request()->getHost())[1] ?? null) === 'crm-s';
     }
 
-    /** Accesos directos visibles (tb_bookmark), con el permiso de cada uno */
+    /** Accesos directos visibles (tb_bookmark), con el permiso de cada uno y solo los que tienen pantalla (Bookmark::targetUrl) */
     public function bookmarks(?Staff $staff): Collection
     {
         return Bookmark::query()->where('bookmark_flg', '1')->orderBy('user_rank')->get()
             ->filter(function (Bookmark $b) use ($staff) {
+                if ($b->targetUrl() === null) {
+                    return false;
+                }
                 if ($b->tb_kengen_contents_cd === null || $b->tb_kengen_contents_node === null) {
                     return true;
                 }
