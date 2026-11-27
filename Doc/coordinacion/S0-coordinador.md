@@ -64,6 +64,15 @@
 - 2026-11-26: diseño de S2 aprobado (76 pts). Rutas `admin.clientes.*`. CONVENCIONES: `PosGateway` propio de cada módulo en `app/Services/<Modulo>/` (sin interfaz común). La pantalla 顧客グループ設定 es de S2 y usa el modelo `CustomerGroup` de S3 sin cambiarlo. Decidido sin Antony: las ventas viejas (`tb_customer_sub` -1/-2) se importan a `sales`/`expenses`; los campos dudosos (`customer_level`, `school*`, `mail_comment`, `biyou`) se migran como datos, aunque solo tengan pantalla si el legacy la tenía; sin límite de 60 días en los informes (como el legacy).
 - 2026-11-26: las pruebas de pantallas fallaban en los worktrees, con 30–70 s por prueba, porque faltaba `public/build/` (Vite, fuera de git). `scripts/en-docker.sh` ahora lo copia del principal si falta, y ya se copió a los 5 worktrees. La línea base de S1 se repite.
 - 2026-11-26: cambio de base de Antony (bf3ab66). S2–S5 se detuvieron y guardaron en stash su capa de datos sobre tablas nuevas, que es recuperable. La capa de datos de S4 (23f14c9) no se integra. En CONVENCIONES §4 se quitan las reglas que dependían del esquema nuevo (`<algo>_settings`, `id = cd`/`legacy_cd`/`legacy_id_map`, `hyouji_flg` → `status`). Se quedan: `routes/publico`, `PosGateway` por módulo, CSV SJIS-win y propiedad de modelos. Los diseños aprobados conservan la paridad, las rutas y los servicios; cada sesión rehace las secciones de esquema y UI.
+- 2026-11-27: Fase 1 de S1 integrada: Laravel 13.44.1 sobre PHP 8.5.13, pruebas en verde, build OK, web 200 en `CRMSystem/`. Diseños v2 sobre la BD y la UI del legacy aprobados e integrados: S2 (84 pts), S3 (≈83), S4 (sin cambio de orden) y S5 (63, de los que 22 esperan 勤怠). También se integraron `SignageFeedBuilder` sobre `tb_*` (S4) y `LegacyJson` (S5).
+- 2026-11-27: CONVENCIONES:
+  - Los estáticos de cada categoría o carpeta pública los copia el módulo dueño; S1 solo copia lo común.
+  - Los modelos de cada módulo van en `app/Models/<Modulo>/`; los traits comunes son de S1.
+  - La BD `admin` de `signage/` usa una conexión aparte `signage`, y falta un volcado (pedido a Antony).
+  - `login_pass` y lo sensible se quedan como en el legacy.
+  - `tb_mobile_navi` → S4.
+  - `numbered_ticket` (クイック予約, solo touchcation, no está en el backup) → descartado.
+- 2026-11-27: siguiente tarea de S1 (Antony: el login primero): modelo base y traits comunes, luego el login contra el personal del legacy, el layout idéntico y los estáticos comunes.
 
 ## Hecho
 

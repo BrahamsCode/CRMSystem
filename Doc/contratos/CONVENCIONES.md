@@ -11,6 +11,8 @@
 - **Modelos Eloquent sobre las tablas del legacy:** `protected $table = 'tb_customer'`, `protected $primaryKey = 'cd'`, `public $timestamps = false` (o las columnas de fecha del legacy con `const CREATED_AT`/`UPDATED_AT`), los nombres de columna tal cual (`kaiin_cd`, `touroku_date`…). Numeración con `hatuban` como el legacy. Borrado lógico con `disp_flg = 9` como el legacy (scope global o trait propio, **no** SoftDeletes).
 - **Migraciones nuevas solo si hacen falta** y siempre compatibles con el legacy: agregar tablas o columnas nullable; **nunca** borrar ni renombrar columnas del legacy (la BD de producción es la misma).
 - No hay importador: pasar a producción es apuntar a la misma BD.
+- Otras BD del legacy: la BD `admin` de `signage/` va en una conexión aparte (`signage`, configurada por S1 con `DB_SIGNAGE_*`), igual que el legacy. Su esquema no está en `crm2019.backup`: hace falta un volcado (Antony).
+- `login_pass` del cliente y las demás columnas sensibles se quedan como en el legacy: la app y las integraciones dependen de ellas. Los cambios de seguridad que rompan el contrato se anotan para Japón.
 - `Doc/database/ESTANDARES_BD.md` y `TABLAS_MODULO_*.md` **ya no aplican** (eran para un esquema nuevo).
 - Lo que CRMSystem tenía sobre tablas nuevas (clientes, promociones, layout Tailwind) se borró; queda en git (commit `8d84c98`) solo como referencia de lógica.
 
@@ -37,9 +39,10 @@ Cada módulo escribe **solo** en sus carpetas. `<Modulo>` en PascalCase inglés,
 | `app/Http/Controllers/Admin/<Modulo>/`, `app/Http/Requests/<Modulo>/` | El módulo |
 | `resources/views/admin/<modulo>/` | El módulo |
 | `resources/views/layouts/`, `resources/views/components/`, `public/legacy/` (CSS, JS e imágenes del legacy) | S1. Componentes nuevos genéricos: pedirlos a S0 |
+| `public/legacy/system/category<N>/…` y estáticos propios de una carpeta pública (`public/legacy/appview/`, `r/`, `signage/`, `digitalsignage/`…) | El módulo dueño de esa categoría o carpeta: copia del legacy sus CSS, JS e imágenes con la misma estructura relativa. S1 copia solo lo común (`system/css`, `system/js`, `system/images`, `system/plugin`, `common/`). Si una carpeta pública necesita sus URL relativas originales, puede ir en `public/<carpeta>/`, con el mismo dueño |
 | `lang/ja/<modulo>.php` | El módulo (opcional: los textos pueden ir directo en el Blade, como en el legacy) |
 | `config/menu/<modulo>.php` | El módulo (entradas del menú lateral; S1 las une) |
-| `app/Models/` | Según la tabla de la sección 3 |
+| `app/Models/` | Raíz y `app/Models/Concerns/`: S1 (modelos del núcleo y traits comunes `HasHatuban`, `LegacySoftDeletes` (`disp_flg = '9'`), `LegacyTimestamps` (`touroku_date`/`update_date`)). Cada módulo pone sus modelos en `app/Models/<Modulo>/` (`Customers`, `Sales`, `Reservations`, `Promotions`, `Mypage`, `Terminales`, `Senalizacion`, `Operaciones`, `Integraciones`); un modelo por `tb_*`, del dueño de la sección 3 |
 | `app/Enums/`, `app/Jobs/`, `app/Mail/`, `app/Console/Commands/` | Subcarpeta `<Modulo>/` del módulo para archivos nuevos |
 | `database/schema/pgsql-schema.sql` | S1 (no se edita a mano: es el esquema del legacy) |
 | `database/migrations/` | Solo si hace falta algo nuevo, compatible con el legacy (sección 0). Nombre `AAAA_MM_DD_HHMMSS_<modulo>_<accion>.php` |

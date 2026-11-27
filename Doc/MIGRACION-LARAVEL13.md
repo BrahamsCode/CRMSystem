@@ -50,7 +50,7 @@ Contado en `crm2-php8/public_html` (2,441 archivos PHP). Nombres de módulo seg�
 
 | # | Módulo | Carpeta legacy | PHP | Submódulos | Estado en CRMSystem |
 |---|---|---|---|---|---|
-| 1 | 顧客管理 | `system/category1/` | 212 | 顧客管理, 初期設定管理, 売上管理, 入退室管理 | **En curso**: mockups `Doc/mockups/modulo-clientes`, BD `Doc/database/TABLAS_MODULO_CLIENTES.md`, modelos `Customer*` |
+| 1 | Subir Laravel 12 → 13 y PHP 8.5 (`composer.json`, Pest 4, Fortify, Dockerfile de Render) | **Hecho (2026-11-27)**: Laravel 13.44.1, PHP 8.5.13 (S1, b44dcea) |
 | 2 | 販売管理 | `system/category2/` | 5 | 商品情報管理 | Pendiente |
 | 3 | 販売促進管理 | `system/category3/` | 390 | お知らせ配信, 来店履歴, 予約, ポイント, スマトピ連携, スタンプ, デコメール, 自動お知らせ, フォローお知らせ, アンケート, マイクーポン, お客様アンケート, プッシュ通知, リマインダ | **En curso**: `Doc/database/TABLAS_MODULO_PROMOCIONES.md`, modelos `Coupon`, `Message*`, `Point*`, `Stamp*`, `Rank*`, `Survey` |
 | 4 | マイページ管理 | `system/category6/` | 83 | マイページ, 携帯HP, フォトギャラリー, 求人情報 | Pendiente |
@@ -132,7 +132,7 @@ Diferencias con crm2-php8, a propósito: `DocumentRoot /var/www/public` (Laravel
 | 0 | Docker igual que crm2-php8 + documentación de referencia | **Hecho (2026-11-26)** |
 | 0b | Análisis vista por vista (`Doc/analisis-legacy/`, ≈ 1.020 vistas, ≈ 615 puntos) y orquestación (`Doc/planificacion/`, `INICIAR-CRM.bat`) | **Hecho (2026-11-26)** |
 | 1 | Subir Laravel 12 → 13 y PHP 8.5 (`composer.json`, Pest 4, Fortify, Dockerfile de Render) | Pendiente — S1 |
-| 1' | Diseño por grupo (`Doc/diseno/`) | Paridad, rutas y servicios aprobados (S2–S5, 2026-11-26). **En curso:** rehacer el esquema (modelos sobre `tb_*`) y la UI (HTML/CSS del legacy) tras el cambio de base |
+| 1' | Diseño por grupo (`Doc/diseno/`) | **Hecho (2026-11-27)**: v2 sobre la BD y la UI del legacy, aprobados: S2 (84 pts), S3 (≈83), S4, S5 (63, de los que 22 esperan 勤怠) |
 | 2 | **Misma BD y misma UI que el legacy** (Antony, 2026-11-26): esquema `database/schema/pgsql-schema.sql` desde `crm2019.backup`, modelos sobre `tb_*`, mismos CSS; responsive al final. Lo construido sobre tablas nuevas se borró | **Hecho (esquema y limpieza)** |
 | 3+ | Módulos en paralelo según `Doc/planificacion/ORCHESTRATION.md` | Pendiente |
 
@@ -149,6 +149,7 @@ Diferencias con crm2-php8, a propósito: `DocumentRoot /var/www/public` (Laravel
 - Push (S3): con la misma BD, `b.g-api.net` puede seguir leyendo `push_master`/`mailmag_master` como hoy, y el contrato no se rompe. Solo falta confirmar que g-api se mantiene (o si algún día se pasa a FCM directo).
 - Promoción (S3): ¿se usan 新着情報 (`category3/digital_signage`), DM発行 y スマトピ? Si no, se descartan (≈5,5 puntos).
 - Asistencia (S5): los dos registradores de 勤怠 (`touchcation/kintai_crm_n` y `touchcation/timecard`) son touchcation, que no se usa. ¿Se sigue usando 勤怠管理/勤怠一覧 (y el lector FeliCa con sus tarjetas)? Si no, ≈27 puntos pasan a «solo datos históricos».
+- Señalización web (S4): volcado de la BD `admin` de `signage/` (no está en `crm2019.backup`). Sin él, el submódulo `signage/` no se puede probar.
 - Las de [legacy-crm2/PENDING.md](legacy-crm2/PENDING.md), sección 7 (servidor POS de prueba, staging con datos reales, IPs de desarrollo, `activation=1`).
 
 ## 10. Inconsistencias vistas al preparar esto
