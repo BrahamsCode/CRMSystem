@@ -50,6 +50,11 @@ Un modelo que necesitan varios módulos (por ejemplo `Customer`) lo **lee** cual
 - Controladores delgados; la lógica en `app/Services/<Modulo>/` o `app/Actions/<Modulo>/`. Validación en Form Requests.
 - Textos de pantalla en japonés vía `__('<modulo>.clave')`. Nada de texto japonés suelto en los controladores.
 - Configuración propia de un módulo (categorías de `contents_master`/`admin_master` que solo usa ese módulo): tabla tipada del módulo `<algo>_settings` (fila única), no una tabla genérica clave-valor. S1 solo mantiene la configuración global y su importador mapea cada categoría a la tabla del módulo según el diseño de ese módulo.
+- Códigos legacy (`cd`), en este orden:
+  1. **`id = cd`** cuando la tabla nueva sale 1:1 de una sola tabla legacy y su código aparece en un contrato externo (URL de dispositivos o de la app, parámetros o respuestas de API): `shops`, `customers`, `staff`, `visits`, productos, displays y programas de señalización… El importador inserta con `id` explícito y después ajusta la secuencia (`SELECT setval(pg_get_serial_sequence('<tabla>','id'), MAX(id))`). Así los registros nuevos siguen la numeración y el contrato usa siempre `id`.
+  2. **`legacy_cd`** (`bigint`, índice único con su discriminador) solo cuando varias tablas legacy se funden en una (los `cd` chocarían) y el código sigue saliendo en un contrato. Los registros nuevos la dejan en null.
+  3. Todo lo demás: la tabla `legacy_id_map` del importador de S1 (tabla legacy, `cd` → `id` nuevo), sin columna en la tabla destino.
+- CSV de descarga: Shift_JIS (`SJIS-win`) como el legacy, porque los abren en Excel en Japón. Un helper común lo publica S1; mientras tanto, cada módulo usa uno propio con la misma firma.
 - `hyouji_flg` (表示/非表示, 停止) → `status` (`0` inactivo, `1` activo) de `ESTANDARES_BD.md` §3; no crear un `display_flg` aparte.
 - Borrado lógico: SoftDeletes (reemplaza `disp_flg = 9`). Fechas con Carbon; **nunca** reproducir el `mktime()` que daba 1970.
 - Correo: Mailables + cola (`QUEUE_CONNECTION=database`). Envíos programados: Scheduler (`routes/console.php`, dueño S1; cada módulo registra sus tareas en un `ServiceProvider` propio en `app/Providers/<Modulo>ServiceProvider.php`).

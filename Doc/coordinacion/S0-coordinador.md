@@ -58,6 +58,7 @@
 - 2026-11-26: arranque de S0. Fase 1 confirmada a S1 (en su cola, el grupo de rutas del quiosco pasa a ser solo para integraciones y señalización) y diseño confirmado a S2–S5, con aviso del recorte de touchcation (filas `descartado: touchcation fuera de alcance`). A S6 se le pidió detenerse sin hacer commit; la rama `l13/quiosco` y el worktree `CRMSystem-quiosco` quedan sin uso (no se borran sin Antony).
 - 2026-11-26: S6 se detuvo y cerró la sesión: worktree limpio, sin commits ni push.
 - 2026-11-26: diseño de S4 aprobado con cambios menores (`hyouji_flg` → `status`; revisar `felica_cards.name`; rutas de dispositivos en `routes/publico/senalizacion.php`). CONVENCIONES: nuevo `routes/publico/<modulo>.php` (fuera del grupo `admin`, sin CSRF ni prefijo; también para S5), redirección `/hp/uploads/*` a cargo de S1 y configuración por módulo en tablas `<algo>_settings`. Pedidos de S4 reenviados a S1, S2, S3 y S5; GoTel/PDF y ビーコン escalados a Antony.
+- 2026-11-26: diseños de S3 (≈71,5 pts, sin partir la sesión por ahora) y S5 (75 pts) aprobados con cambios menores. CONVENCIONES: códigos legacy en este orden: `id = cd` (1:1 y en contrato) → `legacy_cd` (tablas fundidas y en contrato) → `legacy_id_map` de S1; CSV en SJIS-win. `category3/reservation` → S2. `CustomerDevice` sigue siendo de S2 (regla `Customer*`); S3 lo lee. Cupones migrados sin importe: `type`/`value` nulos = cupón solo de texto, como el legacy (sin preguntar a Antony). A Antony: push (g-api frente a FCM), uso de 新着情報/DM/スマトピ y uso de 勤怠 sin touchcation.
 
 ## Hecho
 
