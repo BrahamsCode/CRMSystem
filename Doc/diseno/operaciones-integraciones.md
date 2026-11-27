@@ -101,19 +101,19 @@ Todas con HTTP 200 también en error y leyendo el **cuerpo JSON incluso en GET**
 
 | Archivo legacy | URL | Ruta Laravel | Controlador@método | Tablas legacy | Estado |
 |---|---|---|---|---|---|
-| `api/.htaccess`, `api/index.php` | `/api/<ruta>` | rutas explícitas + fallback del prefijo | `MobileShop\FallbackController` | — | pendiente (404 JSON en lugar del fatal del legacy) |
-| `api/auth.php` | `POST /api/auth` | `publico.integraciones.api.auth` | `MobileShop\AuthController@issue` | — | pendiente |
-| `api/customer.php` | `GET /api/customer` | `publico.integraciones.api.customer` | `MobileShop\CustomerController@search` | L `tb_customer` | pendiente (bindings + lista blanca) |
-| `api/shop.php` | `GET /api/shop` | `publico.integraciones.api.shop` | `MobileShop\ShopController@index` | L `tb_shop` | pendiente |
-| `api/point.php` | `GET /api/point` | `publico.integraciones.api.point` | `MobileShop\PointController@log` | L `tb_point_log`, `tb_customer` | pendiente |
-| `api/mobile_shop/customer.php` | `GET /api/mobile_shop/customer[/<cd>]` | `publico.integraciones.api.ms.customer` | `MobileShop\CustomerController@show` / `@searchDomains` | L `tb_customer` (N BD) | pendiente (multi-BD: pedido 5.1) |
-| `api/mobile_shop/fetch_paid_member.php` | `POST /api/mobile_shop/fetch_paid_member` | `publico.integraciones.api.ms.fetch-paid-member` | `MobileShop\PaidMemberController@fetch` | salida HTTP (extlink) | pendiente |
-| `api/mobile_shop/send_unpaid_member_status.php` | `POST /api/mobile_shop/send_unpaid_member_status` | `publico.integraciones.api.ms.send-unpaid` | `MobileShop\PaidMemberController@sendUnpaid` | salida HTTP (extlink) | pendiente |
-| `api/mobile_shop/passcode.php` | `POST /api/mobile_shop/passcode` | `publico.integraciones.api.ms.passcode` | `MobileShop\PasscodeController@check` | L `contents_master` (`mobileshop`) | pendiente (`hash_equals`) |
-| `api/mobile_shop/point.php` | `GET/POST /api/mobile_shop/point` | `publico.integraciones.api.ms.point` | `MobileShop\PointController@balance` | L `tb_customer`, `tb_customer_point` | pendiente |
-| `api/mobile_shop/point_use.php` | `POST /api/mobile_shop/point_use` | `publico.integraciones.api.ms.point-use` | `MobileShop\PointController@use` | E `tb_customer_point`, `tb_point_log`, `hatuban` | pendiente |
-| `api/mobile_shop/point_exchange_item.php` | `POST /api/mobile_shop/point_exchange_item` | `publico.integraciones.api.ms.point-exchange` | `MobileShop\PointController@exchangeItem` | L `sales_items`; E `tb_customer_point`, `tb_point_log` | pendiente |
-| `api/mobile_shop/sales_items.php` | `GET /api/mobile_shop/sales_items[/<cd>]` | `publico.integraciones.api.ms.sales-items` | `MobileShop\SalesItemController@index` / `@show` | L `sales_items` | pendiente |
+| `api/.htaccess`, `api/index.php` | `/api/<ruta>` | rutas explícitas + fallback del prefijo | `MobileShop\FallbackController` | — | hecho (contrato byte a byte con las fixtures; la prueba se activa cuando S1 integre `firebase/php-jwt`) |
+| `api/auth.php` | `POST /api/auth` | `publico.integraciones.api.auth` | `MobileShop\AuthController@issue` | — | hecho (contrato byte a byte con las fixtures; la prueba se activa cuando S1 integre `firebase/php-jwt`) |
+| `api/customer.php` | `GET /api/customer` | `publico.integraciones.api.customer` | `MobileShop\CustomerController@search` | L `tb_customer` | hecho (contrato byte a byte con las fixtures; la prueba se activa cuando S1 integre `firebase/php-jwt`) |
+| `api/shop.php` | `GET /api/shop` | `publico.integraciones.api.shop` | `MobileShop\ShopController@index` | L `tb_shop` | hecho (contrato byte a byte con las fixtures; la prueba se activa cuando S1 integre `firebase/php-jwt`) |
+| `api/point.php` | `GET /api/point` | `publico.integraciones.api.point` | `MobileShop\PointController@log` | L `tb_point_log`, `tb_customer` | hecho (contrato byte a byte con las fixtures; la prueba se activa cuando S1 integre `firebase/php-jwt`) |
+| `api/mobile_shop/customer.php` | `GET /api/mobile_shop/customer[/<cd>]` | `publico.integraciones.api.ms.customer` | `MobileShop\CustomerController@show` / `@searchDomains` | L `tb_customer` (N BD) | hecho (contrato byte a byte con las fixtures; la prueba se activa cuando S1 integre `firebase/php-jwt`) |
+| `api/mobile_shop/fetch_paid_member.php` | `POST /api/mobile_shop/fetch_paid_member` | `publico.integraciones.api.ms.fetch-paid-member` | `MobileShop\PaidMemberController@fetch` | salida HTTP (extlink) | hecho (contrato byte a byte con las fixtures; la prueba se activa cuando S1 integre `firebase/php-jwt`) |
+| `api/mobile_shop/send_unpaid_member_status.php` | `POST /api/mobile_shop/send_unpaid_member_status` | `publico.integraciones.api.ms.send-unpaid` | `MobileShop\PaidMemberController@sendUnpaid` | salida HTTP (extlink) | hecho (contrato byte a byte con las fixtures; la prueba se activa cuando S1 integre `firebase/php-jwt`) |
+| `api/mobile_shop/passcode.php` | `POST /api/mobile_shop/passcode` | `publico.integraciones.api.ms.passcode` | `MobileShop\PasscodeController@check` | L `contents_master` (`mobileshop`) | hecho (contrato byte a byte con las fixtures; la prueba se activa cuando S1 integre `firebase/php-jwt`) |
+| `api/mobile_shop/point.php` | `GET/POST /api/mobile_shop/point` | `publico.integraciones.api.ms.point` | `MobileShop\PointController@balance` | L `tb_customer`, `tb_customer_point` | hecho (contrato byte a byte con las fixtures; la prueba se activa cuando S1 integre `firebase/php-jwt`) |
+| `api/mobile_shop/point_use.php` | `POST /api/mobile_shop/point_use` | `publico.integraciones.api.ms.point-use` | `MobileShop\PointController@use` | E `tb_customer_point`, `tb_point_log`, `hatuban` | pendiente (espera el servicio de puntos de S3: port de `setPoint`) |
+| `api/mobile_shop/point_exchange_item.php` | `POST /api/mobile_shop/point_exchange_item` | `publico.integraciones.api.ms.point-exchange` | `MobileShop\PointController@exchangeItem` | L `sales_items`; E `tb_customer_point`, `tb_point_log` | pendiente (espera el servicio de puntos de S3: port de `setPoint`) |
+| `api/mobile_shop/sales_items.php` | `GET /api/mobile_shop/sales_items[/<cd>]` | `publico.integraciones.api.ms.sales-items` | `MobileShop\SalesItemController@index` / `@show` | L `sales_items` | hecho (contrato byte a byte con las fixtures; la prueba se activa cuando S1 integre `firebase/php-jwt`) |
 
 ### 1.7 API de la app マイページ (`api/mpa_*.php`)
 

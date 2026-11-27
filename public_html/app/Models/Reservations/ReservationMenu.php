@@ -47,4 +47,26 @@ class ReservationMenu extends LegacyModel
     public const TYPE_BASE = '1';
 
     public const TYPE_OPTION = '2';
+
+    /** `tb_shop_cd = -1`: menú de 全店舗 (todas las tiendas) */
+    public const ALL_SHOPS = -1;
+
+    /** 最終受付時間 del formulario (時 00-29, 分 00/30) → segundos desde las 00:00 (más de 86400 si pasa de las 24) */
+    public static function endTimeSeconds(mixed $hour, mixed $minute): int
+    {
+        return (int) $hour * 3600 + (int) $minute * 60;
+    }
+
+    /** `menu_end_time` → ['HH', 'MM'] para los selectores (como el legacy: 24時 en adelante incluidos) */
+    public function endTimeParts(): array
+    {
+        if ($this->menu_end_time === null) {
+            return [null, null];
+        }
+
+        return [
+            sprintf('%02d', intdiv($this->menu_end_time, 3600)),
+            sprintf('%02d', intdiv($this->menu_end_time % 3600, 60)),
+        ];
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Admin;
+use App\Models\Staff;
 use App\Models\User;
 
 return [
@@ -44,9 +44,10 @@ return [
             'provider' => 'users',
         ],
         
+        // Personal del sistema (tb_staff), como system/login.php del legacy
         'admin' => [
             'driver' => 'session',
-            'provider' => 'admins',
+            'provider' => 'staff',
         ],
     ],
 
@@ -73,9 +74,10 @@ return [
             'model' => env('AUTH_MODEL', User::class),
         ],
 
-        'admins' => [
-            'driver' => 'eloquent',
-            'model' => Admin::class,
+        // App\Auth\LegacyStaffUserProvider: login_id + login_pass en texto, disp_flg = '1'
+        'staff' => [
+            'driver' => 'legacy_staff',
+            'model' => Staff::class,
         ],
 
         // 'users' => [
@@ -111,12 +113,6 @@ return [
             'throttle' => 60,
         ],
 
-        'admins' => [
-            'provider' => 'admins',
-            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
-            'expire' => 60,
-            'throttle' => 60,
-        ],
     ],
 
     /*

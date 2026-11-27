@@ -1,17 +1,14 @@
 <?php
 
+/*
+ * Configuración propia del CRM (núcleo). Los valores secretos van solo en .env, nunca aquí.
+ * Lo que había para las tablas nuevas (menús, campos de clientes…) se quitó con la base legacy:
+ * queda en git (commit 8d84c98) como referencia.
+ */
 return [
 
     /*
-     * Moneda de los importes, que se guardan como entero en la unidad mínima
-     * (yen: decimals 0; sol o dólar: decimals 2, en céntimos).
-     */
-    /* Dirección de Mi página (módulo 3): destino del QR de registro y de las notificaciones push */
-    'mypage_url' => env('CRM_MYPAGE_URL', env('APP_URL', 'http://localhost') . '/mypage'),
-
-    /*
-     * Prefecturas (都道府県), en el orden JIS del legacy. Se guardan como texto
-     * (大阪府), igual que el legacy, para que la migración de datos sea directa.
+     * Prefecturas (都道府県), en el orden JIS del legacy. Se guardan como texto (大阪府), igual que el legacy.
      */
     'prefectures' => [
         '北海道', '青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県', '茨城県',
@@ -22,155 +19,27 @@ return [
         '佐賀県', '長崎県', '熊本県', '大分県', '宮崎県', '鹿児島県', '沖縄県',
     ],
 
-    'currency' => [
-        'symbol' => env('CRM_CURRENCY_SYMBOL', '¥'),
-        'decimals' => (int) env('CRM_CURRENCY_DECIMALS', 0),
-        'decimal_point' => '.',
-        'thousands' => ',',
-    ],
+    /*
+     * Entorno del legacy: STAGE=docker abre los menús de mantenimiento (Common::isDevelopmentAuthorityFromIP).
+     * En producción debe quedar vacío.
+     */
+    'stage' => env('STAGE', ''),
+
+    /* IP de desarrollo (Constant::DEVELOPMENT_IPS del legacy), separadas por comas */
+    'developer_ips' => array_filter(array_map('trim', explode(',', (string) env('CRM_DEVELOPER_IPS', '')))),
 
     /*
-     * Barra de módulos (columna estrecha de la izquierda).
-     * «menu» es la clave de este archivo con el menú lateral del módulo y «lang»
-     * el archivo de idioma con sus etiquetas. Los módulos sin ruta aún no existen.
+     * Login de soporte del proveedor (system/login.php): usuarios `Relation` y `extsupport`
+     * verificados contra el servidor externo; entran como `master` con estas claves internas.
      */
-    'modulos' => [
-        ['key' => 'clientes', 'label' => 'Clientes', 'icon' => 'users', 'route' => 'admin.customers.index',
-            'menu' => 'customer_menu', 'lang' => 'customers', 'description' => 'Altas, búsqueda, visitas, rangos e información adicional'],
-        ['key' => 'promo', 'label' => 'Promociones', 'icon' => 'mega', 'route' => 'admin.promotions.index',
-            'menu' => 'promotion_menu', 'lang' => 'promotions', 'description' => 'Envíos, automatizaciones, cupones, sellos y puntos'],
-        ['key' => 'mipagina', 'label' => 'Mi página', 'icon' => 'heart', 'route' => null, 'description' => 'La web del socio: cupones, sellos y datos'],
-        ['key' => 'web', 'label' => 'Sitio web', 'icon' => 'globe', 'route' => null, 'description' => 'Páginas públicas de la tienda'],
-        ['key' => 'soporte', 'label' => 'Soporte operativo', 'icon' => 'brief', 'route' => null, 'description' => 'Tareas y herramientas del día a día'],
-        ['key' => 'terminales', 'label' => 'Terminales', 'icon' => 'tablet', 'route' => null, 'description' => 'Tablets y lectores de las tiendas'],
-        ['key' => 'reservas', 'label' => 'Reservas', 'icon' => 'cal', 'route' => null, 'description' => 'Agenda y reservas de clientes'],
-        ['key' => 'config', 'label' => 'Configuración', 'icon' => 'sliders', 'route' => null, 'description' => 'Tiendas, personal y datos generales'],
+    'support' => [
+        'relation_login_pass' => env('RELATION_LOGIN_PASS', ''),
+        'support_master_pass' => env('SUPPORT_MASTER_PASS', ''),
+        'api_host' => env('CRM_SUPPORT_API_HOST', 'b.g-api.net'),
+        'timeout' => 15,
     ],
 
-    /*
-     * Menú del módulo de clientes. Replica las 10 secciones del sistema legacy,
-     * agrupadas en operación diaria y configuración.
-     *
-     * Las etiquetas son claves de traducción, no texto: se resuelven contra los
-     * archivos de idioma del módulo para que cambiar APP_LOCALE cambie el menú.
-     */
-    'customer_menu' => [
-        ['head' => 'modulo'],
-        ['label' => 'resumen', 'icon' => 'dash', 'route' => 'admin.customers.index'],
-        ['label' => 'nuevo', 'icon' => 'user-plus', 'route' => 'admin.customers.create'],
-        ['label' => 'buscar', 'icon' => 'search', 'route' => 'admin.customers.search'],
-        ['label' => 'visita', 'icon' => 'visit', 'route' => 'admin.customers.visits'],
-        ['label' => 'estadisticas', 'icon' => 'stats', 'route' => 'admin.customers.statistics'],
+    /* Días que se recuerda el usuario en el login (cookie, casilla ログイン情報を保存) */
+    'remember_login_id_days' => 90,
 
-        ['head' => 'config'],
-        ['label' => 'campos', 'icon' => 'sliders', 'route' => 'admin.customers.field-settings'],
-        ['label' => 'grupos', 'icon' => 'layers', 'route' => 'admin.customers.groups'],
-        ['label' => 'motivos', 'icon' => 'target', 'route' => 'admin.customers.visit-motives'],
-        ['label' => 'rangos', 'icon' => 'award', 'route' => 'admin.customers.ranks'],
-        ['label' => 'reglas', 'icon' => 'shuffle', 'route' => 'admin.customers.rank-schedules'],
-        ['label' => 'info', 'icon' => 'plus-box', 'route' => 'admin.customers.custom-categories'],
-        ['label' => 'intervalo', 'icon' => 'cal', 'route' => 'admin.customers.visit-interval'],
-    ],
-
-    /*
-     * Menú del módulo de promociones (販売促進管理). Reúne las 11 secciones del
-     * legacy: newsletter, decomail y push son un solo «Envíos»; seguimiento,
-     * programados y recordatorios son «Automatizaciones».
-     */
-    'promotion_menu' => [
-        ['head' => 'modulo'],
-        ['label' => 'resumen', 'icon' => 'dash', 'route' => 'admin.promotions.index'],
-        ['label' => 'envios', 'icon' => 'send', 'route' => 'admin.promotions.messages.index', 'active' => 'admin.promotions.messages.*'],
-        ['label' => 'automatizaciones', 'icon' => 'zap', 'route' => 'admin.promotions.rules.index', 'active' => 'admin.promotions.rules.*'],
-        ['label' => 'cupones', 'icon' => 'ticket', 'route' => 'admin.promotions.coupons.index', 'active' => 'admin.promotions.coupons.*'],
-        ['label' => 'encuestas', 'icon' => 'clipboard', 'route' => 'admin.promotions.surveys.index', 'active' => 'admin.promotions.surveys.*'],
-
-        ['head' => 'fidelizacion'],
-        ['label' => 'sellos', 'icon' => 'star', 'route' => 'admin.promotions.stamps'],
-        ['label' => 'puntos', 'icon' => 'coin', 'route' => 'admin.promotions.points'],
-
-        ['head' => 'analisis'],
-        ['label' => 'rendimiento', 'icon' => 'stats', 'route' => 'admin.promotions.analytics'],
-        ['label' => 'historial', 'icon' => 'grid-clock', 'route' => 'admin.promotions.visit-history'],
-
-        ['head' => 'config'],
-        ['label' => 'plantillas', 'icon' => 'template', 'route' => 'admin.promotions.templates.index', 'active' => 'admin.promotions.templates.*'],
-        ['label' => 'pruebas', 'icon' => 'flask', 'route' => 'admin.promotions.test-addresses'],
-        ['label' => 'registro', 'icon' => 'qr', 'route' => 'admin.promotions.registration'],
-    ],
-
-    /*
-     * Catálogo de los campos estándar de `customers`, tal como los agrupa la
-     * pantalla «Campos y CSV» del sistema legacy.
-     *
-     * Esto describe las columnas que existen, no cómo están configuradas: los
-     * cuatro interruptores por campo viven en la tabla `field_settings`.
-     *
-     * Código de 4 caracteres, una posición por columna:
-     *   visible en registro · obligatorio · filtro de búsqueda · exportar CSV
-     *   1 = activo por defecto   0 = inactivo por defecto
-     *   x = no aplica a ese campo   R = obligatorio fijo, no se puede desmarcar
-     */
-    'customer_fields' => [
-        'Identificación y membresía' => [
-            ['num', 'Nº de cliente', 'xx10'], ['mgmt', 'Nº de gestión', '0000'],
-            ['store', 'Tienda de registro', 'xx11'], ['ptype', 'Persona / empresa', '0000'],
-            ['joined', 'Fecha de alta', 'xx11'], ['status', 'Estado de registro', 'xx11'],
-            ['news', 'Newsletter', '0Rx0'], ['updated', 'Fecha de modificación', 'xx00'],
-            ['group', 'Grupo de cliente', 'xx00'], ['pass', 'Contraseña', '0000'],
-        ],
-        'Datos personales' => [
-            ['name', 'Nombre', '1111'], ['namek', 'Nombre (fonético)', '0000'],
-            ['birth', 'Fecha de nacimiento', '1111'], ['age', 'Edad', 'xx11'],
-            ['sex', 'Sexo', '1111'], ['blood', 'Grupo sanguíneo', '0000'], ['job', 'Ocupación', '1111'],
-        ],
-        'Contacto' => [
-            ['tel', 'Teléfono', '0010'], ['mobile', 'Teléfono móvil', '0000'], ['fax', 'Fax', '0000'],
-            ['mail1', 'Email 1', '1111'], ['mail2', 'Email 2', '0000'], ['pmail', 'Email personal', '0000'],
-        ],
-        'Dirección' => [
-            ['zip', 'Código postal', '0000'], ['pref', 'Prefectura', '0000'],
-            ['cityk', 'Ciudad / distrito (kana)', '0000'], ['city', 'Ciudad / distrito', '0000'],
-            ['street', 'Calle y número', '0000'],
-            ['bldgk', 'Edificio / depto. (kana)', '0000'], ['bldg', 'Edificio / depto.', '0000'],
-        ],
-        'Trabajo y empresa' => [
-            ['wname', 'Lugar de trabajo', '0000'], ['wnamek', 'Lugar de trabajo (fonético)', '0000'],
-            ['wind', 'Rubro del lugar de trabajo', '0000'], ['wtel', 'Teléfono del trabajo', '0000'],
-            ['wfax', 'Fax del trabajo', '0000'], ['founded', 'Fecha de fundación', '0000'],
-            ['capital', 'Capital social', '0000'], ['industry', 'Rubro', '0000'], ['dept', 'Departamento', '0000'],
-        ],
-        'Representante y persona de contacto' => [
-            ['rep', 'Representante: nombre', '0000'], ['repk', 'Representante: nombre (fonético)', '0000'],
-            ['repb', 'Representante: fecha de nacimiento', '0000'], ['cname', 'Contacto: nombre', '0000'],
-            ['cnamek', 'Contacto: nombre (fonético)', '0000'], ['ctel', 'Contacto: teléfono', '0000'],
-            ['cmail', 'Contacto: email', '0000'],
-        ],
-        'Fidelización y terminal' => [
-            ['treg', 'Registro de terminal', 'xx00'], ['tid', 'ID de terminal', 'xx11'],
-            ['bounce', 'Correos no entregados', 'xx11'], ['stamps', 'Sellos', 'xx00'],
-            ['points', 'Puntos', 'xx00'], ['staff', 'Personal asignado', '0000'],
-            ['motive', 'Motivo de primera visita', '0000'],
-            ['arn', 'Rango por importe (actual)', 'xx00'], ['arp', 'Rango por importe (anterior)', 'xx00'],
-            ['vrn', 'Rango por visitas (actual)', 'xx00'], ['vrp', 'Rango por visitas (anterior)', 'xx00'],
-        ],
-    ],
-
-    /* Cabeceras de las cuatro columnas de la matriz, en el mismo orden del código */
-    'field_columns' => [
-        ['Visible en registro', 'Formulario móvil'],
-        ['Obligatorio', 'Formulario móvil'],
-        ['Filtro de búsqueda', 'En Buscar clientes'],
-        ['Exportar CSV', 'Columna del archivo'],
-    ],
-
-    /*
-     * Información familiar: son columnas propias de `customers`, no una categoría
-     * personalizada, así que su configuración también va aquí. Código de 3
-     * posiciones: obligatorio · búsqueda · CSV.
-     */
-    'family_fields' => [
-        ['spouse', 'Cónyuge', '110'],
-        ['wedding', 'Aniversario de boda', '110'],
-    ],
 ];

@@ -1,0 +1,572 @@
+
+
+/* ==========================================================
+
+CSS Information
+
+
+
+ File name:      main.css
+
+ Author:         Takeshi Okajima (admin)
+
+ Style Info:     詳細設定用
+
+========================================================== */
+
+
+/* リンク画像ホバー時透過 */
+a:hover img {
+	opacity: 0.7;
+	filter: alpha(opacity=70);
+}
+
+/* リンク時写真透過キャンセル設定 */
+h1 a:hover img {
+	opacity: 1;
+	filter: alpha(opacity=100);
+}
+
+
+/* ================================================
+
+　　　　コンテンツ全体設定
+
+================================================ */
+h2 {
+	clear: both;
+	padding: 3px 0 4px 6px;
+	background: url(../img/h2_bg.gif) repeat-x scroll 0 50%;
+	border: 1px solid #CCCCCC;
+}
+
+h2 span {
+	display: block;
+	padding-left: 6px;
+	border-left: 4px solid #E50E0E;
+	line-height: 1.6;
+}
+
+h3 {
+	clear: both;
+	margin: 10px 0;
+	padding: 4px 5px;
+	border-left: 5px solid #333333;
+	border-bottom: 1px solid #333333;
+	color: #222222;
+	font-size: 117%;
+}
+
+h4 {
+	font-size: 117%;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* ===========================================================
+
+			使いまわし要素設定
+
+=========================================================== */
+/* 新着など用枠有ボックス */
+.topics,
+.topics2 {
+	overflow: auto;
+	min-height: 120px;
+	height: auto !import;
+	height: 120px;
+	padding: 5px;
+	border: 1px solid #CCCCCC;
+}
+
+.topics dt,
+.topics2 dt {
+	float: left;
+	color: #660000;
+}
+
+.topics dd {
+	margin-bottom: 5px;
+	padding-left: 6.5em;/* dtのテキスト幅+0.5emが理想サイズ */
+	padding-bottom: 5px;
+	border-bottom: 1px dotted #666666;
+}
+
+.topics2 dd {
+	margin-bottom: 5px;
+	padding-left: 8em;/* dtのテキスト幅+0.5emが理想サイズ */
+	padding-bottom: 5px;
+	border-bottom: 1px dotted #666666;
+}
+
+
+/* イメージとテキストの横並び */
+.imgText dt {
+	float: left;
+	margin-right: 10px;
+}
+
+.imgText2 dt {
+	float: left;
+}
+
+.imgText dt img,
+.imgText dt2 img {
+	padding: 2px;
+	border: 1px solid #666666;
+}
+
+.imgText2 dd {
+	padding-left: 125px;/* 横にある画像の横幅+10pxが理想サイズ */
+}
+
+
+/* イメージが並ぶパターン */
+.imgList {
+	overflow: hidden;
+}
+
+.imgList dt {
+	float: left;
+}
+
+.imgList li {
+	float: left;
+	width: 180px;
+	margin-bottom: 10px;
+}
+
+.imgList li img {
+	padding: 2px;
+	border: 1px solid #666666;
+}
+
+/* テキストとイメージが並ぶパターンのテキスト設定 */
+.imgList li span {
+	display: block;
+	text-align: center;
+}
+
+
+/* 横並び画像とテキストの設定ここから(dlに指定中にdlは使用不可) ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ */
+.listBox {
+	overflow: hidden;
+}
+
+.listBox dl {
+	display: table;
+	zoom: 1;
+}
+
+.listBox dt {
+	padding: 0 5px;
+	vertical-align: top;
+	display: table-cell;
+}
+
+.listBox dt img {
+	/*border: 1px solid #666666;*/
+}
+
+.listBox dd {
+	width: 100%;
+	vertical-align: top;
+	display: table-cell;
+}
+
+/* for IE6 */
+* html .listBox dd {
+	width: auto;
+	direction: ltr;
+	zoom: 1;
+}
+* html .listBox dt {
+	width: expression(this.getElementsByTagName("img")[0].clientWidth);
+	float: left;
+	zoom: 1;
+}
+
+/* for IE7 */
+*:first-child+html .listBox dd {
+	width: auto;
+	direction: ltr;
+}
+*:first-child+html .listBox dt {
+	width: expression(this.getElementsByTagName("img")[0].clientWidth);
+	float: left;
+}
+
+
+/* 横並び画像とテキストの設定ここから(divに指定。中にdl使用OK) ↓↓↓↓↓↓↓↓↓ */
+.listBox2 {
+	overflow: hidden;
+	display: table;
+	zoom: 1;
+}
+
+.listBox2 .autoImage {
+	padding: 0 5px;
+	vertical-align: top;
+	display: table-cell;
+}
+
+.listBox2 .autoImage img {
+	padding: 2px;
+	border: 1px solid #FF5BB3;
+}
+
+.listBox2 .autoText {
+	width: 100%;
+	vertical-align: top;
+	display: table-cell;
+}
+
+/* for IE6 */
+* html .listBox2 .autoImage {
+	width: expression(this.getElementsByTagName("img")[0].clientWidth);
+	margin: 0;
+	float: left;
+	zoom: 1;
+}
+* html .listBox2 .autoText {
+	width: auto;
+	direction: ltr;
+	zoom: 1;
+}
+
+/* for IE7 */
+*:first-child+html .listBox2 .autoImage {
+	width: expression(this.getElementsByTagName("img")[0].clientWidth);
+	margin: 0;
+	float: left;
+}
+*:first-child+html .listBox2 .autoText {
+	width: auto;
+	direction: ltr;
+}
+
+/* 普通の●リスト */
+.listDisc {
+	padding-left: 20px;
+	clear: both;
+}
+
+.listDisc li {
+	margin-bottom: 5px;
+	list-style: outside disc;
+}
+
+/* 算用数字の順リスト */
+.listDecimal {
+	padding-left: 20px;
+	clear: both;
+}
+
+.listDecimal li {
+	margin-bottom: 5px;
+	list-style: outside decimal;
+}
+
+
+/* 表設定ボーダーあり設定 */
+dl.comBox {
+	margin: 0 10px 20px;
+	padding-top: 10px;
+	border-top: 1px solid #990000;
+}
+
+.comBox dt {
+	clear: both;
+	float: left;
+	width: 10em;
+	font-weight: bold;
+	text-align: center;
+}
+
+.comBox dd {
+	margin-bottom: 10px;
+	padding: 0 0 10px 10em;
+	border-bottom: 1px solid #990000;
+	text-align: left;
+	_text-indent: -3px;
+}
+
+/* 表設定ボーダーなし */
+dl.dlList {
+	clear: both;
+	margin: 0 auto 20px;
+}
+
+.dlList dt {
+	clear: both;
+	float: left;
+	width: 10em;
+	margin-top: 10px;
+}
+
+.dlList dd {
+	padding: 10px 0 10px 11em;
+	border-bottom: 1px solid #FFFFFF;
+	text-align: left;
+	_text-indent: -3px;
+}
+
+/* dl表設定ボーダーなし position使用 */
+dl.dlList2 {
+	clear: both;
+	margin: 10px 10px 20px;
+	zoom: 1;
+}
+
+.dlList2 dt {
+	position: absolute;
+	width: 6em;
+	padding-right: 10px;
+	border-right: 1px dashed #666666;
+	font-weight: bold;
+	text-align: right;
+}
+
+.dlList2 dd {
+	margin-bottom: 5px;
+	padding: 0 0 5px 7.5em;
+	_text-indent: -3px;
+}
+
+.dlList2 dd li {
+	padding-left: 7em;
+	zoom: 1;
+}
+
+
+/* ブロックを囲む箱(線有り) */
+.column {
+	clear: both;
+	overflow: hidden;
+	margin-bottom: 20px;
+	border: 1px solid #666666;
+}
+
+/* ブロックを囲む箱(線なし) */
+.column2 {
+	clear: both;
+	overflow: hidden;
+	margin-bottom: 20px;
+}
+
+
+/* 普通の線なしの囲み */
+.block {
+	clear: both;
+	overflow: hidden;
+	margin: 10px 10px 20px;
+}
+
+/* 線有りの囲み */
+.block2 {
+	clear: both;
+	overflow: hidden;
+	margin: 10px 10px 20px;
+	padding: 15px 10px;
+	border: 5px solid #666666;
+}
+
+
+
+
+/* テーブルのデフォルト枠設定 */
+.tableList,
+.tableList2  {
+	width: 100%;
+}
+
+.tableList th {
+	background: #ECECEC;
+	border: 1px solid #FFFFFF;
+	padding: 5px;
+}
+
+.tableList td {
+	border: 1px solid #FFFFFF;
+	padding: 0 10px;
+}
+
+/* テキスト全てcenter */
+.tableList2 th {
+	background: #ECECEC;
+	border: 1px solid #FFFFFF;
+	padding: 5px;
+	text-align: center;
+}
+
+.tableList2 td {
+	border: 1px solid #FFFFFF;
+	padding: 0 10px;
+	text-align: center;
+}
+
+.tableList .trBgColor,
+.tableList2 .trBgColor {
+	background: #F6F6F6;
+}
+
+/* テーブル1の設定(テーブル100％、th,tdに枠線とぱでんぐ＆thの横幅・背景指定) */
+.tableBox  {
+	width: 100%;
+	margin-bottom: 15px;
+}
+
+.tableBox th,
+.tableBox td {
+	border: 1px solid #CCCCCC;
+	padding: 5px;
+}
+
+.tableBox th {
+	width: 10em;
+	background: #EFEFEF;
+}
+
+/* テーブル2の設定(テーブル100％、) */
+.tableBox2  {
+	width: 100%;
+}
+
+.tableBox2 th {
+	width: 150px;
+	background: #ECECEC;
+	border: 1px solid #FFFFFF;
+	padding: 10px;
+}
+
+.tableBox2 td {
+	background: #F6F6F6;
+	border: 1px solid #FFFFFF;
+	padding: 10px;
+}
+
+/* テーブル3の設定(テーブル100％、枠線、ぱでんぐ大きめ、テーブルの中のテーブルの設定有) */
+.tableBox3 {
+	width: 100%;
+	border: 1px solid #CCCCCC;
+	padding: 10px;
+}
+
+.tableBox3 td {
+	padding: 8px;
+}
+
+.tableBox3 table {
+	width: 100%;
+	border: 1px solid #CCCCCC;
+}
+
+.tableBox3 table th {
+	text-align: center;
+}
+
+.tableBox3 table td {
+	padding: 5px;
+}
+
+.tableBox3 .bgRed {
+	background: #FFA7A6;
+}
+
+.tableBox3 .bgYellow {
+	background: #FFEDC7;
+}
+
+.tableBox3 .bgPink {
+	background: #FED4D5;
+}
+
+.tableBox3 .bgGreen {
+	background: #E0FFF7;
+}
+
+.tableBox3 .bgBlue {
+	background: #D5F1FF;
+}
+
+.tableBox3 .p0 td {
+	padding: 0;
+}
+
+
+/* テーブルの画像全てに枠線 
+.tableBox img,
+.tableBox2 img {
+	border: 1px solid #000000;
+	paddig: 4px;
+}*/
+
+
+
+/* 画像・テキストのリンクボタン設定(基本btnBoxがフォームボタン用、boxBtn2がテキストリンク用) */
+.btnBox {
+	margin-top: 50px;
+	text-align: center;
+}
+
+.btnBox2 {
+	margin: 15px auto;
+	text-align: right;
+}
+
+.btnBox2 a,
+.btnBox2 a:visited {
+	background: #527B86;
+	border: 1px solid #527B86;
+	padding: 3px 10px;
+	color: #FFFFFF;
+	text-decoration: none;
+}
+
+.btnBox2 a:hover {
+	background: #FFFFFF;
+	border: 1px solid #527B86;
+	color: #FF5BB0;
+}
+
+.btnBox li,
+.btnBox2 li {
+	display: inline;
+	margin: 0 2px;
+}
+
+.btnBox li img {
+	display: inline;
+	vertical-align: middle;
+}
+
+/* このページのトップへ設定(pageTop2は矢印が背景画像) */
+.pageTop {
+	clear: both;
+	text-align: right;
+}
+
+.pageTop2 a {
+	background: url(../img/icon_arrow_up_off.gif) no-repeat 4px 50%;
+	padding: 4px 4px 4px 19px;
+}
+
+.pageTop2 a:hover {
+	background: #FF5BB0 url(../img/icon_arrow_up_on.gif) no-repeat 4px 50%;
+	color: #FFFFFF;
+}
+
+
+
+
+/* ============== ここからメイン枠内設定 ============== */
+
+

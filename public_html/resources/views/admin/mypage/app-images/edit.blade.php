@@ -23,6 +23,7 @@
                         imprime nada dentro de .main.
 
     $siteName  string|null  Nombre del sitio para el <title> (legacy: $site_name). Si es null se usa config('app.name').
+               AppImageScreen pasa '' porque el legacy no lo define en esta pantalla (「ショップページ設定 - 」).
 
     $shops  iterable (Collection o array) de filas de tb_shop con disp_flg = '1' ORDER BY cd
             (legacy: $shop_data_ary). Cada fila admite acceso por índice (array o modelo Eloquent) con:
@@ -57,9 +58,10 @@
             ]
 
         'main' / 'thumbnail' → count($shops) + 1 huecos. Índice 0 = 全店舗用; índice i > 0 = $shops[i-1].
-                   Imágenes en hp/uploads/c6/apli_home_image/<i>.<ext> (main) o
-                   hp/uploads/c6/apli_home_thumbnail/<i>.<ext> (thumbnail). OJO: el archivo se busca por
-                   el índice i, no por shop_cd (como el legacy).
+                   Imágenes en hp/uploads/c6/apli_home_image/<shop_cd>.<ext> (main) o
+                   hp/uploads/c6/apli_home_thumbnail/<shop_cd>.<ext> (thumbnail), con shop_cd = 0 en el
+                   hueco 0. Se busca por shop_cd, que es lo que lee la API de la app (el legacy mostraba
+                   el archivo del índice i: bug corregido).
             [
                 'index'            => int,
                 'shop'             => fila de $shops|null,   // null en el índice 0

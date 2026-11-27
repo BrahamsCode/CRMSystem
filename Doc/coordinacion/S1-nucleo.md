@@ -7,11 +7,13 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente de "Cola". Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — A) Base legacy, luego B) Login + layout (S0, 2026-11-26)
+## Próximo paso
+
+A y B hechos (ver "Hecho"). Siguiente, cuando S0 lo confirme: Cola 2 (基本情報管理, category0: configuración, tiendas, asistente de primer acceso `config.php`) y los "Pedidos" que siguen abiertos.
 
 **A) Base legacy** (corto; subir apenas esté): traits `app/Models/Concerns/` `HasHatuban` (numeración por `koumoku`), `LegacySoftDeletes` (scope `disp_flg <> '9'`, `delete()` pone `'9'`), `LegacyTimestamps` (`touroku_date`/`update_date` epoch en texto); modelo base `LegacyModel` (`cd`, no incremental, sin timestamps, `$guarded=[]`); servicio `Hatuban`; modelos `Shop` (`tb_shop`), `Staff` (`tb_staff`), `Terminal` (`tb_terminal`), `AdminMaster`, `ContentsMaster`, con pruebas sobre el esquema legacy; registrar `<Modulo>ServiceProvider` existentes en `bootstrap/providers.php`. Terminado: pruebas en verde, commit, push, aviso.
 
-**B) Login + layout**, en orden: 1) login del personal contra `tb_staff`/`admin_master` (guard propio, mismas credenciales; quitar Fortify/`Admin`); 2) estáticos comunes en `public/legacy/` (`system/css|js|images|plugin`, `common/`); 3) layout Blade idéntico (`inc/head.php`, `header.php`, `left_navi*`, `footer.php`) con contrato de secciones; 4) menú desde `config/menu/*.php`; 5) Gates `<modulo>.<acción>` ≈ `cKengen`; 6) システム選択; 7) `NUCLEO.md`. Terminado: login/logout contra `bd-legacy.sh` (master del backup) con la misma pantalla, pruebas Pest de login y layout, commit, push, aviso.
+**B) Login + layout**, en orden: 1) login del personal contra `tb_staff`/`admin_master` (guard propio, mismas credenciales; quitar Fortify/`Admin`); 2) estáticos comunes en `public/legacy/` (`system/css|js|images|plugin`, `common/`); 3) layout Blade idéntico (`inc/head.php`, `header.php`, `left_navi*`, `footer.php`) con contrato de secciones; 4) menú desde `config/menu/*.php`; 5) Gates `<modulo>.<acción>` ≈ `cKengen`; 6) システム選択; 7) `NUCLEO.md`. Agregados de S0: layouts `layouts.legacy` y `layouts.legacy-popup` con secciones `title`, `css`, `js`, `content` y `@section('menu', '<modulo>')` (CONVENCIONES §4, no cambiar nombres); cargar `routes/legacy/*.php` sin prefijo, con `web` + guard del personal, nombre `legacy.<modulo>.*`; CSRF para jQuery con `$.ajaxSetup` + decidir `_token` en `<form>`; decidir URL de estáticos (`/legacy/system/...` vs `/system/...`); `/hp/uploads/{path}` registrada DESPUÉS de `routes/publico/*.php`. Terminado: login/logout contra `bd-legacy.sh` (master del backup) con la misma pantalla, pruebas Pest de login y layout, commit, push, aviso.
 
 ## Cola (después de la Fase 1, en orden)
 
@@ -52,6 +54,14 @@ Recibidos de S0 el 2026-11-26 (para la Cola, después de la Fase 1; S0 los asign
 - `LegacyTimestamps`: epoch en texto por defecto (`time()`), formato cambiable con `$legacyDateFormat` (p. ej. `tb_shop_category` usa `Y/m/d H:i:s`); las columnas no se castean a Carbon al leer (hay `update_date` vacíos), se usa `legacyDate('col')`. También cubre `Model::where()->update()`.
 - `Hatuban::next()` = `set_hatuban` (sin fila: inserta kazu=2 y devuelve 1); `peek()` = `view_hatuban`.
 - `Terminal` sin borrado lógico (el legacy hace DELETE). `ContentsMaster` solo lee `disp_flg = '1'` (como `Base.php`).
+- `LegacySoftDeletes`: corregido a `COALESCE(disp_flg, '') <> '9'` (NULL visible), pedido de S0/S2.
+- Login (B): guard `admin` → provider `legacy_staff` (tb_staff, clave en texto, sin re-cifrar); Fortify quitado (composer, Actions, provider, config). Logout por GET como el enlace del legacy. Throttle de 20 intentos/min por usuario+IP (mejora). Primer acceso sin `kaishamei` → por ahora a システム選択 (el asistente `config.php` va con 基本情報管理).
+- Revalidación de sesión como `session.php`: huella HMAC de `login_pass` en la sesión (no la clave en claro, que el legacy sí guardaba).
+- `select.php`: sin efectos secundarios (sync POS, normalizar fechas, insertar tb_koumoku/tb_kengen_contents) ni las お知らせ de `b.g-api.net` (llamada externa en cada carga): anotado.
+- CSRF: Laravel 13 acepta same-origin por `Sec-Fetch-Site`; además `$.ajaxSetup` con `X-CSRF-TOKEN` y `_token` automático en todo form POST (WebView viejos). Los Blade no necesitan `@csrf`.
+- Estáticos: en `public/legacy/` pero servidos en su URL absoluta (`/system/...`) por `.htaccess` + ruta de respaldo `LegacyAssetController`; no se reescriben rutas. Se borraron los `.php` de `system/js/freerte_v1` al copiar.
+- `config/crm.php`: quitadas las claves de los módulos borrados (modulos, menús, campos); quedan prefecturas y lo del núcleo.
+- Acordeones del menú: se abre el bloque que contiene la URL actual (aproximación a los `accordion('option','active',N)` de cada página).
 - `bootstrap/providers.php` registra solo cualquier `app/Providers/*ServiceProvider.php`: los módulos no editan ese archivo.
 
 - Fase 1: `config/session.php` → `serialization = json` y `config/cache.php` → `serializable_classes = false` (valores del skeleton 13; si chocan con la base de Antony con `file`, prevalece la suya). `lock_path` de la caché de archivos → `framework/cache/locks`; canal `daily` de logging `days` → `max_files` (skeleton 13).
@@ -59,6 +69,9 @@ Recibidos de S0 el 2026-11-26 (para la Cola, después de la Fase 1; S0 los asign
 - `CSRF`: no había referencias a `VerifyCsrfToken`/`ValidateCsrfToken` en el código; nada que renombrar a `PreventRequestForgery`.
 
 ## Hecho
+
+- **B) Login + layout (2026-11-26):** login/logout/システム選択 en las URL del legacy contra `tb_staff`, `layouts.legacy` y `layouts.legacy-popup` (contrato §4), menú desde `config/menu/*.php` (`base.php` = left_navi0), portada `system/category0`, Gates (`config/kengen.php`, `kengen.<cd>.<fn>`, `kengen` con lista, banderas `nucleo.*`), estáticos comunes en `public/legacy/` (+ `hp/img/banner`), carga de `routes/legacy/*.php`, `/hp/uploads/{path}`, `Doc/contratos/NUCLEO.md`. Verificado con Playwright contra el backup (master): login, システム選択 y category0 idénticos a la muestra; logout OK. Pruebas: `tests/Feature/Nucleo/{LoginTest,LayoutTest}.php`. Suite: 200 en verde.
+- **Pedido S5:** `firebase/php-jwt` 7.2.2, `services.mobileshop.*`, `services.crm.api_key`.
 
 - **A) Base legacy (2026-11-26):** `app/Models/LegacyModel.php`, `Concerns/{HasHatuban,LegacySoftDeletes,LegacySoftDeletingScope,LegacyTimestamps}.php`, `app/Services/Nucleo/Hatuban.php`, modelos `Shop`, `Staff`, `Terminal`, `AdminMaster` (`current()`), `ContentsMaster` (`text/int/put`). Pruebas `tests/Feature/Nucleo/LegacyBaseTest.php` (7). Suite: 29 en verde.
 

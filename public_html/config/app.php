@@ -65,7 +65,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Tokyo', // como el legacy (TZ=Asia/Tokyo)
 
     /*
     |--------------------------------------------------------------------------

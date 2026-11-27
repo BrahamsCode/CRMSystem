@@ -1,0 +1,71 @@
+/* ===========================================================
+
+CSS Information
+
+ File name:	myFlexSelect.css
+
+ Style Info:	plugin表示設定
+
+=========================================================== */
+
+
+
+/* リスト */
+
+.flexselect_dropdown
+{
+	background-color: window;
+	border: 1px solid windowframe;
+	color: windowtext;
+	margin: 0;
+	overflow-x: hidden;
+	overflow-y: auto;
+	padding: 0;
+	position: absolute;
+	text-align: left;
+	z-index: 999999;
+}
+
+.flexselect_dropdown ul
+{
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.flexselect_dropdown li
+{
+    cursor: pointer;
+    display: block;
+    font: menu;
+    margin: 0;
+    overflow: hidden;
+    padding: 2px 5px;
+    width: 100%;
+}
+
+
+
+/* リストのhover設定 */
+
+.flexselect_dropdown li:hover
+{
+    background-color: highlight;
+    color: highlighttext;
+}
+
+
+
+/* リストのselected設定 */
+
+.flexselect_selected
+{
+    background-color: highlight;
+    color: highlighttext;
+}
+
+
+
+
+
