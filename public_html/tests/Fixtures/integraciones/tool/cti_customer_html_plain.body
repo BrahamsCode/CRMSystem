@@ -1,0 +1,127 @@
+<html>
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="robots" content="noindex">
+<meta name="robots" content="nofollow">
+<meta name="robot-control" content="deny-all">
+<meta name="robots" content="none">
+
+<style type="text/css">
+<!--
+
+body {
+	width: 100%;
+	background: transparent;
+	color: #2F2F2F;
+	font-size: 12px;/* 文字サイズ計算＝【基本サイズ ÷ 表示したいサイズ * 100 （小数点以下切り上げ） */
+	font-family: Osaka,"ＭＳ Ｐゴシック","MS PGothic",Sans-Serif;
+	text-align: center;
+	line-height: 1.6;
+}
+
+
+#wrapper {
+	text-align: left;
+}
+
+.detailTableLayout {
+	width: 300px;
+	border-collapse: collapse;
+	border-spacing: 0;
+	margin-bottom: 10px;
+}
+
+.detailTableLayout th {
+	width: 50px;
+	background: #EEEEEE;
+	border: 1px solid #000000;
+	font-size: 8px;
+}
+
+.detailTableLayout td {
+	border: 1px solid #000000;
+}
+
+
+-->
+</style>
+
+</head>
+<body>
+
+
+<div id="wrapper">
+
+<div>■基本情報</div>
+<table class="detailTableLayout" style="margin-bottom: 10px;">
+
+	<tr>
+	<th>ID</th>
+	<td>1000002</td>
+	<th>管理番号</th>
+	<td></td>
+	</tr>
+
+	<tr>
+	<th>フリガナ</th>
+	<td colspan="3">サトウ ハナコ</td>
+	</tr>
+
+	<tr>
+	<th>名前</th>
+	<td colspan="3">佐藤 花子</td>
+	</tr>
+
+	<tr>
+	<th>性別</th>
+	<td>女性</td>
+	<th>生年月日</th>
+	<td>1985/12/31</td>
+	</tr>
+
+	<tr>
+	<th>住所</th>
+	<td colspan="3">東京都&emsp;千代田区千代田</td>
+	</tr>
+
+	<tr>
+	<th>指名担当者</th>
+	<td colspan="3">
+	</td>
+	</tr>
+
+	<tr>
+	<th>紹介者</th>
+	<td colspan="3">
+	</td>
+	</tr>
+
+	<tr>
+	<th>備考</th>
+	<td colspan="3"></td>
+	</tr>
+
+</table>
+
+
+	<div>■来店履歴(過去最大5回まで表示されます。)</div>
+	<table class="detailTableLayout">
+		<tr>
+			<th style="width:40%;">日時</th>
+			<th>来店店舗</th>
+		</tr>
+			<tr>
+			<td>2023/11/10 (金)<br/>16:06</td>
+			<td>shop</td>
+		</tr>
+		</table>
+
+
+
+<!-- div#wrapper END --></div>
+
+
+</body>
+</html>

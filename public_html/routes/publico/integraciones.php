@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\Publico\Integraciones\CtiController;
 use App\Http\Controllers\Publico\Integraciones\MobileShopController;
+use App\Http\Controllers\Publico\Integraciones\ToolApi;
+use App\Http\Middleware\Integraciones\CheckCrmApiKey;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Support\Facades\Route;
 
@@ -29,9 +32,27 @@ Route::name('publico.integraciones.')
                 Route::any('point_exchange_item', [MobileShopController::class, 'pointExchangeItem'])->name('point-exchange');
             });
 
-            // Cualquier otra ruta /api/* (salvo los mpa_*.php): 404 JSON
+            // Cualquier otra ruta /api/* (salvo los mpa_*.php): 404 JSON (debe quedar al final del grupo api)
             Route::any('{any}', [MobileShopController::class, 'notFound'])
                 ->where('any', '(?!mpa_).*')
                 ->name('not-found');
+        });
+
+        // tool/api del legacy (aplicación de escritorio): clave `key` = CRM_API_KEY (checkKey.php)
+        Route::prefix('system/tool/api')->name('tool.')->middleware(CheckCrmApiKey::class)->group(function () {
+            Route::any('category1/searchCustomerList.php', [ToolApi\CustomerController::class, 'search'])->name('search-customer-list');
+            Route::any('category1/getCustomerDetail.php', [ToolApi\CustomerController::class, 'show'])->name('customer-detail');
+            Route::any('category1/getSearchCateFormData.php', [ToolApi\CustomerController::class, 'searchForm'])->name('search-form');
+            Route::any('category1/getRaitenList.php', [ToolApi\RaitenController::class, 'index'])->name('raiten-list');
+            Route::any('category1/getRaitenDetail.php', [ToolApi\RaitenController::class, 'show'])->name('raiten-detail');
+            Route::any('category1/addRaitenRecord.php', [ToolApi\RaitenController::class, 'store'])->name('raiten-add');
+            Route::any('category5/getStaffList.php', [ToolApi\StaffController::class, 'index'])->name('staff-list');
+        });
+
+        // Ventana CTI (system/desktop_request): sin autenticación, como el legacy
+        Route::prefix('system/desktop_request')->name('cti.')->group(function () {
+            Route::any('ctiWindow.php', [CtiController::class, 'window'])->name('window');
+            Route::any('customerDetailHtml.php', [CtiController::class, 'customerHtml'])->name('customer-html');
+            Route::any('jGetCustomerData.php', [CtiController::class, 'customerJson'])->name('customer-json');
         });
     });

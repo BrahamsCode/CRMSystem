@@ -71,6 +71,8 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 
 - **スタッフ新規登録/修正 (2026-11-27):** los datos viajan en crudo entre formulario y confirmación y se aplica get_form2 al guardar; lo leído de `tb_staff` se des-escapa para el formulario. Se guardan los teléfonos ya sin guiones (el legacy validaba la versión limpia pero guardaba la original). 所属部署: el texto libre gana al desplegable siempre y se agrega a `tb_belongpost` solo si no existe (el legacy duplicaba en el alta y vaciaba el campo en la edición). `rank_pass` = '' como el legacy, salvo master/cd 1, que conservan contraseña, grupo y `rank_pass`. La foto se sube con JS propio (rutas de Laravel) en lugar de `staff_entry.js`; se guarda como JPEG reducido a 200 px. Sin las pantallas intermedias «登録中です。».
 
+- **tool/api y CTI (2026-11-27):** salida con `ToolApiOutput` (texto concatenado como el legacy, filas leídas como `col::text`); las consultas que el legacy rompía (cd no numérico, fecha inválida, offset negativo) dan el mismo `NO_DATA`, sin SQL armado con la entrada. Se mantiene sin cambios lo inseguro del contrato y se anota para Japón: `getStaffList` devuelve `tb_staff.*` con `login_pass`; CTI sin autenticación. `ctiWindow` redirige a las URL del legacy (las rutas de S2 que las sirvan son cosa de S2/S1). `htmlData` sale del parcial `custom_field` de S2 (mismo marcado, otros espacios). `setRaitenDetail` queda pendiente del servicio de S2 de `kanren_record_register`.
+
 ## Hecho
 
 - 2026-11-26 — Diseño con tablas nuevas, aprobado por S0 (obsoleto desde el cambio de base).
@@ -85,3 +87,5 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 - 2026-11-27 — `point_use` y `point_exchange_item` con el `PointService` de S3 (af8dd48): la API JWT completa coincide con el legacy; `MobileShopContractTest` autosuficiente (eb92d9a). Integrado por S0 (0396404).
 - 2026-11-27 — スタッフ検索・一覧 (búsqueda de `search_set1/2`, paginación, CSV para master), スタッフ登録情報 (4 pestañas), 削除する, 削除を取り消す/復元する y カード関連付け解除 (`StaffController`, `StaffSearch`, `StaffListTest` 10 pruebas). Suite completa: 395 en verde.
 - 2026-11-27 — スタッフ新規登録 / 修正 completos: formulario, confirmación con `LegacyCheck`, 書き直す, registro (createHatsuban/createID, `hatuban`, 所属部署 nuevo, `PosGateway`), 完了 y foto por AJAX (`StaffEntryController`, `StaffPhotoStore`, `StaffEntryTest` 8 pruebas). スタッフ管理 terminado salvo lo de 勤怠 (⏸). Suite: 403 en verde.
+- 2026-11-27 — Pedidos de S0: `MobileShopClient` como interfaz + `HttpMobileShopClient` (para S2) y `UrlTransferData::customer()` (para S4) (362b8f3).
+- 2026-11-27 — `tool/api` (7 de 8 endpoints + `CheckCrmApiKey`) y CTI (3) con fixtures del legacy grabadas sobre datos sintéticos (`tool-seed.sql`, 47 casos) y `ToolApiContractTest`: todo coincide byte a byte (salvo espacios del `htmlData`). Pendiente: `setRaitenDetail` (servicio de S2). Suite: 442 en verde.

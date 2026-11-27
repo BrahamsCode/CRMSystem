@@ -1,0 +1,534 @@
+[
+    {
+        "name": "tool_no_key",
+        "method": "GET",
+        "path": "/system/tool/api/category5/getStaffList.php",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_no_key.body"
+        }
+    },
+    {
+        "name": "tool_bad_key",
+        "method": "GET",
+        "path": "/system/tool/api/category5/getStaffList.php?key=wrong",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_bad_key.body"
+        }
+    },
+    {
+        "name": "tool_staff_list",
+        "method": "GET",
+        "path": "/system/tool/api/category5/getStaffList.php?key=fixture-key",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_staff_list.body"
+        }
+    },
+    {
+        "name": "tool_staff_list_shop",
+        "method": "GET",
+        "path": "/system/tool/api/category5/getStaffList.php?key=fixture-key&shop=2",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_staff_list_shop.body"
+        }
+    },
+    {
+        "name": "tool_staff_list_cd",
+        "method": "GET",
+        "path": "/system/tool/api/category5/getStaffList.php?key=fixture-key&cd=2",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_staff_list_cd.body"
+        }
+    },
+    {
+        "name": "tool_staff_list_paged",
+        "method": "GET",
+        "path": "/system/tool/api/category5/getStaffList.php?key=fixture-key&offset=1&limit=2",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_staff_list_paged.body"
+        }
+    },
+    {
+        "name": "tool_staff_list_limit_over",
+        "method": "GET",
+        "path": "/system/tool/api/category5/getStaffList.php?key=fixture-key&limit=500",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_staff_list_limit_over.body"
+        }
+    },
+    {
+        "name": "tool_staff_list_jsonp",
+        "method": "GET",
+        "path": "/system/tool/api/category5/getStaffList.php?key=fixture-key&cd=3&data_type=jsonp&callback=cb%3Cx%3E%26amp%3B",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_staff_list_jsonp.body"
+        }
+    },
+    {
+        "name": "tool_staff_list_none",
+        "method": "GET",
+        "path": "/system/tool/api/category5/getStaffList.php?key=fixture-key&shop=99",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_staff_list_none.body"
+        }
+    },
+    {
+        "name": "tool_customer_search",
+        "method": "GET",
+        "path": "/system/tool/api/category1/searchCustomerList.php?key=fixture-key",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_customer_search.body"
+        }
+    },
+    {
+        "name": "tool_customer_search_kana",
+        "method": "GET",
+        "path": "/system/tool/api/category1/searchCustomerList.php?key=fixture-key&keyword=%EF%BE%94%EF%BE%8F%EF%BE%80%EF%BE%9E",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_customer_search_kana.body"
+        }
+    },
+    {
+        "name": "tool_customer_search_words",
+        "method": "GET",
+        "path": "/system/tool/api/category1/searchCustomerList.php?key=fixture-key&keyword=%E3%83%A4%E3%83%9E%E3%83%80%E3%80%80%E5%A4%AA%E9%83%8E",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_customer_search_words.body"
+        }
+    },
+    {
+        "name": "tool_customer_search_tel",
+        "method": "GET",
+        "path": "/system/tool/api/category1/searchCustomerList.php?key=fixture-key&keyword=%EF%BC%90%EF%BC%96",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_customer_search_tel.body"
+        }
+    },
+    {
+        "name": "tool_customer_search_shop",
+        "method": "GET",
+        "path": "/system/tool/api/category1/searchCustomerList.php?key=fixture-key&shop=2",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_customer_search_shop.body"
+        }
+    },
+    {
+        "name": "tool_customer_search_limit",
+        "method": "POST",
+        "path": "/system/tool/api/category1/searchCustomerList.php",
+        "form": {
+            "key": "fixture-key",
+            "limit": "1",
+            "offset": "1"
+        },
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_customer_search_limit.body"
+        }
+    },
+    {
+        "name": "tool_customer_detail",
+        "method": "GET",
+        "path": "/system/tool/api/category1/getCustomerDetail.php?key=fixture-key&cd=1609897927001809158",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_customer_detail.body"
+        }
+    },
+    {
+        "name": "tool_customer_detail_jsonp",
+        "method": "GET",
+        "path": "/system/tool/api/category1/getCustomerDetail.php?key=fixture-key&cd=1610793770001489815&data_type=jsonp&callback=cb",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_customer_detail_jsonp.body"
+        }
+    },
+    {
+        "name": "tool_customer_detail_missing",
+        "method": "GET",
+        "path": "/system/tool/api/category1/getCustomerDetail.php?key=fixture-key",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_customer_detail_missing.body"
+        }
+    },
+    {
+        "name": "tool_customer_detail_not_found",
+        "method": "GET",
+        "path": "/system/tool/api/category1/getCustomerDetail.php?key=fixture-key&cd=1",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_customer_detail_not_found.body"
+        }
+    },
+    {
+        "name": "tool_customer_detail_bad",
+        "method": "GET",
+        "path": "/system/tool/api/category1/getCustomerDetail.php?key=fixture-key&cd=abc",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_customer_detail_bad.body"
+        }
+    },
+    {
+        "name": "tool_search_form",
+        "method": "GET",
+        "path": "/system/tool/api/category1/getSearchCateFormData.php?key=fixture-key",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_search_form.body"
+        }
+    },
+    {
+        "name": "tool_search_form_shop_jsonp",
+        "method": "GET",
+        "path": "/system/tool/api/category1/getSearchCateFormData.php?key=fixture-key&shop=1&data_type=jsonp&callback=cb",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_search_form_shop_jsonp.body"
+        }
+    },
+    {
+        "name": "tool_raiten_list",
+        "method": "GET",
+        "path": "/system/tool/api/category1/getRaitenList.php?key=fixture-key&cd=1609897927001809158",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_raiten_list.body"
+        }
+    },
+    {
+        "name": "tool_raiten_list_dates",
+        "method": "GET",
+        "path": "/system/tool/api/category1/getRaitenList.php?key=fixture-key&s_date=2023/11/09&e_date=2023/11/12",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_raiten_list_dates.body"
+        }
+    },
+    {
+        "name": "tool_raiten_list_bad_date",
+        "method": "GET",
+        "path": "/system/tool/api/category1/getRaitenList.php?key=fixture-key&s_date=notadate",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_raiten_list_bad_date.body"
+        }
+    },
+    {
+        "name": "tool_raiten_list_all",
+        "method": "GET",
+        "path": "/system/tool/api/category1/getRaitenList.php?key=fixture-key&limit=2",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_raiten_list_all.body"
+        }
+    },
+    {
+        "name": "tool_raiten_detail",
+        "method": "GET",
+        "path": "/system/tool/api/category1/getRaitenDetail.php?key=fixture-key&cd=801",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_raiten_detail.body"
+        }
+    },
+    {
+        "name": "tool_raiten_detail_plain",
+        "method": "GET",
+        "path": "/system/tool/api/category1/getRaitenDetail.php?key=fixture-key&cd=802&data_type=jsonp&callback=cb",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_raiten_detail_plain.body"
+        }
+    },
+    {
+        "name": "tool_raiten_detail_deleted",
+        "method": "GET",
+        "path": "/system/tool/api/category1/getRaitenDetail.php?key=fixture-key&cd=803",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_raiten_detail_deleted.body"
+        }
+    },
+    {
+        "name": "tool_raiten_detail_missing",
+        "method": "GET",
+        "path": "/system/tool/api/category1/getRaitenDetail.php?key=fixture-key",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_raiten_detail_missing.body"
+        }
+    },
+    {
+        "name": "tool_add_raiten_missing",
+        "method": "GET",
+        "path": "/system/tool/api/category1/addRaitenRecord.php?key=fixture-key",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_add_raiten_missing.body"
+        }
+    },
+    {
+        "name": "tool_add_raiten_not_found",
+        "method": "GET",
+        "path": "/system/tool/api/category1/addRaitenRecord.php?key=fixture-key&customer=1",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_add_raiten_not_found.body"
+        }
+    },
+    {
+        "name": "cti_window",
+        "method": "GET",
+        "path": "/system/desktop_request/ctiWindow.php",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "cti_window.body"
+        }
+    },
+    {
+        "name": "cti_window_new",
+        "method": "GET",
+        "path": "/system/desktop_request/ctiWindow.php?tel=0612345678&act=new",
+        "response": {
+            "status": 302,
+            "content_type": "text/html; charset=UTF-8",
+            "location": "/system/category1/customer/customer_new.php?tel=0612345678",
+            "body_file": "cti_window_new.body"
+        }
+    },
+    {
+        "name": "cti_window_customer",
+        "method": "GET",
+        "path": "/system/desktop_request/ctiWindow.php?tel=0612345678&customerCd=1609897927001809158",
+        "response": {
+            "status": 302,
+            "content_type": "text/html; charset=UTF-8",
+            "location": "/system/select.php",
+            "body_file": "cti_window_customer.body"
+        }
+    },
+    {
+        "name": "cti_window_bad_customer",
+        "method": "GET",
+        "path": "/system/desktop_request/ctiWindow.php?tel=0612345678&customerCd=1a",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "cti_window_bad_customer.body"
+        }
+    },
+    {
+        "name": "cti_window_search",
+        "method": "GET",
+        "path": "/system/desktop_request/ctiWindow.php?tel=0612345678",
+        "response": {
+            "status": 302,
+            "content_type": "text/html; charset=UTF-8",
+            "location": "/system/category1/customer/customer_list.php?tel=0612345678&kojin_mobile=0612345678&kinmusaki_tel=0612345678&search_method1_type=2&act=up&kensu=10&se_flg=1#customerSearchList",
+            "body_file": "cti_window_search.body"
+        }
+    },
+    {
+        "name": "cti_window_bad_tel",
+        "method": "GET",
+        "path": "/system/desktop_request/ctiWindow.php?tel=06-1234",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "cti_window_bad_tel.body"
+        }
+    },
+    {
+        "name": "cti_customer_html",
+        "method": "GET",
+        "path": "/system/desktop_request/customerDetailHtml.php?cd=1609897927001809158",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "cti_customer_html.body"
+        }
+    },
+    {
+        "name": "cti_customer_html_plain",
+        "method": "GET",
+        "path": "/system/desktop_request/customerDetailHtml.php?cd=1610793770001489815",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "cti_customer_html_plain.body"
+        }
+    },
+    {
+        "name": "cti_customer_html_missing",
+        "method": "GET",
+        "path": "/system/desktop_request/customerDetailHtml.php",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "cti_customer_html_missing.body"
+        }
+    },
+    {
+        "name": "cti_customer_json_cd",
+        "method": "GET",
+        "path": "/system/desktop_request/jGetCustomerData.php?cd=1609897927001809158",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "cti_customer_json_cd.body"
+        }
+    },
+    {
+        "name": "cti_customer_json_tel",
+        "method": "GET",
+        "path": "/system/desktop_request/jGetCustomerData.php?tel=08098765432",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "cti_customer_json_tel.body"
+        }
+    },
+    {
+        "name": "cti_customer_json_id",
+        "method": "POST",
+        "path": "/system/desktop_request/jGetCustomerData.php",
+        "form": {
+            "id": "1000001"
+        },
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "cti_customer_json_id.body"
+        }
+    },
+    {
+        "name": "cti_customer_json_none",
+        "method": "GET",
+        "path": "/system/desktop_request/jGetCustomerData.php",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "cti_customer_json_none.body"
+        }
+    },
+    {
+        "name": "cti_customer_json_not_found",
+        "method": "GET",
+        "path": "/system/desktop_request/jGetCustomerData.php?tel=000",
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "cti_customer_json_not_found.body"
+        }
+    },
+    {
+        "name": "tool_add_raiten",
+        "method": "POST",
+        "path": "/system/tool/api/category1/addRaitenRecord.php",
+        "form": {
+            "key": "fixture-key",
+            "customer": "1610793770001489815",
+            "shop": "2",
+            "staff": "3",
+            "raiten_log_stamp_flg": "1"
+        },
+        "response": {
+            "status": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "location": null,
+            "body_file": "tool_add_raiten.body"
+        }
+    }
+]
