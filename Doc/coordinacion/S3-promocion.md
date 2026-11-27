@@ -7,7 +7,9 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — Diseño (sin código)
+## Próximo paso — Esperar la revisión de S0 del diseño (`Doc/diseno/promocion.md`). Mientras tanto: factories y seeders del grupo.
+
+## (Hecho) Diseño (sin código)
 
 Escribir `Doc/diseno/promocion.md`:
 1. **Tabla de paridad:** una fila por cada vista del análisis (`Doc/analisis-legacy/03a-promocion-mensajeria.md` y `03b-promocion-fidelizacion.md`): archivo legacy, título (ja), ruta Laravel (`admin.<modulo>.*`), controlador@método, tablas nuevas, estado (`pendiente` / `descartado: motivo`).
@@ -31,8 +33,17 @@ Implementar submódulo por submódulo en el orden del diseño: migraciones, mode
 
 ## Pedidos
 
-_(ninguno)_
+Detalle en `Doc/diseno/promocion.md` §5. Resumen:
+- **S1:** cargar `routes/modulos/promocion.php` y `routes/publico/promocion.php`; registrar `PromocionServiceProvider`; niveles de permiso; módulos activables (プッシュ通知, ガチャリン, スマトピ, ポイント交換クーポン, 印刷…); config global (`system_mail`, `mail_footer`…); paquete PDF y editor HTML (npm); staff; importador con el mapeo §2.3.
+- **S2:** modelo `Reservation` (recordatorio); que las pantallas de `category3/reservation/` pasen a S2 (decide S0); `CustomerSearch` y `admin.customers.show`; `customer_devices`; perfil (edad/sexo/ocupación) en `visits`.
+- **S5:** `appview`/`mpa_*` llaman a `LoyaltyService`/`PushSender` en vez de escribir tablas.
+- **S0/Antony:** push (el servidor `b.g-api.net` lee `push_master`/`mailmag_master` del CRM → propuesta `FcmPushSender` con credenciales FCM); uso real de 新着情報, DM発行 y スマトピ; importe de descuento de los cupones migrados; CSV SJIS-win o UTF-8.
+- **S4 (aceptados):** sorteo con `LotterySetting`/`LotteryPrize` + `lottery_draws`; `CouponIssuer::markPrinted/markUsed`; pivotes `coupon_signage_*`.
 
 ## Decisiones
 
+Ver `Doc/diseno/promocion.md` §6. Las principales: controladores en `Admin/Promotions` (existente) con rutas/vistas/lang/menú `promocion`; ninguna pantalla en `hecho` porque la base existente no cumple aún la paridad (textos fuera de `lang/ja`, sin Form Requests ni Policies, faltan campos); `anketo`+`anketo2` → `surveys.type`; `hyouji_flg` → `status`; históricos de envío como solo lectura (la SQL `振分配信` no se migra); saldos de puntos/sellos como movimiento inicial.
+
 ## Hecho
+
+- 2026-11-26 — Diseño `Doc/diseno/promocion.md`: paridad (todas las vistas de 03a y 03b), esquema y mapeo `tb_*`, servicios viejos → Laravel, orden (bloque 0: 3 pts, mensajería: ≈ 33, fidelización: ≈ 35,5) y pedidos. Esperando revisión de S0.
