@@ -123,6 +123,11 @@ Comparación con development.crm-s.net (solo lectura: login y GET; nada guardado
 - マイコレ (全体, バナー, メイン, サムネイル): el legacy repite en cada archivo los formularios de las otras secciones dentro de `<div class="contents" style="display:none">` (no se ven); aquí cada pantalla pinta solo la suya. Lo visible coincide.
 - La muestra falla en 2 pantallas: `movie_program_new.php` corta el HTML tras 追加方法 (sin la lista de 放映ファイル ni los botones; error de PHP de la muestra) y `felica/card_list.php` da 500. Aquí salen completas según el código del legacy.
 
+Subidas en :8081 tras effe1f7 (regla nueva: en-docker.sh como apache; revisando `storage/logs/laravel.log` después de cada una, 0 errores):
+- master: マイコレ カバーフロー, バナー, メイン y サムネイル (temporal + 「アップロード」, se ven en la pantalla y en `api/mpa_getCoverFlow.php` / `mpa_getTopBanner.php`; borrado con 「画像を削除する」); オススメ con imagen (lista, 150 px); 求人 con las dos imágenes (detalle, 240 px); 放映素材 de imagen (0/0s/0_moto.jpg) y de vídeo FLV (10.flv), los dos servidos en `digitalsignage/index2.php` con su programa y display; signage/ コンテンツ (se ve en `/signage/view?cd=` del terminal, sondeo 200) y ファイル (`/signage/upload/…` 200); PDF de GoTel 請求書/領収書 por la URL admin y la legacy (`application/pdf`, fuente japonesa embebida). ガチャリン y ペーパーサイネージ no tienen subidas (tampoco en el legacy); vídeo de signage/: el legacy tiene comentado el alta de categorías de vídeo, así que no hay dónde subirlo.
+- qa_partial: sube 放映素材 (端末管理 sin kengen, como el legacy); las subidas de マイコレ, オススメ y 求人 y el alta de オススメ dan 403.
+- Sin fallos nuevos. Los registros QA-S4 se borraron.
+
 **Resumen S4:** 41 pantallas probadas (master y qa_partial); 5 fallos encontrados y corregidos (放映素材 sin display, 全店舗 = NULL, `GETT` → 405, g-api sin interruptor, `DemoSeederTest` inestable); comparación con la muestra sin diferencias propias; pendiente solo las 4 filas de ビーコン, que esperan a Japón.
 
 ### Operaciones / 勤怠 / integraciones (S5)
