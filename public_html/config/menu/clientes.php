@@ -20,8 +20,8 @@ return [
                 ['label' => '登録・検索項目設定', 'url' => '/system/category1/customer/form_config.php'],
                 ['label' => '顧客情報集計', 'url' => '/system/category1/shukei/shukei_list.php'],
                 // isExtShopDomain(): contents_master mycolle/app_layout_mode = '1' (Gate en ClientesServiceProvider)
-                ['label' => 'ポイント管理', 'url' => '/system/category1/customer/point_setting.php', 'can' => 'clientes.ext-shop'],
-                ['label' => 'ポイント履歴', 'url' => '/system/category1/customer/point_history.php', 'can' => 'clientes.ext-shop'],
+                ['label' => 'ポイント管理', 'url' => '/system/category1/customer/point_setting.php', 'can' => 'clientes.ext-shop.enabled'],
+                ['label' => 'ポイント履歴', 'url' => '/system/category1/customer/point_history.php', 'can' => 'clientes.ext-shop.enabled'],
                 ['label' => '顧客グループ設定', 'url' => '/system/category1/customer/customer_group_category_new.php'],
                 ['label' => '初回来店動機項目設定', 'url' => '/system/category1/customer/raiten_douki.php'],
                 ['label' => '顧客ランク設定', 'url' => '/system/category1/rank/customer_rank_list.php', 'grandchild' => '顧客ランク%'],

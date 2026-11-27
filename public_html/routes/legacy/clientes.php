@@ -96,3 +96,38 @@ Route::match(['get', 'post'], 'system/category1/inc/ajax_picupload.php', [\App\H
 // Temporales de la subida, en su URL legacy (disco public de Storage)
 Route::get('system/category1/customer/uploads/{file}', [\App\Http\Controllers\Admin\Customers\CustomerPhotoController::class, 'tempImage'])->where('file', '[A-Za-z0-9_.-]+')->name('clientes.picupload-temp');
 // --- fin C4-c ---
+
+// --- C5 ---
+// CSVインポート (menú lateral) y su plantilla (POST del botón テンプレートファイルをダウンロード)
+Route::get('system/category1/customer/csv_import.php', [\App\Http\Controllers\Admin\Customers\CustomerImportController::class, 'create'])->name('clientes.import');
+Route::post('system/category1/customer/csv_import.php', [\App\Http\Controllers\Admin\Customers\CustomerImportController::class, 'store'])->name('clientes.import.store');
+Route::match(['get', 'post'], 'system/category1/customer/csv_download_template.php', [\App\Http\Controllers\Admin\Customers\CustomerController::class, 'export'])
+    ->defaults('format', 'template')->name('clientes.csv-template');
+// CSVエクスポート (URL guardadas; el formulario hace POST a la misma URL)
+Route::get('system/category1/customer/csv_export.php', [\App\Http\Controllers\Admin\Customers\TableExportController::class, 'index'])->name('clientes.table-export');
+Route::post('system/category1/customer/csv_export.php', [\App\Http\Controllers\Admin\Customers\TableExportController::class, 'export'])->name('clientes.table-export.download');
+// --- fin C5 ---
+
+// --- C6 ---
+// --- C6-a: 集計ツール (shukei_list, model1/2, point1/2, stamp1) ---
+// 集計ツール (menú lateral 顧客情報集計) y sus ventanas (window.open con tb_shukei_link.url; formulario GET a la misma URL)
+Route::get('system/category1/shukei/shukei_list.php', [\App\Http\Controllers\Admin\Customers\ReportController::class, 'index'])->can('clientes.view')->name('clientes.reports');
+Route::get('system/category1/shukei/model1.php', [\App\Http\Controllers\Admin\Customers\ReportController::class, 'model1'])->can('clientes.view')->name('clientes.reports.model1');
+Route::get('system/category1/shukei/model2.php', [\App\Http\Controllers\Admin\Customers\ReportController::class, 'model2'])->can('clientes.view')->name('clientes.reports.model2');
+Route::get('system/category1/shukei/point1.php', [\App\Http\Controllers\Admin\Customers\ReportController::class, 'point1'])->can('clientes.view')->name('clientes.reports.point1');
+Route::get('system/category1/shukei/point2.php', [\App\Http\Controllers\Admin\Customers\ReportController::class, 'point2'])->can('clientes.view')->name('clientes.reports.point2');
+Route::get('system/category1/shukei/stamp1.php', [\App\Http\Controllers\Admin\Customers\ReportController::class, 'stamp1'])->can('clientes.view')->name('clientes.reports.stamp1');
+// $.ajax de sendMailConfirm() en model1: guarda el filtro de メール y devuelve el search_uniqid
+Route::match(['get', 'post'], 'system/category1/shukei/model1_select.php', [\App\Http\Controllers\Admin\Customers\ReportController::class, 'model1Select'])->can('clientes.view')->name('clientes.reports.model1-select');
+// --- fin C6-a ---
+// --- C6-b: 顧客情報集計 (customer_sumup_list) ---
+// 顧客情報集計: window.open desde 集計ツール (tb_shukei_link.url); list2 era la versión vieja (Flash) y abre la misma pantalla
+Route::match(['get', 'post'], 'system/category1/customer/customer_sumup_list.php', [\App\Http\Controllers\Admin\Customers\StatisticController::class, 'index'])->can('clientes.view')->name('clientes.sumup');
+Route::match(['get', 'post'], 'system/category1/customer/customer_sumup_list2.php', [\App\Http\Controllers\Admin\Customers\StatisticController::class, 'index'])->can('clientes.view')->name('clientes.sumup2');
+// --- fin C6-b ---
+// --- C6-c: csv出力管理画面 (customerDataOutPut) ---
+// csv出力管理画面: window.open desde 集計ツール (tb_shukei_link.url); el legacy enviaba todos sus formularios (mode=search|search_clear|csv) a la misma URL
+Route::match(['get', 'post'], 'system/category1/shukei/customerDataOutPut.php', [\App\Http\Controllers\Admin\Customers\VisitCsvController::class, 'index'])
+    ->can('clientes.view')->name('clientes.visit-csv');
+// --- fin C6-c ---
+// --- fin C6 ---

@@ -131,7 +131,7 @@ class CustomerPhotoImageStore
     }
 
     /** Temporales abandonados de más de un día (el legacy lo hacía con `find -mtime +1` en category1/index.php) */
-    private function cleanOldTemps(): void
+    public function cleanOldTemps(): void
     {
         $limit = now()->subDay()->getTimestamp();
         foreach ($this->disk()->files(self::TEMP_DIR) as $path) {

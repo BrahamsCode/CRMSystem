@@ -75,10 +75,18 @@ class CustomerController extends Controller
      */
     public function export(Request $request, CustomerListService $list, CustomerCsvExporter $csv, ?string $format = null): StreamedResponse
     {
+        $format ??= (string) $request->input('format', 'standard');
+
+        // C5: plantilla de la CSVインポート (csv_download_template.php), sin datos: mismo permiso que la importación
+        if ($format === 'template') {
+            abort_unless(Gate::allows('nucleo.maintenance'), 403);
+
+            return $csv->template();
+        }
+
         // CSV出力の権限 (myKengen[1002][1] o master)
         abort_unless(Gate::allows('kengen', [1002, 1]), 403);
 
-        $format ??= (string) $request->input('format', 'standard');
         abort_unless(in_array($format, CustomerCsvExporter::FORMATS, true), 404);
 
         $description = $list->description((string) $request->input('search_uniqid'));

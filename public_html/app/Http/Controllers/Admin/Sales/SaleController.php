@@ -22,9 +22,6 @@ class SaleController extends Controller
 {
     use SelectsLegacyShop;
 
-    /** El formulario del legacy solo lista el personal de la tienda 1 (`shop_cd = 1` fijo en karute_new_frm.php) */
-    private const FORM_STAFF_SHOP = 1;
-
     /** karute_delete_list.php fija kensu = 10 si no viene */
     private const LIST_KENSU = 10;
 
@@ -53,7 +50,8 @@ class SaleController extends Controller
             'saved' => $request->query('status') === 'saved',
             'today' => now('Asia/Tokyo')->format('Y/m/d'),
             'verifyToken' => (string) time(),
-            'staffList' => Staff::query()->where('shop_cd', self::FORM_STAFF_SHOP)->where('disp_flg', '1')->orderBy('rank')->orderBy('cd')->get(),
+            // El legacy fijaba `shop_cd = 1` (karute_new_frm.php); aquí, el personal de la tienda elegida (decisión S2, 2026-11-27)
+            'staffList' => $shopCd ? Staff::query()->where('shop_cd', $shopCd)->where('disp_flg', '1')->orderBy('rank')->orderBy('cd')->get() : collect(),
             'menus' => $shopCd ? ServiceMenu::query()->where('tb_shop_cd', $shopCd)->where('disp_flg', '1')->orderBy('rank')->orderBy('cd')->get() : collect(),
             'discounts' => $shopCd ? Discount::query()->where('tb_shop_cd', $shopCd)->where('disp_flg', '1')->orderBy('rank')->orderBy('cd')->get() : collect(),
             'history' => $history,

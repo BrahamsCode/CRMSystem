@@ -109,4 +109,19 @@ Route::prefix('reservas')->name('reservas.')->group(function () {
         Route::match(['get', 'post'], 'datetime-form', 'datetimeForm')->name('datetime-form');
     });
     // --- fin R4 ---
+
+    // --- R5 ---
+    // 予約一覧: view_shop.php (店舗毎予約数), yoyaku_list_calendar.php (tb_reserve), pop_calendar.php (年間カレンダー)
+    Route::controller(\App\Http\Controllers\Admin\Reservations\ReservationListController::class)->group(function () {
+        Route::get('by-shop', 'byShop')->name('by-shop');
+        Route::match(['get', 'post'], 'list-calendar', 'calendar')->name('list-calendar');
+        Route::get('pop-calendar', 'popCalendar')->name('pop-calendar');
+        // print/yoyaku_list_print.php y su CSV (print/csv_download.php; sin los archivos temporales del Flash)
+        Route::get('print', 'print')->name('print');
+        Route::match(['get', 'post'], 'csv', 'csv')->name('csv');
+    });
+    // 予約プリント: yoyakuPrint.php (iframe del 予約表) y su sondeo ajaxYoyakuPrint.php
+    Route::get('printer', [\App\Http\Controllers\Admin\Reservations\PrinterController::class, 'index'])->name('printer');
+    Route::match(['get', 'post'], 'printer/poll', [\App\Http\Controllers\Admin\Reservations\PrinterController::class, 'poll'])->name('printer.poll');
+    // --- fin R5 ---
 });

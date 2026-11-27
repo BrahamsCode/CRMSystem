@@ -130,6 +130,36 @@ Route::prefix('clientes')->name('clientes.')->group(function () {
     Route::delete('{customer}/photos/{photo}', [\App\Http\Controllers\Admin\Customers\CustomerPhotoController::class, 'destroy'])->whereNumber(['customer', 'photo'])->name('photos.destroy');
     // --- fin C4-c ---
 
+    // --- C5 ---
+    // 顧客管理トップ (category1/index.php): la portada es del núcleo (Nucleo\CategoryTopController, NUCLEO.md §3)
+    // CSVインポート (csv_import.php; la plantilla es export?format=template)
+    Route::get('import', [\App\Http\Controllers\Admin\Customers\CustomerImportController::class, 'create'])->name('import');
+    Route::post('import', [\App\Http\Controllers\Admin\Customers\CustomerImportController::class, 'store'])->name('import.store');
+    // CSVエクスポート de maestras (csv_export.php, sin enlace en el menú)
+    Route::get('table-export', [\App\Http\Controllers\Admin\Customers\TableExportController::class, 'index'])->name('table-export');
+    Route::post('table-export', [\App\Http\Controllers\Admin\Customers\TableExportController::class, 'export'])->name('table-export.download');
+    // --- fin C5 ---
+
+    // --- C6 ---
+    // --- C6-a: 集計ツール (shukei_list, model1/2, point1/2, stamp1) ---
+    // Los enlaces de tb_shukei_link usan las URL legacy (routes/legacy/clientes.php); aquí, las mismas pantallas con nombre
+    Route::get('reports', [\App\Http\Controllers\Admin\Customers\ReportController::class, 'index'])->can('clientes.view')->name('reports.index');
+    foreach (['model1', 'model2', 'point1', 'point2', 'stamp1'] as $report) {
+        Route::get("reports/{$report}", [\App\Http\Controllers\Admin\Customers\ReportController::class, $report])->can('clientes.view')->name("reports.{$report}");
+    }
+    Route::post('reports/model1/select', [\App\Http\Controllers\Admin\Customers\ReportController::class, 'model1Select'])->can('clientes.view')->name('reports.model1.select');
+    // --- fin C6-a ---
+    // --- C6-b: 顧客情報集計 (customer_sumup_list) ---
+    // 顧客情報集計 (customer_sumup_list.php): el buscador hace POST a la misma pantalla
+    Route::match(['get', 'post'], 'statistics', [\App\Http\Controllers\Admin\Customers\StatisticController::class, 'index'])->can('clientes.view')->name('statistics');
+    // --- fin C6-b ---
+    // --- C6-c: csv出力管理画面 (customerDataOutPut) ---
+    // csv出力管理画面 (shukei/customerDataOutPut.php): buscador (mode=search|search_clear) y descarga por bloques
+    Route::match(['get', 'post'], 'reports/visit-csv', [\App\Http\Controllers\Admin\Customers\VisitCsvController::class, 'index'])->can('clientes.view')->name('reports.visit-csv');
+    Route::post('reports/visit-csv/download', [\App\Http\Controllers\Admin\Customers\VisitCsvController::class, 'download'])->can('clientes.view')->name('reports.visit-csv.download');
+    // --- fin C6-c ---
+    // --- fin C6 ---
+
     // --- C1-b: ficha y pestañas, borrar, recuperar (al final: captura /{customer}) ---
     Route::get('{customer}', [\App\Http\Controllers\Admin\Customers\CustomerController::class, 'show'])->whereNumber('customer')->name('show');
     Route::delete('{customer}', [\App\Http\Controllers\Admin\Customers\CustomerController::class, 'destroy'])->whereNumber('customer')->name('destroy');

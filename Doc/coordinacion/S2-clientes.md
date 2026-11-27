@@ -7,7 +7,7 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — C5 (CSV import), C6 (集計), C7 (lector, tarjetas, 入退室, escuela, nivel), R5 (listados, impresión, CSV), R6 (category3 予約 simple, 予約機種一覧). Ventas pasa a S4 (S0, 2026-11-27).
+## Próximo paso — C7 (lector, tarjetas, 入退室, escuela, コメント設定) y R6 (category3 予約 simple, 予約機種一覧). Ventas sigue en S2 (S0, 2026-11-27).
 
 ## Tarea anterior — Diseño (sin código, HECHO)
 
@@ -72,7 +72,11 @@ Ver `Doc/diseno/clientes-ventas-reservas.md` §5 (S1: `staff`, Gates, rutas púb
 
 - 2026-11-27 (C2/R3): búsqueda guardada solo en `customer_search.<uniqid>` (quitada la copia a `promocion.audience.*`, acuerdo con S0/S3). Grupo y 来店動機 numeran con `createHatsuban` como el legacy; 顧客レベル con `hatuban`. El reparto de rangos suma `tb_point_log` + `tb_stamp_log` como el script legacy; S3 tenía previsto `promocion:customer-rank` para lo mismo: decidir uno (pedido a S0). El alta de reserva comprueba el aforo de la franja (`people`) con `lockForUpdate`; mover/cambiar desde el 予約表 no, como el legacy. Correo de reserva sin `md5(login_pass)`: enlace firmado a `publico.mypage.login` solo si S4 publica esa ruta.
 
+- 2026-11-27 (C5/C6/R5/ventas): 売上データ作成 lista el personal de la tienda elegida (el legacy fijaba `shop_cd = 1`). El 会員検索 del formulario de venta sigue con `SaleCustomerSearch` (port de `karute_menu/ajax_search_kaiin.php`, búsqueda en línea por palabras), no con el popup `admin.clientes.lookup` (otra pantalla del legacy, `karute_customer_search.php`): misma UI que el legacy. model1 → メール: el servidor arma el filtro (`MailAudience::storeRaw` de S3), no SQL del navegador. stamp1 sin `sashihiki_kaikei` (columna inexistente).
+
 ## Hecho
+
+- 2026-11-27 C5: CSVインポート (`CustomerCsvImporter`, SJIS-win, transacción por fila), plantilla CSV, `csv_export.php` (volcado de maestras, `nucleo.maintenance`), tarea `clientes:limpiar-temporales`. La portada `category1/` es del núcleo (NUCLEO.md §3): quitada la de C5. C6: 集計ツール (model1/2, point1/2, stamp1), 顧客情報集計, csv出力管理画面 (todo con `clientes.view`). R5: 店舗毎予約数, 予約一覧 (`tb_reserve`), 年間カレンダー, 予約一覧出力, CSV 予約, 予約プリント. QA S1: Gate `clientes.ext-shop.enabled`; ■顧客一覧 solo tras buscar; quitadas las entradas `category9/`. Suite 761 en verde.
 
 - 2026-11-27 C4: 追加情報 múltiple (`CustomRecordService`), selector de cliente (`karute_customer_search`), AJAX `ajax_category`/`ajax_staff`, カルテ alta/edición + カルテ詳細 + 施術カテゴリー (`biyou/`), マイアルバム con Storage en `hp/uploads/c1/photoalbum/<cd>/` (GD, mismos tamaños). Suite 717 en verde. Pendiente menor: la pestaña custom no envía `wintype=no_headers`; 「カルテを削除する」 sigue en `#` (el legacy apunta a un archivo que no existe).
 

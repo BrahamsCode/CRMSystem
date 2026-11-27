@@ -40,7 +40,7 @@ it('carga el buscador vacío sin resultados', function () {
         ->assertSee('■顧客検索条件')
         ->assertSee('この条件で検索する')
         ->assertSee('検索条件クリア')
-        ->assertSee('■顧客一覧')
+        ->assertDontSee('■顧客一覧')
         ->assertDontSee('件見つかりました');
 });
 

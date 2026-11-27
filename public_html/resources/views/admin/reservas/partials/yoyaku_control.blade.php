@@ -59,7 +59,7 @@
 <li><a id="calAreaControl_raitenList">　来店リスト　</a></li>
 @endif
 <li><a id="calAreaControl_ichiran">　一覧表示　</a></li>
-@if ($listPrintEnabled && \Illuminate\Support\Facades\Route::has('admin.reservas.print'))
+@if ($listPrintEnabled)
 <li><a href="{{ route('admin.reservas.print', ['shop' => $shopCd, 'd' => $d]) }}" target="_blank">当日予約一覧出力</a></li>
 @endif
 </ul>
@@ -97,7 +97,7 @@
 <span id="yoyakuBtnZenjitsu"><a href="{{ route('admin.reservas.timetable', $navParams($yesterday)) }}">@if ($versionFlg == '2')前日@else<img src="{{ $btnImg('button_zenjitsu.jpg') }}" width="70" height="31" alt="前日" />@endif</a></span><span id="yoyakuBtnYokujitsu"><a href="{{ route('admin.reservas.timetable', $navParams($tomorrow)) }}">@if ($versionFlg == '2')翌日@else<img src="{{ $btnImg('button_yokujitsu.jpg') }}" width="70" height="31" alt="翌日" />@endif</a></span>
 <span id="yoyakuBtnKyo"><a href="{{ route('admin.reservas.timetable', $navParams(null)) }}">@if ($versionFlg == '2')今日@else<img src="{{ $btnImg('button_kyo.jpg') }}" width="145" height="31" alt="今日" />@endif</a></span>
 <span id="yoyakuBtnSensyu"><a href="{{ route('admin.reservas.timetable', $navParams($senshu)) }}">@if ($versionFlg == '2')先週@else<img src="{{ $btnImg('button_sensyu.jpg') }}" width="70" height="31" alt="先週" />@endif</a></span><span id="yoyakuBtnYokusyu"><a href="{{ route('admin.reservas.timetable', $navParams($raishu)) }}">@if ($versionFlg == '2')翌週@else<img src="{{ $btnImg('button_yokusyu.jpg') }}" width="70" height="31" alt="翌週" />@endif</a></span>
-<span id="yoyakuBtnCal"><a href="javascript:void(0);" onclick="var w=screen.width-650;var h=screen.height-130;window.open({{ \Illuminate\Support\Js::from(\Illuminate\Support\Facades\Route::has('admin.reservas.pop-calendar') ? route('admin.reservas.pop-calendar', $navParams(null)) : 'about:blank') }}, 'popCalendar', 'width=630, height='+h+', left='+w+', top=10, menubar=no, toolbar=no, scrollbars=yes');">@if ($versionFlg == '2')年間カレンダー@else<img class="propagateThis" src="{{ $btnImg('button_cale.jpg') }}" alt="年間カレンダー" />@endif</a></span>
+<span id="yoyakuBtnCal"><a href="javascript:void(0);" onclick="var w=screen.width-650;var h=screen.height-130;window.open({{ \Illuminate\Support\Js::from(route('admin.reservas.pop-calendar', $navParams(null))) }}, 'popCalendar', 'width=630, height='+h+', left='+w+', top=10, menubar=no, toolbar=no, scrollbars=yes');">@if ($versionFlg == '2')年間カレンダー@else<img class="propagateThis" src="{{ $btnImg('button_cale.jpg') }}" alt="年間カレンダー" />@endif</a></span>
 </div>
 
 

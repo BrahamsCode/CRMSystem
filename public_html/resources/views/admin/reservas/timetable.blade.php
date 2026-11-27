@@ -605,7 +605,7 @@ $(document).ready(function() {
 @endif
 </div>
 
-@if ($realtimePrintEnabled && \Illuminate\Support\Facades\Route::has('admin.reservas.printer'))
+@if ($realtimePrintEnabled)
 <div style="display: none;">
 <iframe src="{{ route('admin.reservas.printer') }}" frameborder="0" width="100" height="100"></iframe>
 </div>

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\Customers\CustomerPhotoImageStore;
 use App\Services\Customers\NullPosGateway;
 use App\Services\Customers\NullVisitLoyalty;
 use App\Services\Customers\PosGateway;
@@ -31,9 +32,24 @@ class ClientesServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // cUtility::isExtShopDomain(): ポイント管理/ポイント履歴 del menú de clientes
-        Gate::define('clientes.ext-shop', fn ($staff = null) => ContentsMaster::text('mycolle', 'app_layout_mode') === '1');
+        Gate::define('clientes.ext-shop.enabled', fn ($staff = null) => ContentsMaster::text('mycolle', 'app_layout_mode') === '1');
 
         $this->scheduleRankAssignment();
+        $this->scheduleTempCleanup();
+    }
+
+    /**
+     * category1/index.php borraba en cada visita, con `find … -mtime +1 -exec rm`, los temporales de subida de más de
+     * un día (uploads/ de la マイアルバム; uploads/temp/ era de la CSVインポート, que aquí ya no deja temporales).
+     */
+    private function scheduleTempCleanup(): void
+    {
+        $this->callAfterResolving(Schedule::class, function (Schedule $schedule) {
+            $schedule->call(fn () => $this->app->make(CustomerPhotoImageStore::class)->cleanOldTemps())
+                ->name('clientes:limpiar-temporales')
+                ->hourly()
+                ->withoutOverlapping();
+        });
     }
 
     /**

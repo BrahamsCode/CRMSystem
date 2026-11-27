@@ -18,7 +18,16 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
  */
 class CustomerCsvExporter
 {
-    public const FORMATS = ['standard', 'ex02'];
+    public const FORMATS = ['standard', 'ex02', 'template'];
+
+    /** csv_export.php (CSVエクスポート): tablas que se pueden volcar enteras */
+    public const DUMP_TABLES = [
+        'tb_customer' => '顧客マスタ',
+        'tb_customer_group' => '顧客グループマスタ',
+        'tb_raiten_douki_master' => '来店動機マスタ',
+        'tb_staff' => 'スタッフマスタ',
+        'tb_staff_group' => 'スタッフグループマスタ',
+    ];
 
     /** Filas por bloque de lectura */
     private const CHUNK = 500;
@@ -27,7 +36,11 @@ class CustomerCsvExporter
 
     public function download(string $format, Builder $query): StreamedResponse
     {
-        return $format === 'ex02' ? $this->ex02($query) : $this->standard($query);
+        return match ($format) {
+            'ex02' => $this->ex02($query),
+            'template' => $this->template(),
+            default => $this->standard($query),
+        };
     }
 
     /**
@@ -104,6 +117,52 @@ class CustomerCsvExporter
                 flush();
             }
         }, 'CRM_DM_List.csv', ['Content-Type' => 'text/x-csv']);
+    }
+
+    /**
+     * csv_download_template.php: plantilla de la CSVインポート (columnas, títulos, tipos y aviso; sin datos).
+     */
+    public function template(): StreamedResponse
+    {
+        $str = 'kanri_id,name,name_kana,kojin_birth,kojin_sex,kojin_bloodtype,tel,kojin_mobile,email1,email2,zip,pref,add,add_number,add_build,mailmaga_flg,staff_id'.self::CRLF
+            .'管理ID,名前,フリガナ,生年月日（○○/○○/○○形式で入力。例：1970/11/19　年がない場合：/10/13）,性別（男性・女性）,血液型（A・B・O・AB）,電話番号（半角数字ハイフン無入力）,携帯番号（半角数字ハイフン無入力）,メール1,メール2,郵便番号（半角数字ハイフン無入力）,都道府県,市区町村,丁目番地,建物名,メルマガ配信（配信無しならば空白、有ならば1入力）,指名担当者（スタッフID。半角数字入力）'.self::CRLF
+            .implode(',', array_fill(0, 17, '文字列')).self::CRLF
+            .'↑は編集しないでください。追加する商品データは↓から記述してください。'.self::CRLF;
+
+        return response()->streamDownload(function () use ($str): void {
+            echo $this->sjis($str);
+        }, 'inputCustomerData.csv', ['Content-Type' => 'text/x-csv']);
+    }
+
+    /**
+     * csv_export.php: volcado de una tabla entera (SELECT * ORDER BY cd) con los nombres de columna como cabecera;
+     * cada valor entre comillas con CR, LF, TAB y comillas escapados con «\» y sin caracteres de control.
+     * Nombre del archivo: <tabla>_<YmdHis>.csv. La tabla debe estar en DUMP_TABLES.
+     */
+    public function tableDump(string $table): StreamedResponse
+    {
+        abort_unless(isset(self::DUMP_TABLES[$table]), 404);
+
+        return response()->streamDownload(function () use ($table): void {
+            $first = true;
+            foreach (DB::table($table)->orderBy('cd')->lazy(self::CHUNK)->chunk(self::CHUNK) as $rows) {
+                $buffer = '';
+                foreach ($rows as $row) {
+                    $row = (array) $row;
+                    if ($first) {
+                        $buffer .= implode(',', array_map(fn ($k) => '"'.$k.'"', array_keys($row))).self::CRLF;
+                        $first = false;
+                    }
+                    $buffer .= implode(',', array_map(function ($v) {
+                        $v = str_replace(["\r", "\n", "\t", '"'], ['\\r', '\\n', '\\t', '\\"'], (string) $v);
+
+                        return '"'.preg_replace('/[\x00-\x1F\x7F]/', '', $v).'"';
+                    }, $row)).self::CRLF;
+                }
+                echo $this->sjis($buffer);
+                flush();
+            }
+        }, $table.'_'.now('Asia/Tokyo')->format('YmdHis').'.csv', ['Content-Type' => 'text/x-csv']);
     }
 
     /** Valor de una columna de tb_koumoku con las conversiones del legacy */
