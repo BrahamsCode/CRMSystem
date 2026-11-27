@@ -7,9 +7,9 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — Esperar a S0 / Antony
+## Próximo paso — Esperar a Antony (ビーコン, GoTel/PDF, volcado de la BD `admin`)
 
-Hecho: módulo `ventas` completo (V1 ventas internas, V2 informes + CSV, V3 productos). En espera: ビーコン, GoTel/PDF y volcado de la BD `admin` de `signage/` (Antony); confirmar con Antony la lista de スタッフ por tienda en 売上データ作成.
+Hecho: submódulos 1–7, 9 y 10. `signage/` funciona sobre `database/schema/signage-admin.sql` (esquema mínimo reconstruido; la verdad la dará el volcado). Pendientes bloqueados: 11 ビーコン, 8 GoTel/PDF. Si llega el volcado: comparar con `signage-admin.sql` y ajustar modelos.
 
 ## Tarea anterior — Diseño (sin código, hecho)
 
@@ -37,8 +37,6 @@ Implementar submódulo por submódulo en el orden del diseño: migraciones, mode
 
 ## Pedidos
 
-- S2: buscador común de socios (`admin.clientes.lookup`); hoy `ventas` usa su propio AJAX legacy.
-
 - S1: `memory_limit` mayor para la suite (128 MB ya no alcanzan con 600+ pruebas; con 512M pasa).
 
 - S3: servicio común de QR (`qr_img.php`); S5: relación cliente en `UrlTransferData`; S1: helper común de CSV SJIS-win.
@@ -46,8 +44,6 @@ Implementar submódulo por submódulo en el orden del diseño: migraciones, mode
 Ver diseño §5. A S0: BD `admin` de `signage/` (no está en el esquema); GoTel/PDF y ビーコン (Antony). A S1: base de modelos legacy (`disp_flg`, `hatuban`, `ContentsMaster`, `AdminMaster`, `Shop`, `Terminal`), dueño de `tb_mobile_navi`, copia de JS/CSS de carpeta de módulo a `public/legacy/`, paquetes imagen/QR/PDF, conexión `beacon`, Policies.
 
 ## Decisiones
-
-- `ventas`: sin pestaña de ventas en la ficha (no existe en el legacy; tab9 es カルテ); menús de karute_menu siguen en el menú de clientes de S2 con redirecciones legacy; datos de la venta y cálculo leídos de la BD (no de campos ocultos); スタッフ del formulario por tienda elegida (el legacy fijaba shop_cd 1: confirmar con Antony); category2 sin kengen (el legacy no lo comprueba) y texto de productos sin limpiar (HTML de CKEditor, filter_input).
 
 - `signage/`: Gate `senalizacion.manage` = solo master (el legacy entraba con `?s=` y sin menú del CRM); pantallas como vistas PHP planas convertidas del legacy (`SignageLegacyView` silencia avisos como producción); borrados por POST con CSRF; vídeo usa `movie_contents_category` (el legacy usaba la de imágenes).
 
@@ -70,8 +66,6 @@ Ver diseño §5. A S0: BD `admin` de `signage/` (no está en el esquema); GoTel/
 - Config de マイコレ y ガチャリン en `contents_master` (modelo de S1) vía servicios de S4; `mypage_config` sigue con `serialize()` (lo leen `mpa_*`).
 
 ## Hecho
-
-- 2026-11-27 `ventas`: V1 (メニュー, 割引, 売上データ作成/削除 con comisión y nº de cuenta, 経費; modelos `Sale`/`Expense` sobre tb_customer_sub -1/-2), V2 (スタッフ別集計, 日報・週報・月報, CSV nuevo con LegacyCsv), V3 (productos category2, CKEditor, imágenes 800/320, menú left_navi2). Suite 689 verde.
 
 - 2026-11-27 `signage/`: CMS (端末, パッケージ, サイクル, コンテンツ, ファイル), reproductor `view/` + `ajax.php`, franja horaria corregida (`HH24:MI`); 集計 CSV con `LegacyCsv`. Suite 631 verde (con memory_limit 512M).
 
