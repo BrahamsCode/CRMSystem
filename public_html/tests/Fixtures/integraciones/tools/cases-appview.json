@@ -349,5 +349,51 @@
   "headers": [
    "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
   ]
+ },
+ {
+  "name": "av_anketo2",
+  "method": "GET",
+  "path": "/appview/anketo2.php"
+ },
+ {
+  "name": "av_anketo2_post",
+  "method": "POST",
+  "path": "/appview/anketo2.php?act=up",
+  "form": {
+   "anketo_cate_cd": "1"
+  }
+ },
+ {
+  "name": "av_member_complete_bad_token",
+  "method": "POST",
+  "path": "/appview/member_complete.php",
+  "form": {
+   "_token": "x",
+   "regist": "1",
+   "name": "a",
+   "tel": "1",
+   "mail": "m"
+  }
+ },
+ {
+  "name": "av_member_complete_no_regist",
+  "method": "POST",
+  "path": "/appview/member_complete.php",
+  "form": {
+   "name": "表示 <だけ>",
+   "tel": "0901",
+   "mail": "a@b.test"
+  }
+ },
+ {
+  "name": "av_member_complete",
+  "method": "POST",
+  "path": "/appview/member_complete.php",
+  "form": {
+   "regist": "1",
+   "name": "新規 会員",
+   "tel": "09011112222",
+   "mail": "new@example.test"
+  }
  }
 ]

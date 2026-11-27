@@ -1,0 +1,128 @@
+[
+ {
+  "name": "srd_no_kaiin",
+  "method": "POST",
+  "path": "/system/tool/api/category1/setRaitenDetail.php",
+  "form": {
+   "key": "fixture-key"
+  }
+ },
+ {
+  "name": "srd_no_verify",
+  "method": "POST",
+  "path": "/system/tool/api/category1/setRaitenDetail.php",
+  "form": {
+   "key": "fixture-key",
+   "kaiin_cd": "1609897927001809158"
+  }
+ },
+ {
+  "name": "srd_bad_date",
+  "method": "POST",
+  "path": "/system/tool/api/category1/setRaitenDetail.php",
+  "form": {
+   "key": "fixture-key",
+   "kaiin_cd": "1609897927001809158",
+   "raiten_y": "2026",
+   "raiten_m": "13",
+   "raiten_d": "5",
+   "raiten_h": "10",
+   "raiten_i": "30",
+   "kaikei": "3000",
+   "shiharai_houhou": "現金",
+   "form101": "パーマ",
+   "form102": "腰",
+   "form103": "1",
+   "add_record_verify": "1"
+  }
+ },
+ {
+  "name": "srd_bad_date_jsonp",
+  "method": "POST",
+  "path": "/system/tool/api/category1/setRaitenDetail.php",
+  "form": {
+   "key": "fixture-key",
+   "kaiin_cd": "1609897927001809158",
+   "raiten_y": "2026",
+   "raiten_m": "13",
+   "raiten_d": "5",
+   "raiten_h": "10",
+   "raiten_i": "30",
+   "kaikei": "3000",
+   "shiharai_houhou": "現金",
+   "form101": "パーマ",
+   "form102": "腰",
+   "form103": "1",
+   "add_record_verify": "1",
+   "data_type": "jsonp",
+   "callback": "cb"
+  }
+ },
+ {
+  "name": "srd_new",
+  "method": "POST",
+  "path": "/system/tool/api/category1/setRaitenDetail.php",
+  "form": {
+   "key": "fixture-key",
+   "kaiin_cd": "1609897927001809158",
+   "raiten_y": "2026",
+   "raiten_m": "3",
+   "raiten_d": "5",
+   "raiten_h": "10",
+   "raiten_i": "30",
+   "kaikei": "3000",
+   "shiharai_houhou": "現金",
+   "form101": "パーマ",
+   "form102": "腰",
+   "form103": "1",
+   "add_record_verify": "2"
+  }
+ },
+ {
+  "name": "srd_linked",
+  "method": "POST",
+  "path": "/system/tool/api/category1/setRaitenDetail.php",
+  "form": {
+   "key": "fixture-key",
+   "kaiin_cd": "1609897927001809158",
+   "raiten_y": "2026",
+   "raiten_m": "3",
+   "raiten_d": "5",
+   "raiten_h": "10",
+   "raiten_i": "30",
+   "kaikei": "3000",
+   "shiharai_houhou": "現金",
+   "form101": "パーマ",
+   "form102": "腰",
+   "form103": "1",
+   "raiten_cd": "802",
+   "add_record_verify": "3"
+  }
+ },
+ {
+  "name": "srd_update",
+  "method": "POST",
+  "path": "/system/tool/api/category1/setRaitenDetail.php",
+  "form": {
+   "key": "fixture-key",
+   "kaiin_cd": "1609897927001809158",
+   "raiten_y": "2026",
+   "raiten_m": "3",
+   "raiten_d": "5",
+   "raiten_h": "10",
+   "raiten_i": "30",
+   "kaikei": "3000",
+   "shiharai_houhou": "現金",
+   "form101": "カラー",
+   "form102": "腰",
+   "form103": "1",
+   "related_features_cd": "801",
+   "add_record_verify": "4"
+  }
+ },
+ {
+  "name": "srd_after_list",
+  "method": "GET",
+  "path": "/system/tool/api/category1/getRaitenList.php?key=fixture-key&cd=1609897927001809158"
+ }
+]

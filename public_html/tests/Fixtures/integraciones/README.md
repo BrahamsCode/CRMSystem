@@ -70,3 +70,9 @@ Lo que mostraron: `memberId`/`qr_code` responden `error` (texto) si `customer_cd
 - `coupon_detail.php` de un cupón ajeno responde 302 a `coupon.php` **con** la página (sin `exit` tras `header()`).
 - `coupon.php` borra los cupones caducados de todos los socios en cada visita; `kensu` no numérico vale 0 (lista vacía).
 - `qr_code.php?demo=1` toma «el primer socio» sin `ORDER BY`: depende del orden físico (por eso `av_qr_demo` cambió al agregar los `UPDATE` de sellos).
+
+**Lote C1:** `member_complete` con token de sesión (sin token ni sesión, `null == null` deja pasar, como el legacy) y `anketo2` (sin la sesión de hp/user: 302 a `login.php?logerr=2`; hace falta `hp/user/inc/` en la copia). El INSERT de `member_complete` nombra columnas que no existen en el esquema del backup (`mobile_type`, `ec_member_cd`, `family_membership_id`, `visit_time_required`, `family_size`, `register_type`, `year_purchase_rank`, `pos_member_cd`): en el legacy falla en silencio y la página igual dice 登録完了.
+
+## setRaitenDetail (`srd/`, grabado el 2026-11-27)
+
+8 casos de `system/tool/api/category1/setRaitenDetail.php` sobre los datos de `tool-seed.sql` (`tools/cases-srd.json`, BD como la de `tool/`). Se comprueban en `SetRaitenDetailTest` con el `VisitRecordService` real de S2. Mostraron que el legacy valida (fecha, campos) **antes** de mirar `add_record_verify`; el JSONP de error sale roto (solo los pares) y Laravel emite el formato correcto.
