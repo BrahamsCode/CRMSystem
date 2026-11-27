@@ -132,5 +132,222 @@
   "headers": [
    "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
   ]
+ },
+ {
+  "name": "av_coupon_list",
+  "method": "GET",
+  "path": "/appview/coupon.php?customer_cd=1609897927001809158",
+  "headers": [
+   "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  ]
+ },
+ {
+  "name": "av_coupon_list_pc",
+  "method": "GET",
+  "path": "/appview/coupon.php?customer_cd=1609897927001809158"
+ },
+ {
+  "name": "av_coupon_list_paged",
+  "method": "GET",
+  "path": "/appview/coupon.php?customer_cd=1609897927001809158&kensu=1&page=2",
+  "headers": [
+   "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  ]
+ },
+ {
+  "name": "av_coupon_list_bad_kensu",
+  "method": "GET",
+  "path": "/appview/coupon.php?customer_cd=1609897927001809158&kensu=abc",
+  "headers": [
+   "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  ]
+ },
+ {
+  "name": "av_coupon_list_page_over",
+  "method": "GET",
+  "path": "/appview/coupon.php?customer_cd=1609897927001809158&kensu=1&page=9",
+  "headers": [
+   "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  ]
+ },
+ {
+  "name": "av_coupon_none",
+  "method": "GET",
+  "path": "/appview/coupon.php?customer_cd=1610793770001489815",
+  "headers": [
+   "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  ]
+ },
+ {
+  "name": "av_coupon_zero",
+  "method": "GET",
+  "path": "/appview/coupon.php?customer_cd=abc",
+  "headers": [
+   "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  ]
+ },
+ {
+  "name": "av_coupon_missing",
+  "method": "GET",
+  "path": "/appview/coupon.php?customer_cd=999",
+  "headers": [
+   "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  ]
+ },
+ {
+  "name": "av_coupon_detail",
+  "method": "GET",
+  "path": "/appview/coupon_detail.php?cd=100&customer_cd=1609897927001809158",
+  "headers": [
+   "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  ]
+ },
+ {
+  "name": "av_coupon_detail_all_shops",
+  "method": "GET",
+  "path": "/appview/coupon_detail.php?cd=101&customer_cd=1609897927001809158"
+ },
+ {
+  "name": "av_coupon_detail_other",
+  "method": "GET",
+  "path": "/appview/coupon_detail.php?cd=100&customer_cd=1610793770001489815",
+  "headers": [
+   "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  ]
+ },
+ {
+  "name": "av_coupon_detail_no_cd",
+  "method": "GET",
+  "path": "/appview/coupon_detail.php?customer_cd=1609897927001809158",
+  "headers": [
+   "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  ]
+ },
+ {
+  "name": "av_used_list",
+  "method": "GET",
+  "path": "/appview/used_coupon_list.php?customer_cd=1609897927001809158",
+  "headers": [
+   "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  ]
+ },
+ {
+  "name": "av_used_list_pc",
+  "method": "GET",
+  "path": "/appview/used_coupon_list.php?customer_cd=1609897927001809158"
+ },
+ {
+  "name": "av_used_none",
+  "method": "GET",
+  "path": "/appview/used_coupon_list.php?customer_cd=1610793770001489815",
+  "headers": [
+   "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  ]
+ },
+ {
+  "name": "av_stamp",
+  "method": "GET",
+  "path": "/appview/stamp.php?customer_cd=1609897927001809158",
+  "headers": [
+   "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  ]
+ },
+ {
+  "name": "av_stamp_full",
+  "method": "GET",
+  "path": "/appview/stamp.php?customer_cd=1610793770001489815",
+  "headers": [
+   "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  ]
+ },
+ {
+  "name": "av_stamp_zero",
+  "method": "GET",
+  "path": "/appview/stamp.php?customer_cd=0",
+  "headers": [
+   "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  ]
+ },
+ {
+  "name": "av_coupon_control_missing",
+  "method": "GET",
+  "path": "/appview/coupon_control.php?customer_cd=1609897927001809158&my_coupon_cd=999",
+  "headers": [
+   "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  ]
+ },
+ {
+  "name": "av_coupon_control_zero",
+  "method": "GET",
+  "path": "/appview/coupon_control.php?my_coupon_cd=100",
+  "headers": [
+   "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  ]
+ },
+ {
+  "name": "av_coupon_control_noact",
+  "method": "GET",
+  "path": "/appview/coupon_control.php?customer_cd=1609897927001809158&my_coupon_cd=100",
+  "headers": [
+   "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  ]
+ },
+ {
+  "name": "av_coupon_control_use",
+  "method": "POST",
+  "path": "/appview/coupon_control.php",
+  "form": {
+   "act": "use",
+   "coupon_cd": "10",
+   "my_coupon_cd": "100",
+   "customer_cd": "1609897927001809158",
+   "tb_shop_cd": "1"
+  },
+  "headers": [
+   "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  ]
+ },
+ {
+  "name": "av_coupon_use",
+  "method": "POST",
+  "path": "/appview/coupon_use.php",
+  "form": {
+   "coupon_cd": "10",
+   "my_coupon_cd": "100"
+  },
+  "headers": [
+   "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  ]
+ },
+ {
+  "name": "av_coupon_use_empty",
+  "method": "GET",
+  "path": "/appview/coupon_use.php",
+  "headers": [
+   "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  ]
+ },
+ {
+  "name": "av_coupon_control_print",
+  "method": "POST",
+  "path": "/appview/coupon_control.php",
+  "form": {
+   "act": "print",
+   "coupon_cd": "11",
+   "my_coupon_cd": "101",
+   "customer_cd": "1609897927001809158",
+   "tb_shop_cd": "2"
+  },
+  "headers": [
+   "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  ]
+ },
+ {
+  "name": "av_coupon_list_after",
+  "method": "GET",
+  "path": "/appview/coupon.php?customer_cd=1609897927001809158",
+  "headers": [
+   "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  ]
  }
 ]

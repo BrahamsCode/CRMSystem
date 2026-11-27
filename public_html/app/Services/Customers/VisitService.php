@@ -136,4 +136,98 @@ class VisitService
         // Sin tocar update_date, como el UPDATE del legacy
         Customer::withDeleted()->whereKey($customer->cd)->toBase()->update($values);
     }
+
+    /**
+     * `changeCustomerRaitenData()` de `inc/raiten_function.php` (tras el alta manual, la corrección o el borrado de
+     * visitas): `last_raiten_date` = MAX(raiten_hiduke) de las visitas visibles y `shuki_heikin` = ciclo medio de las
+     * últimas 11 fechas distintas, o NULL si hay menos de 2.
+     */
+    public function syncVisitStats(int $customerCd): void
+    {
+        $dates = Visit::query()
+            ->where('user_cd', $customerCd)
+            ->distinct()
+            ->orderByDesc('raiten_hiduke')
+            ->limit(11)
+            ->pluck('raiten_hiduke')
+            ->values();
+
+        $shuki = null;
+        if ($dates->count() > 1) {
+            $total = 0;
+            for ($i = 1; $i < $dates->count(); $i++) {
+                $total += (strtotime((string) $dates[$i - 1]) - strtotime((string) $dates[$i])) / 86400;
+            }
+            $shuki = (int) round($total / ($dates->count() - 1));
+        }
+
+        Customer::withDeleted()->whereKey($customerCd)->toBase()->update([
+            'shuki_heikin' => $shuki,
+            'last_raiten_date' => $dates->first() !== null ? (string) $dates->first() : '',
+        ]);
+    }
+
+    /**
+     * Alta manual desde la pestaña 来店履歴 de la ficha (`inc/raiten_register.php`, 「来店履歴処理実行」):
+     * $count visitas (一括登録, mínimo 1) en la fecha indicada, con manual_flg '1', sin sellos (stamp 0)
+     * ni puntos, y recalcula las estadísticas. Devuelve los cd creados.
+     *
+     * @return list<int>
+     */
+    public function registerManual(Customer $customer, int $shopCd, CarbonInterface $at, int $count = 1, ?int $pointLogCd = null, ?int $stampLogCd = null): array
+    {
+        $at = $at->copy()->setTimezone('Asia/Tokyo');
+
+        $cds = DB::transaction(function () use ($customer, $shopCd, $at, $count, $pointLogCd, $stampLogCd) {
+            $cds = [];
+            for ($i = 0; $i < max(1, $count); $i++) {
+                $cds[] = Visit::create([
+                    'user_id' => $customer->id,
+                    'user_cd' => $customer->cd,
+                    'shop_cd' => $shopCd,
+                    'raiten_time' => (string) $at->getTimestamp(),
+                    'raiten_hiduke' => $this->businessDay($at),
+                    'stamp' => 0,
+                    'customer_age' => $customer->ageAt($at),
+                    'customer_sex' => $customer->kojin_sex,
+                    'customer_job' => $customer->job,
+                    'manual_flg' => '1',
+                    'tb_point_log_cd' => $pointLogCd,
+                    'tb_stamp_log_cd' => $stampLogCd,
+                ])->cd;
+            }
+
+            return $cds;
+        });
+
+        $this->syncVisitStats((int) $customer->cd);
+
+        return $cds;
+    }
+
+    /**
+     * 「来店履歴削除」 de la pestaña 来店履歴 (`inc/raiten_register.php`): disp_flg '9' en la visita y en sus campos
+     * 関連情報 (tb_customer_sub del mismo category_inner_group); no toca puntos ni sellos. Recalcula las estadísticas.
+     */
+    public function deleteManual(Customer $customer, int $visitCd): void
+    {
+        DB::transaction(function () use ($customer, $visitCd) {
+            $visit = DB::table('tb_raiten_rireki')->where('user_cd', $customer->cd)->where('cd', $visitCd)->first();
+            if (! $visit) {
+                return;
+            }
+
+            if ($visit->tb_search_cate_cd !== null) {
+                DB::table('tb_customer_sub')
+                    ->where('tb_search_cate_cd', $visit->tb_search_cate_cd)
+                    ->where('tb_customer_cd', $customer->cd)
+                    ->where('category_inner_group', (string) $visit->tb_customer_sub_inner_group)
+                    ->update(['disp_flg' => '9']);
+            }
+
+            DB::table('tb_raiten_rireki')->where('cd', $visitCd)->where('user_cd', $customer->cd)->update(['disp_flg' => '9']);
+        });
+
+        $this->syncVisitStats((int) $customer->cd);
+    }
 }

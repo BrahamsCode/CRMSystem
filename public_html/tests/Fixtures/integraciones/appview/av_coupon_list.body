@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title></title>
+<style>
+body{
+	font-family: 'Meiryo',"ヒラギノ角ゴ Pro W3","ＭＳ Ｐゴシック","Osaka", sans-serif;
+}
+</style>
+</head>
+
+<body>
+<h2 align="center" bgcolor="#FF6600" color="#FFFFFF">ｸｰﾎﾟﾝ</h2>
+
+
+
+
+<div>
+
+
+<div class="kadomaruArea">
+
+カット10%OFF<br />
+<span class="textS"><font size="-1">ご来店時にこの画面をご提示くださ....<br />(shop)</font></span><br />
+
+<div align="right" class="textRight"><span class="textS"><font size="-1"><a href="coupon_detail.php?cd=100&customer_cd=1609897927001809158">詳細を見る</a></font></span></div>
+
+<!---■■ /.kadomaruArea ■■---></div>
+
+
+
+
+<div class="kadomaruArea">
+
+全店舗ドリンク券<br />
+<span class="textS"><font size="-1">ドリンク1杯無料<br />(全店舗)</font></span><br />
+
+<div align="right" class="textRight"><span class="textS"><font size="-1"><a href="coupon_detail.php?cd=101&customer_cd=1609897927001809158">詳細を見る</a></font></span></div>
+
+<!---■■ /.kadomaruArea ■■---></div>
+
+
+
+<!--　ネクストバック　-->
+<div>
+</div>
+
+</div>
+
+
+
+
+
+<div class="hr_border"></div>
+
+※<span class="attention"><font color="#FE0000">1回のみの使用</font></span>となりますので「使用する」は<span class="attention"><font color="#FE0000">必ず店内で</font></span>押してください。<br />
+<a href="used_coupon_list.php?customer_cd=1609897927001809158">○使用済みｸｰﾎﾟﾝ</a>
+
+
+<br />
+</body>
+</html>

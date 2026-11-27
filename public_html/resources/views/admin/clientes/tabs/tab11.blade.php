@@ -602,3 +602,6 @@ function getTenki(num){
 
 </div>
 <!--マイクーポンtable end-->
+
+{{-- Punto de enganche de S4 (ventas): parcial de la pestaña de ventas, mientras no exista no pinta nada --}}
+@includeIf('admin.ventas.partials.customer-tab', ['customer' => $customer])

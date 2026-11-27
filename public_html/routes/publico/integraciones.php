@@ -77,6 +77,12 @@ Route::name('publico.integraciones.')
             Route::any('member_kiyaku.php', [Appview\MemberRegistrationController::class, 'terms'])->name('member-kiyaku');
             Route::any('member_comfirm.php', [Appview\MemberRegistrationController::class, 'confirm'])->name('member-comfirm');
             Route::any('privacyPage.php', [Appview\PageController::class, 'privacy'])->name('privacy');
+            Route::any('coupon.php', [Appview\CouponController::class, 'index'])->name('coupon');
+            Route::any('coupon_detail.php', [Appview\CouponController::class, 'show'])->name('coupon-detail');
+            Route::any('coupon_control.php', [Appview\CouponController::class, 'use'])->name('coupon-control');
+            Route::any('coupon_use.php', [Appview\CouponController::class, 'used'])->name('coupon-use');
+            Route::any('used_coupon_list.php', [Appview\CouponController::class, 'usedList'])->name('used-coupons');
+            Route::any('stamp.php', [Appview\StampController::class, 'show'])->name('stamp');
         });
 
         // Ventana CTI (system/desktop_request): sin autenticación, como el legacy

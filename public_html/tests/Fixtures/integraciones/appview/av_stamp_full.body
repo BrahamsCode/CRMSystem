@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title></title>
+<link rel="stylesheet" href="/admin/css/font-awesome.min.css">
+<style>
+body{
+	line-height: 19px;
+    background: url(css/img.png);
+}
+.stampWrap {
+    margin: 0 auto;
+    max-width: 300px;
+    padding-top: 10px;
+}
+.stampWrap table {
+	width: 100%;
+    background: #ffe1d3;
+    margin: auto;
+    border: 9px solid #c78d71;
+    border-top-width: 150px;
+}
+.stampWrap table tr {
+}
+.stampWrap table tr {
+}
+.stampWrap table tr th {
+}
+.stampWrap table tr td {
+}
+/* 03.リボン */
+#heading03{
+	position:relative;
+	margin:0 -10px;
+	padding:5px;
+	font:normal 28px/1.6 "Times New Roman", Times, serif;
+	text-align:center;
+	color:#ffe8e8;
+	background:#f99;
+	-webkit-transform: rotate(-3deg) skew(-3deg);
+	-moz-transform: rotate(-3deg) skew(-3deg);
+	-o-transform: rotate(-3deg) skew(-3deg);
+	transform: rotate(-3deg) skew(-3deg);
+	box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);
+    background-image: -webkit-gradient(linear, left top, left bottom,
+			from(			rgba(0, 0, 0, 0.0)), 
+			color-stop(0.08, rgba(255, 255, 255, 0.5)),
+			color-stop(0.12, rgba(255, 255, 255, 0.5)),
+			color-stop(0.12, rgba(0, 0, 0, 0.0)),
+			color-stop(0.88, rgba(0, 0, 0, 0.0)),
+			color-stop(0.88, rgba(255, 255, 255, 0.5)),
+			color-stop(0.92, rgba(255, 255, 255, 0.5)),
+			color-stop(0.92, rgba(0, 0, 0, 0.0)),
+			to(				rgba(0, 0, 0, 0.0))
+			);
+	background-image: -moz-linear-gradient(top,
+			transparent 8%,
+            rgba(255, 255, 255, 0.5) 8%,
+            rgba(255, 255, 255, 0.5) 12%,
+            transparent 12%,
+            transparent 88%,
+            rgba(255, 255, 255, 0.5) 88%,
+            rgba(255, 255, 255, 0.5) 92%,
+            transparent 92%	
+			);
+	background-image: -o-linear-gradient(top,
+			transparent 8%,
+            rgba(255, 255, 255, 0.5) 8%,
+            rgba(255, 255, 255, 0.5) 12%,
+            transparent 12%,
+            transparent 88%,
+            rgba(255, 255, 255, 0.5) 88%,
+            rgba(255, 255, 255, 0.5) 92%,
+            transparent 92%	
+			);
+	background-image: linear-gradient(to bottom,
+			transparent 8%,
+            rgba(255, 255, 255, 0.5) 8%,
+            rgba(255, 255, 255, 0.5) 12%,
+            transparent 12%,
+            transparent 88%,
+            rgba(255, 255, 255, 0.5) 88%,
+            rgba(255, 255, 255, 0.5) 92%,
+            transparent 92%	
+			);
+    margin-bottom: -60px;
+}
+#heading03:before{
+	content:" ";
+	position:absolute;
+	top:-5px;
+	left:0;
+	width:0;
+	height:0;
+	border-width:0 0 5px 10px;
+	border-style:solid;
+	border-color:transparent;
+	border-bottom-color:#c66;
+}
+#heading03:after{
+	content:" ";
+	position:absolute;
+	top:100%;
+	right:0;
+	width:0;
+	height:0;
+	border-width:5px 10px 0 0;
+	border-style:solid;
+	border-color:transparent;
+	border-top-color:#c66;
+}
+</style>
+</head>
+<body>
+
+
+<div class="bgWhite p10">
+
+<div>
+	
+</div>
+
+<div class="textCenter stampWrap" align="center">
+
+<h3 id="heading03">会員スタンプ</h3>
+
+<p style="margin-top: 80px; margin-bottom: -127px;color:white;font-size: 13px; padding: 0 10px;
+">
+	商品をご購入頂いたり、店舗に来て頂くことでスタンプを発行させて頂いております。<br>
+</p>
+
+<table bgcolor="#666666" cellspacing="1" style="background: #ffe1d3; margin: auto;">
+<tr>
+<td align="center" bgcolor="#FFFFFF" width="30" height="30" style="background: #FFFFFF;"><img src="/hp/uploads/c4/stamp/5.gif" width="30" height="30" alt="ｽﾀﾝﾌﾟ" /></td><td align="center" bgcolor="#FFFFFF" width="30" height="30" style="background: #FFFFFF;"><img src="/hp/uploads/c4/stamp/5.gif" width="30" height="30" alt="ｽﾀﾝﾌﾟ" /></td><td align="center" bgcolor="#FFFFFF" width="30" height="30" style="background: #FFFFFF;"><img src="/hp/uploads/c4/stamp/5.gif" width="30" height="30" alt="ｽﾀﾝﾌﾟ" /></td><td align="center" bgcolor="#FFFFFF" width="30" height="30" style="background: #FFFFFF;"><img src="/hp/uploads/c4/stamp/5.gif" width="30" height="30" alt="ｽﾀﾝﾌﾟ" /></td><td align="center" bgcolor="#FFFFFF" width="30" height="30" style="background: #FFFFFF;"><img src="/hp/uploads/c4/stamp/5.gif" width="30" height="30" alt="ｽﾀﾝﾌﾟ" /></td></tr>
+<tr>
+<td align="center" bgcolor="#FFFFFF" width="30" height="30" style="background: #FFFFFF;"><img src="/hp/uploads/c4/stamp/5.gif" width="30" height="30" alt="ｽﾀﾝﾌﾟ" /></td><td align="center" bgcolor="#FFFFFF" width="30" height="30" style="background: #FFFFFF;"><img src="/hp/uploads/c4/stamp/5.gif" width="30" height="30" alt="ｽﾀﾝﾌﾟ" /></td><td align="center" bgcolor="#FFFFFF" width="30" height="30" style="background: #FFFFFF;"><img src="/hp/uploads/c4/stamp/5.gif" width="30" height="30" alt="ｽﾀﾝﾌﾟ" /></td><td align="center" bgcolor="#FFFFFF" width="30" height="30" style="background: #FFFFFF;"><img src="/hp/uploads/c4/stamp/5.gif" width="30" height="30" alt="ｽﾀﾝﾌﾟ" /></td><td align="center" bgcolor="#FFFFFF" width="30" height="30" style="background: #FFFFFF;"><img src="/hp/uploads/c4/stamp/5.gif" width="30" height="30" alt="ｽﾀﾝﾌﾟ" /></td></tr>
+</table>
+</div><br />
+<div align="center" class="textCenter">
+<span class="textS"><font size="-1" color="#FE0000">
+<span id="stampPageDisp">現在 1枚目</span><br />
+<span id="stampCountDisp">
+12個目<br />※これ以上ｽﾀﾝﾌﾟは貯まりません。</span>
+</font>
+</span>
+</div>
+
+    
+    </body>
+</html>
