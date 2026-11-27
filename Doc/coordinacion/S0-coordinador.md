@@ -177,6 +177,10 @@
   - S5: 勤怠管理 y `para-japon.md` §3/§5.
   Conflicto aditivo en `config/menu/operaciones.php` resuelto (勤怠一覧 de S2 primero y después lo de S5). `laravel13` con 989 pruebas en verde.
 - Nuevo para Antony y Japón (de S2): qué deben mostrar 普通残業/休日残業/休日出勤 en 集計 (el legacy nunca los calculó; hoy salen los mismos valores) y si 休出勤合計 del 帳票 sigue siendo 外出×休憩. 帳票 queda apagado por defecto (`CRM_WORKING_REPORT`).
+- 2026-11-27 (10:00), CIERRE de esta fase:
+  - Paridad (S1, sobre 1c56ac2): 97 %. Después del ajuste de S5 (tarjetas FeliCa descartadas, por ser solo para fichar desde touchcation; portada y paginador hechos) quedan 7 pendientes: スマトピ 2 (oculta), ビーコン 4 (provisional, Japón) y `shukei` 1 (BD externa de VIZAN).
+  - Regresión 2 sobre :8081: 134/131 pantallas, 0 errores 500, 0 páginas en blanco y 0 errores de JS, con el log limpio. Solo dan 404 las 3 URL pendientes de decisión.
+  - `laravel13` con 989 pruebas en verde. Todo está integrado y las 5 sesiones quedan libres.
 - 2026-11-27: siguiente tarea de S1 (Antony: el login primero): modelo base y traits comunes, luego el login contra el personal del legacy, el layout idéntico y los estáticos comunes.
 
 ## Hecho

@@ -134,7 +134,7 @@ Diferencias con crm2-php8, a propósito: `DocumentRoot /var/www/public` (Laravel
 | 1 | Subir Laravel 12 → 13 y PHP 8.5 (`composer.json`, Pest 4, Fortify, Dockerfile de Render) | Pendiente — S1 |
 | 1' | Diseño por grupo (`Doc/diseno/`) | **Hecho (2026-11-27)**: v2 sobre la BD y la UI del legacy, aprobados: S2 (84 pts), S3 (≈83), S4, S5 (63, de los que 22 esperan 勤怠) |
 | 2 | **Misma BD y misma UI que el legacy** (Antony, 2026-11-26): esquema `database/schema/pgsql-schema.sql` desde `crm2019.backup`, modelos sobre `tb_*`, mismos CSS; responsive al final. Lo construido sobre tablas nuevas se borró | **Hecho (esquema y limpieza)** |
-| 3+ | Módulos en paralelo según `Doc/planificacion/ORCHESTRATION.md` | **Casi terminado** (2026-11-27, 940 pruebas en verde): paridad del 83 % (403 hechas, 79 pendientes y 137 descartadas, en `Doc/qa/paridad.md`); lo pendiente espera decisiones de Antony (`Doc/qa/para-japon.md`) |
+| 3+ | Módulos en paralelo según `Doc/planificacion/ORCHESTRATION.md` | **Hecho salvo decisiones de Japón** (2026-11-27): 989 pruebas en verde; paridad del 97 % (`Doc/qa/paridad.md`), con 7 pendientes (スマトピ, ビーコン, `shukei`); regresión de punta a punta sin errores 500 (`Doc/qa/regresion.md`); informe en `Doc/qa/para-japon.md` |
 
 ## 8. Siguiente paso
 
