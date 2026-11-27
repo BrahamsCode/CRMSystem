@@ -46,7 +46,8 @@ class DigitalSignageNewsStore
     {
         $path = self::TEMP_DIR.'/'.$time.'.swf';
 
-        return ctype_digit($time) && $this->disk()->exists($path) ? asset($path) : null;
+        // URL del disco (como MailImageStore): /system/category3/… no tiene ruta en Laravel
+        return ctype_digit($time) && $this->disk()->exists($path) ? $this->disk()->url($path) : null;
     }
 
     /** register: copia la temporal a hp/uploads/c3/digital_signage/<cd>/<cd>.swf y la borra */

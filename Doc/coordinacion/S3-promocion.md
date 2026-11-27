@@ -73,6 +73,7 @@ Ver `Doc/diseno/promocion.md` §6. Las principales: controladores en `Admin/Prom
 
 ## Hecho
 
+- 2026-11-27 — Repaso de subidas en :8081 (master y qa_partial, log limpio): 2 fallos corregidos (imagen en フォロー/自動 404, enlace temporal de 新着情報) con `QaSubidasTest`; avisado a S0 de `storage:link` y `APP_URL` en :8081.
 - 2026-11-28 — Tercera pasada, fase B terminada: pantallas de promoción probadas en :8081 como master, umeda01 y qa_partial (resumen en `Doc/qa/regresion.md` «Promoción (S3)»).
 
 - 2026-11-28 — Push a g-api con el interruptor común `GApi` (CRM_GAPI_ENABLED) de S1; fuera el `config/promocion.php` provisional. `QrBaseInfo` no hace peticiones (solo arma la URL del QR): sin cambios.

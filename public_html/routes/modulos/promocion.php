@@ -69,6 +69,9 @@ Route::prefix('promocion')->name('promocion.')->group(function () {
             Route::post($type.'_mail_future_confirm', [MailController::class, 'confirm'])->name('edit-confirm')->defaults('mailType', $type);
             Route::post($type.'_mail_future_send', [MailController::class, 'store'])->name('update')->defaults('mailType', $type);
             Route::post('mail_kaijo', [MailController::class, 'cancel'])->name('cancel')->defaults('mailType', $type);
+            // Imagen del envío (staff_entry.js sube a la ruta relativa inc/upload.php): follow/inc/upload.php y auto/inc/upload.php
+            Route::post('inc/upload.php', [MailAjaxController::class, 'upload'])->name('upload')->defaults('folder', $type);
+            Route::get('inc/disp_pic.php', [MailAjaxController::class, 'displayPicture'])->name('picture')->defaults('folder', $type);
         });
     }
 
