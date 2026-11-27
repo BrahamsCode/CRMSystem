@@ -7,7 +7,7 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — C1 (controladores y rutas de 顧客一覧・検索, ficha, alta/edición) en cuanto S1 publique el layout `layouts.legacy`, el Gate `kengen` y la carga de `routes/legacy/`; mientras, R1 (configuración de reservas: modelos ya hechos)
+## Próximo paso — C1 (controladores y rutas de 顧客一覧・検索, ficha, alta/edición) en cuanto S1 publique el layout `layouts.legacy`, el Gate `kengen` y la carga de `routes/legacy/`; mientras, R2 (受付日: franjas y su estado)
 
 ## Tarea anterior — Diseño (sin código, HECHO)
 
@@ -64,7 +64,11 @@ Ver `Doc/diseno/clientes-ventas-reservas.md` §5 (S1: `staff`, Gates, rutas púb
 - 2026-11-26 (D1): el contrato `remindable()` es por día y con no socios, como el legacy (no por rango ni solo socios como decía la v2).
 - 2026-11-26 (vistas): pedidos a S1 surgidos al pasar las vistas: Gate `kengen` con `[N, M]` (el legacy usa `myKengen[N][M]`) y paso libre a master; clases extra en `.wrap` (`customerDetail`, `yoyakuWrap`) y clase de `<body>`; estáticos `system/css/popInline.css`, `system/js/{popInline,toast,jquery.colorbox,jquery.maskedinput-1.2.2}.js`, `system/img/*`; componente del árbol de áreas (`Area::createAreaCheckUi`). Rutas legacy para los JS: `/system/category1/inc/ajax_*.php`, `/system/category1/customer/zip.php`, `/system/category9/yoyaku/ajax_*.php`.
 
+- 2026-11-26 (R1): `ajax_yoyaku_config.php`, `ajax_yoyaku_koumoku_new.php`, `ajax_yoyaku_koumoku_category.php`, `ajax_menu.php` y `ajax_free_yoyaku_rank.php` solo los usan sus pantallas: pasan a rutas `admin.reservas.*` y el JS inline llama a esas rutas. Los guardados redirigen (PRG) con el mismo mensaje. No-master: el servidor fuerza la tienda de la sesión. Categoría vacía de menú = NULL (el legacy guardaba 0 y los ocultaba).
+
 ## Hecho
+
+- 2026-11-26 R1: 予約設定 (tienda, formulario, funciones, 注釈), 予約項目, 予約項目カテゴリ, 設備, スタッフ施術管理, フリー予約: controladores, Form Requests, servicios, vistas del legacy, rutas en `routes/modulos/reservas.php`. 33 pruebas de pantalla con layout y usuario de prueba (`tests/Feature/Reservations/ScreenSetup.php`, se quita cuando S1 publique layout, login y Gate). Suite 212/212. Imágenes de menú en el disco `public` (`hp/uploads/c9/yoyaku_koumoku/`).
 
 - 2026-11-26 D1: modelos sobre `tb_*` en `app/Models/{Customers,Sales,Reservations}` (Customer, CustomerSub, CustomCategory, CustomField, Visit, VisitMotive, CustomerLevel, Karte, ServiceCategory, CustomerPhoto, ReportLink, School*Config, Job, Prefecture, Zip, ChangeModel; SalesItem, ServiceMenu, Discount; Reservation, ReservationSlot, ReservationMenu, ReservationMenuCategory, StaffWork, Facility, FreeReservationRank, ReservationConfig, SimpleReservation, SimpleReservationCategory). Servicios: `VisitService::register`, `CustomerSearch` (port de `search_set2.php`: `apply`, `query`, `byPhone`, `describe`, `forStaff`, `forCategory`), `CustomerFelicaService`, interfaces `VisitLoyalty` y `PosGateway` con implementación nula en `ClientesServiceProvider`. Vistas Blade (HTML del legacy): 顧客一覧・検索 + parciales de búsqueda, ficha + 14 pestañas + personalizada, alta/edición/confirmación, 予約表. 38 pruebas propias; suite 60/60.
 
