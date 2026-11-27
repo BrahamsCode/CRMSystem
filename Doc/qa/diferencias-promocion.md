@@ -10,3 +10,13 @@ Revisión visual S1, 2026-11-27 (método en [README.md](README.md)). Pantallas: 
 | `mail_mag/mail_past` | En local tardó más de 30 s y no llegó a cargar (dos intentos) | Revisar la consulta con la BD del backup (`crmsystem2_nucleo`). |
 
 Cabecera y pie: sin diferencias (salvo サポート, ver README).
+
+## Segunda pasada (S1, 2026-11-27): F6, F7 y M8 de S4
+
+Muestra ~ web principal `localhost:8081` (`laravel13`, BD `crmsystem2`), texto visible de `.main` y capturas.
+
+| Pantalla | Resultado |
+|---|---|
+| `anketo/anketo_cate_list.php`, `anketo2/anketo_cate_list.php`, `anketo2/anketo_cate_new.php` (F6) | Iguales. |
+| `visit/visit_stats2.php`, `visit/touch_config.php` (F7) | Iguales. |
+| `dm/customer_list.php` (M8) | Igual salvo el árbol de grupos de tienda (solo existe en la BD de la muestra). El menú lateral cambia por los submódulos activos de cada BD. |
