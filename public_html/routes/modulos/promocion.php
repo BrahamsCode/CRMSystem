@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\Promotions\MailAjaxController;
 use App\Http\Controllers\Admin\Promotions\MailController;
 use App\Http\Controllers\Admin\Promotions\MailPastController;
 use App\Http\Controllers\Admin\Promotions\PointConfigController;
+use App\Http\Controllers\Admin\Promotions\PointRuleController;
 use App\Http\Controllers\Admin\Promotions\PointTemplateController;
 use App\Http\Controllers\Admin\Promotions\TemplateCategoryController;
 use App\Http\Controllers\Admin\Promotions\TemplateController;
@@ -82,5 +83,12 @@ Route::prefix('promocion')->name('promocion.')->group(function () {
         Route::post('ajax_point_yukoukigen_kakunin', [PointConfigController::class, 'expiryPreview'])->name('expiry-preview');
         Route::get('mail_template/{type}', [PointTemplateController::class, 'edit'])->name('template')->whereIn('type', array_keys(PointTemplateController::TYPES));
         Route::post('mail_template/{type}', [PointTemplateController::class, 'update'])->name('template.update')->whereIn('type', array_keys(PointTemplateController::TYPES));
+
+        // ポイント発行ルール: lista, alta/modificación (mismo formulario), «登録中です» y borrado físico
+        Route::match(['get', 'post'], 'point_rules_list', [PointRuleController::class, 'index'])->name('rules.index');
+        Route::match(['get', 'post'], 'point_rules_new', [PointRuleController::class, 'form'])->name('rules.create');
+        Route::match(['get', 'post'], 'point_rules_update', [PointRuleController::class, 'form'])->name('rules.edit');
+        Route::get('point_rules_register', [PointRuleController::class, 'registered'])->name('rules.registered');
+        Route::post('point_rules_delete', [PointRuleController::class, 'destroy'])->name('rules.destroy');
     });
 });
