@@ -74,3 +74,25 @@ Route::match(['get', 'post'], 'system/category1/inc/stamp_use_register.php', [\A
 // ポイント利用一覧 (menú lateral; el CSV era un POST csv_print=1 a la misma URL)
 Route::match(['get', 'post'], 'system/category1/customer/point_history.php', [\App\Http\Controllers\Admin\Customers\PointHistoryController::class, 'index'])->name('clientes.point-history');
 // --- fin C3 ---
+
+// --- C4-a ---
+// $("#tb_sejutsu_cate_cd").load("ajax_category.php") del formulario カルテ (inc/ y customer/) y ajax_staff.php de customer/
+Route::match(['get', 'post'], 'system/category1/inc/ajax_category.php', [\App\Http\Controllers\Admin\Customers\OptionController::class, 'categories'])->name('clientes.ajax-category-inc');
+Route::match(['get', 'post'], 'system/category1/customer/ajax_category.php', [\App\Http\Controllers\Admin\Customers\OptionController::class, 'categories'])->name('clientes.ajax-category');
+Route::match(['get', 'post'], 'system/category1/customer/ajax_staff.php', [\App\Http\Controllers\Admin\Customers\OptionController::class, 'staff'])->name('clientes.ajax-staff');
+// 顧客検索 (selector de cliente de la カルテ; el form_search se envía a la misma URL)
+Route::match(['get', 'post'], 'system/category1/customer/karute_customer_search.php', [\App\Http\Controllers\Admin\Customers\CustomerLookupController::class, 'index'])->name('clientes.karute-customer-search');
+// --- fin C4-a ---
+
+// --- C4-b ---
+// 美容 (sin enlace en el menú): URL guardadas de 施術カテゴリー (?cd= edita) y カルテ詳細 (?cd=)
+Route::get('system/category1/biyou/sejutsu_cate.php', [\App\Http\Controllers\Admin\Customers\ServiceCategoryController::class, 'index'])->name('clientes.sejutsu-cate');
+Route::get('system/category1/biyou/karute_detail.php', [\App\Http\Controllers\Admin\Customers\KarteController::class, 'legacyShow'])->name('clientes.karute-detail');
+// --- fin C4-b ---
+
+// --- C4-c ---
+// マイアルバム: subida AjaxUpload de inc/js/pic_upload.js (POST ?up=true) y su miniatura (GET ?f=)
+Route::match(['get', 'post'], 'system/category1/inc/ajax_picupload.php', [\App\Http\Controllers\Admin\Customers\CustomerPhotoController::class, 'upload'])->name('clientes.picupload');
+// Temporales de la subida, en su URL legacy (disco public de Storage)
+Route::get('system/category1/customer/uploads/{file}', [\App\Http\Controllers\Admin\Customers\CustomerPhotoController::class, 'tempImage'])->where('file', '[A-Za-z0-9_.-]+')->name('clientes.picupload-temp');
+// --- fin C4-c ---

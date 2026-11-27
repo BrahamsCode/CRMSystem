@@ -31,7 +31,7 @@
 
 	<tr>
 		<th>施術</th>
-		<td>{{ $karuteSelected->sejutsu_name }}</td>
+		<td>{!! $karuteSelected->sejutsu_name !!}</td>{{-- tb_sejutsu_cate.name se guarda con get_form2() --}}
 	</tr>
 
 	<tr>
@@ -49,6 +49,7 @@
 <input type="hidden" name="kaiin_cd" id="kaiin_cd" class="btn" value="{{ $customer->cd }}">
 <input type="hidden" name="tab" id="tab" value="{{ request('tab') }}">
 <input type="hidden" name="page" id="page" value="{{ request('page') }}" />
+{!! $popupInput ?? '' !!}
 </form>
 @if ($karuteSelected)
 <form method="get" name="update_record_form" id="add_record_form" class="form" action="{{ $pendingRoute('admin.clientes.kartes.edit', [$customer->cd, $karuteSelected->cd]) }}">
@@ -57,6 +58,7 @@
 <input type="hidden" name="tab" id="tab" value="{{ request('tab') }}">
 <input type="hidden" name="karute_cd" id="karute_cd" class="btn" value="{{ $karuteSelected->cd }}">
 <input type="hidden" name="page" id="page" value="{{ request('page') }}" />
+{!! $popupInput ?? '' !!}
 </form>
 <form method="post" name="delete_record_form" id="add_record_form" class="form" action="{{ $pendingRoute('admin.clientes.kartes.destroy', [$customer->cd, $karuteSelected->cd]) }}" onsubmit="submitChk(this); return false;">
 @csrf
@@ -90,7 +92,7 @@
 <td>{{ $karute->cd }}</td>
 <td>{{ $shopList[$karute->tb_shop_cd] ?? '' }}</td>
 <td>{{ $dateDisp($karute->uketsuke_date) }}</td>
-<td>{{ $karute->sejutsu_name }}</td>
+<td>{!! $karute->sejutsu_name !!}</td>
 <td>
 @if ($karuteSelected && $karute->cd == $karuteSelected->cd)
 <span style="padding: 2px; border: 1px solid #FF9955; color: #EE6622;">選択中</span>

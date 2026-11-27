@@ -93,6 +93,43 @@ Route::prefix('clientes')->name('clientes.')->group(function () {
     Route::match(['get', 'post'], 'point-history/csv', [\App\Http\Controllers\Admin\Customers\PointHistoryController::class, 'csv'])->name('point-history.csv');
     // --- fin C3 ---
 
+    // --- C4-a ---
+    // 追加情報 de varios registros (pestaña custom: add_record_new/_confirm/_register.php y del_record.php; POST como el legacy)
+    Route::post('custom-records/create', [\App\Http\Controllers\Admin\Customers\CustomRecordController::class, 'create'])->name('custom-records.create');
+    Route::post('custom-records/confirm', [\App\Http\Controllers\Admin\Customers\CustomRecordController::class, 'confirm'])->name('custom-records.confirm');
+    Route::post('custom-records', [\App\Http\Controllers\Admin\Customers\CustomRecordController::class, 'store'])->name('custom-records.store');
+    Route::post('custom-records/delete', [\App\Http\Controllers\Admin\Customers\CustomRecordController::class, 'destroy'])->name('custom-records.destroy');
+    // 顧客検索: selector de cliente para la カルテ (karute_customer_search.php)
+    Route::match(['get', 'post'], 'lookup', [\App\Http\Controllers\Admin\Customers\CustomerLookupController::class, 'index'])->name('lookup');
+    // <option> de ajax_category.php (施術カテゴリー) y ajax_staff.php (担当者)
+    Route::match(['get', 'post'], 'options/categories', [\App\Http\Controllers\Admin\Customers\OptionController::class, 'categories'])->name('options.categories');
+    Route::match(['get', 'post'], 'options/staff', [\App\Http\Controllers\Admin\Customers\OptionController::class, 'staff'])->name('options.staff');
+    // --- fin C4-a ---
+
+    // --- C4-b ---
+    // カルテ de la pestaña 5 (inc/karute_new.php, karute_update.php, karute_frm.php, karute_register.php)
+    Route::get('{customer}/kartes/create', [\App\Http\Controllers\Admin\Customers\KarteController::class, 'create'])->whereNumber('customer')->name('kartes.create');
+    Route::post('{customer}/kartes', [\App\Http\Controllers\Admin\Customers\KarteController::class, 'store'])->whereNumber('customer')->name('kartes.store');
+    Route::get('{customer}/kartes/{karte}/edit', [\App\Http\Controllers\Admin\Customers\KarteController::class, 'edit'])->whereNumber(['customer', 'karte'])->name('kartes.edit');
+    Route::put('{customer}/kartes/{karte}', [\App\Http\Controllers\Admin\Customers\KarteController::class, 'update'])->whereNumber(['customer', 'karte'])->name('kartes.update');
+    // 美容: カルテ詳細 (biyou/karute_detail.php) y 予約カテゴリー管理 / 施術カテゴリー (biyou/sejutsu_cate*.php)
+    Route::get('kartes/{karte}', [\App\Http\Controllers\Admin\Customers\KarteController::class, 'show'])->whereNumber('karte')->name('kartes.show');
+    Route::get('service-categories', [\App\Http\Controllers\Admin\Customers\ServiceCategoryController::class, 'index'])->name('service-categories.index');
+    Route::post('service-categories', [\App\Http\Controllers\Admin\Customers\ServiceCategoryController::class, 'store'])->name('service-categories.store');
+    Route::put('service-categories/{cd}', [\App\Http\Controllers\Admin\Customers\ServiceCategoryController::class, 'update'])->whereNumber('cd')->name('service-categories.update');
+    Route::delete('service-categories/{cd}', [\App\Http\Controllers\Admin\Customers\ServiceCategoryController::class, 'destroy'])->whereNumber('cd')->name('service-categories.destroy');
+    // --- fin C4-b ---
+
+    // --- C4-c ---
+    // マイアルバム (pestaña 7: photoalbum_new/_update/_register/_delete.php) y la subida AjaxUpload (ajax_picupload.php)
+    Route::post('photos/upload', [\App\Http\Controllers\Admin\Customers\CustomerPhotoController::class, 'upload'])->name('photos.upload');
+    Route::get('{customer}/photos/create', [\App\Http\Controllers\Admin\Customers\CustomerPhotoController::class, 'create'])->whereNumber('customer')->name('photos.create');
+    Route::post('{customer}/photos', [\App\Http\Controllers\Admin\Customers\CustomerPhotoController::class, 'store'])->whereNumber('customer')->name('photos.store');
+    Route::get('{customer}/photos/{photo}/edit', [\App\Http\Controllers\Admin\Customers\CustomerPhotoController::class, 'edit'])->whereNumber(['customer', 'photo'])->name('photos.edit');
+    Route::put('{customer}/photos/{photo}', [\App\Http\Controllers\Admin\Customers\CustomerPhotoController::class, 'update'])->whereNumber(['customer', 'photo'])->name('photos.update');
+    Route::delete('{customer}/photos/{photo}', [\App\Http\Controllers\Admin\Customers\CustomerPhotoController::class, 'destroy'])->whereNumber(['customer', 'photo'])->name('photos.destroy');
+    // --- fin C4-c ---
+
     // --- C1-b: ficha y pestañas, borrar, recuperar (al final: captura /{customer}) ---
     Route::get('{customer}', [\App\Http\Controllers\Admin\Customers\CustomerController::class, 'show'])->whereNumber('customer')->name('show');
     Route::delete('{customer}', [\App\Http\Controllers\Admin\Customers\CustomerController::class, 'destroy'])->whereNumber('customer')->name('destroy');

@@ -3,14 +3,15 @@
      Variables:
        $mode       'register' | 'delete'
        $popup      bool: ventana emergente (sin menú), versión inc/ del legacy
-       $detailUrl  string: ficha a la que vuelve (tab, page, related_features_cd) --}}
+       $detailUrl  string: ficha a la que vuelve (tab, page, related_features_cd)
+       $refresh    int opcional: segundos del meta Refresh (1 por defecto; del_record.php usaba 2) --}}
 @extends(($popup ?? false) ? 'layouts.legacy-popup' : 'layouts.legacy')
 
 @section('menu', 'clientes')
 @section('title', '顧客登録情報 - ' . config('app.name'))
 
 @section('css')
-<meta http-equiv="Refresh" content="1; URL={{ $detailUrl }}">
+<meta http-equiv="Refresh" content="{{ $refresh ?? 1 }}; URL={{ $detailUrl }}">
 @endsection
 
 @section('content')

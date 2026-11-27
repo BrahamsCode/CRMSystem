@@ -6,14 +6,15 @@
        $heading      texto del h2Title (con ■)
        $message      '登録中です。' | '削除中です。'
        $redirectUrl  URL de vuelta (lista)
-       $navLinks     (opcional) [[url, texto], …]: enlaces 新規追加 / 登録一覧 de encima de .contents --}}
+       $navLinks     (opcional) [[url, texto], …]: enlaces 新規追加 / 登録一覧 de encima de .contents
+       $refresh      (opcional) segundos del Refresh (por defecto 2) --}}
 @extends('layouts.legacy')
 
 @section('menu', 'clientes')
 @section('title', $title)
 
 @section('css')
-<meta http-equiv="Refresh" content="2; URL={{ $redirectUrl }}">
+<meta http-equiv="Refresh" content="{{ $refresh ?? 2 }}; URL={{ $redirectUrl }}">
 @endsection
 
 @section('content')
