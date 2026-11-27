@@ -198,6 +198,40 @@ class MobileShopController extends Controller
         ));
     }
 
+    /**
+     * POST /api/mobile_shop/point_exchange_item: canje de un producto por puntos con el servicio de S3
+     * (Point::exchangeSalesItem del legacy). Responde su resultado sin envoltorio.
+     */
+    public function pointExchangeItem(Request $request, PointService $points): Response
+    {
+        $claims = $this->claims($request);
+        if ($claims instanceof Response) {
+            return $claims;
+        }
+
+        $data = $this->body($request);
+        $errors = [];
+        if (! $this->validId($data->customer_id ?? null)) {
+            $errors[] = 'IDがありません。';
+        }
+        if (! $this->validId($data->salesItemCd ?? null)) {
+            $errors[] = '商品コードがありません。';
+        }
+        if (! $this->validId($data->shop_cd ?? null)) {
+            $errors[] = '店舗コードがありません。';
+        }
+        if ($errors) {
+            return LegacyJson::response(['status' => 'ng', 'message' => implode(' ', $errors)]);
+        }
+
+        $customerCd = $this->api->customerCdById($data->customer_id);
+        if (! $customerCd) {
+            return LegacyJson::response(['status' => 'ng', 'message' => '顧客コードが見つかりません。']);
+        }
+
+        return LegacyJson::response($points->exchangeSalesItem($customerCd, $data->salesItemCd, $data->shop_cd));
+    }
+
     /** GET /api/mobile_shop/sales_items[/<cd>] */
     public function salesItems(Request $request, ?string $parameter = null): Response
     {

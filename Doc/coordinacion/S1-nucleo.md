@@ -31,7 +31,7 @@ A y B hechos (ver "Hecho"). Siguiente, cuando S0 lo confirme: Cola 2 (基本情�
 
 ## Pedidos
 
-- **Abiertos (S0, 2026-11-27), en orden:** (1) separar permisos de condiciones de módulo: `Gate::before` no debe dejar pasar a master en Gates de condición (p. ej. sufijo `.enabled`/`.flag`), documentarlo en NUCLEO.md y avisar a S0; (2) copiar a `public/legacy/system/img/` las imágenes comunes que falten (`btn_back_off.gif`…; S3); (3) opcional: etiqueta dinámica en `config/menu` (`label_from`) para オススメ管理 (S4).
+- **Hechos (2026-11-27):** condiciones `*.enabled` que master no salta; `label_from`/`title_from` en el menú; `system/img` ya estaba completo (480 archivos).
 - **基本情報管理 pendiente:** ショートカット管理, エリア管理, 機能設定 + plantillas de caducidad, mantenimiento (システム管理, 権限項目管理, CRM端末管理). Ver `Doc/diseno/nucleo-base.md`.
 
 Recibidos de S0 el 2026-11-26 (para la Cola, después de la Fase 1; S0 los asigna al integrar):

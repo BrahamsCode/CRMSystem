@@ -53,6 +53,7 @@ Una ruta legacy que en el legacy terminaba en `/` (p. ej. `/system/category1/`) 
   - Con nombre `<modulo>.<acción>`: los de `config/kengen.php` (`clientes.view|create|update|delete` = 1001, `ventas.*` = 1033, `promocion.coupon` = 1009, `sns.configure` = 1034/1…). Un módulo que necesite otro: `NucleoServiceProvider::defineKengenGate('reservas.staff', 1028, 1)` en su `ServiceProvider`, o pedirlo a S1.
   - Por código: `@can('kengen.1001.2')`.
   - Con lista (basta uno): `Gate::allows('kengen', [1001, 2])`, `Gate::allows('kengen', [[1001, 2], [1033, 2]])`.
+- **Permisos vs condiciones.** `master` pasa todo Gate de PERMISO, pero no las CONDICIONES (módulo o función activa: app encendida, UI CRM2, beacon…), igual que el legacy. Convención: un Gate de condición se llama `<modulo>.<algo>.enabled` (o `nucleo.*`) y `Gate::before` no lo resuelve para master: se evalúa su función. Si la condición además pide permiso, lo consulta dentro: `Gate::define('mypage.mycolle.enabled', fn ($s) => AdminMaster::current()->application_use_flg == 1 && Gate::forUser($s)->allows('kengen.1035.1'))` (master pasa el `kengen`, no la app apagada). `NucleoServiceProvider::isCondition($nombre)` dice cuál es cuál.
 - Banderas (no las pasa master por sí solo, como el legacy): `nucleo.master`, `nucleo.developer` (`STAGE=docker` o IP en `CRM_DEVELOPER_IPS`), `nucleo.support`, `nucleo.support-master`, `nucleo.maintenance` ((IP de desarrollo o soporte) y no Relation: menús de mantenimiento), `nucleo.shop-create` (IP de desarrollo o `support_master`).
 
 ## 5. Layout (CONVENCIONES §4)
@@ -87,10 +88,12 @@ return [
             'child' => '顧客管理',           // opcional: solo si ese tb_base_system_child está activo (y en su orden rank, cd)
             'can' => 'clientes.view',       // opcional: Gate o lista de Gates (basta uno)
             'image_only' => false,          // opcional: imagen también en la UI 2 (bloques que el legacy dibuja siempre con <img>)
+            'title_from' => [Clase::class, 'metodo'], // opcional: título calculado (vacío = el fijo)
             'links' => [
                 ['label' => '顧客新規登録', 'url' => '/system/category1/customer/customer_new.php', 'can' => 'clientes.create'],
                 ['label' => '顧客ランク設定', 'url' => '/system/category1/rank/customer_rank_list.php', 'grandchild' => '顧客ランク%'],
                 ['label' => 'CSVインポート', 'url' => '/system/category1/customer/csv_import.php', 'can' => 'nucleo.maintenance'],
+                ['label' => 'オススメ管理', 'url' => '…', 'label_from' => [MobileNavi::class, 'recommendTitle']], // texto calculado (vacío = el fijo)
                 // 'target' => '_blank' opcional
             ],
         ],
@@ -98,7 +101,7 @@ return [
 ];
 ```
 
-Las condiciones que no encajen (dominio, `admin_master.*_use_flg`…) se expresan como un Gate propio del módulo, definido en su `ServiceProvider`, y se usan en `can`. Ejemplo hecho: `config/menu/base.php` (left_navi0).
+Las condiciones que no encajen (dominio, `admin_master.*_use_flg`…) se expresan como un Gate propio del módulo `<modulo>.<algo>.enabled`, definido en su `ServiceProvider`, y se usan en `can` (master no las salta). `label_from`/`title_from` llevan `[Clase::class, 'metodo']` estático (sin closures, para `config:cache`). Ejemplo hecho: `config/menu/base.php` (left_navi0).
 
 ## 7. CSRF
 

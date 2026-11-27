@@ -54,9 +54,11 @@ class NucleoServiceProvider extends ServiceProvider
 
     private function defineGates(): void
     {
-        // master (login_id = 'master') puede todo, salvo las banderas nucleo.* (soporte, IP), igual que el legacy
+        // master (login_id = 'master') pasa todos los PERMISOS, pero no las CONDICIONES, igual que el legacy:
+        // banderas nucleo.* (soporte, IP) y Gates `<modulo>.<algo>.enabled` (módulo o función activa:
+        // app encendida, UI CRM2…). Una condición que además pida permiso lo consulta dentro (kengen.*).
         Gate::before(function ($user, string $ability) {
-            if (str_starts_with($ability, 'nucleo.')) {
+            if (self::isCondition($ability)) {
                 return null;
             }
             if ($user instanceof Staff && $user->isMaster()) {
@@ -89,6 +91,12 @@ class NucleoServiceProvider extends ServiceProvider
         Gate::define('nucleo.maintenance', fn (Staff $staff) => (self::isDeveloper() || self::flag('support_login')) && ! self::flag('relation_login'));
         // 店舗新規登録: IP de desarrollo o support_master (left_navi0)
         Gate::define('nucleo.shop-create', fn (Staff $staff) => self::isDeveloper() || self::flag('support_master'));
+    }
+
+    /** ¿Es una condición (master no la pasa por ser master)? `nucleo.*` o `*.enabled` */
+    public static function isCondition(string $ability): bool
+    {
+        return str_starts_with($ability, 'nucleo.') || str_ends_with($ability, '.enabled');
     }
 
     /** Define un Gate `<modulo>.<acción>` sobre la matriz cKengen (lo pueden usar los ServiceProvider de los módulos) */
