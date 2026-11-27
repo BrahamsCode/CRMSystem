@@ -121,3 +121,12 @@ Route::name('nucleo.category-top.')->controller(\App\Http\Controllers\Admin\Nucl
     Route::get('system/category9', 'reservations')->name('9');
     Route::get('system/category9/index.php', 'reservations');
 });
+
+/*
+ * Subida temporal de imágenes común (system/inc/ajax_picupload.php) y su carpeta pública system/uploads/
+ * (push de category3, páginas de category6, system/js/pic_upload.js)
+ */
+Route::name('nucleo.uploads.')->controller(\App\Http\Controllers\Admin\Nucleo\PicUploadController::class)->group(function () {
+    Route::match(['get', 'post'], 'system/inc/ajax_picupload.php', 'upload')->name('picupload');
+    Route::get('system/uploads/{file}', 'show')->name('show');
+});

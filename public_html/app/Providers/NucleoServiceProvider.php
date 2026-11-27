@@ -7,7 +7,9 @@ use App\Models\Staff;
 use App\Services\Nucleo\Kengen;
 use App\Services\Nucleo\LegacyUi;
 use App\Services\Nucleo\StaffLogin;
+use App\Services\Nucleo\TempUploads;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -29,6 +31,14 @@ class NucleoServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // login.php borraba en cada acceso los temporales de system/uploads de más de un día (find -mmin +1440)
+        $this->callAfterResolving(Schedule::class, function (Schedule $schedule) {
+            $schedule->call(fn () => $this->app->make(TempUploads::class)->purge(1440))
+                ->name('nucleo:limpiar-subidas')
+                ->hourly()
+                ->withoutOverlapping();
+        });
+
         Auth::provider('legacy_staff', fn ($app, array $config) => new LegacyStaffUserProvider($app['hash'], $config['model']));
 
         RateLimiter::for('staff-login', fn (Request $request) => Limit::perMinute(20)->by((string) $request->input('admin_id') . '|' . $request->ip()));

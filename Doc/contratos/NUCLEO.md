@@ -168,3 +168,12 @@ LegacyPdf::downloadView(string $filename, string $view, array $data = [], array 
 - Fuentes propias (IPAex, Noto): dejar los `.ttf` en `config('crm.pdf.font_dir')` (`CRM_PDF_FONT_DIR`, por defecto `storage/fonts`), declararlos en `crm.pdf.fonts` (ya están `ipaexg`/`ipaexm`) y elegir con `CRM_PDF_DEFAULT_FONT`. Solo se registran si el archivo existe; los archivos no van en git.
 - **IPAex para nombres** (decisión S0, 2026-11-27): la fuente por defecto (Sun-ExtA) sirve para todo el texto, pero en caracteres de nombres como 髙 (U+9AD9) o 﨑 no se distingue bien de 高/崎 (ver `Doc/qa/README.md`, «PDF con japonés»). Para etiquetas DM, 請求書/領収書 u otros PDF con nombres de clientes, instalar IPAex (ゴシック `ipaexg.ttf` / 明朝 `ipaexm.ttf`, licencia IPA, descarga en moji.or.jp) en `storage/fonts` del servidor y poner `CRM_PDF_DEFAULT_FONT=ipaexm` (o `ipaexg`) en su `.env`. El valor por defecto no cambia.
 - Temporales en `storage/framework/cache/mpdf`.
+
+## 12. Subida temporal de imágenes: `system/inc/ajax_picupload.php` y `system/uploads/`
+
+Común del núcleo (decisión S0, antes en S4): `Nucleo\PicUploadController` + `App\Services\Nucleo\TempUploads`. Lo llaman los `pic_upload.js` (AjaxUpload) de push (category3), category6 (`shop_hp`, `user_hp`, `digital_catalog`) y `system/js/pic_upload.js`.
+
+- `POST /system/inc/ajax_picupload.php?up=true` (campo `file` = `picfile_<n>`, `tempfilename`, `ext`): guarda en el disco `public` `system/uploads/<temp>.jpg` (o `.gif`) y la miniatura `<temp>th.<ext>` de 240 px; responde el nombre o `error:<mensaje>` (mismos textos que el legacy). `GET …?f=<archivo>&h=<alto>`: responde el `<img>` de la miniatura. Solo con sesión del personal.
+- `GET /system/uploads/<archivo>`: sirve el temporal (`[A-Za-z0-9_-]+.(jpg|gif)`).
+- Para pasar un temporal a la carpeta definitiva del módulo: `app(TempUploads::class)->path($file)` / `absolutePath($file)` y los ayudantes GD `TempUploads::load()`, `shrink($img, $ancho, $siempre)`, `save($img, $ruta, $ext)`.
+- Limpieza: tarea `nucleo:limpiar-subidas` (cada hora) borra los de más de un día, como hacía `login.php`.
