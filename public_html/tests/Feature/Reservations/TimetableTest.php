@@ -141,8 +141,7 @@ it('admite franjas que pasan de medianoche (horas > 24)', function () {
         ->assertSee('endTime="01:30"', false);
 });
 
-it('publica las URL de entrada del legacy (category9/ y time_table.php)', function () {
-    $this->get('/system/category9/')->assertRedirect(route('admin.reservas.timetable'));
+it('publica las URL del legacy del 予約表 (la portada category9/ es del núcleo y redirige a time_table.php)', function () {
     $this->get('/system/category9/yoyaku/time_table.php?d=20261201')->assertOk()->assertSee('yoyakuListTable');
     $this->get('/system/category9/yoyaku/time_table_staff.php?staff=10&d=20261201')->assertOk()->assertSee('予約状況');
 });

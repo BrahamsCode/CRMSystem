@@ -239,12 +239,6 @@ class TimetableController extends Controller
         return response($content)->withCookie($this->panelCookie($request->input('type') === 'raitenList' ? 'raitenList' : null));
     }
 
-    /** system/category9/ (index.php del legacy) → 予約表 */
-    public function legacyEntry(Request $request): RedirectResponse
-    {
-        return redirect()->route('admin.reservas.timetable', $request->query());
-    }
-
     // ---------------------------------------------------------------- auxiliares
 
     /** Tienda del 予約表: `?shop` solo para master; si no (o no viene), la de la sesión */
