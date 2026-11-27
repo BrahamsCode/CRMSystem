@@ -75,6 +75,8 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 
 - **mpa_* (2026-11-27):** imágenes de `hp/uploads/c6` y del álbum en el disco public (`AppImages` reproduce is_file/filemtime/glob); `mpa_setraiten` usa el `VisitService` de S2 (sin terminal ni personal) y con éxito responde `ok` (el legacy daba fatal 500); `mpa_albumUpdate` con Imagick (mismos tamaños 480x>, 240x>, 150x150, 75x75) y la misma URL fija de vuelta a la app. Las rutas quedan como `publico.integraciones.api.mpa.*`.
 
+- **Menú スケジュール管理 (2026-11-27):** シフト区分管理 y los turnos van en el bloque スケジュール管理 (vacío en el legacy; allí los turnos solo salían en 勤怠管理 para un `SERVER_ADDR` concreto). シフト区分管理 es pantalla propia (en el legacy era una sección de 各種設定, ⏸).
+
 ## Hecho
 
 - 2026-11-26 — Diseño con tablas nuevas, aprobado por S0 (obsoleto desde el cambio de base).
@@ -93,3 +95,4 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 - 2026-11-27 — `tool/api` (7 de 8 endpoints + `CheckCrmApiKey`) y CTI (3) con fixtures del legacy grabadas sobre datos sintéticos (`tool-seed.sql`, 47 casos) y `ToolApiContractTest`: todo coincide byte a byte (salvo espacios del `htmlData`). Pendiente: `setRaitenDetail` (servicio de S2). Suite: 442 en verde.
 - 2026-11-27 — `mpa_*` (5 endpoints: corresponding, getTopBanner, getCoverFlow, setraiten, albumUpdate): los 12 casos grabados coinciden (setraiten_ok corregido) y `MpaTest` cubre imágenes por tienda, beacon y álbum. Suite: 503 en verde (con laravel13 fusionado por S0).
 - 2026-11-27 — 営業日設定 (`ShopWorkController`, `LegacyHolidays` con las reglas de `check_holiday` tal cual) y bloque 初期設定管理 del menú (`ShopWorkTest`).
+- 2026-11-27 — シフト区分管理 (`StaffShiftKindController`, `LegacyRanking` compartido con スタッフグループ) (`ShiftKindTest`).

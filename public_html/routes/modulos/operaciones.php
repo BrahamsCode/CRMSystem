@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\Operaciones\StaffController;
 use App\Http\Controllers\Admin\Operaciones\StaffEntryController;
 use App\Http\Controllers\Admin\Operaciones\StaffFieldController;
 use App\Http\Controllers\Admin\Operaciones\StaffGroupController;
+use App\Http\Controllers\Admin\Operaciones\StaffShiftKindController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,6 +21,13 @@ Route::prefix('operaciones')->name('operaciones.')->group(function () {
         Route::get('staff-groups/sort', [StaffGroupController::class, 'sort'])->name('staff-groups.sort');
         Route::put('staff-groups/{cd}', [StaffGroupController::class, 'update'])->whereNumber('cd')->name('staff-groups.update');
         Route::delete('staff-groups/{cd}', [StaffGroupController::class, 'destroy'])->whereNumber('cd')->name('staff-groups.destroy');
+
+        // シフト区分管理 (sección de kintai/config.php, solo master como 各種設定)
+        Route::get('shift-kinds', [StaffShiftKindController::class, 'index'])->name('shift-kinds.index');
+        Route::post('shift-kinds', [StaffShiftKindController::class, 'store'])->name('shift-kinds.store');
+        Route::get('shift-kinds/sort', [StaffShiftKindController::class, 'sort'])->name('shift-kinds.sort');
+        Route::put('shift-kinds/{cd}', [StaffShiftKindController::class, 'update'])->whereNumber('cd')->name('shift-kinds.update');
+        Route::delete('shift-kinds/{cd}', [StaffShiftKindController::class, 'destroy'])->whereNumber('cd')->name('shift-kinds.destroy');
     });
 
     // スタッフ新規登録 / 修正 (staff_entry.php → _confirm → _register → _complete, foto de inc/upload.php).
