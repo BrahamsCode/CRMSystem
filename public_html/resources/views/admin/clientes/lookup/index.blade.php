@@ -14,7 +14,7 @@
 @extends('layouts.legacy')
 
 @section('menu', 'clientes')
-@section('title', '顧客一覧・検索 - ' . config('app.name'))
+@section('title', '顧客一覧・検索 - ' . app(\App\Services\Nucleo\LegacyUi::class)->siteName())
 
 @section('css')
 <link rel="stylesheet" type="text/css" href="{{ asset('legacy/system/plugin/myflexselect/myFlexSelect.css') }}" />

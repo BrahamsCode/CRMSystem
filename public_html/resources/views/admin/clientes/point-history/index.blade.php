@@ -15,7 +15,7 @@
 @extends('layouts.legacy')
 
 @section('menu', 'clientes')
-@section('title', 'ポイント利用一覧 - ' . config('app.name'))
+@section('title', 'ポイント利用一覧 - ' . app(\App\Services\Nucleo\LegacyUi::class)->siteName())
 
 @php
     $searchType = (string) ($filters['search_type'] ?? '');

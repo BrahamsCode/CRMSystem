@@ -21,7 +21,7 @@
 @extends(($popup ?? false) ? 'layouts.legacy-popup' : 'layouts.legacy')
 
 @section('menu', 'clientes')
-@section('title', '顧客登録情報 - ' . config('app.name'))
+@section('title', '顧客登録情報 - ' . app(\App\Services\Nucleo\LegacyUi::class)->siteName())
 
 @php
     $isUpdate = ($hidden['related_features_cd'] ?? '') !== '';

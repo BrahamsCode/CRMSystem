@@ -17,7 +17,9 @@ use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
     reservasLogin(); // tienda 1 「本店」, master (cd 1) y staff 10 「山田」
-    Storage::fake('public');
+    // Disco en /tmp del contenedor, único por prueba: Storage::fake() borra y recrea el directorio en el
+    // montaje de Windows y el mkdir siguiente falla a veces (UnableToCreateDirectory)
+    Storage::set('public', Storage::createLocalDriver(['root' => sys_get_temp_dir() . '/demo-public-' . uniqid('', true)]));
 });
 
 /** Filas de las tablas que tocan las cuatro partes */

@@ -41,6 +41,10 @@
         var customerCd = "{{ $customer->cd }}";
         var isPaidMemberCurrent = "{{ $currentIsPaidMember }}";
         var paidMemberSendBtn = document.querySelector('#paidMemberSendBtn');
+        // Laravel: el botón solo existe para 有料会員; el legacy lanzaba un error de JS con 無料会員
+        if (! paidMemberSendBtn) {
+            return;
+        }
 
         paidMemberSendBtn.addEventListener("click", function(){
 
