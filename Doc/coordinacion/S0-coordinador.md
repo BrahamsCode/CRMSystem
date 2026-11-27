@@ -160,6 +160,15 @@
   - S2: el error de JS de `@json` con coma, y ポイント管理 de category1 (C8), que estaba mal marcada como de S3.
   - S3: las URL de follow/auto push redirigen, y スマトピ queda oculto hasta que decida Antony.
   `laravel13` con 948 pruebas en verde. Solo quedan pendientes las decisiones de Antony (`Doc/qa/para-japon.md` §3).
+- 2026-11-27 (08:15), respuestas de Antony. Las marcadas como **provisional** valen hasta que conteste Japón:
+  1. **Provisional.** BD `admin` de `signage/`: se sigue con `signage-admin.sql` y se reemplaza cuando llegue el volcado real.
+  2. **Provisional.** GoTel (`signage/mail`) y `signage/pdf`: en pausa, porque dependen de esa BD. Se dejan preparadas las rutas con la URL legacy, sin bloquear nada. Lo hace S4, sobre el esquema mínimo.
+  3. **Provisional.** ビーコン: en pausa. Que no responda en desarrollo no prueba que esté muerto en producción. Se dejan el modelo y la conexión `beacon` sin pantallas: la conexión la hace S1 y los modelos S4.
+  4. **Provisional.** Push: se mantiene el GET a `b.g-api.net` como el legacy (ya hecho por S3); FCM se decide después.
+  5. 新着情報 (M9) se migra por paridad (S3). DM発行 ya está. スマトピ (F8) sigue oculto.
+  6. 勤怠: se migra la gestión, local y sin dependencias externas. Por reparto: `category5/kintai` → S5 y `category5/working` → S2, sobre los modelos de S5 (`KintaiHiduke`, `KintaiRecord`, `WorkTime`). El fichaje desde el quiosco queda fuera, con touchcation.
+  7. Login de `hp/user`: fuera (`hp/` completo). La reserva web entra con el token desde la app. El enlace de `mpa_getTopBanner` a `hp/user/control.php` queda como deuda (S5 lo anota en `para-japon.md`).
+  Antony pide a Japón: el volcado de la BD `admin`, si `b.g-api.net` sigue activo en producción y qué módulos usan los clientes reales.
 - 2026-11-27: siguiente tarea de S1 (Antony: el login primero): modelo base y traits comunes, luego el login contra el personal del legacy, el layout idéntico y los estáticos comunes.
 
 ## Hecho

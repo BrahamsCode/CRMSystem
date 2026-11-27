@@ -140,6 +140,10 @@ Diferencias con crm2-php8, a propósito: `DocumentRoot /var/www/public` (Laravel
 
 1. Commit del contexto y doble clic en `INICIAR-CRM.bat` (ver `Doc/planificacion/ARRANQUE.md`). A partir de ahí, S0 orquesta: el plan está en `Doc/planificacion/ORCHESTRATION.md` y el estado de cada sesión en `Doc/coordinacion/`.
 
+## 8b. Respuestas de Antony (2026-11-27)
+
+Provisionales hasta que conteste Japón: (1) BD `admin` de signage con `signage-admin.sql`; (2) GoTel/`signage/pdf` en pausa, con rutas preparadas; (3) ビーコン en pausa, solo con modelo y conexión; (4) push por g-api como el legacy. Firmes: 新着情報 se migra; スマトピ oculto; 勤怠 se migra la gestión (sin quiosco); `hp/user` fuera. Detalle en `Doc/coordinacion/S0-coordinador.md` y en `Doc/qa/para-japon.md`.
+
 ## 9. Decisiones abiertas (Antony / Japón)
 
 - Esquema de BD: nuevo con estándares o compatible con `tb_*` (afecta a integraciones que leen la BD: POS).
