@@ -10,8 +10,10 @@ use Illuminate\Support\Facades\Route;
  * con el guard del personal y el prefijo de nombre `legacy.` (routes/web.php): nombres legacy.mypage.*
  */
 Route::name('mypage.')->group(function () {
+    // Permisos como en routes/modulos/mypage.php: マイコレ con 1035 閲覧. Las subidas de imagen y el
+    // desplegable de 職種 piden 新規 o 編集 de su contenido (1016 / 1023): lo comprueba el controlador.
     Route::post('system/category6/user_hp/ajax_apliFileUpload.php', ApliFileUploadController::class)
-        ->name('apli-file-upload');
+        ->middleware('can:kengen.1035.1')->name('apli-file-upload');
 
     // AjaxUpload de la imagen de オススメ (user_hp/inc/upload.php) y su vista previa (inc/disp_pic.php)
     Route::post('system/category6/user_hp/inc/upload.php', [RecommendationController::class, 'upload'])

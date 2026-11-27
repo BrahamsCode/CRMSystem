@@ -131,3 +131,14 @@ Route::match(['get', 'post'], 'system/category1/shukei/customerDataOutPut.php', 
     ->can('clientes.view')->name('clientes.visit-csv');
 // --- fin C6-c ---
 // --- fin C6 ---
+
+// --- C7 ---
+// Menú 初期設定管理 / 入退室管理 (left_navi1.php) y URL guardadas de las pantallas sin enlace (config/)
+Route::get('system/category1/config/felica_mode.php', [\App\Http\Controllers\Admin\Customers\ReaderModeController::class, 'edit'])->name('clientes.felica-mode');
+Route::get('system/category1/config/card_new.php', [\App\Http\Controllers\Admin\Customers\CardController::class, 'index'])->name('clientes.card-new');
+Route::get('system/category1/config/mail_comment.php', [\App\Http\Controllers\Admin\Customers\MailCommentController::class, 'edit'])->name('clientes.mail-comment');
+Route::get('system/category1/config/schoolyear_config.php', [\App\Http\Controllers\Admin\Customers\SchoolConfigController::class, 'index'])->defaults('kind', 'years')->name('clientes.schoolyear-config');
+Route::get('system/category1/config/schoolclass_config.php', [\App\Http\Controllers\Admin\Customers\SchoolConfigController::class, 'index'])->defaults('kind', 'classes')->name('clientes.schoolclass-config');
+Route::get('system/category1/entrance/working_calendar.php', [\App\Http\Controllers\Admin\Customers\EntryController::class, 'calendar'])->name('clientes.working-calendar');
+Route::get('system/category1/entrance/work_list.php', [\App\Http\Controllers\Admin\Customers\EntryController::class, 'index'])->name('clientes.work-list');
+// --- fin C7 ---

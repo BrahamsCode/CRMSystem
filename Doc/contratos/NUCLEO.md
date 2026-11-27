@@ -16,6 +16,13 @@ Fuente legacy: `system/login.php`, `session.php`, `select.php`, `inc/head.php`, 
 
 Zona horaria de la app: `Asia/Tokyo`, como el legacy.
 
+### Numeración (`App\Services\Nucleo\Hatuban`)
+
+- `app(Hatuban::class)->next('tb_x')` / `peek()`: contador de la tabla `hatuban` (cHatuban). `HasHatuban` lo usa en los modelos.
+- `Hatuban::legacyCd($shopCd = '')`: `createHatsuban()` del legacy (epoch + tienda en 3 cifras + 6 cifras aleatorias, en texto) para las tablas sin contador. **Usar este en vez de copiar `time().sprintf(...).random_int(...)`**: hoy hay copias en `CustomerRegistrationService`, `StaffEntryController`, `CouponController`, `PointConfigController` y `LotteryConfig::legacyCd()`.
+- **Pruebas** (inestables por orden): `Hatuban::fake($epoch = 1700000000, $start = 1)` hace `legacyCd()` determinista (epoch fijo y secuencia creciente: los `cd` salen en orden de alta); `tests/TestCase.php` lo deshace al terminar cada prueba. `Hatuban::fixCounters(['tb_x' => 100])` fija el próximo número de `next()` (lo deshace `RefreshDatabase`). Con `RefreshDatabase` la tabla `hatuban` ya empieza vacía en cada prueba (`next()` da 1): el orden de las pruebas solo influye si se usan números aleatorios o la hora.
+- Si una consulta ordena por una columna con empates (misma hora, mismo `rank`), añadir un desempate (`cd`) según el orden que resulte del legacy: sin él, PostgreSQL devuelve los empates en cualquier orden (es el caso de `SetRaitenDetailTest`).
+
 ## 2. Login del personal
 
 - URL del legacy: `GET|POST /system/login.php` (ruta `login`), `GET /system/logout.php` (ruta `logout`, enlace de la cabecera), `GET /system/select.php` (ruta `nucleo.select`, システム選択). `/` y `/system` redirigen.
@@ -70,7 +77,7 @@ Una ruta legacy que en el legacy terminaba en `/` (p. ej. `/system/category1/`) 
 ```
 
 - `content` es exactamente lo que en el legacy va dentro de `<div class="main">` (después de `main1`…`main7`); normalmente uno o varios `<div class="contents">`.
-- Opcionales: `@section('wrapClass', 'customerDetail')` (se agrega a `.wrap`), `@section('body_class', '…')` (se agrega a `pageCategory<N>`), `@section('jquery', 'jquery-1.11.2.min.js')` y `@section('jquery_ui', 'jquery-ui-1.11.4.min.js')` (como `createHead([...])` de las pantallas que usan un jQuery más nuevo).
+- Opcionales: `@section('wrapClass', 'customerDetail')` (se agrega a `.wrap`), `@section('body_class', '…')` (se agrega a `pageCategory<N>`), `@section('jquery', 'jquery-1.11.2.min.js')` y `@section('jquery_ui', 'jquery-ui-1.11.4.min.js')` (como `createHead([...])` de las pantallas que usan un jQuery más nuevo). `@section('ui_version', '1')` (o `'2'`) fuerza la versión de UI solo en esa pantalla (head con `import.css` o `mainStyle.css`, logo, botones de cabecera y títulos del menú, vía `LegacyUi::uiVersion()`), para las páginas que en el legacy cargan su propio `<head>` (p. ej. `felica/terminal_list.php`, UI clásica); los módulos visibles siguen `admin_master.base_system_version_flg` (`versionFlg()`).
 - `layouts.legacy-popup`: mismas secciones, sin cabecera, menú ni pie (ventanas emergentes).
 - El layout pone: `<head>` de `Base::createHead` según `admin_master.base_system_version_flg` (2 = CRM2 con `mainStyle.css`, 1 = clásica con `import.css`), jQuery 1.3.2 + compat + jQuery UI 1.7.2 (dialog, accordion, tabs, datepicker, sortable, draggable), la cabecera (logo, お問合せ, サポート en dominios crm-s, 総合トップ, ログアウト, pestañas de módulos con el actual seleccionado, 仕入れ, accesos directos `tb_bookmark` con su permiso), el menú lateral con LOGIN NAME y el pie. `body` = `pageCategory<N>`, con `<N>` sacado de la URL `system/category<N>` o del `category` del menú.
 - Acordeones del menú: se inicializan cerrados (como `inc/ac.php`) y se abre el bloque que contiene un enlace a la URL actual. Si la pantalla necesita abrir otro, lo hace en su `js` (`$(".ac2").accordion('option', 'active', 0);`).

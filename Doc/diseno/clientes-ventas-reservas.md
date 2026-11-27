@@ -124,20 +124,20 @@ Abreviaturas: `Cu\` = `Admin\Customers\`, `Sa\` = `Admin\Sales\`, `Re\` = `Admin
 
 | Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas `tb_*` | Estado |
 |---|---|---|---|---|---|
-| `felica_mode.php` | カードリーダーモード設定 | `admin.clientes.reader-mode` | `Cu\ReaderModeController@edit/update` | L/E `tb_felica_mode` (fila `cd = 2`: `mode`, `interval_time`, `nyushitsu_komento`, `taishitsu_komento`); L `tb_customer`, `tb_user_card` | pendiente (si falta la fila `cd = 2`, se crea en lugar de no guardar en silencio: ver Decisiones) |
-| `card_new.php` | カード管理 | `admin.clientes.cards` | `Cu\CardController@index/store` | L/E `tb_user_card`, `tb_customer`, `tb_play_time`, `tb_felica_mode` | pendiente (necesita lector real para probar del todo) |
-| `card_staff_select.php` | (selector de personal) | `admin.clientes.options.staff` | `Cu\OptionController@staff` | L `tb_staff` | pendiente |
+| `felica_mode.php` | カードリーダーモード設定 | `admin.clientes.reader-mode` (+`.update`) | `Cu\ReaderModeController@edit/update` | L/E `tb_felica_mode` (fila `cd = 2`: `mode`, `interval_time`, `nyushitsu_komento`, `taishitsu_komento`); L `tb_customer`, `tb_user_card` | hecho (C7) (`ReaderModeService`; también en su URL; la fila `cd = 2` se crea al guardar si falta; `inter_time` solo acepta los valores del selector; la rama `felica_set_flg` que solo usaba `card_staff_select.php` no se migra) |
+| `card_new.php` | カード管理 | `admin.clientes.cards` (+`.select/.store/.mode`) | `Cu\CardController@index/select/store/mode` | L/E `tb_user_card`, `tb_customer`, `tb_play_time`, `tb_felica_mode` | hecho (C7) (también en su URL; la asignación es `CustomerFelicaService::attach`; el paginador conserva `card_flg`; el mensaje de error pone en rojo el `felica_no` del socio o, si no tenía, la tarjeta pedida. El lector real sigue sin probarse) |
+| `card_staff_select.php` | (selector de personal) | — | — | L `tb_staff` | descartado (C7): copia de `category5` sin enlace desde ninguna pantalla; asignaría el `cd` de un `tb_staff` a `tb_customer.felica_no` vía `felica_mode.php`. La asignación a socios es `admin.clientes.cards.select` |
 | `shop_work_calendar.php` | 営業日設定 | (S5) `admin.operaciones.business-days.*` | (S5) | `tb_shop_work` (S5) | descartado: la misma pantalla y tabla la hace S5; el menú de clientes enlaza a su ruta |
-| `mail_comment.php`, `mail_comment_register.php` | (コメント設定) | `admin.clientes.mail-comment` | `Cu\MailCommentController@edit/update` | L/E `tb_felica_mode` (`nyushitsu_komento`/`taishitsu_komento`) **(?)**; L `tb_schoolyear_config` | pendiente (prioridad baja, sin enlace en el menú) |
-| `schoolyear_config.php`, `schoolyear_register.php`, `schoolyear_delete.php` | 学年設定 | `admin.clientes.school-years.*` | `Cu\SchoolYearController` | L/E `tb_schoolyear_config` (`cate_name`, `cate_order`), `hatuban` | pendiente (prioridad baja) |
-| `schoolclass_config.php`, `schoolclass_register.php`, `schoolclass_delete.php` | クラス設定 | `admin.clientes.school-classes.*` | `Cu\SchoolClassController` | L/E `tb_schoolclass_config`, `hatuban` | pendiente (prioridad baja) |
+| `mail_comment.php`, `mail_comment_register.php` | (コメント設定) | `admin.clientes.mail-comment` (+`.update`) | `Cu\MailCommentController@edit/update` | L/E `tb_felica_mode` (`nyushitsu_komento`/`taishitsu_komento`, fila `cd = 2`) | hecho (C7) (sin enlace en el menú; también en su URL; `get_form2()`; sin alguno de los dos no guarda, como su `submitChk()`; no lee `tb_schoolyear_config`) |
+| `schoolyear_config.php`, `schoolyear_register.php`, `schoolyear_delete.php` | 学年設定 | `admin.clientes.school-years.*` | `Cu\SchoolConfigController` (`kind` = years) | L/E `tb_schoolyear_config` (`cate_name`, `cate_order`), `hatuban` | hecho (C7) (un controlador y `SchoolConfigService` para 学年 y クラス; también en su URL; sin nombre no guarda, como su `submitChk()`) |
+| `schoolclass_config.php`, `schoolclass_register.php`, `schoolclass_delete.php` | クラス設定 | `admin.clientes.school-classes.*` | `Cu\SchoolConfigController` (`kind` = classes) | L/E `tb_schoolclass_config`, `hatuban` | hecho (C7) (ídem 学年設定) |
 
 #### `entrance/` — entrada y salida
 
 | Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas `tb_*` | Estado |
 |---|---|---|---|---|---|
-| `working_calendar.php` | 入退室一覧 (calendario) | `admin.clientes.entries.calendar` | `Cu\EntryController@calendar` | L `tb_shop`, `tb_shop_work` (S5) | pendiente (Carbon; sin los botones 「1970年1月へ」) |
-| `work_list.php` | 入退室一覧 | `admin.clientes.entries.index?date=` | `Cu\EntryController@index` | L `tb_play_time` (S5), `tb_customer`, `tb_shop` | pendiente |
+| `working_calendar.php` | 入退室一覧 (calendario) | `admin.clientes.entries.calendar` | `Cu\EntryController@calendar` | L `tb_shop_work` (S5) | hecho (C7) (Carbon; también en su URL; 休日 de la tienda de la sesión (el legacy tomaba la fila del mes de cualquier tienda); flechas de mes por GET; la rama `shop_work_flg` sin formulario que la envíe no se migra: es 営業日設定 de S5) |
+| `work_list.php` | 入退室一覧 | `admin.clientes.entries.index?dd=` (+`.update`) | `Cu\EntryController@index/update` | L/E `tb_play_time` (S5), L `tb_customer` | hecho (C7) (también en su URL; el 決定 envía un POST oculto en lugar de guardar por GET; `shop_cd` filtra por `tb_customer.tb_shop_cd` (el legacy usaba una columna inexistente); el cálculo de horas trabajadas, comentado en el HTML del legacy, no se migra) |
 
 #### `rank/` — rangos (modelos de S3, pantallas de S2)
 
@@ -215,8 +215,8 @@ Abreviaturas: `Cu\` = `Admin\Customers\`, `Sa\` = `Admin\Sales\`, `Re\` = `Admin
 | `ajax_free_yoyaku_rank.php` | — | `admin.reservas.free.ranks` | `Re\FreeReservationController@ranks` | L/E `tb_free_yoyaku_rank` | hecho (R1) |
 | `ajax_getReservationData.php` | — | — | `App\Services\Customers\PosGateway` | — | descartado: datos para el POS (fuera de alcance) |
 | `yoyaku_new*.php` (7) | (flujo `yoyaku_new_*`) | — | — | — | descartado: roto en master (columna y archivo inexistentes) |
-| `yoyaku_uketsuke_day.php`, `yoyaku_uketsuke_register.php`, `yoyaku_uketsuke_delete.php` | 受付日設定 / 予約受付削除 | `admin.reservas.slots.*` | `Re\ReservationSlotController` | L `tb_customer`, `tb_staff`, `tb_yoyaku`, `tb_yoyaku_config`; E `tb_yoyaku_uketsuke_day`, `hatuban` | pendiente |
-| `yoyaku_multi_uketsuke_day.php`, `yoyaku_multi_uketsuke_register.php` | 受付日設定 (varios días) | `admin.reservas.slots.bulk` (+`.store`) | `@bulkCreate/bulkStore` | L `tb_yoyaku_config`; E `tb_yoyaku_uketsuke_day` | pendiente |
+| `yoyaku_uketsuke_day.php`, `yoyaku_uketsuke_register.php`, `yoyaku_uketsuke_delete.php` | 受付日設定 / 予約受付削除 | `admin.reservas.slots.*` | `Re\ReservationSlotController` | L `tb_customer`, `tb_staff`, `tb_yoyaku`, `tb_yoyaku_config`; E `tb_yoyaku_uketsuke_day`, `hatuban` | hecho (R2; `ReservationSlotController`) |
+| `yoyaku_multi_uketsuke_day.php`, `yoyaku_multi_uketsuke_register.php` | 受付日設定 (varios días) | `admin.reservas.slots.bulk` (+`.store`) | `@bulkCreate/bulkStore` | L `tb_yoyaku_config`; E `tb_yoyaku_uketsuke_day` | hecho (R2; `ReservationSlotController`) |
 | `yoyaku_koumoku_new.php`, `yoyaku_koumoku_register.php`, `ajax_yoyaku_koumoku_new.php` | 予約項目管理 | `admin.reservas.menus.index/.store/.update/.destroy/.sort/.list` | `Re\ReservationMenuController` | L `tb_setsubi`, `tb_yoyaku_koumoku_category`; E `tb_yoyaku_koumoku_master`, `hatuban` | hecho (R1) |
 | `yoyaku_koumoku_category.php`, `_register.php` | 予約項目カテゴリ管理 | `admin.reservas.menu-categories.*` (+`.list/.sort/.toggle`) | `Re\ReservationMenuCategoryController` | L/E `tb_yoyaku_koumoku_category` | hecho (R1) |
 | `setsubi_new.php`, `setsubi_register.php` | 設備管理 | `admin.reservas.facilities.*` | `Re\FacilityController` | L/E `tb_setsubi`, `hatuban` | hecho (R1) |
@@ -242,17 +242,17 @@ Sistema de reserva simple, **independiente** de category9 en el legacy: tabla `t
 
 | Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas `tb_*` | Estado |
 |---|---|---|---|---|---|
-| `reserve_customer_search.php` | 予約新規登録 / 顧客一覧・検索 | `admin.reservas.simple.customer-search` | `Re\SimpleReservationController@customerSearch` | L `tb_customer`, `tb_koumoku` | pendiente |
-| `reserve_new.php`, `reserve_new_confirm.php`, `reserve_new_register.php`, `reserve_new_complete.php` | 予約新規登録 / 確認 / 完了 | `admin.reservas.simple.create/.confirm/.store/.complete` | `Re\SimpleReservationController` | L `tb_customer`, `tb_koumoku`, `tb_reserve_name`, `tb_shop`, `tb_staff`; E `tb_reserve`, `hatuban` | pendiente |
-| `reserve_calendar.php` | 予約・来店一覧 | `admin.reservas.simple.calendar` | `@calendar` | L `tb_reserve`, `tb_shop`, `tb_shop_work` | pendiente |
-| `reserve_list.php` | 予約一覧 | `admin.reservas.simple.index` | `@index` | L `tb_reserve`, `tb_customer`, `tb_shop` | pendiente |
-| `reserve_detail.php` | 予約詳細 | `admin.reservas.simple.show` | `@show` | L `tb_reserve`, `tb_customer`, `tb_reserve_name`, `tb_shop`, `tb_staff` | pendiente |
-| `reserve_change_status.php` | 予約情報 (状態変更) | `admin.reservas.simple.status` | `@status` | E `tb_reserve` (`reserve_flg` `'9'` cancelar / `'2'` confirmar, `raiten_flg = '1'`, `update`) | pendiente |
-| `reserve_delete.php` | 予約情報 (削除) | `admin.reservas.simple.destroy` | `@destroy` | E `tb_reserve` | pendiente |
-| `category_entry.php`, `category_register.php`, `category_delete.php` | 予約カテゴリ登録・変更 | `admin.reservas.simple-categories.*` | `Re\SimpleCategoryController` | L/E `tb_reserve_name`, `hatuban` | pendiente |
-| `config.php`, `config_register.php` | 予約項目設定 | `admin.reservas.simple.config` | `Re\SimpleReservationController@config/updateConfig` | L/E `tb_koumoku` (`tb_name = 'tb_reserve'`) | pendiente |
-| `ajax_category.php`, `ajax_staff.php`, `inc/check_select.php` | (AJAX) | `admin.reservas.simple.options.*` | `Re\OptionController` | L `tb_reserve_name`, `tb_staff` | pendiente |
-| `model_reservation.php` | 予約機種一覧 | `admin.reservas.model-changes` | `Re\ModelChangeController@index` | L `tb_change_model`, `tb_customer`, `tb_shop`, `tb_customer_point` | pendiente (solo lista; nadie del repositorio escribe `tb_change_model`: S0 decidió migrar todo lo que tenía pantalla) |
+| `reserve_customer_search.php` | 予約新規登録 / 顧客一覧・検索 | `admin.reservas.simple.customer-search` | `Re\SimpleReservationController@customerSearch` | L `tb_customer`, `tb_koumoku` | hecho (R6) (buscador de `CustomerListService`/`CustomerSearchForm`; 20 por página como `category3/inc/page_control.php`) |
+| `reserve_new.php`, `reserve_new_confirm.php`, `reserve_new_register.php`, `reserve_new_complete.php` | 予約新規登録 / 確認 / 完了 | `admin.reservas.simple.create/.confirm/.store/.complete` | `Re\SimpleReservationController` | L `tb_customer`, `tb_koumoku`, `tb_reserve_name`, `tb_shop`, `tb_staff`; E `tb_reserve`, `hatuban` | hecho (R6) (texto guardado como el legacy, get_form(get_form2()), con entidades; correos con `ReservationMail` y enlace firmado de Mi página en vez del md5; título según el `act` resuelto; 完了 muestra 会員番号 si es socio) |
+| `reserve_calendar.php` | 予約・来店一覧 | `admin.reservas.simple.calendar` | `@calendar` | L `tb_reserve`, `tb_shop`, `tb_shop_work` | hecho (R6) (reutiliza `ReservationListService::simpleCalendar()` de R5) |
+| `reserve_list.php` | 予約一覧 | `admin.reservas.simple.index` | `@index` | L `tb_reserve`, `tb_customer`, `tb_shop` | hecho (R6) (no master: tienda de la sesión forzada; iconos copiados a `public/legacy/hp/inc_m/img/`) |
+| `reserve_detail.php` | 予約詳細 | `admin.reservas.simple.show` | `@show` | L `tb_reserve`, `tb_customer`, `tb_reserve_name`, `tb_shop`, `tb_staff` | hecho (R6) (reenvía reserve_cd/page/dd/shop_cd/kensu en vez de todo `$_REQUEST`) |
+| `reserve_change_status.php` | 予約情報 (状態変更) | `admin.reservas.simple.status` | `@status` | E `tb_reserve` (`reserve_flg` `'9'` cancelar / `'2'` confirmar, `raiten_flg = '1'`, `update`) | hecho (R6) (correo en del/kakutei como el legacy; del exige 1026-4 también en el servidor) |
+| `reserve_delete.php` | 予約情報 (削除) | `admin.reservas.simple.destroy` | `@destroy` | E `tb_reserve` | hecho (R6) (`del` → `'9'`, `permanent` → `'2'`, sin correo; nadie lo enlaza) |
+| `category_entry.php`, `category_register.php`, `category_delete.php` | 予約カテゴリ登録・変更 | `admin.reservas.simple-categories.*` | `Re\SimpleCategoryController` | L/E `tb_reserve_name`, `hatuban` | hecho (R6) (modificar a 全店舗 guarda NULL; el legacy no tocaba la columna) |
+| `config.php`, `config_register.php` | 予約項目設定 | `admin.reservas.simple.config` | `Re\SimpleReservationController@config/updateConfig` | L/E `tb_koumoku` (`tb_name = 'tb_reserve'`) | hecho (R6) |
+| `ajax_category.php`, `ajax_staff.php`, `inc/check_select.php` | (AJAX) | `admin.reservas.simple.options.*` | `Re\SimpleReservationController@categoryOptions/staffOptions` | L `tb_reserve_name`, `tb_staff` | hecho (R6) (URL legacy `reservation/ajax_category.php` y `ajax_staff.php`; 予約内容 incluye las de 全店舗 (NULL), que ajax_category perdía; `inc/check_select.php` va dentro de la vista `config`) |
+| `model_reservation.php` | 予約機種一覧 | `admin.reservas.model-changes` | `Re\ModelChangeController@index` | L `tb_change_model`, `tb_customer`, `tb_shop`, `tb_customer_point` | hecho (R6) (lista y su CSV `csv_print=1`; nadie del repositorio escribe `tb_change_model`) |
 
 ### 1.4 Reserva web pública `r/` y `reserve/` (`routes/publico/reservas.php`)
 
@@ -260,14 +260,14 @@ Sistema de reserva simple, **independiente** de category9 en el legacy: tabla `t
 
 | Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas `tb_*` | Estado |
 |---|---|---|---|---|---|
-| `r/index.php` (+ `reserve/`) | Reserve | `GET /r/index.php` · `publico.reservas.index` | `Re\PublicReservationController@index` | L `tb_yoyaku_koumoku_master`, `tb_shop`, `admin_master` (`application_use_flg`, `shop_category_flg`), `contents_master`, `tb_manage_words` | pendiente |
-| `r/check.php` (+ `reserve/`) | Reserve (確認) | `POST /r/check.php` | `@check` | L `tb_yoyaku_koumoku_master`, `tb_koumoku` | pendiente |
-| `r/ajax_getScheduleData.php` (+ `reserve/`) | — | `GET /r/ajax_getScheduleData.php` | `@schedule` + `AvailabilityService` | L `tb_yoyaku_config`, `tb_shop_work`, `tb_yoyaku_uketsuke_day` | pendiente (JSON idéntico) |
-| `r/ajax_getChoiceData.php` (+ `reserve/`) | — | `GET /r/ajax_getChoiceData.php` | `@choices` | L `tb_yoyaku_uketsuke_day`, `tb_yoyaku`, `tb_staff_works`, `tb_yoyaku_koumoku_master` | pendiente |
-| `r/ajax_reserveRegister.php` (+ `reserve/`) | — | `POST /r/ajax_reserveRegister.php` | `@register` + `ReservationService` (`LOCK TABLE tb_yoyaku` → `lockForUpdate`) | E `tb_yoyaku` (`entry_type` `'100'`/`'101'`), `hatuban`; L `tb_customer` | pendiente (mismos textos de error) |
-| `r/ajax_reserveDelete.php` (+ `reserve/`) | — | `POST /r/ajax_reserveDelete.php` | `@cancel` | E `tb_yoyaku.disp_flg = '9'` | pendiente (rama `tb_c2_*` de `reserve/` descartada) |
-| `r/getReservationWaitTime.php` | — | `GET /r/getReservationWaitTime.php` | `@waitTime` | L `tb_yoyaku`, `tb_yoyaku_config` | pendiente |
-| `r/class/Reserve.php`, `Timetable.php`, `reserve/class/Util.php`, `reserve/memo.md`, `css/js/img/plugin` | — | — | `ReservationService`, `AvailabilityService`, `TimetableService`; estáticos a `public/legacy/r/` | — | descartado como vista |
+| `r/index.php` (+ `reserve/`) | Reserve | `GET /r/index.php` · `publico.reservas.r.index` (y `.reserve.*`) | `Publico\Reservas\PublicReservationController@index` | L `tb_yoyaku_koumoku_master`, `tb_shop`, `admin_master` (`application_use_flg`, `shop_category_flg`), `contents_master`, `tb_manage_words` | hecho (R7): `token` deja la sesión `mobile.*` (contrato para Mi página de S4); HTTPS forzado solo en producción |
+| `r/check.php` (+ `reserve/`) | Reserve (確認) | `POST /r/check.php` | `@check` | L `tb_yoyaku_koumoku_master`, `tb_koumoku` | hecho (R7) |
+| `r/ajax_getScheduleData.php` (+ `reserve/`) | — | `GET /r/ajax_getScheduleData.php` | `@schedule` + `AvailabilityService` | L `tb_yoyaku_config`, `tb_shop_work`, `tb_yoyaku_uketsuke_day` | hecho (R7): JSON idéntico (`WebReservationService::scheduleData()`, port de `Timetable.php`; AvailabilityService es el 時間選択 del admin y no sirve aquí) |
+| `r/ajax_getChoiceData.php` (+ `reserve/`) | — | `GET /r/ajax_getChoiceData.php` | `@choices` | L `tb_yoyaku_uketsuke_day`, `tb_yoyaku`, `tb_staff_works`, `tb_yoyaku_koumoku_master` | hecho (R7) |
+| `r/ajax_reserveRegister.php` (+ `reserve/`) | — | `POST /r/ajax_reserveRegister.php` | `@register` + `ReservationService` (`LOCK TABLE tb_yoyaku` → `lockForUpdate`) | E `tb_yoyaku` (`entry_type` `'100'`/`'101'`), `hatuban`; L `tb_customer` | hecho (R7): `WebReservationBookingService`; aforo recalculado dentro de la transacción con las franjas de la tienda bloqueadas; `customer_cd` solo si es el socio de la sesión (o `token`) |
+| `r/ajax_reserveDelete.php` (+ `reserve/`) | — | `POST /r/ajax_reserveDelete.php` | `@cancel` | E `tb_yoyaku.disp_flg = '9'` | hecho (R7): solo anula reservas del socio de la sesión (el legacy anulaba cualquier cd); rama `tb_c2_*` de `reserve/` descartada |
+| `r/getReservationWaitTime.php` | — | `GET /r/getReservationWaitTime.php` | `@waitTime` | L `tb_yoyaku`, `tb_yoyaku_config` | hecho (R7): `WebReservationService::waitTime()` (reutilizable por S5); huecos de 24:00+ con la hora real |
+| `r/class/Reserve.php`, `Timetable.php`, `reserve/class/Util.php`, `reserve/memo.md`, `css/js/img/plugin` | — | — | `ReservationService`, `AvailabilityService`, `TimetableService`; estáticos a `public/legacy/r/` y `public/legacy/reserve/` | — | descartado como vista (R7: `reserve/*.php` responde con la lógica CRM de `r/` y carga los JS de `/r/js/`) |
 
 > `appview/reservation.php` y `appview/quick_reservation*.php` son de S5; usan `ReservationService` de S2. `numbered_ticket` **no existe en el backup** (`pgsql-schema.sql`): si S5 mantiene クイック予約, hace falta una migración `reservas_create_numbered_ticket` con las columnas del legacy (`cd`, `issued_date`, `issued_number`, `called_flg`, `called_date`, `adult`, `child`, `smoking_select`, `tb_yoyaku_cd`). Ver §5.
 

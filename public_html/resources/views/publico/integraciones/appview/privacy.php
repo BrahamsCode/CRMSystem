@@ -19,7 +19,7 @@
 	<body>
 		<div class="col-xs-12 col-xs-offset-0 well">
 			<div class="text-left">
-				<a href="./member_regist.php?domain=<?=$domain?>">&laquo; 新規会員登録ページへ</a>
+				<a href="./member_regist.php?domain=<?=$h($domain)?>">&laquo; 新規会員登録ページへ</a>
 			</div>
 			<h3>プライバシーポリシー</h3>
 			<?php
@@ -126,7 +126,7 @@
 			</pre>
 			<?php } ?>
 			<div class="text-left">
-				<a href="./member_regist.php?domain=<?=$domain?>">&laquo; 新規会員登録ページへ</a>
+				<a href="./member_regist.php?domain=<?=$h($domain)?>">&laquo; 新規会員登録ページへ</a>
 			</div>
 		</div>
 	</body>

@@ -112,4 +112,66 @@ Route::prefix('promocion')->name('promocion.')->group(function () {
         Route::get('point_rules_register', [PointRuleController::class, 'registered'])->name('rules.registered');
         Route::post('point_rules_delete', [PointRuleController::class, 'destroy'])->name('rules.destroy');
     });
+
+    // 来店履歴管理 (visit) y DM発行 (dm) — S4
+    Route::prefix('visit')->name('visit.')->group(function () {
+        Route::match(['get', 'post'], 'visit_stats2', [\App\Http\Controllers\Admin\Promotions\VisitStatsController::class, 'index'])->name('stats');
+        Route::match(['get', 'post'], 'day_visit_list', [\App\Http\Controllers\Admin\Promotions\VisitStatsController::class, 'day'])->name('day');
+        Route::match(['get', 'post'], 'store_visit_list', [\App\Http\Controllers\Admin\Promotions\VisitStatsController::class, 'shop'])->name('store-list');
+        Route::post('csv_download', [\App\Http\Controllers\Admin\Promotions\VisitCsvController::class, 'visits'])->name('csv');
+        Route::post('storecsv_download', [\App\Http\Controllers\Admin\Promotions\VisitCsvController::class, 'shops'])->name('store-csv');
+        Route::post('daycsv_download', [\App\Http\Controllers\Admin\Promotions\VisitCsvController::class, 'days'])->name('day-csv');
+        Route::get('touch_config', [\App\Http\Controllers\Admin\Promotions\VisitTouchConfigController::class, 'edit'])->name('touch-config');
+        Route::post('touch_config_register', [\App\Http\Controllers\Admin\Promotions\VisitTouchConfigController::class, 'update'])->name('touch-config.update');
+    });
+    Route::prefix('dm')->name('dm.')->group(function () {
+        Route::match(['get', 'post'], 'customer_list', [\App\Http\Controllers\Admin\Promotions\DmController::class, 'index'])->name('index');
+        Route::post('aterna_a4_12', [\App\Http\Controllers\Admin\Promotions\DmController::class, 'labels'])->name('labels');
+    });
+
+    // アンケート管理 (anketo) y お客様アンケート管理 (anketo2) — S4 (F6): un juego de controladores con `family`
+    foreach (\App\Services\Promotions\AnketoFamily::FAMILIES as $anketoFamily) {
+        Route::prefix($anketoFamily)->name($anketoFamily.'.')->group(function () use ($anketoFamily) {
+            $c = \App\Http\Controllers\Admin\Promotions\AnketoCateController::class;
+            $f = \App\Http\Controllers\Admin\Promotions\AnketoFormController::class;
+            $a = \App\Http\Controllers\Admin\Promotions\AnketoAnswerController::class;
+            Route::match(['get', 'post'], 'anketo_cate_list', [$c, 'index'])->name('index')->defaults('family', $anketoFamily);
+            Route::match(['get', 'post'], 'anketo_cate_new', [$c, 'create'])->name('create')->defaults('family', $anketoFamily);
+            Route::match(['get', 'post'], 'anketo_cate_update', [$c, 'edit'])->name('edit')->defaults('family', $anketoFamily);
+            Route::post('anketo_cate_action', [$c, 'action'])->name('action')->defaults('family', $anketoFamily);
+            Route::match(['get', 'post'], 'anketo_cate_detail', [$c, 'show'])->name('show')->defaults('family', $anketoFamily);
+
+            Route::match(['get', 'post'], 'anketo_form_list', [$f, 'index'])->name('forms.index')->defaults('family', $anketoFamily);
+            Route::post('anketo_form_move', [$f, 'move'])->name('forms.move')->defaults('family', $anketoFamily);
+            Route::match(['get', 'post'], 'anketo_form_new', [$f, 'create'])->name('forms.create')->defaults('family', $anketoFamily);
+            Route::match(['get', 'post'], 'anketo_form_update', [$f, 'edit'])->name('forms.edit')->defaults('family', $anketoFamily);
+            Route::post('anketo_form_delete', [$f, 'destroy'])->name('forms.destroy')->defaults('family', $anketoFamily);
+            Route::get('anketo_form_detail', [$f, 'show'])->name('forms.show')->defaults('family', $anketoFamily);
+
+            Route::get('anketo_test', [\App\Http\Controllers\Admin\Promotions\AnketoTestController::class, 'show'])->name('test')->defaults('family', $anketoFamily);
+            Route::post('anketo_test', [\App\Http\Controllers\Admin\Promotions\AnketoTestController::class, 'show'])->name('test.store')->defaults('family', $anketoFamily);
+
+            Route::get('anketo_answer_analyze', [$a, 'analyze'])->name('analyze')->defaults('family', $anketoFamily);
+            Route::match(['get', 'post'], 'anketo_answer_shousai', [$a, 'texts'])->name('answer')->defaults('family', $anketoFamily);
+            Route::post('csv_answer_download', [$a, 'csv'])->name('csv')->defaults('family', $anketoFamily);
+        });
+    }
+    Route::prefix('anketo')->name('anketo.mail.')->controller(\App\Http\Controllers\Admin\Promotions\AnketoMailController::class)->group(function () {
+        // アンケート発行: 発行条件選択 → 内容設定 → 確認 → 登録 (motor de envío de S3, mail_type = anketo)
+        Route::match(['get', 'post'], 'anketo_mail_customer_select', 'select')->name('select');
+        Route::match(['get', 'post'], 'anketo_mail_new', 'create')->name('create');
+        Route::post('anketo_mail_new_confirm', 'confirm')->name('confirm');
+        Route::post('anketo_mail_new_send', 'store')->name('store');
+    });
+    Route::prefix('anketo2')->name('anketo2.')->group(function () {
+        // お客様アンケート: 回答一覧, 回答詳細 y 返信メール (mail_type = mail)
+        Route::match(['get', 'post'], 'anketo_answer_list', [\App\Http\Controllers\Admin\Promotions\AnketoAnswerController::class, 'index'])->name('answers')->defaults('family', 'anketo2');
+        Route::get('anketo_answer_detail', [\App\Http\Controllers\Admin\Promotions\AnketoAnswerController::class, 'show'])->name('answers.show')->defaults('family', 'anketo2');
+        Route::controller(\App\Http\Controllers\Admin\Promotions\AnketoMailController::class)->name('reply.')->group(function () {
+            Route::match(['get', 'post'], 'anketo_reply_customer_select', 'replySelect')->name('select');
+            Route::match(['get', 'post'], 'anketo_reply_new', 'replyCreate')->name('create');
+            Route::post('anketo_reply_new_confirm', 'replyConfirm')->name('confirm');
+            Route::post('anketo_reply_new_send', 'replyStore')->name('store');
+        });
+    });
 });

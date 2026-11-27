@@ -174,3 +174,21 @@ it('calcula etiquetas del menú con label_from y title_from', function () {
     expect($menu['blocks'][0]['title'])->toBe('おすすめ')
         ->and(array_column($menu['blocks'][0]['links'], 'label'))->toBe(['オススメ管理', 'おすすめ']);
 });
+
+it('fuerza la UI clásica en una pantalla con @section(ui_version)', function () {
+    seedNucleo();
+    loginAs('master', 'secreto1');
+    $dir = storage_path('framework/testing/qa-views');
+    @mkdir($dir, 0777, true);
+    $cuerpo = "@section('title', 't')\n@section('menu', 'base')\n@section('content')\n<p>x</p>\n@endsection\n";
+    file_put_contents("$dir/ui1.blade.php", "@extends('layouts.legacy')\n@section('ui_version', '1')\n" . $cuerpo);
+    file_put_contents("$dir/ui2.blade.php", "@extends('layouts.legacy')\n" . $cuerpo);
+    \Illuminate\Support\Facades\View::addNamespace('qa', $dir);
+    \Illuminate\Support\Facades\Route::middleware(['web', 'auth:admin'])->get('admin/qa-ui1', fn () => view('qa::ui1'));
+    \Illuminate\Support\Facades\Route::middleware(['web', 'auth:admin'])->get('admin/qa-ui2', fn () => view('qa::ui2'));
+
+    // admin_master de seedNucleo = UI 2
+    $this->get('/admin/qa-ui1')->assertSee('/system/css/import.css', false)->assertSee('/system/img/logo.gif', false)
+        ->assertDontSee('mainStyle.css');
+    $this->get('/admin/qa-ui2')->assertSee('/system/css/mainStyle.css', false)->assertSee('/system/img/v2/logo.png', false);
+});

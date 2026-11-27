@@ -11,6 +11,7 @@ use App\Services\Mypage\RecommendationPush;
 use App\Services\Mypage\RecommendationService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -29,6 +30,8 @@ class RecommendationController extends Controller
     public function index(Request $request): View
     {
         if ($request->input('update_hyouji_flg') === 'update') {
+            // 表示情報を更新: el botón solo sale con 1016 編集; sin él, 403 también en el servidor
+            abort_unless($this->shop->can(RecommendationService::KENGEN, MypageShop::EDIT), 403);
             $this->service->updateVisibility((array) $request->input('update_cd', []), (array) $request->input('hyouji_flg_array', []));
         }
 
@@ -87,6 +90,7 @@ class RecommendationController extends Controller
     /** inc/upload.php (AjaxUpload): responde 'success' o 'error' en texto */
     public function upload(Request $request, LegacyTempImages $temp): Response
     {
+        $this->authorizeForm();
         $file = $request->file('userfile');
         $ok = $file !== null && in_array(strtolower($file->getClientOriginalExtension()), ['jpg', 'jpeg', 'png', 'gif'], true)
             && $temp->store(RecommendationService::FOLDER, (string) $request->input('time'), $request->input('lastTime'), $file, 'recommend');
@@ -97,6 +101,7 @@ class RecommendationController extends Controller
     /** inc/disp_pic.php: HTML de la vista previa o 'ERROR' */
     public function tempPicture(Request $request, LegacyTempImages $temp): Response
     {
+        $this->authorizeForm();
         $extension = $request->query('ext') === 'gif' ? 'gif' : 'jpg';
         $time = (string) $request->query('t');
         $path = $temp->validName($time) ? $temp->path(RecommendationService::FOLDER, $time, $extension) : null;
@@ -106,5 +111,11 @@ class RecommendationController extends Controller
             : 'ERROR';
 
         return response($html, 200, ['Content-Type' => 'text/html; charset=UTF-8']);
+    }
+
+    /** La imagen se sube desde el formulario, que solo sale con 1016 新規 o 編集 */
+    private function authorizeForm(): void
+    {
+        abort_unless(Gate::allows('kengen', [[RecommendationService::KENGEN, MypageShop::CREATE], [RecommendationService::KENGEN, MypageShop::EDIT]]), 403);
     }
 }

@@ -395,5 +395,122 @@
    "tel": "09011112222",
    "mail": "new@example.test"
   }
+ },
+ {
+  "name": "av_regist_no_domain",
+  "method": "GET",
+  "path": "/appview/member_regist.php"
+ },
+ {
+  "name": "av_regist_unknown",
+  "method": "GET",
+  "path": "/appview/member_regist.php?domain=example.test"
+ },
+ {
+  "name": "av_regist_form",
+  "method": "GET",
+  "path": "/appview/member_regist.php?domain=test.crm-s.net&touroku_kubun=2&introducer_cd=1609897927001809158"
+ },
+ {
+  "name": "av_regist_errors",
+  "method": "POST",
+  "path": "/appview/member_regist.php",
+  "form": {
+   "domain": "test.crm-s.net",
+   "shop_cd": "1",
+   "name_1": "",
+   "name_2": "",
+   "name_kana_1": "abc",
+   "name_kana_2": "",
+   "email1": "taro@example.test",
+   "zip": "12a",
+   "kojin_birth_y": "1990",
+   "kojin_birth_m": "1",
+   "kojin_birth_d": "2",
+   "ext_colum[201]": "読書",
+   "ext_colum[203_y]": "",
+   "ext_colum[203_m]": "",
+   "ext_colum[203_d]": ""
+  }
+ },
+ {
+  "name": "av_regist_ok",
+  "method": "POST",
+  "path": "/appview/member_regist.php",
+  "form": {
+   "domain": "test.crm-s.net",
+   "shop_cd": "1",
+   "introducer_cd": "1609897927001809158",
+   "name_1": "新規",
+   "name_2": "太郎",
+   "name_kana_1": "ｼﾝｷ",
+   "name_kana_2": "タロウ",
+   "email1": "new@example.test",
+   "kojin_birth_y": "1995",
+   "kojin_birth_m": "4",
+   "kojin_birth_d": "7",
+   "kojin_sex": "男性",
+   "zip": "530-0001",
+   "pref": "大阪府",
+   "job": "学生",
+   "mailmaga_flg": "0",
+   "kojin_mobile": "09011112222",
+   "ext_colum[201]": "読書",
+   "ext_colum[202][]": "音楽",
+   "ext_colum[203_y]": "2020",
+   "ext_colum[203_m]": "5",
+   "ext_colum[203_d]": "6"
+  }
+ },
+ {
+  "name": "av_cupdate_no_id",
+  "method": "GET",
+  "path": "/appview/customerUpdate.php?domain=test.crm-s.net"
+ },
+ {
+  "name": "av_cupdate_form",
+  "method": "GET",
+  "path": "/appview/customerUpdate.php?domain=test.crm-s.net&customer_cd=1609897927001809158"
+ },
+ {
+  "name": "av_cupdate_error",
+  "method": "POST",
+  "path": "/appview/customerUpdate.php",
+  "form": {
+   "domain": "test.crm-s.net",
+   "id": "1000001",
+   "shop_cd": "1",
+   "name_1": "山田",
+   "name_2": "太郎",
+   "email1": "hanako@example.test",
+   "ext_colum[203_y]": "2020",
+   "ext_colum[203_m]": "1",
+   "ext_colum[203_d]": "1"
+  }
+ },
+ {
+  "name": "av_cupdate_ok",
+  "method": "POST",
+  "path": "/appview/customerUpdate.php",
+  "form": {
+   "domain": "test.crm-s.net",
+   "id": "1000001",
+   "shop_cd": "1",
+   "name_1": "山田",
+   "name_2": "一郎",
+   "name_kana_1": "ヤマダ",
+   "name_kana_2": "イチロウ",
+   "email1": "taro@example.test",
+   "kojin_sex": "男性",
+   "ext_colum[201]": "釣り",
+   "ext_colum[203_y]": "2021",
+   "ext_colum[203_m]": "2",
+   "ext_colum[203_d]": "3"
+  }
+ },
+ {
+  "name": "av_cupdate_after",
+  "method": "GET",
+  "path": "/appview/customerUpdate.php?domain=test.crm-s.net&customer_cd=1609897927001809158"
  }
 ]

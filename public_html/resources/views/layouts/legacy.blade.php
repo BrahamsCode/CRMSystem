@@ -12,6 +12,8 @@
 --}}
 @php
     $legacyUi = app(\App\Services\Nucleo\LegacyUi::class);
+    // @section('ui_version', '1'|'2'): fuerza la UI clásica o la 2 solo en esta pantalla (NUCLEO.md §5)
+    $legacyUi->forceUiVersion(trim($__env->yieldContent('ui_version')) ?: null);
     $staff = auth('admin')->user();
     $menuKey = trim($__env->yieldContent('menu'));
     $menu = $menuKey !== '' ? $legacyUi->menu($menuKey, $staff) : null;

@@ -43,3 +43,16 @@ it('valida con las reglas y mensajes de error_check.php', function () {
         ->and(LegacyCheck::replaceTel('03-1234/56*7ー8'))->toBe('0312345678')
         ->and(LegacyCheck::replaceTel(''))->toBeNull();
 });
+
+it('createHatsuban: epoch + tienda + aleatorio, y determinista con Hatuban::fake()', function () {
+    $cd = \App\Services\Nucleo\Hatuban::legacyCd(5);
+    expect($cd)->toMatch('/^\d{10}005\d{6}$/');
+
+    \App\Services\Nucleo\Hatuban::fake(1700000000, 41);
+    expect(\App\Services\Nucleo\Hatuban::legacyCd(1))->toBe('1700000000001000041')
+        ->and(\App\Services\Nucleo\Hatuban::legacyCd(''))->toBe('1700000000000000042')
+        ->and(\App\Services\Nucleo\Hatuban::legacyCd(12))->toBe('1700000000012000043');
+
+    \App\Services\Nucleo\Hatuban::unfake();
+    expect(\App\Services\Nucleo\Hatuban::legacyCd(1))->not->toStartWith('1700000000');
+});

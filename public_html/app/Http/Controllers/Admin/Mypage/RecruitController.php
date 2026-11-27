@@ -11,6 +11,7 @@ use App\Services\Mypage\RecruitService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -69,6 +70,9 @@ class RecruitController extends Controller
     /** recruit_complete.php */
     public function complete(Request $request, int $cd): View
     {
+        // Se llega tras el alta (新規) o la modificación (編集), o desde el listado (閲覧)
+        abort_unless(Gate::allows('kengen', [[RecruitService::KENGEN, 1], [RecruitService::KENGEN, MypageShop::CREATE], [RecruitService::KENGEN, MypageShop::EDIT]]), 403);
+
         return view('admin.mypage.recruits.show', $this->showData('complete', $cd, (string) $request->query('register_type')));
     }
 
@@ -88,6 +92,7 @@ class RecruitController extends Controller
     /** ajax_category.php: <option> de los 職種 de la tienda */
     public function categoryOptions(Request $request): View
     {
+        $this->authorizeForm();
         return view('admin.mypage.recruits.category-options', [
             'categories' => $this->service->categoriesFor(filter_var($request->input('shop_cd'), FILTER_VALIDATE_INT)),
         ]);
@@ -96,6 +101,7 @@ class RecruitController extends Controller
     /** inc/upload.php (AjaxUpload): 'success' o 'error' */
     public function upload(Request $request, LegacyTempImages $temp): Response
     {
+        $this->authorizeForm();
         $file = $request->file('userfile');
         $ok = $file !== null && in_array(strtolower($file->getClientOriginalExtension()), ['jpg', 'jpeg', 'png', 'gif'], true)
             && $temp->store(RecruitService::FOLDER, (string) $request->input('time'), $request->input('lastTime'), $file, 'recruit');
@@ -106,6 +112,7 @@ class RecruitController extends Controller
     /** inc/disp_pic.php: HTML de la vista previa ('ERROR' si no existe, que el JS ya contempla) */
     public function tempPicture(Request $request, LegacyTempImages $temp): Response
     {
+        $this->authorizeForm();
         $time = (string) $request->query('t');
         $path = $temp->validName($time) ? $temp->path(RecruitService::FOLDER, $time, 'jpg') : null;
 
@@ -114,6 +121,12 @@ class RecruitController extends Controller
             : 'ERROR';
 
         return response($html, 200, ['Content-Type' => 'text/html; charset=UTF-8']);
+    }
+
+    /** Subidas y desplegable de 職種: los usa el formulario, que se abre con 1023 新規 o 編集 */
+    private function authorizeForm(): void
+    {
+        abort_unless(Gate::allows('kengen', [[RecruitService::KENGEN, MypageShop::CREATE], [RecruitService::KENGEN, MypageShop::EDIT]]), 403);
     }
 
     private function findOrFail(int $cd): Recruit

@@ -32,4 +32,19 @@ Route::prefix('system/category3')->name('promocion.')->group(function () {
     Route::match(['get', 'post'], 'inc/ajax_search_kaiin.php', [MailAjaxController::class, 'searchCustomers'])->name('inc.ajax_search_kaiin');
     Route::get('inc/ajax_get_shop_data.php', [MailAjaxController::class, 'shopOptions'])->name('inc.ajax_get_shop_data');
     Route::post('inc/ajax_change_status.php', [MailAjaxController::class, 'changeStatus'])->name('inc.ajax_change_status');
+
+    // 来店履歴管理 y DM発行 (S4): GET de las .php del legacy (menú left_navi3, enlaces entre pantallas) → pantallas nuevas
+    foreach (['visit_stats2' => 'stats', 'day_visit_list' => 'day', 'store_visit_list' => 'store-list'] as $file => $name) {
+        Route::get("visit/$file.php", [\App\Http\Controllers\Admin\Promotions\VisitStatsController::class, 'legacy'])
+            ->name("visit.$file")->defaults('target', "admin.promocion.visit.$name");
+    }
+    Route::get('visit/touch_config.php', [\App\Http\Controllers\Admin\Promotions\VisitTouchConfigController::class, 'legacy'])->name('visit.touch_config');
+    Route::get('dm/customer_list.php', [\App\Http\Controllers\Admin\Promotions\DmController::class, 'legacy'])->name('dm.customer_list');
+
+    // アンケート管理 / お客様アンケート管理 (S4, F6): GET de las .php del menú → pantallas nuevas (con su query) y el AJAX de «選択»
+    foreach (['anketo/anketo_cate_list' => 'anketo.index', 'anketo2/anketo_cate_list' => 'anketo2.index', 'anketo2/anketo_cate_new' => 'anketo2.create'] as $file => $target) {
+        Route::get("$file.php", [\App\Http\Controllers\Admin\Promotions\AnketoCateController::class, 'legacy'])
+            ->name(str_replace('/', '.', $file))->defaults('target', "admin.promocion.$target");
+    }
+    Route::post('anketo2/ajax_set_anketo.php', [\App\Http\Controllers\Admin\Promotions\AnketoCateController::class, 'setActive'])->name('anketo2.ajax_set_anketo');
 });

@@ -135,8 +135,8 @@ Mismas pantallas con `mail_type = deco` (`$tb_base_system_child_cd = 32`); cuerp
 
 | Legacy | Título | Ruta Laravel | Controlador@método | Tablas | Estado |
 |---|---|---|---|---|---|
-| `customer_list.php` | DM発行 | `dm.index` | `DmController@index` | L tb_customer, tb_koumoku | pendiente (uso por confirmar) |
-| `aterna_a4_12.php` | (宛名ラベル A4×12) | `dm.labels` (PDF) | `DmController@labels` | L tb_customer (el legacy lee `kaiin_master`, inexistente: se corrige) | pendiente (uso por confirmar) |
+| `customer_list.php` | DM発行 | `dm.index` (`/admin/promocion/dm/customer_list`; GET `system/category3/dm/customer_list.php` redirige) | `DmController@index` + `DmCustomerList` | L tb_customer, tb_koumoku | hecho (S4): buscador `search_set1` de S2; la búsqueda se guarda con `MailAudience` y viaja como `search_uniqid` (el legacy pasaba el SQL en `wherestr`); solo sesión, sin permiso propio, como el legacy |
+| `aterna_a4_12.php` | (宛名ラベル A4×12) | `dm.labels` (POST, PDF en línea) | `DmController@labels` + `DmLabelPdf` | L tb_customer | hecho (S4): mismas medidas (2×6, 6 pt) y orden `cd`; PDF propio sin paquete (S1 aún no fijó uno) con fuente CID japonesa sin incrustar `KozMinPro-Regular` / `UniJIS-UTF16-H`, como la `KozMinPro-Regular-Acro` del FPDF legacy; sin búsqueda guardada → 404 (el legacy imprimía todo `tb_customer`) |
 | `japanese.php` | — | — | — | — | descartado: utilidades de texto, no vista |
 
 #### 新着情報 — `digital_signage/` (category3)
@@ -168,44 +168,53 @@ Mismas pantallas con `mail_type = deco` (`$tb_base_system_child_cd = 32`); cuerp
 
 #### アンケート管理 — `anketo/` (tablas `tb_c3_anketo_*`)
 
-`anketo` y `anketo2` conservan sus tablas: un solo juego de controladores con el parámetro `family` (`anketo` | `anketo2`) que elige los modelos.
+`anketo` y `anketo2` conservan sus tablas: un solo juego de controladores con el parámetro de ruta `family` (`anketo` | `anketo2`) que elige modelos, tablas y textos (`App\Services\Promotions\AnketoFamily`). Hecho por S4 (F6, 2026-11-27). Rutas con el prefijo `admin.promocion.anketo.`; URL `/admin/promocion/anketo/<archivo sin .php>`. Controladores `Anketo*Controller` (`AC` = AnketoCate, `AF` = AnketoForm, `AT` = AnketoTest, `AA` = AnketoAnswer, `AM` = AnketoMail).
 
 | Legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas | Estado |
 |---|---|---|---|---|---|
-| `anketo_cate_list.php` | アンケート一覧 | `anketo.index` | `SurveyController@index` | L tb_c3_anketo_cate, tb_c3_anketo_sub, mailmag_master | pendiente |
-| `anketo_cate_list.php?which=sended` | 過去アンケート配信一覧 | `anketo.index?which=sended` | `SurveyController@index` | idem | pendiente |
-| `anketo_cate_new.php`, `_frm`, `_errchk`, `_register` | アンケート新規登録 | `anketo.create/store` | `SurveyController@create/store` | E tb_c3_anketo_cate, hatuban | pendiente |
-| `anketo_cate_update.php` | アンケート修正 | `anketo.edit/update` | `SurveyController@edit/update` | E tb_c3_anketo_cate | pendiente |
-| `anketo_cate_action.php` | (表示切替・並び替え・削除) | `anketo.action` | `SurveyController@action` | E tb_c3_anketo_cate, tb_c3_anketo_form | pendiente |
-| `anketo_cate_detail.php` | アンケート詳細 | `anketo.show` | `SurveyController@show` | L tb_c3_anketo_cate | pendiente |
-| `anketo_form_list.php` | 項目一覧 | `anketo.forms.index` | `SurveyFormController@index` | L tb_c3_anketo_form, _cate, _sub, tb_mycoupon_master, tb_mailmag_analyze, mailmag_master | pendiente |
-| `anketo_form_new.php`, `anketo_form_update.php`, `_frm`, `_errchk`, `_register` | 項目新規 / 修正 | `anketo.forms.create/store/edit/update`, `anketo.forms.move` | `SurveyFormController@*` | E tb_c3_anketo_form (`rank`), hatuban | pendiente |
-| `anketo_form_delete.php` | (削除) | `anketo.forms.destroy` | `SurveyFormController@destroy` | E tb_c3_anketo_form (`disp_flg = 9`) | pendiente |
-| `anketo_form_detail.php` | 項目詳細 | `anketo.forms.show` | `SurveyFormController@show` | L tb_c3_anketo_form, _cate | pendiente |
-| `anketo_form_issue.php` | アンケート発行 (発行条件選択) | `anketo.issue` | `MC@select` (`anketo`) | L tb_customer, tb_koumoku, tb_search_cate, tb_search_form | pendiente |
-| `anketo_mail.php`, `anketo_mail_confirm.php`, `anketo_mail_send.php` + envoltorios `anketo_mail_*` | 新規メール配信 | `anketo.mail.*` | `MC@*` (`anketo`) | E mailmag_master (`type_flg='anketo'`), tb_c3_anketo_cate (`attached_cd`), hatuban | pendiente |
-| `ajax_search_coupon.php` | (AJAX) | `coupons.ajax-search` | `CouponController@search` | L tb_mycoupon_master | pendiente |
-| `anketo_test.php`, `anketo_test_register.php` | アンケートテスト | `anketo.test`, `anketo.test.store` | `SurveyController@test/storeTest` | E tb_c3_anketo_sub (`category_inner_group` = MAX+1) | pendiente |
-| `anketo_answer_analyze.php` | 回答解析 | `anketo.analyze` | `SurveyAnswerController@analyze` | L tb_c3_anketo_cate, _form, _sub, mailmag_master | pendiente |
-| `anketo_answer_shousai.php` | 回答詳細 | `anketo.answer` | `SurveyAnswerController@detail` | L tb_c3_anketo_sub | pendiente |
-| `csv_answer_download.php` | 回答CSV | `anketo.csv` | `SurveyAnswerController@csv` (SJIS-win) | L tb_c3_anketo_* | pendiente |
-| `anketo_analyze.php` | クリックカウンタ | `anketo.click` | `AnalyzeController@index` | L tb_mailmag_analyze | pendiente |
+| `anketo_cate_list.php` | アンケート一覧 | `anketo.index` (GET\|POST) | `AC@index` | L tb_c3_anketo_cate | hecho |
+| `anketo_cate_list.php?which=sended` | 過去アンケート配信一覧 | `anketo.index?which=sended` | `AC@index` | L tb_c3_anketo_cate, tb_c3_anketo_sub, mailmag_master | hecho |
+| `anketo_cate_new.php`, `_frm`, `_errchk`, `_register` | アンケート新規登録 | `anketo.create` (GET\|POST, `act=up`) | `AC@create` + `AnketoCateRequest` + `AnketoSurveyService::save` | E tb_c3_anketo_cate, hatuban | hecho |
+| `anketo_cate_update.php` | アンケート修正 | `anketo.edit` (GET\|POST) | `AC@edit` | E tb_c3_anketo_cate | hecho |
+| `anketo_cate_action.php` | (発行・削除・複製) | `anketo.action` (POST) | `AC@action` → `AnketoSurveyService::action` | E tb_c3_anketo_cate, tb_c3_anketo_form | hecho |
+| `anketo_cate_detail.php` | アンケート詳細 | `anketo.show` | `AC@show` | L tb_c3_anketo_cate | hecho (sin enlaces en el legacy) |
+| `anketo_form_list.php` | アンケート詳細 + 部品一覧 (必須, ▲▼, 発行条件, クリックカウンタ) | `anketo.forms.index` (GET\|POST `act=update`), `anketo.forms.move` (POST) | `AF@index`, `AF@move` | L/E tb_c3_anketo_form; L tb_c3_anketo_cate, _sub, tb_mycoupon_master, tb_mailmag_analyze (`ClickStats` de S3), mailmag_master | hecho |
+| `anketo_form_new.php`, `anketo_form_update.php`, `_frm`, `_errchk`, `_register` | 部品 新規 / 修正 | `anketo.forms.create`, `anketo.forms.edit` (GET\|POST) | `AF@create/edit` + `AnketoFormRequest` + `AnketoItemService::save` | E tb_c3_anketo_form (`rank`), hatuban | hecho |
+| `anketo_form_delete.php` | (削除) | `anketo.forms.destroy` (POST) | `AF@destroy` | E tb_c3_anketo_form (DELETE físico, como el legacy) | hecho |
+| `anketo_form_detail.php` | 部品詳細 | `anketo.forms.show` | `AF@show` | L tb_c3_anketo_form, _cate | hecho |
+| `anketo_mail_customer_select.php`, `anketo_mail_new.php`, `anketo_mail_new_confirm.php`, `anketo_mail_new_send.php` | 発行条件選択 → 内容設定 → 確認 → 登録 | `anketo.mail.select/create/confirm/store` | `AM@*` → `MailController@*` de S3 (`mailType = anketo`) | E mailmag_master (`type_flg = anketo`, `type_data_cd`), send_schedule, tb_c3_anketo_cate (`hyouji_flg`, `attached_cd`, `hakkou_date`), hatuban | hecho |
+| `anketo_form_issue.php`, `anketo_mail.php`, `anketo_mail_confirm.php`, `anketo_mail_send.php`, `ajax_search_coupon.php` | (flujo antiguo) | — | — | — | descartado: nadie enlaza `anketo_form_issue.php`; el 発行 va por los envoltorios `anketo_mail_*` y el motor común (`inc/ajax_search_coupon.php` de S3) |
+| `anketo_test.php`, `anketo_test_register.php` | アンケートテスト | `anketo.test` (GET), `anketo.test.store` (POST) | `AT@show` + `AnketoAnswerService::storeTest` | E tb_c3_anketo_sub (`category_inner_group` = MAX+1), hatuban | hecho |
+| `anketo_answer_analyze.php` | 回答解析 | `anketo.analyze` | `AA@analyze` | L tb_c3_anketo_cate, _form, _sub, mailmag_master | hecho |
+| `anketo_answer_shousai.php` | 回答一覧 (texto, popup) | `anketo.answer` | `AA@texts` | L tb_c3_anketo_sub | hecho |
+| `csv_answer_download.php` | 回答CSV | `anketo.csv` (POST) | `AA@csv` (SJIS-win, `LegacyCsv::encode`) | L tb_c3_anketo_* | hecho |
+| `anketo_analyze.php` | クリックカウンタ (menú) | — | `AnalyzeController@index` de S3 | L tb_mailmag_analyze | pendiente S3 (M4): el menú sigue a la URL del legacy |
+| GET `system/category3/anketo/anketo_cate_list.php` | (menú) | `legacy.promocion.anketo.anketo_cate_list` | `AC@legacy` → `anketo.index` con su query | — | hecho |
 | `inc/page.php`, css, colorbox, `cron_schedule/cronfile` | fragmento | — | — | — | descartado: no son vistas |
-| `inc/anketo_function.php` | fragmento (clases de tamaño de ítem) | — | helper de `SurveyFormController` | — | pendiente (dentro de 項目新規 / 修正) |
+| `inc/anketo_function.php` | (tamaño de ítem) | — | `CustomFieldService::STYLE_CLASSES` de S2 | — | hecho |
 
 #### お客様アンケート管理 — `anketo2/` (tablas `tb_c3_anketo2_*`)
 
-Vistas comunes: las mismas rutas con prefijo `anketo2.` y los modelos `Anketo2*`. Propias:
+Vistas comunes: las mismas rutas con prefijo `anketo2.` (`family = anketo2`) y los modelos `Anketo2*`. Propias:
 
 | Legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas | Estado |
 |---|---|---|---|---|---|
-| Vistas comunes (`anketo_cate_*`, `anketo_form_*`, `anketo_mail*`, `anketo_test*`, `anketo_answer_shousai`, `csv_answer_download`, `anketo_analyze`, `ajax_search_coupon`) | お客様アンケート新規登録 / 修正 / 項目… | `anketo2.*` | idem con `family=anketo2` | tb_c3_anketo2_* | pendiente |
-| `anketo_cate_list.php` (casilla 選択) | お客様アンケート一覧 | `anketo2.index` | `SurveyController@index` | L tb_c3_anketo2_cate, contents_master | pendiente |
-| `ajax_set_anketo.php` | (AJAX encuesta activa) | `anketo2.ajax-set` | `SurveyController@setActive` | E contents_master (`tb_c3_anketo2` / `set_anketo_cd`) | pendiente |
-| `anketo_answer_list.php` | お客様アンケート回答一覧 | `anketo2.answers` | `SurveyAnswerController@index` | L tb_c3_anketo2_*, tb_customer, tb_raiten_rireki | pendiente |
-| `anketo_answer_detail.php` | 回答詳細 (por cliente) | `anketo2.answers.show` | `SurveyAnswerController@show` | L tb_c3_anketo2_*, tb_customer | pendiente |
-| `anketo_reply_customer_select.php`, `anketo_reply_new.php`, `_confirm.php`, `_send.php` | 返信メール | `anketo2.reply.*` | `MC@*` (`anketo`) | E mailmag_master | pendiente |
-| `anketo_answer_analyze.php` | 回答解析 | `anketo2.analyze` | `SurveyAnswerController@analyze` | L tb_c3_anketo2_* | pendiente (el legacy mezcla `tb_c3_anketo_*` en alguna consulta: se usa siempre la familia `anketo2`) |
+| Vistas comunes (`anketo_cate_*`, `anketo_form_*`, `anketo_test*`, `anketo_answer_shousai`, `csv_answer_download`, `anketo_answer_analyze`) | お客様アンケート新規登録 / 項目… | `anketo2.*` | idem con `family=anketo2` | tb_c3_anketo2_* | hecho |
+| `anketo_cate_list.php` (casilla 選択) | お客様アンケート一覧 | `anketo2.index` | `AC@index` | L tb_c3_anketo2_cate, contents_master | hecho |
+| `ajax_set_anketo.php` | (AJAX encuesta activa) | `legacy.promocion.anketo2.ajax_set_anketo` (POST `system/category3/anketo2/ajax_set_anketo.php`) | `AC@setActive` | E contents_master (`tb_c3_anketo2` / `set_anketo_cd`) | hecho |
+| `anketo_cate_action.php?act=登録` | (本登録) | `anketo2.action` | `AC@action` | E tb_c3_anketo2_cate (`disp_flg = 1`) | hecho |
+| `anketo_answer_list.php` | お客様アンケート回答一覧 | `anketo2.answers` (GET\|POST) | `AA@index` + `AnketoAnswerService::answers` | L tb_c3_anketo2_*, tb_customer, tb_raiten_rireki | hecho |
+| `anketo_answer_detail.php` | 回答内容詳細 (popup) | `anketo2.answers.show` | `AA@show` | L tb_c3_anketo2_*, tb_customer | hecho |
+| `anketo_reply_customer_select.php`, `anketo_reply_new.php`, `_confirm.php`, `_send.php` | 返信メール | `anketo2.reply.select/create/confirm/store` | `AM@reply*` → `MailController@*` (`mailType = mail`) | E mailmag_master, send_schedule | hecho |
+| `anketo_mail_*` (envoltorios copiados de anketo) | (発行) | — | — | — | descartado: el legacy quitó el botón 発行 de お客様アンケート (2012) y su envoltorio escribía en `tb_c3_anketo_cate`; la encuesta se reparte con `{アンケートURL[cd]}` (S3) |
+| GET `system/category3/anketo2/anketo_cate_list.php`, `anketo_cate_new.php` | (menú) | `legacy.promocion.anketo2.*` | `AC@legacy` | — | hecho |
+
+Decisiones F6 (S4, 2026-11-27):
+- Reutilización del motor de S3: `AnketoMailController` llama a `MailController@select/create/confirm/store` y cambia en su vista `routes`, `selectAction`, `issueAction`, `title` y `activeAc`; al registrar marca la encuesta 発行済 como `mail_send_frm.php`. Pedidos a S3: familias `anketo` y 返信メール en `MailController::family()`/`activeAc()` (para enlazar sus acciones sin envoltorio), el marcado 発行済 dentro de `MailRegistrar::register()`, la edición de un programado `type_flg = anketo` (cupón adjunto en `attached_cd` y 発行済 al guardar, como `mail_future_frm.php`/`mail_future_send_frm.php`) y la クリックカウンタ `anketo_analyze.php` (M4).
+- Bugs del legacy corregidos: `anketo2/anketo_cate_update.php`, `anketo_test(_register).php` y `anketo_mail_*` de anketo2 escribían en `tb_c3_anketo_*` (se usa siempre la familia); el título `『』` de los ítems (pg_fetch_result con fila '') lleva el nombre de la encuesta; `addStylePrint` no conocía `selectBox`; 回答一覧 cortaba con `array_slice($a, $from, $from + $kensu)`; el «内訳» de 回答解析 dejaba solo la columna filtrada (ahora filtra respuestas completas); la fecha de 回答一覧 usaba `h` (12 h) → `H`; el 返信メール buscaba destinatarios por `email1 LIKE` (ahora por `cd` de los socios marcados, con `disp_flg = 1` y `touroku_kubun = 2`); el CSV no reiniciaba los recuentos entre ítems; 回答状況 de お客様アンケート salía vacío (ahora muestra el número de respuestas); un tipo sin recuento (年, 年月…) heredaba el modo del ítem anterior (ahora va al 詳細 de texto).
+- Se mantiene del legacy: borrado físico de ítems; «必須情報を更新» de アンケート管理 vacía `serach_flg` y `hyouji_flg`; 複製 sin fechas; las páginas solo piden sesión (el permiso 1011 filtra el menú de S3).
+- ▲▼ y 削除 de ítems eran GET: ahora POST (mismo aviso). La アンケートテスト usa un socio existente al azar (el legacy inventaba un `cd` entre 1000 y 10134) y pinta los ítems vivos (`disp_flg = 1`) como la encuesta del cliente; campos, comprobación y guardado con las piezas de S2 (`partials/custom_field`, `customFieldError`, `customFieldValues`). La encuesta activa nueva se numera con hatuban de contents_master (el legacy usaba `createHatsuban` de la tienda).
+- Sin `fnc_furiwake_disp`: el 振分配信 del 過去アンケート配信一覧 muestra `search_display`. El popup 顧客情報 de 回答一覧 abre la versión PC (`window.open`), sin la rama de tablet `roid.popUp`.
 
 #### クーポン — `coupon/` (cupón-imagen antiguo)
 
@@ -288,12 +297,12 @@ Vistas comunes: las mismas rutas con prefijo `anketo2.` y los modelos `Anketo2*`
 
 | Legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas | Estado |
 |---|---|---|---|---|---|
-| `visit_stats2.php` | 来店履歴一覧 | `visit.stats` | `VisitStatsController@index` | L tb_raiten_rireki, tb_customer, tb_shop | pendiente |
-| `day_visit_list.php` | 来店履歴一覧 (日別) | `visit.day` | `VisitStatsController@day` | idem | pendiente |
-| `store_visit_list.php` | 個別来店履歴 | `visit.store-list` | `VisitStatsController@shop` | idem | pendiente |
-| `csv_download.php`, `storecsv_download.php`, `daycsv_download.php` | CSV de visitas | `visit.csv`, `visit.store-csv`, `visit.day-csv` | `VisitStatsController@*Csv` (SJIS-win) | L tb_raiten_rireki, tb_shop | pendiente (`daycsv_download.php` está vacío en el legacy: se implementa igual que los otros) |
+| `visit_stats2.php` | 来店履歴一覧 | `visit.stats` (`/admin/promocion/visit/visit_stats2`; GET del `.php` del menú redirige con su query) | `VisitStatsController@index` + `VisitStatsService` | L tb_raiten_rireki, tb_customer, tb_shop | hecho (S4): gráficos con `circle.js` (el del legacy; `jquery.gchart` no se usa aquí); sin botón Flash ni gráfico vertical; no master = su tienda siempre; de madrugada 当日 es el día de negocio de ayer |
+| `day_visit_list.php` | 来店履歴一覧 (日別) | `visit.day` | `VisitStatsController@day` | idem | hecho (S4): 0〜4時 = madrugada del día siguiente; `hhh=0` cuenta; enlaces y paginación conservan tienda y fecha; botón CSVファイル出力 añadido |
+| `store_visit_list.php` | 個別来店履歴 | `visit.store-list` | `VisitStatsController@shop` | idem | hecho (S4): días naturales como el legacy; formulario CSV (comentado en el legacy) activado |
+| `csv_download.php`, `storecsv_download.php`, `daycsv_download.php` | CSV de visitas | `visit.csv`, `visit.store-csv`, `visit.day-csv` (POST) | `VisitCsvController@visits/shops/days` + `VisitCsvService` (LegacyCsv, SJIS-win) | L tb_raiten_rireki, tb_shop | hecho (S4): `user.csv` igual que el legacy (solo master, ahora también en el servidor); `store.csv` con los tres periodos (el legacy solo 今日 y en UTF-8); `day.csv` nuevo con la tabla de 日別 |
 | `customer_detail.php` | 顧客登録情報 | enlace a `admin.clientes.show` | — | — | descartado: es la ficha de cliente de S2 |
-| `touch_config.php`, `touch_config_register.php` | カードリーダ設定 | `visit.touch-config` | `TouchConfigController@*` | L/E tb_touch_mode, hatuban | pendiente (intervalo del lector de tarjetas de visita) |
+| `touch_config.php`, `touch_config_register.php` | カードリーダ設定 | `visit.touch-config` (GET), `visit.touch-config.update` (POST → «登録中です» y vuelta) | `VisitTouchConfigController@edit/update` + `VisitTouchConfigService` | L/E tb_touch_mode, hatuban | hecho (S4): alta de la fila por tienda al abrir (1800 s), como el legacy; solo valores del selector; un no master solo cambia su tienda |
 | `visit_stats.php`, `new_visit_stats.php`, `stats_test*.php`, `csv_test*.php` | (copias antiguas) | — | — | — | descartado: duplicados/pruebas |
 | `fix_visit_stats.php` | (corrección masiva) | — | — | — | descartado: script peligroso, bloqueado a 403 |
 
@@ -456,7 +465,7 @@ Cada pantalla se pasa a Blade con el mismo HTML (clases, ids, textos japoneses) 
 | F3 | ポイントルール + `PointService`/`PointRuleResolver` | F2 | 3 |
 | F4 | ポイント集計 + 一括付与 CSV + comandos de puntos y rangos | F3 | 5 |
 | F5 | Sellos: diseños, 仕様, reglas, クーポンお知らせ, plantillas, comandos | 0.1, F1 | 6 |
-| F6 | アンケート y お客様アンケート (dos familias, un juego de controladores): cabecera, ítems, prueba, emisión, análisis, CSV, respuestas por cliente, encuesta activa, 返信メール | 0.1, M2 | 9 |
+| F6 | アンケート y お客様アンケート (dos familias, un juego de controladores): cabecera, ítems, prueba, emisión, análisis, CSV, respuestas por cliente, encuesta activa, 返信メール — **hecho (S4, 2026-11-27)**, salvo la クリックカウンタ (M4 de S3) | 0.1, M2 | 9 |
 | F7 | 来店履歴 (lista, día, tienda, CSV) + カードリーダ設定 | 0.1; S2 visitas | 3,5 |
 | F8 | スマトピ (opcional) | confirmación de uso | 3 |
 

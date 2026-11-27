@@ -7,9 +7,9 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — Esperar a Antony (ビーコン, GoTel/PDF, volcado de la BD `admin`)
+## Próximo paso — Esperar a S0 / Antony
 
-Hecho: submódulos 1–7, 9 y 10. `signage/` funciona sobre `database/schema/signage-admin.sql` (esquema mínimo reconstruido; la verdad la dará el volcado). Pendientes bloqueados: 11 ビーコン, 8 GoTel/PDF. Si llega el volcado: comparar con `signage-admin.sql` y ajustar modelos.
+Hecho (promocion, por reparto de carga): F6 アンケート/お客様アンケート, F7 来店履歴, M8 DM発行; permisos de mypage (QA). Pendiente: クリックカウンタ de anketo (M4 de S3); en espera de Antony: ビーコン, GoTel/PDF, volcado de `signage/`.
 
 ## Tarea anterior — Diseño (sin código, hecho)
 
@@ -37,6 +37,9 @@ Implementar submódulo por submódulo en el orden del diseño: migraciones, mode
 
 ## Pedidos
 
+- S1: paquete PDF con fuente japonesa (DM, y luego signage/pdf); `@section('ui_version')` en el layout.
+- S3: `MailController::family()/activeAc()` con anketo y 返信メール; marcar encuesta emitida en `MailRegistrar::register()`; edición de envío programado anketo; クリックカウンタ (M4).
+
 - S1: `memory_limit` mayor para la suite (128 MB ya no alcanzan con 600+ pruebas; con 512M pasa).
 
 - S3: servicio común de QR (`qr_img.php`); S5: relación cliente en `UrlTransferData`; S1: helper común de CSV SJIS-win.
@@ -44,6 +47,9 @@ Implementar submódulo por submódulo en el orden del diseño: migraciones, mode
 Ver diseño §5. A S0: BD `admin` de `signage/` (no está en el esquema); GoTel/PDF y ビーコン (Antony). A S1: base de modelos legacy (`disp_flg`, `hatuban`, `ContentsMaster`, `AdminMaster`, `Shop`, `Terminal`), dueño de `tb_mobile_navi`, copia de JS/CSS de carpeta de módulo a `public/legacy/`, paquetes imagen/QR/PDF, conexión `beacon`, Policies.
 
 ## Decisiones
+
+- `ventas` volvió a S2 (S0): mi 0cb4201 revertido en 741543e.
+- DM: PDF con escritor mínimo propio (`DmLabelPdf`, fuente CID KozMinPro sin incrustar, como el FPDF del legacy) hasta que S1 fije paquete PDF; verificar una hoja impresa.
 
 - `signage/`: Gate `senalizacion.manage` = solo master (el legacy entraba con `?s=` y sin menú del CRM); pantallas como vistas PHP planas convertidas del legacy (`SignageLegacyView` silencia avisos como producción); borrados por POST con CSRF; vídeo usa `movie_contents_category` (el legacy usaba la de imágenes).
 
@@ -66,6 +72,8 @@ Ver diseño §5. A S0: BD `admin` de `signage/` (no está en el esquema); GoTel/
 - Config de マイコレ y ガチャリン en `contents_master` (modelo de S1) vía servicios de S4; `mypage_config` sigue con `serialize()` (lo leen `mpa_*`).
 
 ## Hecho
+
+- 2026-11-27 F6 (anketo/anketo2 con `AnketoFamily`, envío vía MailController de S3), F7 (来店履歴 + 3 CSV SJIS-win + カードリーダ設定), M8 (DM + PDF A4×12 propio): suite 829 verde. Permisos de mypage (1685a84).
 
 - 2026-11-27 `signage/`: CMS (端末, パッケージ, サイクル, コンテンツ, ファイル), reproductor `view/` + `ajax.php`, franja horaria corregida (`HH24:MI`); 集計 CSV con `LegacyCsv`. Suite 631 verde (con memory_limit 512M).
 
