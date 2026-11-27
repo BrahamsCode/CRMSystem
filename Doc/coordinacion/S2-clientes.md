@@ -7,7 +7,7 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — Esperar revisión de S0 del diseño v2 (BD y UI del legacy); después D1 (modelos sobre `tb_*`, `Reservation` para S3 y servicios publicados)
+## Próximo paso — Esperar revisión de S0 del diseño v2 (BD y UI del legacy); D1 (modelos sobre `tb_*`, `Reservation` para S3, `VisitService::register`, `CustomerSearch` + `byPhone`, `CustomerFelicaService`) cuando S0 avise de que la base de S1 (`LegacyModel`, traits, `Shop`/`Staff`) está integrada
 
 ## Tarea anterior — Diseño (sin código, HECHO)
 
@@ -58,7 +58,7 @@ Ver `Doc/diseno/clientes-ventas-reservas.md` §5 (S1: `staff`, Gates, rutas púb
 - 2026-11-26: si falta `tb_felica_mode` `cd = 2`, se crea al guardar en vez de no guardar en silencio (defecto del legacy).
 
 - 2026-11-26: estáticos de S2 copiados a `public/legacy/` (32 archivos: `system/category1/{customer,inc}/js`, `karute_menu/css`, `category9/yoyaku/{css,js,img}`, `r/{css,js,img}`), idénticos al legacy; sin Flash (`csv_download*`, `AC_RunActiveContent.js`) ni `uploads/`. `category2` y `category3/reservation` no tienen estáticos propios. No existen ni en el legacy (allí daban 404): `biyou/js/shopping_entry.js`, `config/js/topics_entry.js`, `karute_menu/js/user.js`, `reservation/js/staff_entry.js`, `yoyaku/css/popInline.css`, `yoyaku/js/popInline.js`. Los de `system/js`, `system/css`, `system/plugin`, `/common/` (S1) y `category3/{css,js,smatopi}` (S3) no los copia S2.
-- 2026-11-26: los JS del legacy llaman a URL absolutas (`/system/category1/inc/ajax_search_kaiin.php`, `ajax_raiten_list.php`, `ajax_picupload.php`) y relativas (`./ajax_*.php` en `r/`, `time_table_staff.php`). Al implementar: rutas Laravel en esas mismas URL (alias dentro del grupo admin para `/system/...`; `r/` es URL literal), sin tocar los JS.
+- 2026-11-26: los JS del legacy llaman a URL absolutas (`/system/category1/inc/ajax_search_kaiin.php`, `ajax_raiten_list.php`, `ajax_picupload.php`) y relativas (`./ajax_*.php` en `r/`, `time_table_staff.php`). S0 (CONVENCIONES §2): esas URL van en `routes/legacy/clientes.php` (sin prefijo, `web` + guard del personal, nombre `legacy.clientes.*`; CSRF por `X-CSRF-TOKEN` desde el layout de S1), las pantallas en `routes/modulos/clientes.php`; `r/` en `routes/publico/reservas.php`. Los JS no se tocan.
 
 ## Hecho
 
