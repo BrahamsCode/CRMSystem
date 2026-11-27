@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Base\AreaController;
 use App\Http\Controllers\Admin\Base\AuthorityController;
 use App\Http\Controllers\Admin\Base\IndexController;
 use App\Http\Controllers\Admin\Base\OfficeController;
@@ -41,6 +42,14 @@ Route::name('base.')->group(function () {
         Route::get('authority.php', 'index')->name('index');
         Route::get('ajax_group_authority.php', 'group')->name('group');
         Route::match(['get', 'post'], 'ajax_group_authority_register.php', 'register')->name('register');
+    });
+
+    // エリア管理
+    Route::prefix('system/category0/config')->name('areas.')->controller(AreaController::class)->group(function () {
+        Route::match(['get', 'post'], 'area.php', 'index')->name('index');
+        Route::match(['get', 'post'], 'area_edit.php', 'edit')->name('edit');
+        Route::get('area_confirm.php', 'confirmDelete')->name('confirm');
+        Route::post('area_register.php', 'register')->name('register');
     });
 
     Route::match(['get', 'post'], 'system/category0/shop/shop_category.php', ShopCategoryController::class)->name('shop-categories');
