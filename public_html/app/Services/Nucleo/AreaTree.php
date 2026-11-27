@@ -18,6 +18,30 @@ class AreaTree
     private int $depthMax = 0;
 
     /**
+     * Llamadas `d.add(cd, pid, 'nombre', 'url', …)` del árbol dTree de エリア管理 (areaTree / areaTree_noLink
+     * de inc/function.php). $url = página base de los enlaces ('area.php'); null = sin enlace.
+     */
+    public function dtreeJs(?string $url, string $areaCd = '', int $pid = 0): HtmlString
+    {
+        $areas = DB::table('tb_area')->where('disp_flg', '<>', '9')->where('flg', '1')
+            ->when($pid, fn ($q) => $q->where('pid', $pid), fn ($q) => $q->where(fn ($w) => $w->whereNull('pid')->orWhere('pid', '<', 1)))
+            ->orderBy('row_lis')->get();
+
+        $js = '';
+        foreach ($areas as $area) {
+            $name = json_encode((string) $area->name, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
+            $js .= $url === null
+                ? "d.add({$area->cd}, {$pid},{$name},'javascript: void(0);');"
+                : "d.add({$area->cd}, {$pid},{$name},'{$url}?pid={$area->cd}&category_cd=&area_cd=" . e($areaCd) . "','javascript: void(0);');";
+            if (DB::table('tb_area')->where('pid', $area->cd)->exists()) {
+                $js .= $this->dtreeJs($url, $areaCd, (int) $area->cd);
+            }
+        }
+
+        return new HtmlString($js);
+    }
+
+    /**
      * @param  iterable  $shops  tiendas a colgar del árbol
      * @param  array  $selected  cd de tiendas marcadas
      * @param  string  $inputName  nombre de la casilla (`{shop_cd}` se reemplaza si $coverflow)
