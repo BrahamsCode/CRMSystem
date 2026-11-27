@@ -71,4 +71,30 @@ Route::prefix('system/category3')->name('promocion.')->group(function () {
     Route::get('stamp/stamp_shikkou_mail_template_entry.php', [\App\Http\Controllers\Admin\Promotions\StampPatternController::class, 'legacy'])
         ->name('stamp.stamp_shikkou_mail_template_entry')->defaults('target', 'admin.promocion.stamps.template')->defaults('type', 'shikkou');
     // --- fin F5 ---
+
+    // QRコード情報 (S4, M7): GET de base*.php del menú → pantalla nueva con su type (qr_img.php, pública, en routes/publico/promocion.php)
+    foreach (array_keys(\App\Http\Controllers\Admin\Promotions\QrBaseController::LEGACY_FILES) as $file) {
+        Route::get("mail_mag/$file.php", [\App\Http\Controllers\Admin\Promotions\QrBaseController::class, 'legacy'])
+            ->name("mail_mag.$file")->defaults('file', $file);
+    }
+
+    // プッシュ通知 (S4, M5): AJAX de push_new.php / push_follow_list.php y .php del legacy → pantallas nuevas
+    // (POST de follow_new_confirm / auto con kind = followPush|autoPush a push_new.php: 307, conserva el cuerpo)
+    Route::prefix('push')->name('push.')->group(function () {
+        $ajax = \App\Http\Controllers\Admin\Promotions\PushAjaxController::class;
+        Route::post('ajaxSavePush.php', [$ajax, 'save'])->name('ajax-save');
+        Route::post('ajaxChangeStatus.php', [$ajax, 'status'])->name('ajax-status');
+        Route::post('ajaxSearchMember.php', [$ajax, 'searchMember'])->name('ajax-member');
+        foreach (['push_customer_select' => 'select', 'push_new' => 'create', 'push_complete' => 'complete', 'push_follow_list' => 'follow-list',
+            'push_past' => 'past', 'push_past_shousai' => 'show', 'push_history' => 'history', 'push_history_detail' => 'history.show'] as $file => $name) {
+            Route::match(['get', 'post'], "$file.php", [\App\Http\Controllers\Admin\Promotions\PushController::class, 'legacy'])
+                ->name($file)->defaults('target', "admin.promocion.push.$name");
+        }
+    });
 });
+
+// Subida de imágenes de push_new.js (S4, M5): URL absolutas de system/inc y system/uploads que el JS tiene fijas.
+// Pedido a S1: si otra pantalla las necesita, pasarlas al núcleo (hoy solo las usa push_new.js).
+Route::match(['get', 'post'], 'system/inc/ajax_picupload.php', [\App\Http\Controllers\Admin\Promotions\PushAjaxController::class, 'picUpload'])->name('promocion.push.picupload');
+Route::get('system/uploads/{file}', [\App\Http\Controllers\Admin\Promotions\PushAjaxController::class, 'tempImage'])
+    ->where('file', '[A-Za-z0-9_.-]+')->name('promocion.push.picupload-temp');

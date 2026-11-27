@@ -216,4 +216,26 @@ Route::prefix('promocion')->name('promocion.')->group(function () {
         Route::post('oshirase_coupon_register', [\App\Http\Controllers\Admin\Promotions\StampOshiraseController::class, 'store'])->name('oshirase.store');
     });
     // --- fin F5 ---
+
+    // QRコード情報 / メールマガジン基本情報 (mail_mag/base*.php) — S4 (M7): una pantalla con ?type=base|mailmaga|mycolle|point
+    Route::prefix('mail_mag')->name('base.')->group(function () {
+        Route::get('base', [\App\Http\Controllers\Admin\Promotions\QrBaseController::class, 'show'])->name('show');
+        Route::get('qr_img', \App\Http\Controllers\Publico\Promotions\QrImageController::class)->name('qr');
+        Route::get('base_download', [\App\Http\Controllers\Admin\Promotions\QrBaseController::class, 'download'])->name('download');
+        Route::post('qr_print_pdf', [\App\Http\Controllers\Admin\Promotions\QrBaseController::class, 'print'])->name('qr-print');
+    });
+
+    // プッシュ通知 (push/) — S4 (M5): 発行条件選択 (motor de S3, mailType = push), 新規作成/修正, 完了, 予定/フォロー/自動の一覧,
+    // 過去配信 y プッシュ集計. El AJAX y las .php del menú están en routes/legacy/promocion.php
+    Route::prefix('push')->name('push.')->group(function () {
+        $push = \App\Http\Controllers\Admin\Promotions\PushController::class;
+        Route::match(['get', 'post'], 'push_customer_select', [$push, 'select'])->name('select');
+        Route::match(['get', 'post'], 'push_new', [$push, 'create'])->name('create');
+        Route::get('push_complete', [$push, 'complete'])->name('complete');
+        Route::match(['get', 'post'], 'push_follow_list', [$push, 'followList'])->name('follow-list');
+        Route::match(['get', 'post'], 'push_past', [\App\Http\Controllers\Admin\Promotions\PushPastController::class, 'index'])->name('past');
+        Route::get('push_past_shousai', [\App\Http\Controllers\Admin\Promotions\PushPastController::class, 'show'])->name('show');
+        Route::match(['get', 'post'], 'push_history', [\App\Http\Controllers\Admin\Promotions\PushHistoryController::class, 'index'])->name('history');
+        Route::get('push_history_detail', [\App\Http\Controllers\Admin\Promotions\PushHistoryController::class, 'show'])->name('history.show');
+    });
 });
