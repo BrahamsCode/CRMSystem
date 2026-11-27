@@ -17,6 +17,7 @@ beforeEach(function () {
     seedNucleo();
     pushSeed();
     Http::fake();
+    config(['crm.gapi.enabled' => true]); // las pruebas comprueban la llamada a g-api
 });
 
 it('primera pasada: solo anota la hora; luego genera los push que tocan y reprograma', function () {

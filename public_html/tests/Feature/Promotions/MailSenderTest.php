@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Mail;
 beforeEach(function () {
     Mail::fake();
     Http::fake();
+    config(['crm.gapi.enabled' => true]); // las pruebas comprueban la llamada a g-api
     $this->travelTo(Carbon::parse('2026-11-26 10:00:00', 'Asia/Tokyo'));
 
     DB::table('admin_master')->insert(['cd' => 1, 'domain' => 'shop.crm-s.net', 'mail_footer' => '', 'mail_send_filter' => '', 'mailmag_sended_log' => '1<>1', 'system_mail' => 'eigyo@example.com', 'application_use_flg' => 1, 'push_api_host' => '1']);
