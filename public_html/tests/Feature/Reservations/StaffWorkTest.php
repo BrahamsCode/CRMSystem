@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/helpers.php';
+
 use Illuminate\Support\Facades\DB;
 
 /*
@@ -7,7 +9,7 @@ use Illuminate\Support\Facades\DB;
  */
 
 beforeEach(function () {
-    \Tests\Feature\Reservations\ScreenSetup::boot();
+    reservasLogin();
 
     DB::table('tb_yoyaku_koumoku_category')->insert(['cd' => 1, 'name' => 'カット系', 'hyouji_flg' => '1', 'disp_flg' => '1', 'rank' => 1]);
     DB::table('tb_yoyaku_koumoku_master')->insert([

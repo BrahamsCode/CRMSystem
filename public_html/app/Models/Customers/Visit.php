@@ -14,8 +14,7 @@ use Illuminate\Support\Carbon;
  * - `user_cd` = `tb_customer.cd`, `user_id` = `tb_customer.id`, `shop_cd` = tienda.
  * - `raiten_time`: epoch en texto; `raiten_hiduke`: día de negocio 'Y/m/d' (corte a las 05:00).
  * - `customer_age/sex/job`: datos del cliente en el momento de la visita.
- * - `disp_flg`: el legacy inserta NULL y considera visible todo lo que no sea '9'
- *   (`COALESCE(disp_flg, '') <> '9'`), por eso usa VisitDeletedScope en lugar del scope común.
+ * - `disp_flg`: el legacy inserta NULL y considera visible todo lo que no sea '9' (el scope común ya usa COALESCE).
  */
 class Visit extends LegacyModel
 {
@@ -35,12 +34,6 @@ class Visit extends LegacyModel
         'tb_stamp_log_cd' => 'integer',
         'tb_search_cate_cd' => 'integer',
     ];
-
-    /** Sustituye al scope común: aquí un `disp_flg` NULL es una visita visible */
-    public static function bootLegacySoftDeletes(): void
-    {
-        static::addGlobalScope(new VisitDeletedScope);
-    }
 
     public function customer(): BelongsTo
     {

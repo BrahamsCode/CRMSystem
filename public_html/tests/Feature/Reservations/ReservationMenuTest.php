@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/helpers.php';
+
 use App\Models\Reservations\Facility;
 use App\Models\Reservations\ReservationMenu;
 use App\Models\Reservations\ReservationMenuCategory;
@@ -10,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 // 予約項目管理 (legacy: yoyaku_koumoku_new.php, yoyaku_koumoku_register.php, ajax_yoyaku_koumoku_new.php)
 
 beforeEach(function () {
-    \Tests\Feature\Reservations\ScreenSetup::boot();
+    reservasLogin();
 });
 
 function menuFormData(array $overrides = []): array
@@ -39,7 +41,7 @@ it('carga la pantalla con el formulario de la tienda', function () {
 it('muestra 設備設定 solo si admin_master.yoyaku_setsubi_flg = 1', function () {
     $this->get(route('admin.reservas.menus.index', ['shop' => 1]))->assertDontSee('設備設定');
 
-    DB::table('admin_master')->insert(['cd' => 1, 'yoyaku_setsubi_flg' => '1']);
+    DB::table('admin_master')->where('cd', 1)->update(['yoyaku_setsubi_flg' => '1']);
     Facility::create(['tb_shop_cd' => 1, 'name' => 'ベッドA', 'quantity' => 2, 'disp_flg' => '1']);
 
     $this->get(route('admin.reservas.menus.index', ['shop' => 1]))
