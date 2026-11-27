@@ -18,11 +18,16 @@ use Illuminate\Support\Facades\DB;
  *
  * Idempotente: cada fila se busca por su clave natural (nombre de tienda, área, grupo, `login_id`) antes
  * de crearla. No toca la tienda ni el staff del backup (master conserva su clave). Lo único que cambia de
- * lo existente es configuración: `system_flg` de módulos y opciones de menú, y dos banderas de admin_master.
+ * lo existente es configuración: `system_flg` de módulos y opciones de menú, banderas de admin_master y el 歩合
+ * de master si no tiene.
  *
  * Staff de demo: contraseña común DEMO_PASSWORD; `tencho_<tienda>` (店長, todos los permisos) y
- * `<tienda>01/02` (スタッフ, sin borrar ni CSV y solo ver スタッフ管理). Nombres fijos (no Faker) para
- * que kanji y kana coincidan; correos @example.com y teléfonos 090-0000-xxxx.
+ * `<tienda>01/02` (スタッフ, sin borrar ni CSV y solo ver スタッフ管理); `qa_partial` (QA部分権限, LIMITED_PASSWORD:
+ * solo 閲覧 y nada en un contenido por módulo) y `taishoku01` (退職). Nombres fijos (no Faker) para que kanji y
+ * kana coincidan; correos @example.com y teléfonos 090-0000-xxxx. 歩合 (kingaku_buai) según BUAI.
+ *
+ * Casos límite: 心斎橋店 de baja (disp_flg 9), una tienda con nombre de 255 caracteres y 天王寺店 sin campos
+ * opcionales (sin área ni grupo).
  */
 class NucleoDemoSeeder extends Seeder
 {
@@ -75,9 +80,30 @@ class NucleoDemoSeeder extends Seeder
             'email' => 'kyoto@example.com', 'area' => '京都', 'category' => 'フランチャイズ',
             'latitude' => 34.9858, 'longitude' => 135.7588,
         ],
+        // Casos límite (CONVENCIONES §4): tienda de baja (como 削除 de shop_delete_register.php), nombre largo hasta
+        // el máximo de kaishamei (varchar 255) y una con solo los campos que pide el alta (sin área ni grupo)
+        'shinsaibashi' => [
+            'kaishamei' => '心斎橋店', 'kaishamei_kana' => 'シンサイバシテン', 'zip' => '5420085', 'pref' => '大阪府',
+            'add' => '大阪市中央区心斎橋筋', 'add_kana' => 'オオサカシチュウオウクシンサイバシスジ', 'add_number' => '2-1',
+            'tel' => '09000001004', 'email' => 'shinsaibashi@example.com', 'area' => '大阪', 'category' => '直営店',
+            'disp_flg' => '9',
+        ],
+        'long' => [
+            'kaishamei' => null, 'kaishamei_kana' => 'デモチョウメイテンポ', 'zip' => '5300011', 'pref' => '大阪府',
+            'add' => '大阪市北区大深町', 'add_kana' => 'オオサカシキタクオオフカチョウ', 'add_number' => '9-9-9',
+            'add_build' => 'デモグランフロント北館タワーＣ２７階デモ長名称テナント区画', 'tel' => '09000001005',
+            'email' => 'long@example.com', 'area' => '大阪', 'category' => 'フランチャイズ',
+        ],
+        'tennoji' => ['kaishamei' => '天王寺店', 'kaishamei_kana' => 'テンノウジテン'],
     ];
 
-    /** Staff: [login_id, tienda (null = la tienda 1 del backup), grupo, nombre, kana, 性別, 雇用形態, 生年月日, 入社日] */
+    /** Base del nombre largo: se repite hasta 255 caracteres, el máximo de tb_shop.kaishamei (ver longName()) */
+    private const LONG_NAME_BASE = 'デモ長名称店舗ヴィヴァテック関西エリア統括本部直営大阪北区大深町グランフロント北館店';
+
+    /**
+     * Staff: [login_id, tienda (null = la tienda 1 del backup), grupo, nombre, kana, 性別, 雇用形態, 生年月日, 入社日, extras].
+     * extras: `pass` (por defecto DEMO_PASSWORD) y `disp_flg` (9 = 退職, como staff_delete_register.php).
+     */
     private const STAFF = [
         ['tencho_honten', null, '店長', '佐藤 健一', 'サトウ ケンイチ', '男性', '正社員', '1978/04/12', '2008/04/01'],
         ['tencho_umeda', 'umeda', '店長', '高橋 美咲', 'タカハシ ミサキ', '女性', '正社員', '1985/09/03', '2012/04/01'],
@@ -89,7 +115,28 @@ class NucleoDemoSeeder extends Seeder
         ['tencho_kyoto', 'kyoto', '店長', '小林 由美', 'コバヤシ ユミ', '女性', '正社員', '1980/02/25', '2009/04/01'],
         ['kyoto01', 'kyoto', 'スタッフ', '加藤 陽菜', 'カトウ ヒナ', '女性', '契約社員', '1997/12/09', '2020/04/01'],
         ['kyoto02', 'kyoto', 'スタッフ', '吉田 蓮', 'ヨシダ レン', '男性', 'アルバイト', '2002/08/18', '2024/04/01'],
+        // Usuario limitado para probar permisos (como el antiguo qa_partial de crmsystem2_nucleo, que migrate:fresh borra)
+        ['qa_partial', 'umeda', self::LIMITED_GROUP, '品質 確認', 'ヒンシツ カクニン', '女性', '契約社員', '1999/02/28', '2025/04/01', ['pass' => self::LIMITED_PASSWORD]],
+        // 退職 (disp_flg 9): no entra ni sale en listas de activos
+        ['taishoku01', 'namba', 'スタッフ', '松本 隆', 'マツモト タカシ', '男性', 'アルバイト', '1998/06/30', '2019/04/01', ['disp_flg' => '9']],
+        // Kana de ancho medio y la tienda de nombre largo
+        ['long01', 'long', 'スタッフ', '長谷川 千代子', 'ﾊｾｶﾞﾜ ﾁﾖｺ', '女性', 'パート', '1972/02/29', '2016/02/29'],
     ];
+
+    public const LIMITED_GROUP = 'QA部分権限';
+
+    public const LIMITED_PASSWORD = 'qa12345';
+
+    /** 歩合 (tb_staff.kingaku_buai, %) por grupo; master recibe el de 店長 si no tiene */
+    private const BUAI = ['店長' => 15, 'スタッフ' => 10, self::LIMITED_GROUP => 5];
+
+    /**
+     * QA部分権限: 閲覧 solo en todo (sin alta, edición ni borrado) y nada en un contenido de cada módulo con kengen:
+     * 1002 csv出力 (顧客管理), 1009 クーポン管理 (販売促進管理), 1035 マイコレ管理 (マイページ管理), 1027 予約項目管理 y
+     * 1029 予約設定 (予約管理). 1024 スタッフ管理 queda en solo 閲覧 (業務支援管理: sin スタッフ新規登録). 端末管理 no
+     * usa kengen en el legacy y 基本情報管理 es solo de master.
+     */
+    private const LIMITED_NONE = [1002, 1009, 1027, 1029, 1035];
 
     /** Contenidos de permiso que スタッフ no tiene enteros: cd => [閲覧, 新規, 編集, 削除] */
     private const STAFF_LIMITS = [1002 => [0, 0, 0, 0], 1024 => [1, 0, 0, 0], 1034 => [0, 0, 0, 0]];
@@ -185,43 +232,50 @@ class NucleoDemoSeeder extends Seeder
         return $cds;
     }
 
+    /** Nombre de 255 caracteres (multibyte) para la tienda de nombre largo */
+    public static function longName(): string
+    {
+        return mb_substr(str_repeat(self::LONG_NAME_BASE, 10), 0, 255);
+    }
+
     /** @return array<string, int> clave => cd */
     private function shops(array $categories, array $areas): array
     {
         $cds = [];
         foreach (self::SHOPS as $key => $data) {
+            $data['kaishamei'] ??= self::longName();
             $staff = collect(self::STAFF)->first(fn ($s) => $s[1] === $key && $s[2] === '店長');
-            $shop = Shop::query()->where('kaishamei', $data['kaishamei'])->first()
+            $shop = Shop::withDeleted()->where('kaishamei', $data['kaishamei'])->first() // también la de baja
                 ?? Shop::create([
                     'master_cd' => 1,
                     'kaishamei' => $data['kaishamei'],
                     'kaishamei_kana' => $data['kaishamei_kana'],
-                    'zip' => $data['zip'],
-                    'pref' => $data['pref'],
-                    'add' => $data['add'],
-                    'add_kana' => $data['add_kana'],
-                    'add_number' => $data['add_number'],
-                    'add_build' => $data['add_build'],
-                    'add_build_kana' => $data['add_build_kana'],
-                    'tel' => $data['tel'],
-                    'mycolle_tel' => $data['tel'],
+                    'zip' => $data['zip'] ?? '',
+                    'pref' => $data['pref'] ?? '',
+                    'add' => $data['add'] ?? '',
+                    'add_kana' => $data['add_kana'] ?? '',
+                    'add_number' => $data['add_number'] ?? '',
+                    'add_build' => $data['add_build'] ?? '',
+                    'add_build_kana' => $data['add_build_kana'] ?? '',
+                    'tel' => $data['tel'] ?? '',
+                    'mycolle_tel' => $data['tel'] ?? '',
                     'fax' => '',
-                    'email' => $data['email'],
+                    'email' => $data['email'] ?? '',
                     'shop_url' => '',
-                    'tantou' => $staff[3],
-                    'tantou_kana' => $staff[4],
+                    'tantou' => $staff[3] ?? '',
+                    'tantou_kana' => $staff[4] ?? '',
                     'kyuyo_marume' => '15',
                     'start_work_time' => '10<>00',
                     'break_time' => '60',
-                    'shop_category_cd' => $categories[$data['category']],
-                    'area_cd' => $areas[$data['area']],
-                    'latitude' => $data['latitude'],
-                    'longitude' => $data['longitude'],
+                    'shop_category_cd' => isset($data['category']) ? $categories[$data['category']] : null,
+                    'area_cd' => isset($data['area']) ? $areas[$data['area']] : null,
+                    'latitude' => $data['latitude'] ?? null,
+                    'longitude' => $data['longitude'] ?? null,
                     'is_closed' => 0,
                     'is_new_store' => 0,
                     'beacon_visiting_area' => 0,
                     'beacon_accounting_area' => 0,
-                    'disp_flg' => '1',
+                    'disp_flg' => $data['disp_flg'] ?? '1',
                 ]);
             $cds[$key] = $shop->cd;
         }
@@ -229,11 +283,11 @@ class NucleoDemoSeeder extends Seeder
         return $cds;
     }
 
-    /** Grupos 店長/スタッフ y su fila de tb_kengen por contenido visible (como 権限管理) */
+    /** Grupos 店長/スタッフ/QA部分権限 y su fila de tb_kengen por contenido visible (como 権限管理) */
     private function staffGroups(): array
     {
         $cds = [];
-        foreach (['店長', 'スタッフ'] as $name) {
+        foreach (['店長', 'スタッフ', self::LIMITED_GROUP] as $name) {
             $group = StaffGroup::query()->where('name', $name)->first()
                 ?? StaffGroup::create([
                     'name' => $name,
@@ -248,7 +302,11 @@ class NucleoDemoSeeder extends Seeder
                 if (in_array((int) $contentsCd, $existing, true)) {
                     continue;
                 }
-                $flags = $name === '店長' ? [1, 1, 1, 1] : (self::STAFF_LIMITS[(int) $contentsCd] ?? [1, 1, 1, 0]);
+                $flags = match ($name) {
+                    '店長' => [1, 1, 1, 1],
+                    'スタッフ' => self::STAFF_LIMITS[(int) $contentsCd] ?? [1, 1, 1, 0],
+                    default => in_array((int) $contentsCd, self::LIMITED_NONE, true) ? [0, 0, 0, 0] : [1, 0, 0, 0],
+                };
                 DB::table('tb_kengen')->insert([
                     'cd' => $this->hatuban->next('tb_kengen'),
                     'tb_staff_group_cd' => $group->cd,
@@ -271,7 +329,13 @@ class NucleoDemoSeeder extends Seeder
     {
         $headShop = (int) DB::table('tb_shop')->where('disp_flg', '1')->orderBy('cd')->value('cd');
         foreach (self::STAFF as $i => [$loginId, $shopKey, $group, $name, $kana, $sex, $employment, $birthday, $entrance]) {
+            $extras = self::STAFF[$i][9] ?? [];
+            $buai = self::BUAI[$group];
             if (Staff::withDeleted()->where('login_id', $loginId)->exists()) {
+                // Sembrado por la versión anterior de este seeder, con 歩合 0: se completa
+                DB::table('tb_staff')->where('login_id', $loginId)->where(fn ($q) => $q->whereNull('kingaku_buai')->orWhere('kingaku_buai', 0))
+                    ->update(['kingaku_buai' => $buai]);
+
                 continue;
             }
             $shopCd = $shopKey === null ? $headShop : $shops[$shopKey];
@@ -285,7 +349,7 @@ class NucleoDemoSeeder extends Seeder
                 'shop_cd' => $shopCd,
                 'id' => $shopCd . '1' . sprintf('%05d', $count),
                 'login_id' => $loginId,
-                'login_pass' => self::DEMO_PASSWORD,
+                'login_pass' => $extras['pass'] ?? self::DEMO_PASSWORD,
                 'rank_pass' => '',
                 'name' => $name,
                 'name_kana' => $kana,
@@ -298,12 +362,16 @@ class NucleoDemoSeeder extends Seeder
                 'reserve_flg' => '1',
                 'tb_staff_group_cd' => $groups[$group],
                 'pos_rank' => 10,
-                'kingaku_buai' => 0,
+                'kingaku_buai' => $buai,
                 'synchronize_flg' => '',
                 'touroku_date' => $now,
                 'update_date' => $now,
-                'disp_flg' => Staff::ACTIVE_FLAG,
+                'disp_flg' => $extras['disp_flg'] ?? Staff::ACTIVE_FLAG,
             ]);
         }
+
+        // Pedido de S2 (informes de 歩合 en 0): master recibe el de 店長 solo si no tiene, para no pisar un valor real
+        DB::table('tb_staff')->where('login_id', 'master')->where(fn ($q) => $q->whereNull('kingaku_buai')->orWhere('kingaku_buai', 0))
+            ->update(['kingaku_buai' => self::BUAI['店長']]);
     }
 }
