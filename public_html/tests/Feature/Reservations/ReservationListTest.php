@@ -144,13 +144,13 @@ it('yoyaku_list_print: lista del día con columnas de tb_koumoku y datos del soc
     $this->get(route('admin.reservas.print'))->assertOk()->assertContent('');
 });
 
-it('csv_download: CSV SJIS-win del último 予約一覧出力', function () {
+it('csv_download: CSV SJIS-win del último 予約一覧出力 (Content-Type con charset=Shift_JIS)', function () {
     listReservation(1, $this->slot->cd, 10 * 3600, 11 * 3600, ['tb_customer_cd' => 500]);
 
     $this->get(route('admin.reservas.print', ['shop' => 1, 'd' => '20261201']))->assertOk();
     $response = $this->post('/system/category9/yoyaku/print/csv_download.php', ['titleflg' => '1', 'flg' => 'upload'])->assertOk();
 
-    expect($response->headers->get('content-type'))->toContain('text/x-csv')
+    expect($response->headers->get('content-type'))->toBe('text/x-csv; charset=Shift_JIS')
         ->and($response->headers->get('content-disposition'))->toContain('yoyaku.csv');
     $csv = mb_convert_encoding($response->streamedContent(), 'UTF-8', 'SJIS-win');
     expect($csv)->toBe(
