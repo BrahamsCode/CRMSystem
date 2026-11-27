@@ -88,6 +88,7 @@
   - S4: submódulos 1–5 completos y los menús de category6/7.
   - S5: スタッフグループ, 検索項目, インフォメーション y `point_use`.
   `laravel13` queda con 360 pruebas en verde. En los worktrees aparecen fallos sueltos (QueryException) en pruebas de otros módulos cuando varias sesiones corren pruebas a la vez o cuando `vendor/` está a medio instalar; al repetir pasan. Se integra con la corrida limpia en `CRMSystem/`.
+- 2026-11-27 (00:35): integrados 基本情報確認・変更, el asistente de primer acceso y 権限管理 (S1), F1a マイクーポン (S3) y el reproductor `digitalsignage` HTML5 (S4). `laravel13` con 383 pruebas en verde. `MobileShopContractTest` falla solo en el worktree de S4 (entorno de ese worktree) y pasa en `CRMSystem/`. S1, S3 y S4 se detuvieron por límite de uso; sus pendientes están en su archivo de estado.
 - 2026-11-27: siguiente tarea de S1 (Antony: el login primero): modelo base y traits comunes, luego el login contra el personal del legacy, el layout idéntico y los estáticos comunes.
 
 ## Hecho
