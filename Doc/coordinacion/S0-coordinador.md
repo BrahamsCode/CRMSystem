@@ -115,6 +115,12 @@
   - Integrados `signage/` de S4 (CMS, reproductor `view/` y esquema mínimo, a la espera del volcado), appview lote A de S5 (20 contratos) y utilidades (shukei ⏸: escribe en la BD externa de VIZAN). `laravel13` con 651 pruebas en verde.
   - `phpunit.xml` con `memory_limit` de 512M: la suite moría por memoria con 128M.
   - Reparto: el módulo `ventas` (販売管理 + `karute_menu`, V1–V3, ≈10 pts) pasa de S2 a S4, que se quedó libre (solo le quedan ビーコン y GoTel/PDF, que esperan a Antony). S2 sigue con lo más largo: C3–C7 y R4–R6.
+- 2026-11-27 (02:20):
+  - Integrados C3 y R4 de S2, que incluyen las ventas V1–V3 ya hechas; F2 y F3 de S3 (menú de promoción con el contrato §6) y appview lote B de S5 (45 contratos; `coupon_control act=use` da 500 en el legacy y aquí sí usa el cupón: anotado para Japón). `laravel13` con 709 pruebas en verde.
+  - ERROR MÍO: pasé `ventas` a S4 sin comprobar que S2 ya lo había terminado. S4 lo rehízo (0cb4201): NO se integra y se queda la de S2 (ya integrada y sin el CSV que el legacy no tenía). `ventas` vuelve a S2 en CONVENCIONES. Antes de reasignar, comprobar el estado en el diseño.
+  - Reparto: a S4 le paso, dentro de `promocion`, F6 (アンケート), F7 (来店履歴) y M8 (DM発行), con los modelos `Anketo*`. S3 sigue con el resto.
+  - La QA visual de S1 (7d54d3a + 0f029ca) espera a que S2 quite sus rutas `system/category9` y `index.php`: las portadas son del núcleo (NUCLEO.md §3) y con las dos falla `CategoryTopTest`.
+  - Felica `terminal_list` con la UI clásica, como la muestra (paridad).
 - 2026-11-27: siguiente tarea de S1 (Antony: el login primero): modelo base y traits comunes, luego el login contra el personal del legacy, el layout idéntico y los estáticos comunes.
 
 ## Hecho
