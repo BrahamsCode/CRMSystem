@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Base\AccessTerminalController;
 use App\Http\Controllers\Admin\Base\AreaController;
 use App\Http\Controllers\Admin\Base\AuthorityContentsController;
 use App\Http\Controllers\Admin\Base\AuthorityController;
@@ -53,6 +54,14 @@ Route::name('base.')->group(function () {
             Route::match(['get', 'post'], 'authority_contents_list.php', 'index')->name('index');
             Route::get('authority_contents.php', 'form')->name('form');
             Route::post('ajax_authority_contents_register.php', 'register')->name('register');
+        });
+
+    // CRM端末管理 (mantenimiento); slim_href / slim_del_href son la vuelta del popup de ac.crm-s.jp (iframe, GET)
+    Route::prefix('system/category0/config')->name('access-terminals.')->middleware('can:nucleo.maintenance')
+        ->controller(AccessTerminalController::class)->group(function () {
+            Route::match(['get', 'post'], 'slim_list.php', 'index')->name('index');
+            Route::match(['get', 'post'], 'slim_href.php', 'registered')->name('registered');
+            Route::match(['get', 'post'], 'slim_del_href.php', 'deleted')->name('deleted');
         });
 
     // エリア管理
