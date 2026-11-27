@@ -21,7 +21,7 @@ return [
             ['label' => 'マイコレ登録用QR', 'url' => '/system/category3/mail_mag/base_mycolle.php'],
             ['label' => 'メルマガ用QR', 'url' => '/system/category3/mail_mag/base_mailmaga.php'],
             ['label' => 'ポイント利用QR', 'url' => '/system/category3/mail_mag/base_point.php'],
-            ['label' => '新規お知らせ配信', 'url' => '/system/category3/mail_mag/mail_customer_select.php', 'kengen' => [1005, 2]],
+            ['label' => '新規お知らせ配信', 'route' => 'admin.promocion.mail.select', 'kengen' => [1005, 2]],
             ['label' => '予定配信お知らせ一覧', 'url' => '/system/category3/mail_mag/mail_future_list.php', 'kengen' => [1005, 1]],
             ['label' => '過去配信お知らせ一覧', 'url' => '/system/category3/mail_mag/mail_past.php', 'kengen' => [1005, 1]],
             ['label' => 'テンプレート管理', 'route' => 'admin.promocion.templates.index'],
