@@ -49,8 +49,8 @@ class StaffShiftController extends Controller
             'hours' => $hours,
             'shifts' => $this->board->dayShifts($rows, $day),
             'kinds' => StaffShiftKind::ordered()->get(['cd', 'name', 'color']),
-            // Los 3 calendarios del legacy: mes anterior, actual y siguiente respecto de hoy
-            'calendars' => [$today->copy()->startOfMonth()->subMonth(), $today->copy()->startOfMonth(), $today->copy()->startOfMonth()->addMonth()],
+            // Los 3 calendarios del legacy: mes actual y los dos siguientes respecto de hoy (mktime con 1 + (m-1 … m+1))
+            'calendars' => [$today->copy()->startOfMonth(), $today->copy()->startOfMonth()->addMonth(), $today->copy()->startOfMonth()->addMonths(2)],
             'print' => $request->has('print'),
         ]);
     }

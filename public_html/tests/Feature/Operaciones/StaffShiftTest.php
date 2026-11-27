@@ -117,3 +117,15 @@ it('月別シフト管理: un empleado, una fila por día del mes, guardado de t
     $this->post('/admin/operaciones/shifts/month', ['shop_cd' => '2', 'staff_cd' => '22', 'd' => '20260201', 'sch' => ['0_1_2__']]);
     expect(DB::table('tb_staff_shift')->where('staff_cd', 22)->exists())->toBeFalse();
 });
+
+it('日別シフト管理: calendarios del mes actual y los dos siguientes y la fecha como enlace (QA contra la muestra)', function () {
+    seedShiftBoard();
+    loginAs('master', 'secreto1');
+    $this->travelTo(CarbonImmutable::create(2026, 11, 27, 12, 0, 0, 'Asia/Tokyo'));
+
+    $this->get('/admin/operaciones/shifts/day?shop_cd=2&d=20260305')
+        ->assertOk()
+        ->assertSeeInOrder(['2026年11月', '2026年12月', '2027年1月'])
+        ->assertDontSee('2026年10月')
+        ->assertSee('<div id="dateDisp"><a href="'.e(route('admin.operaciones.shifts.day', ['d' => '20260305', 'shop_cd' => 2])).'">03/05<span>', false);
+});
