@@ -267,7 +267,7 @@ function deletePic() {
 <p class="h2Title">■{{ $toolName }}内容設定</p>
 <p><span class="attention">※</span>マークがある項目は、必須項目です。（空白にはしないで下さい）</p>
 
-	  <form action="{{ $routes['confirm'] }}" method="post" enctype="multipart/form-data" name="mail_form" id="mail_form" class="form" onsubmit="return Check_form()" style="margin-bottom: 300px;">
+	  <form action="{{ $registerType === 'update' ? $routes['editConfirm'] : $routes['confirm'] }}" method="post" enctype="multipart/form-data" name="mail_form" id="mail_form" class="form" onsubmit="return Check_form()" style="margin-bottom: 300px;">
 	  @csrf
 
 <table class="tableBox">
@@ -515,8 +515,8 @@ function deletePic() {
 <input type="hidden" name="mailmagcd" id="mailmagcd" value="{{ $v('mailmagcd') }}" />
 @endif
 {!! $hiddenFields($carry) !!}
-@if ($registerType === 'update')
-<input type="button" name="dummy_btn" id="dummy_btn" value="予定解除する" onClick="document.delete_btn.submit()">
+@if ($registerType === 'update' && ($canCancel ?? false))
+<input type="button" name="dummy_btn" id="dummy_btn" class="btnStyleM" value="予定解除する" onClick="document.delete_btn.submit()">
 @endif
 @if ($displayParameters)
 <input type="hidden" name="display_parameters" value="{{ $displayParameters }}" />
@@ -526,7 +526,7 @@ function deletePic() {
 </form>
 
 @if ($registerType === 'update')
-<form name="delete_btn" action="{{ $routes['cancel'] ?? '' }}" method="post">
+<form name="delete_btn" action="{{ $routes['cancel'] }}" method="post">
 @csrf
 <input type="hidden" name="mailmagcd" value="{{ $v('mailmagcd') }}">
 </form>

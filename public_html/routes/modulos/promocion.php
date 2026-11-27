@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\Promotions\MailAjaxController;
 use App\Http\Controllers\Admin\Promotions\MailController;
+use App\Http\Controllers\Admin\Promotions\MailPastController;
 use App\Http\Controllers\Admin\Promotions\TemplateCategoryController;
 use App\Http\Controllers\Admin\Promotions\TemplateController;
 use App\Http\Controllers\Admin\Promotions\TestAddressController;
@@ -26,9 +27,22 @@ Route::prefix('promocion')->name('promocion.')->group(function () {
             Route::match(['get', 'post'], 'mail_new', [MailController::class, 'create'])->name('create')->defaults('mailType', $type);
             Route::post('mail_new_confirm', [MailController::class, 'confirm'])->name('confirm')->defaults('mailType', $type);
             Route::post('mail_new_send', [MailController::class, 'store'])->name('store')->defaults('mailType', $type);
+
+            // 予定配信: lista, 修正, 確認, 登録 y 予定解除
+            Route::match(['get', 'post'], 'mail_future_list', [MailController::class, 'future'])->name('future')->defaults('mailType', $type);
+            Route::match(['get', 'post'], 'mail_future', [MailController::class, 'edit'])->name('edit')->defaults('mailType', $type);
+            Route::post('mail_future_confirm', [MailController::class, 'confirm'])->name('edit-confirm')->defaults('mailType', $type);
+            Route::post('mail_future_send', [MailController::class, 'store'])->name('update')->defaults('mailType', $type);
+            Route::post('mail_kaijo', [MailController::class, 'cancel'])->name('cancel')->defaults('mailType', $type);
+
+            // 過去配信: lista, 詳細 y 配信先 (+ CSV)
+            Route::match(['get', 'post'], 'mail_past', [MailPastController::class, 'index'])->name('past')->defaults('mailType', $type);
+            Route::get('mail_past_shousai', [MailPastController::class, 'show'])->name('show')->defaults('mailType', $type);
+            Route::match(['get', 'post'], 'mail_sended_list', [MailPastController::class, 'recipients'])->name('recipients')->defaults('mailType', $type);
         });
     }
     Route::get('mail_mag/customer_list', [MailController::class, 'customers'])->name('mail.customers');
+    Route::post('mail_mag/csv_shousai_download', [MailPastController::class, 'clicksCsv'])->name('mail.clicks-csv');
 
     // Imagen adjunta (staff_entry.js: rutas relativas a la carpeta de la pantalla)
     Route::post('mail_mag/inc/upload.php', [MailAjaxController::class, 'upload'])->name('mail.upload');

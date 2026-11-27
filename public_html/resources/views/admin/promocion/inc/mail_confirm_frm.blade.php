@@ -180,6 +180,24 @@ function sendTestMail() {
 
 <div class="btnBox">
 
+@if ($update ?? false)
+<form action="{{ $routes['edit'] }}" method="post">
+@csrf
+<input type="submit" class="backBtnStyleM" value="戻　　る">
+<input name="back_flg" type="hidden" value="1">
+{!! $hiddenFields($in, ['back_flg', 'flg']) !!}
+<input type="hidden" name="flg" value="1">
+</form>
+@if (! $pastTime && ! $error)
+<form action="{{ $routes['update'] }}" method="post">
+@csrf
+<input type="submit" name="act" class="btnStyleM" value="配信する">
+<input type="hidden" name="mail_send_verify" id="mail_send_verify" value="{{ $verify }}" />
+{!! $hiddenFields($in, ['flg', 'act', 'mail_send_verify']) !!}
+<input type="hidden" name="flg" value="1">
+</form>
+@endif
+@else
 @if (! $pastTime)
 <form action="{{ $routes['select'] }}" method="post">
 @csrf
@@ -210,6 +228,8 @@ function sendTestMail() {
 {!! $hiddenFields($in, ['flg', 'act', 'mail_send_verify']) !!}
 <input type="hidden" name="flg" value="1" />
 </form>
+@endif
+
 @endif
 
 </div>

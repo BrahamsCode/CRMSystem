@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\Promotions\MailAjaxController;
+use App\Http\Controllers\Admin\Promotions\MailPastController;
 use App\Http\Controllers\Admin\Promotions\TemplateCategoryController;
 use App\Http\Controllers\Admin\Promotions\TemplateController;
 use App\Http\Controllers\Admin\Promotions\TestAddressController;
@@ -25,5 +26,6 @@ Route::prefix('system/category3')->name('legacy.promocion.')->group(function () 
     Route::match(['get', 'post'], 'inc/ajax_search_coupon.php', [MailAjaxController::class, 'searchCoupon'])->name('inc.ajax_search_coupon');
     Route::match(['get', 'post'], 'inc/ajax_testMailList.php', [MailAjaxController::class, 'testMailList'])->name('inc.ajax_test_mail_list');
     Route::post('inc/ajax_sendTestMail.php', [MailAjaxController::class, 'sendTestMail'])->name('inc.ajax_send_test_mail');
+    Route::post('inc/ajax_mail_delete.php', [MailPastController::class, 'destroy'])->name('inc.ajax_mail_delete');
     Route::match(['get', 'post'], 'inc/ajax_reigai_kaiin.php', [MailAjaxController::class, 'exceptions'])->name('inc.ajax_reigai_kaiin');
 });
