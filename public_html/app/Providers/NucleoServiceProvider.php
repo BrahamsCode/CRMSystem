@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -33,6 +34,22 @@ class NucleoServiceProvider extends ServiceProvider
         RateLimiter::for('staff-login', fn (Request $request) => Limit::perMinute(20)->by((string) $request->input('admin_id') . '|' . $request->ip()));
 
         $this->defineGates();
+
+        // $siteName en todas las vistas ($site_name de inc/db.php: tb_office cd=1, hp_hyouji_name o kaishamei)
+        View::composer('*', function ($view) {
+            if (! array_key_exists('siteName', $view->getData())) {
+                $view->with('siteName', self::siteName());
+            }
+        });
+    }
+
+    private static function siteName(): string
+    {
+        try {
+            return app(LegacyUi::class)->siteName();
+        } catch (\Throwable) {
+            return '';
+        }
     }
 
     private function defineGates(): void

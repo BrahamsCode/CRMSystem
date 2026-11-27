@@ -23,6 +23,8 @@ Zona horaria de la app: `Asia/Tokyo`, como el legacy.
 - Mismos mensajes de error que el legacy, mismo historial en `tb_login_rireki` (ログイン / ログアウト, con hatuban), casilla "記憶する" = cookie `admin_login_id` con el usuario (nunca la clave), 90 días.
 - Soporte del proveedor: `extsupport` (clave de un solo uso de 6) y `Relation` (clave de la cuenta o de un solo uso de 8) se verifican contra `CRM_SUPPORT_API_HOST` (por defecto `b.g-api.net`) y entran como `master`. Las claves internas `RELATION_LOGIN_PASS`/`SUPPORT_MASTER_PASS` van solo en `.env` y no se aceptan escritas en el formulario.
 - Banderas de sesión (antes `$_SESSION[...]`): `session('nucleo.support_login')`, `nucleo.support_master`, `nucleo.relation_login`.
+- Claves del legacy en la sesión: `session('shop_cd')` (tienda del staff) y `session('master_cd')` (`tb_shop.master_cd`), puestas al entrar y repuestas en cada petición si cambian, como `session.php`.
+- `$siteName` está en **todas** las vistas (`$site_name` de `inc/db.php`: `tb_office` cd=1, `hp_hyouji_name` o `kaishamei`).
 - Como `session.php`: el middleware `ValidateStaffSession` expulsa la sesión si cambia `login_pass` o el staff se borra.
 - En controladores y vistas: `auth('admin')->user()` (o `$request->user('admin')`) es el `Staff`. Equivalencias: `$_SESSION['user_master_cd']` = `->cd`, `shop_cd` = `->shop_cd`, `rank` = `->legacyRank()`, `login_user_name` = `->loginUserName()`, `tantou` = `->name`, master = `->isMaster()`.
 - Pendiente: primer acceso con `tb_office.kaishamei` vacío (el legacy manda al asistente `config.php`): hoy va a システム選択; se hace con 基本情報管理.

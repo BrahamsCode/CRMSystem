@@ -110,3 +110,17 @@ it('expulsa la sesión si cambia la clave del staff, como session.php', function
     $this->get('/system/select.php')->assertRedirect('/system/login.php');
     $this->assertGuest('admin');
 });
+
+it('deja shop_cd y master_cd en la sesión, como session.php', function () {
+    seedNucleo();
+
+    loginAs('master', 'secreto1');
+
+    expect(session('shop_cd'))->toBe(1)->and(session('master_cd'))->toBe(1);
+});
+
+it('comparte $siteName con todas las vistas (tb_office cd=1)', function () {
+    seedNucleo();
+
+    expect(Illuminate\Support\Facades\Blade::render('{{ $siteName }}'))->toBe('shop');
+});

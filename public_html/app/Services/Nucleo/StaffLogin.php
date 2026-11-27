@@ -66,8 +66,18 @@ class StaffLogin
             'relation_login' => $isRelation,
             'pass_hash' => self::passwordFingerprint($staff),
         ]);
+        self::putLegacySession($request, $staff);
 
         return null;
+    }
+
+    /** Claves del legacy que leen los módulos: session('shop_cd') y session('master_cd') (como session.php) */
+    public static function putLegacySession(Request $request, Staff $staff): void
+    {
+        $request->session()->put([
+            'shop_cd' => $staff->shop_cd,
+            'master_cd' => $staff->shop?->master_cd,
+        ]);
     }
 
     public function logout(Request $request): void

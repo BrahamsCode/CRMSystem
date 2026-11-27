@@ -28,6 +28,11 @@ class ValidateStaffSession
             return redirect('/system/login.php');
         }
 
+        // session.php vuelve a poner shop_cd/master_cd en cada petición (por si cambió la tienda del staff)
+        if ($staff instanceof Staff && $request->session()->get('shop_cd') !== $staff->shop_cd) {
+            StaffLogin::putLegacySession($request, $staff);
+        }
+
         return $next($request);
     }
 }
