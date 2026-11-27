@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>デジタルサイネージ</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="">
+<meta name="author" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" type="text/css" href="./view/css/reset.css">
+<link rel="stylesheet" type="text/css" href="./view/css/common.css">
+<link rel="stylesheet" type="text/css" href="./view/css/jquery.bxslider.css">
+<link rel="shortcut icon" href="./img/favicon.ico" >
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<script src="./view/js/jquery-1.11.0.min.js"></script>
+<script src="./view/js/jquery.bxslider.js"></script>
+
+<script>
+
+	function slider1() {
+		var obj1 = $('.bxslider1_1').bxSlider({
+			auto:true,	//スライドショーを自動再生
+			pause:6000,	//3.5秒ポーズ（停止して次のスライド）
+						mode: 'fade', //画像の切り替えを垂直方向の縦スライド。縦は'vertical'。横は'horizontal（初期値）'。フェードは'fade'。
+						autoHover:false, //スライダーにマウスオーバーすると一時停止する
+			moveSlides: 1, //指定された値だけスライドする
+			minSlides: 1, //１スライドに表示するサムネイルの数
+			maxSlides: 1, //１スライドに表示するサムネイルの最大数
+						
+				slideWidth: 1920, //スライダーの横幅
+			
+						slideMargin: 0, //スライダー間のマージン
+			speed: 3000, //スライダーのスピード
+			
+			startSlide: 0, //最初の画像をどれにするか？？
+			randomStart: false, //最初のスライドをランダムに表示させる。
+			infiniteLoop: true, //無限に繰り返すかどうか
+			captions: true, //キャプションを表示するかどうか。キャプションは img 要素の title 属性に記述
+			
+			video: false, //スライドにビデオが含まれる場合は「true」に設定してダウンロードした「plugins」。フォルダの「jquery.fitvids.js」も読み込むようにする。
+			responsive: true, //boolean (true / false) レスポンシブ対応にするかどうか
+			useCSS: false, //boolean (true / false) true の場合、CSS の transitions が使われ、 false の場合は、jQuery animate() が使われる。
+			pager: false, //boolean (true / false) ページャー（丸いアイコン）の表示、サムネル表示の場合もtrue
+			controls: false, //boolean (true / false) コントロール（Next, Prev）を表示するかどうか
+			
+			autoControls: false, //boolean (true / false) true の場合 Stop, Start のコントロールが表示される
+			autoControlsCombine: false, //boolean (true / false) true の場合スライドが実行されていれば Stop のみが表示され、停止しているときは Start のみが表示される
+			onSliderLoad:function(currentIndex){
+				//処理(スライダーが完全にロードされた直後に実行)
+				//※引数currentIndex：現在のスライドの要素のインデックス
+				$('.bxslider1_1 .cover1').children('video').get(0).play();
+			},
+			onSlideNext: function($slideElement, oldIndex, newIndex){
+				//処理(それぞれの次へのスライド遷移の直前に実行、関数の引数は次のスライド要素)
+				//※引数$slideElement：スライドするjQuery要素
+				//※引数oldIndex：前のスライドの要素のインデックス（遷移前）
+				//※引数newIndex：先のスライドの要素インデックス（遷移後）
+			},
+			onSlideBefore: function($slideElement, oldIndex, newIndex){
+				//処理(直ちに各スライドの推移後に実行、関数の引数は現在のスライドの要素（移行が完了したとき）)
+				//※引数$slideElement：スライドするjQuery要素
+				//※引数oldIndex：前のスライドの要素のインデックス（遷移前）
+				//※引数newIndex：先のスライドの要素インデックス（遷移後）
+				$slideElement.children('video').get(0).play();
+			}
+		});
+		var obj2 = $('.bxslider1_2').bxSlider({
+			auto:true,	//スライドショーを自動再生
+			pause:6000,	//3.5秒ポーズ（停止して次のスライド）
+						mode: 'vertical', //画像の切り替えを垂直方向の縦スライド。縦は'vertical'。横は'horizontal（初期値）'。フェードは'fade'。
+						autoHover:false, //スライダーにマウスオーバーすると一時停止する
+			moveSlides: 1, //指定された値だけスライドする
+			minSlides: 1, //１スライドに表示するサムネイルの数
+			maxSlides: 1, //１スライドに表示するサムネイルの最大数
+						
+				slideWidth: 1920, //スライダーの横幅
+			
+						slideMargin: 0, //スライダー間のマージン
+			speed: 3000, //スライダーのスピード
+			
+			startSlide: 0, //最初の画像をどれにするか？？
+			randomStart: false, //最初のスライドをランダムに表示させる。
+			infiniteLoop: true, //無限に繰り返すかどうか
+			captions: true, //キャプションを表示するかどうか。キャプションは img 要素の title 属性に記述
+			
+			video: false, //スライドにビデオが含まれる場合は「true」に設定してダウンロードした「plugins」。フォルダの「jquery.fitvids.js」も読み込むようにする。
+			responsive: true, //boolean (true / false) レスポンシブ対応にするかどうか
+			useCSS: false, //boolean (true / false) true の場合、CSS の transitions が使われ、 false の場合は、jQuery animate() が使われる。
+			pager: false, //boolean (true / false) ページャー（丸いアイコン）の表示、サムネル表示の場合もtrue
+			controls: false, //boolean (true / false) コントロール（Next, Prev）を表示するかどうか
+			
+			autoControls: false, //boolean (true / false) true の場合 Stop, Start のコントロールが表示される
+			autoControlsCombine: false, //boolean (true / false) true の場合スライドが実行されていれば Stop のみが表示され、停止しているときは Start のみが表示される
+			onSliderLoad:function(currentIndex){
+				//処理(スライダーが完全にロードされた直後に実行)
+				//※引数currentIndex：現在のスライドの要素のインデックス
+				$('.bxslider1_2 .cover1').children('video').get(0).play();
+			},
+			onSlideNext: function($slideElement, oldIndex, newIndex){
+				//処理(それぞれの次へのスライド遷移の直前に実行、関数の引数は次のスライド要素)
+				//※引数$slideElement：スライドするjQuery要素
+				//※引数oldIndex：前のスライドの要素のインデックス（遷移前）
+				//※引数newIndex：先のスライドの要素インデックス（遷移後）
+			},
+			onSlideBefore: function($slideElement, oldIndex, newIndex){
+				//処理(直ちに各スライドの推移後に実行、関数の引数は現在のスライドの要素（移行が完了したとき）)
+				//※引数$slideElement：スライドするjQuery要素
+				//※引数oldIndex：前のスライドの要素のインデックス（遷移前）
+				//※引数newIndex：先のスライドの要素インデックス（遷移後）
+				$slideElement.children('video').get(0).play();
+			}
+		});
+		var obj3 = $('.bxslider1_3').bxSlider({
+			auto:true,	//スライドショーを自動再生
+			pause:6000,	//3.5秒ポーズ（停止して次のスライド）
+						mode: 'fade', //画像の切り替えを垂直方向の縦スライド。縦は'vertical'。横は'horizontal（初期値）'。フェードは'fade'。
+						autoHover:false, //スライダーにマウスオーバーすると一時停止する
+			moveSlides: 1, //指定された値だけスライドする
+			minSlides: 1, //１スライドに表示するサムネイルの数
+			maxSlides: 1, //１スライドに表示するサムネイルの最大数
+						
+				slideWidth: 1920, //スライダーの横幅
+			
+						slideMargin: 0, //スライダー間のマージン
+			speed: 3000, //スライダーのスピード
+			
+			startSlide: 0, //最初の画像をどれにするか？？
+			randomStart: false, //最初のスライドをランダムに表示させる。
+			infiniteLoop: true, //無限に繰り返すかどうか
+			captions: true, //キャプションを表示するかどうか。キャプションは img 要素の title 属性に記述
+			
+			video: false, //スライドにビデオが含まれる場合は「true」に設定してダウンロードした「plugins」。フォルダの「jquery.fitvids.js」も読み込むようにする。
+			responsive: true, //boolean (true / false) レスポンシブ対応にするかどうか
+			useCSS: false, //boolean (true / false) true の場合、CSS の transitions が使われ、 false の場合は、jQuery animate() が使われる。
+			pager: false, //boolean (true / false) ページャー（丸いアイコン）の表示、サムネル表示の場合もtrue
+			controls: false, //boolean (true / false) コントロール（Next, Prev）を表示するかどうか
+			
+			autoControls: false, //boolean (true / false) true の場合 Stop, Start のコントロールが表示される
+			autoControlsCombine: false, //boolean (true / false) true の場合スライドが実行されていれば Stop のみが表示され、停止しているときは Start のみが表示される
+			onSliderLoad:function(currentIndex){
+				//処理(スライダーが完全にロードされた直後に実行)
+				//※引数currentIndex：現在のスライドの要素のインデックス
+				$('.bxslider1_3 .cover1').children('video').get(0).play();
+			},
+			onSlideNext: function($slideElement, oldIndex, newIndex){
+				//処理(それぞれの次へのスライド遷移の直前に実行、関数の引数は次のスライド要素)
+				//※引数$slideElement：スライドするjQuery要素
+				//※引数oldIndex：前のスライドの要素のインデックス（遷移前）
+				//※引数newIndex：先のスライドの要素インデックス（遷移後）
+			},
+			onSlideBefore: function($slideElement, oldIndex, newIndex){
+				//処理(直ちに各スライドの推移後に実行、関数の引数は現在のスライドの要素（移行が完了したとき）)
+				//※引数$slideElement：スライドするjQuery要素
+				//※引数oldIndex：前のスライドの要素のインデックス（遷移前）
+				//※引数newIndex：先のスライドの要素インデックス（遷移後）
+				$slideElement.children('video').get(0).play();
+			}
+		});
+		var obj3 = $('.bxslider1_4').bxSlider({
+			auto:true,	//スライドショーを自動再生
+			pause:6000,	//3.5秒ポーズ（停止して次のスライド）
+						mode: 'fade', //画像の切り替えを垂直方向の縦スライド。縦は'vertical'。横は'horizontal（初期値）'。フェードは'fade'。
+						autoHover:false, //スライダーにマウスオーバーすると一時停止する
+			moveSlides: 1, //指定された値だけスライドする
+			minSlides: 1, //１スライドに表示するサムネイルの数
+			maxSlides: 1, //１スライドに表示するサムネイルの最大数
+						
+				slideWidth: 1920, //スライダーの横幅
+			
+						slideMargin: 0, //スライダー間のマージン
+			speed: 3000, //スライダーのスピード
+			
+			startSlide: 0, //最初の画像をどれにするか？？
+			randomStart: false, //最初のスライドをランダムに表示させる。
+			infiniteLoop: true, //無限に繰り返すかどうか
+			captions: true, //キャプションを表示するかどうか。キャプションは img 要素の title 属性に記述
+			
+			video: false, //スライドにビデオが含まれる場合は「true」に設定してダウンロードした「plugins」。フォルダの「jquery.fitvids.js」も読み込むようにする。
+			responsive: true, //boolean (true / false) レスポンシブ対応にするかどうか
+			useCSS: false, //boolean (true / false) true の場合、CSS の transitions が使われ、 false の場合は、jQuery animate() が使われる。
+			pager: false, //boolean (true / false) ページャー（丸いアイコン）の表示、サムネル表示の場合もtrue
+			controls: false, //boolean (true / false) コントロール（Next, Prev）を表示するかどうか
+			
+			autoControls: false, //boolean (true / false) true の場合 Stop, Start のコントロールが表示される
+			autoControlsCombine: false, //boolean (true / false) true の場合スライドが実行されていれば Stop のみが表示され、停止しているときは Start のみが表示される
+			onSliderLoad:function(currentIndex){
+				//処理(スライダーが完全にロードされた直後に実行)
+				//※引数currentIndex：現在のスライドの要素のインデックス
+				$('.bxslider1_4 .cover1').children('video').get(0).play();
+			},
+			onSlideNext: function($slideElement, oldIndex, newIndex){
+				//処理(それぞれの次へのスライド遷移の直前に実行、関数の引数は次のスライド要素)
+				//※引数$slideElement：スライドするjQuery要素
+				//※引数oldIndex：前のスライドの要素のインデックス（遷移前）
+				//※引数newIndex：先のスライドの要素インデックス（遷移後）
+			},
+			onSlideBefore: function($slideElement, oldIndex, newIndex){
+				//処理(直ちに各スライドの推移後に実行、関数の引数は現在のスライドの要素（移行が完了したとき）)
+				//※引数$slideElement：スライドするjQuery要素
+				//※引数oldIndex：前のスライドの要素のインデックス（遷移前）
+				//※引数newIndex：先のスライドの要素インデックス（遷移後）
+				$slideElement.children('video').get(0).play();
+			}
+		});
+	}
+	$(document).ready(function(){
+
+		slider1();
+		
+	});
+</script>
+<style>
+#cover1_1	{
+    width: 50%;
+    float: left;
+	}
+#cover1_2	{
+    width: 50%;
+    float: left;
+}
+#cover1_3	{
+    width: 50%;
+    float: left;
+}
+#cover1_4	{
+    width: 50%;
+    float: left;
+}
+</style>
+	</head>
+<body>
+<div id="cover1_1" data-level="1">
+				<ul class="bxslider1_1">
+				 
+					<li class="cover1"> 
+						<video src="./video/video1_1080p.mp4">
+						</video>
+					 
+					</li>
+				 
+					<li class="cover2"> 
+					 
+						<video src="./video/video2_1080p.mp4">
+						</video>
+					</li>
+				 
+					<li class="cover3"> 
+					 
+						<video src="./video/video3_1080p.mp4">
+						</video>
+					</li>
+				 
+					<li class="cover4"> 
+					 
+						<video src="./video/video4_1080p.mp4">
+						</video>
+					</li>
+				</ul>
+</div>
+<div id="cover1_2" data-level="2">
+				<ul class="bxslider1_2">
+				 
+					<li class="cover1"> 
+						<video src="./video/video1_1080p.mp4">
+						</video>
+					 
+					</li>
+				 
+					<li class="cover2"> 
+					 
+						<video src="./video/video2_1080p.mp4">
+						</video>
+					</li>
+				 
+					<li class="cover3"> 
+					 
+						<video src="./video/video3_1080p.mp4">
+						</video>
+					</li>
+				 
+					<li class="cover4"> 
+					 
+						<video src="./video/video4_1080p.mp4" loop>
+						</video>
+					</li>
+				</ul>
+</div>
+<div id="cover1_3" data-level="3">
+				<ul class="bxslider1_3">
+				 
+					<li class="cover1"> 
+						<video src="./video/video1_1080p.mp4">
+						</video>
+					 
+					</li>
+				 
+					<li class="cover2"> 
+					 
+						<video src="./video/video2_1080p.mp4">
+						</video>
+					</li>
+				 
+					<li class="cover3"> 
+					 
+						<video src="./video/video3_1080p.mp4">
+						</video>
+					</li>
+				 
+					<li class="cover4"> 
+					 
+						<video src="./video/video4_1080p.mp4" loop>
+						</video>
+					</li>
+				</ul>
+</div>
+<div id="cover1_4" data-level="4">
+				<ul class="bxslider1_4">
+				 
+					<li class="cover1"> 
+						<video src="./video/video1_1080p.mp4">
+						</video>
+					 
+					</li>
+				 
+					<li class="cover2"> 
+					 
+						<video src="./video/video2_1080p.mp4">
+						</video>
+					</li>
+				 
+					<li class="cover3"> 
+					 
+						<video src="./video/video3_1080p.mp4">
+						</video>
+					</li>
+				 
+					<li class="cover4"> 
+					 
+						<video src="./video/video4_1080p.mp4" loop>
+						</video>
+					</li>
+				</ul>
+</div>
+<script src="./movie_demo_youtube.js"></script>
+</body>
+</html>

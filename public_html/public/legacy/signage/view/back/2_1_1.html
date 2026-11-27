@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>デジタルサイネージ</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="">
+<meta name="author" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" type="text/css" href="./css/reset.css">
+<link rel="stylesheet" type="text/css" href="./css/common2_1_1.css">
+<link rel="stylesheet" type="text/css" href="./css/jquery.bxslider.css">
+<link rel="shortcut icon" href="./img/favicon.ico" >
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+<script src="./js/jquery-1.11.0.min.js"></script>
+<script src="./js/jquery.bxslider.js"></script>
+
+<script>
+
+	function slider1() {
+		var obj1 = $('.bxslider1').bxSlider({
+			
+			auto:true,	//スライドショーを自動再生
+			pause:6000,	//3.5秒ポーズ（停止して次のスライド）
+			mode: 'vertical', //画像の切り替えを垂直方向の縦スライド。縦は'vertical'。横は'horizontal（初期値）'。フェードは'fade'。
+			autoHover:false, //スライダーにマウスオーバーすると一時停止する
+			moveSlides: 1, //指定された値だけスライドする
+			minSlides: 1, //１スライドに表示するサムネイルの数
+			maxSlides: 1, //１スライドに表示するサムネイルの最大数
+			slideWidth: 3840, //スライダーの横幅
+			slideMargin: 0, //スライダー間のマージン
+			speed: 2000, //スライダーのスピード
+			
+			startSlide: 0, //最初の画像をどれにするか？？
+			randomStart: false, //最初のスライドをランダムに表示させる。
+			infiniteLoop: true, //無限に繰り返すかどうか
+			captions: true, //キャプションを表示するかどうか。キャプションは img 要素の title 属性に記述
+			
+			video: false, //スライドにビデオが含まれる場合は「true」に設定してダウンロードした「plugins」。フォルダの「jquery.fitvids.js」も読み込むようにする。
+			responsive: true, //boolean (true / false) レスポンシブ対応にするかどうか
+			useCSS: true, //boolean (true / false) true の場合、CSS の transitions が使われ、 false の場合は、jQuery animate() が使われる。
+			pager: false, //boolean (true / false) ページャー（丸いアイコン）の表示、サムネル表示の場合もtrue
+			controls: false, //boolean (true / false) コントロール（Next, Prev）を表示するかどうか
+			
+			autoControls: false, //boolean (true / false) true の場合 Stop, Start のコントロールが表示される
+			autoControlsCombine: false, //boolean (true / false) true の場合スライドが実行されていれば Stop のみが表示され、停止しているときは Start のみが表示される
+			
+			
+			//pagerCustom: '#bx-pager', //サムネイルを表示する
+			
+			//onSlideAfter: function(){obj1.startAuto(); }
+			
+			});
+			
+			var obj2 = $('.bxslider2').bxSlider({
+		
+				auto:true,	//スライドショーを自動再生
+				pause:6000,	//3.5秒ポーズ（停止して次のスライド）
+				mode: 'horizontal', //画像の切り替えを垂直方向の縦スライド。縦は'vertical'。横は'horizontal（初期値）'。フェードは'fade'。
+				autoHover:false, //スライダーにマウスオーバーすると一時停止する
+				moveSlides: 1, //指定された値だけスライドする
+				minSlides: 1, //１スライドに表示するサムネイルの数
+				maxSlides: 1, //１スライドに表示するサムネイルの最大数
+				slideWidth: 1920, //スライダーの横幅
+				slideMargin: 0, //スライダー間のマージン
+				speed: 2000, //スライダーのスピード
+				
+				startSlide: 0, //最初の画像をどれにするか？？
+				randomStart: false, //最初のスライドをランダムに表示させる。
+				infiniteLoop: true, //無限に繰り返すかどうか
+				captions: true, //キャプションを表示するかどうか。キャプションは img 要素の title 属性に記述
+				
+				video: false, //スライドにビデオが含まれる場合は「true」に設定してダウンロードした「plugins」。フォルダの「jquery.fitvids.js」も読み込むようにする。
+				responsive: true, //boolean (true / false) レスポンシブ対応にするかどうか
+				useCSS: true, //boolean (true / false) true の場合、CSS の transitions が使われ、 false の場合は、jQuery animate() が使われる。
+				pager: false, //boolean (true / false) ページャー（丸いアイコン）の表示、サムネル表示の場合もtrue
+				controls: false, //boolean (true / false) コントロール（Next, Prev）を表示するかどうか
+				
+				autoControls: false, //boolean (true / false) true の場合 Stop, Start のコントロールが表示される
+				autoControlsCombine: false, //boolean (true / false) true の場合スライドが実行されていれば Stop のみが表示され、停止しているときは Start のみが表示される
+				
+				
+				//pagerCustom: '#bx-pager', //サムネイルを表示する
+				
+				onSlideAfter: function(){obj2.startAuto(); }
+				});
+		
+		
+			var obj3 = $('.bxslider3').bxSlider({
+
+				auto:true,	//スライドショーを自動再生
+				pause:6000,	//3.5秒ポーズ（停止して次のスライド）
+				mode: 'fade', //画像の切り替えを垂直方向の縦スライド。縦は'vertical'。横は'horizontal（初期値）'。フェードは'fade'。
+				autoHover:false, //スライダーにマウスオーバーすると一時停止する
+				moveSlides: 1, //指定された値だけスライドする
+				minSlides: 1, //１スライドに表示するサムネイルの数
+				maxSlides: 1, //１スライドに表示するサムネイルの最大数
+				slideWidth: 1920, //スライダーの横幅
+				slideMargin: 0, //スライダー間のマージン
+				speed: 2000, //スライダーのスピード
+				
+				startSlide: 0, //最初の画像をどれにするか？？
+				randomStart: false, //最初のスライドをランダムに表示させる。
+				infiniteLoop: true, //無限に繰り返すかどうか
+				captions: true, //キャプションを表示するかどうか。キャプションは img 要素の title 属性に記述
+				
+				video: false, //スライドにビデオが含まれる場合は「true」に設定してダウンロードした「plugins」。フォルダの「jquery.fitvids.js」も読み込むようにする。
+				responsive: true, //boolean (true / false) レスポンシブ対応にするかどうか
+				useCSS: true, //boolean (true / false) true の場合、CSS の transitions が使われ、 false の場合は、jQuery animate() が使われる。
+				pager: false, //boolean (true / false) ページャー（丸いアイコン）の表示、サムネル表示の場合もtrue
+				controls: false, //boolean (true / false) コントロール（Next, Prev）を表示するかどうか
+				
+				autoControls: false, //boolean (true / false) true の場合 Stop, Start のコントロールが表示される
+				autoControlsCombine: true, //boolean (true / false) true の場合スライドが実行されていれば Stop のみが表示され、停止しているときは Start のみが表示される
+				
+				
+				//pagerCustom: '#bx-pager', //サムネイルを表示する
+				
+				onSlideAfter: function(){obj3.startAuto(); }
+				});
+
+	}
+	
+
+	$(document).ready(function(){
+
+		slider1();
+		
+	});
+</script>
+
+
+<!--[if lt IE 9]>
+<script src="./js/html5shiv.js"></script>
+<script src="./js/respond.js"></script>
+<![endif]-->
+
+
+</head>
+<body id="pTop">
+
+<article id="container">
+
+	<header>
+		<div class="inner">
+		</div>
+	</header>
+
+	<div id="coverBox">
+	
+		<div id="cover1">
+			<ul class="bxslider1">
+				<li class="cover1"><img src="./img/2/2_1.png" alt=""></li>
+				<li class="cover2"><img src="./img/2/2_2.png" alt=""></li>
+				<li class="cover3"><img src="./img/2/2_3.png" alt=""></li>
+				<li class="cover4"><img src="./img/2/2_4.png" alt=""></li>
+				<li class="cover5"><img src="./img/2/2_5.png" alt=""></li>
+			</ul>
+			
+		</div>
+
+		<div id="cover2">
+			<ul class="bxslider2">
+				<li class="cover1"><img src="./img/vizan1.jpg" alt=""></li>
+				<li class="cover2"><img src="./img/glory1.jpg" alt=""></li>
+				<li class="cover3"><img src="./img/tetra1.jpg" alt=""></li>
+				<li class="cover4"><img src="./img/fusell1.jpg" alt=""></li>
+				<li class="cover5"><img src="./img/fusell1.jpg" alt=""></li>
+			</ul>
+		</div>
+
+		<div id="cover3">
+			<ul class="bxslider3">
+				<li class="cover1"><img src="./img/vizan1.jpg" alt=""></li>
+				<li class="cover2"><img src="./img/glory1.jpg" alt=""></li>
+				<li class="cover3"><img src="./img/tetra1.jpg" alt=""></li>
+				<li class="cover4"><img src="./img/fusell1.jpg" alt=""></li>
+				<li class="cover5"><img src="./img/fusell1.jpg" alt=""></li>
+			</ul>
+		</div>
+		
+	</div>
+
+	<div id="contentsBox">
+		<section class="contents1">
+		</section>
+
+		<section class="contents2">
+		</section>
+
+		<section class="contents3">
+		</section>
+
+		<section class="contents4">
+		</section>
+
+	</div>
+
+	<footer>
+	</footer>
+
+</body>
+</html>

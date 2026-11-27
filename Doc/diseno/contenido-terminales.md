@@ -171,7 +171,7 @@ Base (CONVENCIONES §0 y §4): **la BD es la del legacy** (`database/schema/pgsq
 
 ### 2.1 Modelos de S4
 
-| Modelo (`app/Models/`) | Tabla | Claves y columnas relevantes | Relaciones | Lo leen además |
+| Modelo (`app/Models/Mypage|Terminales/`) | Tabla | Claves y columnas relevantes | Relaciones | Lo leen además |
 |---|---|---|---|---|
 | `Recommendation` | `tb_hp_recommend` | `cd`; `tb_shop_cd` (0/null = 全店舗), `disp_date` (`Y/m/d` texto), `title`, `naiyou`, `link`, `link_type`, `img_flg`, `img_type`, `pic_link`, `hyouji_flg` (`1` 表示; `9` se excluye en la app), `update`, `disp_flg` | `shop()` → `Shop` (`tb_shop_cd`) | S5 (`appview`: últimos 20, `tb_shop_cd IN (tienda, 0)`) |
 | `Recruit` | `tb_recruit` | `cd`; `tb_shop_cd`, `boshu_headline`, `boshu_shokushu` (→ `tb_recruit_category.cd`), `shigoto_naiyou`, `koyou_keitai`, `oubo_shikaku`, `kinmu_chi`, `kinmu_jikan`, `kyuyo`, `kyuka`, `taigu`, `pic_flg1`, `pic_flg2`, `kaisha_name`, `add`, `tel`, `fax`, `jigyou_naiyou`, `oubo_houhou`, `mensetsuchi`, `tantou`, `touroku_date`, `update_date`, `disp_flg` | `shop()`, `category()` → `RecruitCategory` | `SignageFeedBuilder` (floormap) |
@@ -198,7 +198,7 @@ Beacons y sus terminales receptores: modelos `Beacon` y `BeaconReceiver` con `$c
 | `tb_mycoupon_master` | `Coupon` (S3) | Cupones de programas/displays y cupones impresos (`CouponIssuer::markPrinted/markUsed`) |
 | `tb_raiten_rireki` | `Visit` (S2) | Sondeo de cupones impresos por visita (`digitalsignage`) |
 | `url_transfer_data` | `PaperCardAccess` (S5) | 集計 de ペーパーサイネージ |
-| `tb_mobile_navi` | (S1 o S4, ver Pedidos) | Nombre del menú de オススメ |
+| `tb_mobile_navi` | `MobileNavi` (S4) | Nombre del menú de オススメ |
 | `hatuban` | servicio de numeración (S1) | Alta de todos los registros |
 
 ### 2.3 Archivos
@@ -207,7 +207,7 @@ Imágenes y XML en el disco `public` de Storage con **la misma ruta relativa que
 
 ### 2.4 `signage/` (BD `admin`)
 
-Las tablas de `signage/` (`terminal`, `packages`, `cycle`, `contents`, `contents_category`, `movie_contents`, `signage`, `customer`, `shop`, `contact`) viven en otra BD (`admin`, no `crm2019`) y **no están** en `pgsql-schema.sql`. **Pregunta a S0:** ¿conexión adicional `admin` (esquema de esa BD) o se agregan sus tablas al esquema? Hasta la respuesta, el submódulo 7 queda bloqueado. Sus modelos serían `SignageWebTerminal`, `SignageWebPackage`, `SignageWebCycle` (`img_path_ary`/`action_ary` con `serialize()`: se leen con `allowed_classes => false`), `SignageWebContent`, `SignageWebContentCategory`, `SignageWebMovieContent`, `SignageWebFile`, `SignageWebContact`.
+Las tablas de `signage/` (`terminal`, `packages`, `cycle`, `contents`, `contents_category`, `movie_contents`, `signage`, `customer`, `shop`, `contact`) viven en otra BD (`admin`, no `crm2019`) y **no están** en `pgsql-schema.sql`: conexión aparte `signage` como el legacy (S0). Sin volcado de Antony, esquema mínimo de desarrollo en `database/schema/signage-admin.sql`. Sus modelos (`app/Models/Senalizacion/`) serían `SignageWebTerminal`, `SignageWebPackage`, `SignageWebCycle` (`img_path_ary`/`action_ary` con `serialize()`: se leen con `allowed_classes => false`), `SignageWebContent`, `SignageWebContentCategory`, `SignageWebMovieContent`, `SignageWebFile`, `SignageWebContact`.
 
 ## 2b. UI
 
@@ -226,7 +226,7 @@ Mismo HTML (mismas clases e ids) y mismos CSS que el legacy, copiados al Blade (
 | `digitalsignage` (reproductor) | HTML5 nuevo en lugar de `digitalsignage.swf` (ruleta y tragaperras en Canvas); mismo polling JS a `ajax_xml_check*.php` / `ajax_display_config_check*.php` |
 | `signage/` | CSS/JS propios de `signage/` (`list/inc_js/*`, diseños `view/h_*`, `v_*`) |
 
-Los JS de carpeta de módulo (`category6/*/js`, `category7/*/js`, `css/`) se copian a `public/legacy/system/category6|7/...` con la misma estructura (pedido a S1, dueño de `public/legacy/`).
+**Copiados (2026-11-27)** a `public/legacy/` con la misma estructura relativa: `system/category6/{user_hp,recruit}`, `system/category7/{digital_signage,felica,card_signage}`, `digitalsignage/` y `signage/` (143 archivos, 2,3 MB). Excluidos: `.php`, `.swf`/`.fla` (Flash), `.htaccess`/`.ini`, cargas de usuarios (`uploads/`, `signage/upload/`) y los micrositios descartados (`digitalsignage/html/{immovables,recipe}`, `fla/immovables`). Lo común (`system/css|js|images|plugin`, `common/`) lo copia S1. Las URL que llaman los JS del personal (`/system/category6|7/…/ajax_*.php`, formularios) van en `routes/legacy/<modulo>.php` (`legacy.<modulo>.*`); las de los reproductores, en `routes/publico/senalizacion.php`.
 
 ## 3. Servicios viejos → Laravel 13
 
@@ -268,18 +268,18 @@ Los JS de carpeta de módulo (`category6/*/js`, `category7/*/js`, `css/`) se cop
 | 11 | `terminales` ビーコン | Lista/detalle externos + `tb_beacon_history` | conexión `beacon`, BD externa accesible, Antony | 3 |
 | | **Total** | | | **60** |
 
-Ya hecho y sin dependencias: `SignageFeedBuilder` (XML del programa y `floormap.xml` sobre las `tb_*`) con sus pruebas.
+Ya hecho y sin dependencias: `SignageFeedBuilder` (XML del programa y `floormap.xml` sobre las `tb_*`), la ruta pública `GET /hp/uploads/c7/display/{<cd>.xml|floormap.xml}` (`publico.senalizacion.display-xml`: entrega el archivo guardado o lo genera) y los estáticos de §2b, con sus pruebas.
 
 ## 5. Pedidos
 
 **A S0**
-1. **BD `admin` de `signage/`:** no está en `pgsql-schema.sql`. ¿Conexión adicional o se añaden sus tablas al esquema? (bloquea el submódulo 7).
+1. ~~BD `admin` de `signage/`~~: resuelto, conexión aparte `signage` (`DB_SIGNAGE_*`, S1); volcado pedido a Antony. Sin volcado, esquema mínimo de desarrollo en `database/schema/signage-admin.sql` reconstruido de las consultas (solo pruebas).
 2. Confirmación de Antony: `signage/mail` (GoTel) y `signage/pdf`; si se conserva ビーコン (servidor externo caído).
 
 **A S1 (núcleo)**
 1. Base de modelos legacy: scope `disp_flg <> '9'`, servicio `hatuban`, y los modelos `ContentsMaster`, `AdminMaster`, `Shop`, `Terminal`.
-2. `tb_mobile_navi`: ¿modelo de S1 (menú de la app) o de S4? Lo uso solo para leer el nombre del menú de オススメ.
-3. Copiar a `public/legacy/` los JS/CSS de carpeta de módulo de §2b (`category6/user_hp/js`, `category6/recruit/js`, `category7/digital_signage/js`, `category7/felica/js` y `css`, `/system/plugin/ui-datepicker/`).
+2. ~~`tb_mobile_navi`~~: resuelto, es de S4.
+3. ~~Estáticos de carpeta de módulo~~: resuelto, los copia S4. Registrar la redirección genérica `/hp/uploads/{path}` **después** de `routes/publico/*` (la ruta del XML de S4 debe ganar).
 4. Paquetes: imágenes (miniaturas), QR, PDF con fuente japonesa; conexión `beacon` (`DB_BEACON_*`).
 5. Policies/Gates para `kengen` 1014–1017, 1023, 1032, 1035, 1036, el menú de category7 y `manageSignage`.
 6. Redirección `/hp/uploads/{path}` al disco public (ya acordada).
