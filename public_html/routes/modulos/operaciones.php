@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\Operaciones\InformationController;
+use App\Http\Controllers\Admin\Operaciones\KintaiConfigController;
+use App\Http\Controllers\Admin\Operaciones\KintaiController;
+use App\Http\Controllers\Admin\Operaciones\KintaiCsvController;
 use App\Http\Controllers\Admin\Operaciones\ShopWorkController;
 use App\Http\Controllers\Admin\Operaciones\StaffController;
 use App\Http\Controllers\Admin\Operaciones\StaffEntryController;
@@ -67,6 +70,26 @@ Route::prefix('operaciones')->name('operaciones.')->group(function () {
     // 月別シフト管理 (schedule/staff_shift_month.php)
     Route::get('shifts/month', [StaffShiftController::class, 'month'])->name('shifts.month');
     Route::post('shifts/month', [StaffShiftController::class, 'saveMonth'])->name('shifts.month.save');
+
+    // 勤怠管理 (kintai/): lista del día, alta y CSV diario para todos (la tienda del no master es la suya)
+    Route::match(['get', 'post'], 'kintai', [KintaiController::class, 'index'])->name('kintai.index');
+    Route::get('kintai/create', [KintaiController::class, 'create'])->name('kintai.create');
+    Route::post('kintai', [KintaiController::class, 'store'])->name('kintai.store');
+    Route::get('kintai/csv', [KintaiCsvController::class, 'daily'])->name('kintai.csv.daily');
+    // Editar, borrar, 端末パスワード変更, 各種設定 y CSV mensual: solo master (el legacy solo mostraba
+    // los botones y los enlaces al master)
+    Route::middleware('can:nucleo.master')->group(function () {
+        Route::get('kintai/{hiduke}/edit', [KintaiController::class, 'edit'])->whereNumber('hiduke')->name('kintai.edit');
+        Route::put('kintai/{hiduke}', [KintaiController::class, 'update'])->whereNumber('hiduke')->name('kintai.update');
+        Route::delete('kintai/{hiduke}', [KintaiController::class, 'destroy'])->whereNumber('hiduke')->name('kintai.destroy');
+        Route::delete('kintai/{hiduke}/records', [KintaiController::class, 'destroyRecords'])->whereNumber('hiduke')->name('kintai.records.destroy');
+        Route::get('kintai/password', [KintaiConfigController::class, 'editPassword'])->name('kintai.password.edit');
+        Route::post('kintai/password', [KintaiConfigController::class, 'updatePassword'])->name('kintai.password.update');
+        Route::get('kintai/password/complete', [KintaiConfigController::class, 'passwordComplete'])->name('kintai.password.complete');
+        Route::get('kintai/config', [KintaiConfigController::class, 'edit'])->name('kintai.config.edit');
+        Route::post('kintai/config', [KintaiConfigController::class, 'update'])->name('kintai.config.update');
+        Route::get('kintai/csv/monthly', [KintaiCsvController::class, 'monthly'])->name('kintai.csv.monthly');
+    });
 
     // 営業日設定 (config/shop_work_calendar.php)
     Route::get('shop-work', [ShopWorkController::class, 'edit'])->name('shop-work.edit');

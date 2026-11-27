@@ -4,7 +4,7 @@
 > Fuentes: `Doc/analisis-legacy/05-operaciones-terminales-reservas.md` (sección category5), `07-pos-api-y-externos.md` (salvo category11, category12, `r/`, `reserve/`), `00-nucleo-y-base.md` §10 (`tool/api` y CTI, que CONVENCIONES §3 asigna a `integraciones`), el esquema `public_html/database/schema/pgsql-schema.sql` y el código de `crm2-php8` (solo lectura).
 > Fuera de alcance (Antony, 2026-11-26): POS (category11, `pos_session.php`/`CRMPOS-<id>`, servidores POS de tienda → `PosGateway` sin implementar), SNS (category12) y touchcation completo (incluida su parte de `version/`).
 
-**⏸ 勤怠 en espera (S0, 2026-11-26):** los dos registradores de asistencia del legacy son touchcation (`touchcation/kintai_crm_n` escribe `kintai_tb_*`; `touchcation/timecard` escribe `tb_work_time` y usa `tb_felica_mode`/`tb_card`), y touchcation no se usa. Hasta que Antony confirme si 勤怠 sigue en uso, las filas marcadas **⏸** están diseñadas pero no se implementan (§4).
+**勤怠 (Antony, 2026-11-27): se migra la gestión** (`kintai` S5, hecho; `working` S2 sobre los modelos de S5). El fichaje desde el quiosco queda fuera con touchcation. Antes: **⏸ en espera (S0, 2026-11-26):** los dos registradores de asistencia del legacy son touchcation (`touchcation/kintai_crm_n` escribe `kintai_tb_*`; `touchcation/timecard` escribe `tb_work_time` y usa `tb_felica_mode`/`tb_card`), y touchcation no se usa. Hasta que Antony confirme si 勤怠 sigue en uso, las filas marcadas **⏸** están diseñadas pero no se implementan (§4).
 
 ---
 
@@ -41,20 +41,20 @@ Integraciones: `routes/publico/integraciones.php`, que S1 carga fuera del grupo 
 
 | Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas legacy | Estado |
 |---|---|---|---|---|---|
-| `index.php` | 日付別勤怠データ一覧 | `admin.operaciones.kintai.index` | `KintaiController@index` | L `kintai_tb_config`, `kintai_tb_hiduke`, `kintai_tb_kintai`, `tb_staff`; E `kintai_tb_config` (crea la fila de la tienda) | pendiente ⏸ (Carbon, sin 1970) |
-| `kintai_new.php` | 勤怠データ新規追加 | `admin.operaciones.kintai.create` | `KintaiController@create` | L `kintai_tb_config`, `tb_staff` | pendiente ⏸ |
-| `kintai_new_up.php` | 勤怠データ新規追加 | `admin.operaciones.kintai.store` | `KintaiController@store` | E `kintai_tb_hiduke`, `kintai_tb_kintai`, `hatuban` | pendiente ⏸ (transacción; sin el INSERT+UPDATE en una sola consulta) |
-| `kintai_update.php` | 勤怠データ編集 | `admin.operaciones.kintai.edit` | `KintaiController@edit` | L `kintai_tb_config`, `kintai_tb_hiduke`, `kintai_tb_kintai`, `tb_staff` | pendiente ⏸ |
-| `kintai_update_up.php` | 勤怠データ編集 | `admin.operaciones.kintai.update` | `KintaiController@update` | E `kintai_tb_hiduke`, `kintai_tb_kintai`, `hatuban` | pendiente ⏸ |
-| `kintai_update_del.php` | (marca: borrar) | `admin.operaciones.kintai.records.destroy` | `KintaiRecordController@destroy` | E `kintai_tb_kintai` | pendiente ⏸ |
-| `kintai_delete.php` | (día: borrar) | `admin.operaciones.kintai.destroy` | `KintaiController@destroy` | E `kintai_tb_hiduke`, `kintai_tb_kintai` | pendiente ⏸ |
-| `password_update.php`, `password_update_complete.php` | 端末パスワード変更 | `admin.operaciones.kintai.password.edit` / `.update` | `KintaiConfigController@editPassword` / `@updatePassword` | L/E `kintai_tb_config.password` | pendiente ⏸ (texto plano: lo lee el terminal, §7) |
-| `config.php` | 各種設定データ | `admin.operaciones.kintai.config.edit` / `.update` | `KintaiConfigController@edit` / `@update` | L/E `kintai_tb_config`; L `tb_staff`, `tb_staff_shift_kind` | pendiente ⏸ |
+| `index.php` | 日付別勤怠データ一覧 | `admin.operaciones.kintai.index` | `KintaiController@index` | L `kintai_tb_config`, `kintai_tb_hiduke`, `kintai_tb_kintai`, `tb_staff`; E `kintai_tb_config` (crea la fila de la tienda) | hecho (`KintaiService`; ステータス sin marcas borradas; 編集/削除 solo master) |
+| `kintai_new.php` | 勤怠データ新規追加 | `admin.operaciones.kintai.create` | `KintaiController@create` | L `kintai_tb_config`, `tb_staff` | hecho |
+| `kintai_new_up.php` | 勤怠データ新規追加 | `admin.operaciones.kintai.store` | `KintaiController@store` | E `kintai_tb_hiduke`, `kintai_tb_kintai`, `hatuban` | hecho (transacción, `KintaiEntryValidator` con los mensajes del legacy) |
+| `kintai_update.php` | 勤怠データ編集 | `admin.operaciones.kintai.edit` | `KintaiController@edit` | L `kintai_tb_config`, `kintai_tb_hiduke`, `kintai_tb_kintai`, `tb_staff` | hecho (solo master) |
+| `kintai_update_up.php` | 勤怠データ編集 | `admin.operaciones.kintai.update` | `KintaiController@update` | E `kintai_tb_hiduke`, `kintai_tb_kintai`, `hatuban` | hecho (solo toca marcas de la jornada) |
+| `kintai_update_del.php` | (marca: borrar) | `admin.operaciones.kintai.records.destroy` (DELETE) | `KintaiController@destroyRecords` | E `kintai_tb_kintai` | hecho (POST con CSRF; solo cd de la jornada) |
+| `kintai_delete.php` | (día: borrar) | `admin.operaciones.kintai.destroy` | `KintaiController@destroy` | E `kintai_tb_hiduke`, `kintai_tb_kintai` | hecho (DELETE con CSRF) |
+| `password_update.php`, `password_update_complete.php` | 端末パスワード変更 | `admin.operaciones.kintai.password.edit` / `.update` | `KintaiConfigController@editPassword` / `@updatePassword` / `@passwordComplete` | L/E `kintai_tb_config.password` | hecho (solo master; texto plano: lo lee el terminal, §7) |
+| `config.php` | 各種設定データ | `admin.operaciones.kintai.config.edit` / `.update` | `KintaiConfigController@edit` / `@update` | L/E `kintai_tb_config`; L `tb_staff`, `tb_staff_shift_kind` | hecho (solo master; imagen con GD `KintaiBackground`; シフト区分 enlazada a su pantalla) |
 | `staff_shift_kind.php`, `_frm.php`, `_register.php` | シフト区分管理 | `admin.operaciones.shift-kinds.*` (index, store, update, destroy, `sort`) | `StaffShiftKindController` | L/E `tb_staff_shift_kind`, `hatuban` | hecho (pantalla propia, solo master, menú スケジュール管理; ▲▼ con `LegacyRanking`) |
-| `csv_out.php`, `csv_download/csv_out.php` | (CSV diario) | `admin.operaciones.kintai.csv.daily` | `KintaiCsvController@daily` | L `kintai_tb_config`, `kintai_tb_kintai`, `tb_staff` | pendiente ⏸ |
-| `monthly_csv_out.php`, `csv_download/monthly_csv_out.php` | (CSV mensual por persona) | `admin.operaciones.kintai.csv.monthly` | `KintaiCsvController@monthly` | L las mismas | pendiente ⏸ |
+| `csv_out.php`, `csv_download/csv_out.php` | (CSV diario) | `admin.operaciones.kintai.csv.daily` | `KintaiCsvController@daily` | L `kintai_tb_config`, `kintai_tb_kintai`, `tb_staff` | hecho (`KintaiCsv` + `LegacyCsv`; 外出/戻り con su propio día) |
+| `monthly_csv_out.php`, `csv_download/monthly_csv_out.php` | (CSV mensual por persona) | `admin.operaciones.kintai.csv.monthly` | `KintaiCsvController@monthly` | L las mismas | hecho (solo master) |
 | `csv_download/csv_file_out.php`, `csv_download/csv_file_del.php` | (archivo temporal Flash) | — | — | — | descartado: `StreamedResponse` sin archivo temporal |
-| `ajax_session_update.php` | (tienda seleccionada) | `admin.operaciones.kintai.shop` (POST JSON) | `KintaiController@selectShop` | — (sesión) | pendiente ⏸ (misma sesión que el legacy) |
+| `ajax_session_update.php` | (tienda seleccionada) | — | — | — (sesión) | descartado: solo alimentaba el botón Flash del cliente AIR |
 
 ### 1.3 勤怠一覧 / 集計 (`system/category5/working/`)
 

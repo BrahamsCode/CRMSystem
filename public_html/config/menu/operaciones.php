@@ -24,6 +24,7 @@ return [
         ],
         [
             // 勤怠管理 (ac2 de left_navi5.php). 勤怠データ一覧 (category5/kintai) es de S5
+            // 勤怠一覧 (working/working_calendar.php) es de S2: su enlace va primero cuando tenga ruta
             'title' => '勤怠管理',
             'image' => 'ln_t5_1.gif',
             'ac' => 'ac2',
@@ -36,6 +37,9 @@ return [
                 // 帳票管理: el legacy solo lo mostraba en el servidor 202.218.51.245 (config/working.php)
                 ['label' => '帳票管理', 'url' => '/admin/operaciones/working/report', 'can' => 'operaciones.working-report.enabled'],
                 // --- fin W ---
+                ['label' => '勤怠データ一覧', 'url' => '/admin/operaciones/kintai'],
+                ['label' => '端末パスワード変更', 'url' => '/admin/operaciones/kintai/password', 'can' => 'nucleo.master'],
+                ['label' => '各種設定', 'url' => '/admin/operaciones/kintai/config', 'can' => 'nucleo.master'],
             ],
         ],
         [
