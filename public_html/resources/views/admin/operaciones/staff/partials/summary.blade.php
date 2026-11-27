@@ -219,7 +219,7 @@
 	</colgroup>
 	<tr>
 	<th>ログインID</th>
-	<td>@if ($isAdminAccount)管理者用ID@else{{ $v('id') }}@endif</td>
+	<td>@if ($isAdminAccount){{ '管理者用ID' }}@else{{ $v('id') }}@endif</td>
 	</tr>
 	<tr>
 	<th>パスワード</th>

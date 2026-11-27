@@ -186,7 +186,7 @@ class MailController extends Controller
 
     public function future(Request $request, string $mailType = 'mail'): View
     {
-        $perPage = max(1, (int) $request->input('kensu', 20));
+        $perPage = max(1, (int) ($request->input('kensu') ?: 20));
         $query = MailmagMaster::query()
             ->where('受付メールアドレス', 'なし')
             ->where('配信状況', MailmagMaster::STATUS_PENDING)
@@ -400,6 +400,10 @@ class MailController extends Controller
         }
         [, $preview] = $renderer->forSender($in['tourokusya'] ?? null)->replace('', $body, $sample);
         $nl = $deco ? '<br/>' : "\n";
+        // Texto: se escapa el cuerpo y el aviso azul de 簡単ログイン va como HTML (el legacy imprimía nl2br($message))
+        if (! $deco) {
+            $preview = e($preview);
+        }
         $preview .= $nl.$nl.'<span style="color:#0000FF;">＊＊＊＊ここに簡単ログインが入ります＊＊＊＊</span>'.$nl.$nl;
 
         $coupon = $mailType === 'mycoupon' && ($in['hakkou_cd'] ?? '') !== ''

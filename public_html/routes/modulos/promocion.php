@@ -26,6 +26,10 @@ Route::prefix('promocion')->name('promocion.')->group(function () {
     Route::get('mail_mag/mail_template_entry', [TemplateController::class, 'entry'])->name('templates.entry');
     Route::get('mail_mag/mail_template_category', [TemplateCategoryController::class, 'index'])->name('template-categories.index');
     Route::get('mail_mag/test_mail_address', [TestAddressController::class, 'index'])->name('test-addresses.index');
+    // 絵文字 de TinyMCE: las plantillas y envíos del legacy guardan <img src="../decomail/js/tiny_mce/plugins/emoji…/img/…">
+    // (relativo a system/category3/<carpeta>/); desde estas pantallas apunta aquí → estáticos del legacy
+    Route::get('decomail/js/{path}', fn (string $path) => redirect(asset('legacy/system/category3/decomail/js/'.$path), 301))
+        ->where('path', 'tiny_mce/[A-Za-z0-9_/.-]+')->name('decomail.js');
 
     // 新規メール配信 (mail_mag) y 新規デコメール配信 (decomail): 発行条件選択 → 内容設定 → 確認 → 登録
     foreach (['mail' => 'mail_mag', 'deco' => 'decomail'] as $type => $folder) {

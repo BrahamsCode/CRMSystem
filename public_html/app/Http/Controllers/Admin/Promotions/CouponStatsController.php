@@ -63,7 +63,7 @@ class CouponStatsController extends Controller
             return redirect('/system/logout.php');
         }
         [$mode, $apply] = $this->period($request, $shops, $shopCd);
-        $perPage = max(1, (int) $request->input('kensu', 20));
+        $perPage = max(1, (int) ($request->input('kensu') ?: 20));
 
         $query = DB::table('tb_mycoupon_used as tb1')
             ->join('tb_mycoupon_master as tb2', 'tb1.tb_mycoupon_master_cd', '=', 'tb2.cd')
@@ -101,7 +101,7 @@ class CouponStatsController extends Controller
         $rows = $base()->groupBy('tb2.cd', 'tb2.id', 'tb2.name')
             ->selectRaw('tb2.cd, tb2.id, tb2.name, max(tb1.used_date::int) AS last_used, COUNT(*) AS cnt')
             ->orderByDesc('cnt')->orderByDesc('last_used')
-            ->paginate(max(1, (int) $request->input('kensu', 20)), ['*'], 'page', max(1, (int) $request->input('page', 1)));
+            ->paginate(max(1, (int) ($request->input('kensu') ?: 20)), ['*'], 'page', max(1, (int) $request->input('page', 1)));
 
         // Con más de un uso se listan todas las fechas del cliente
         $times = [];

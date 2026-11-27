@@ -6,7 +6,7 @@
 @extends('layouts.legacy')
 
 @section('menu', 'clientes')
-@section('title', '来店処理 - ' . config('app.name'))
+@section('title', '来店処理 - ' . app(\App\Services\Nucleo\LegacyUi::class)->siteName())
 
 @section('css')
 <style type="text/css">

@@ -47,16 +47,22 @@ class SociosDemoSeeder extends Seeder
     /** Socios con fotos en マイアルバム (cada uno 1–2 filas con imagen) */
     private const PHOTO_CUSTOMERS = 12;
 
-    /** Menús de respaldo si el catálogo (tb_karute_menu, D2) está vacío: [nombre, precio] */
-    private const FALLBACK_MENUS = [
-        ['カット', 4950], ['カラー', 6600], ['パーマ', 8800], ['縮毛矯正', 16500],
-        ['トリートメント', 3300], ['ヘッドスパ', 4400], ['前髪カット', 1100],
+    /**
+     * Clientes extra con casos límite (demo301…): n => caso. Ver applyEdgeCases().
+     */
+    public const EDGE_CASES = [
+        301 => 'baja',            // disp_flg 9 (como CustomerDeletionService), con visitas anteriores
+        302 => 'baja',            // disp_flg 9, sin visitas, メルマガ no
+        303 => 'provisional',     // touroku_kubun 1 (仮登録), sin visitas
+        304 => 'provisional0',    // touroku_kubun 0, sin visitas
+        305 => 'mailError',       // mailmaga_flg 9 (不達配信) con error_send_cnt
+        306 => 'long',            // japonés largo hasta el máximo de cada columna varchar(255)
+        307 => 'halfKana',        // カナ de ancho medio (ｶﾅ) en nombre y dirección
+        308 => 'empty',           // campos opcionales vacíos (cumpleaños '//', sin teléfono ni dirección)
+        309 => 'leap',            // cumpleaños 29/02
+        310 => 'leap',
+        311 => 'monthEnds',       // visitas el último día de cada mes, el 31/12 y el 1/1
     ];
-
-    /** Peso de cada menú principal (los que no estén aquí pesan 1) */
-    private const MENU_WEIGHTS = ['カット' => 10, 'カラー' => 6, 'リタッチカラー' => 3, 'パーマ' => 3, '縮毛矯正' => 2, 'デジタルパーマ' => 1];
-
-    private const OPTION_MENUS = ['トリートメント', 'ヘッドスパ', '前髪カット', 'ブロー'];
 
     /** Apellidos [漢字, カナ] (Faker ja_JP no empareja el kanji con su lectura) */
     private const LAST_NAMES = [
@@ -101,10 +107,9 @@ class SociosDemoSeeder extends Seeder
             $shops = $this->shops();
             $staff = $this->staffByShop($shops);
             $masters = $this->seedMasters();
-            $menus = $this->menusByShop($shops);
 
             $customers = $this->buildCustomers($shops, $staff, $masters);
-            $history = $this->buildHistory($customers, $staff, $menus, $shops);
+            $history = $this->buildHistory($customers, $staff, $shops);
             $this->applySummaries($customers, $history, $masters);
 
             $this->insertChunks('tb_customer', array_map(fn ($c) => $c['row'], $customers));
@@ -155,21 +160,6 @@ class SociosDemoSeeder extends Seeder
         }
 
         return $byShop;
-    }
-
-    /** [shop_cd => [[nombre, precio]…]] de los menús 技術 de la tienda (catálogo de D2) o los de respaldo */
-    private function menusByShop(array $shops): array
-    {
-        $menus = [];
-        foreach ($shops as $shop) {
-            $rows = DB::table('tb_karute_menu')->where('tb_shop_cd', $shop)->where('type', '1')
-                ->where('disp_flg', '1')->where('kingaku', '>', 0)->orderBy('rank')->get(['name', 'kingaku']);
-            $menus[$shop] = $rows->isEmpty()
-                ? self::FALLBACK_MENUS
-                : $rows->map(fn ($r) => [(string) $r->name, (int) $r->kingaku])->all();
-        }
-
-        return $menus;
     }
 
     /**
@@ -304,7 +294,8 @@ class SociosDemoSeeder extends Seeder
         $baseCount = DB::table('tb_customer')->count();
         $customers = [];
 
-        for ($n = 1; $n <= self::TOTAL; $n++) {
+        $count = self::TOTAL + count(self::EDGE_CASES);
+        for ($n = 1; $n <= $count; $n++) {
             // 75 % en la primera tienda si hay varias, el resto repartido
             $shop = count($shops) > 1 && $f->numberBetween(1, 100) > 60 ? $f->randomElement($shops) : $shops[$n % count($shops)];
             $female = $f->numberBetween(1, 100) <= 75;
@@ -341,7 +332,8 @@ class SociosDemoSeeder extends Seeder
                     'tb_shop_cd' => $shop,
                     'type' => '個人',
                     'name' => $last[0] . ' ' . $first[0],
-                    'name_kana' => $last[1] . ' ' . $first[1],
+                    // 1 de cada 10 con カナ de ancho medio, como los importados de sistemas viejos
+                    'name_kana' => $n % 10 === 7 ? mb_convert_kana($last[1] . ' ' . $first[1], 'k') : $last[1] . ' ' . $first[1],
                     'zip' => $address['zip'],
                     'pref' => $address['pref'],
                     'add' => $address['add'],
@@ -370,6 +362,9 @@ class SociosDemoSeeder extends Seeder
                     'shoukai_tb_customer_cd' => $n > 20 && $f->numberBetween(1, 100) <= 10
                         ? $customers[$f->numberBetween(1, $n - 1)]['row']['cd'] : null,
                     'bikou' => $f->numberBetween(1, 100) <= 25 ? $f->realText(40) : '',
+                    'kinmusaki_name' => '',
+                    'kinmusaki_name_kana' => '',
+                    'hobby' => '',
                     'error_send_cnt' => 0,
                     'stamp_count' => 0,
                     // Resúmenes: los rellena applySummaries() (todas las filas con las mismas columnas para el insert)
@@ -385,7 +380,100 @@ class SociosDemoSeeder extends Seeder
             ];
         }
 
+        $this->applyEdgeCases($customers);
+
         return $customers;
+    }
+
+    /** Casos límite de los clientes extra (EDGE_CASES) sobre las filas ya generadas */
+    private function applyEdgeCases(array &$customers): void
+    {
+        $long = fn (string $text, int $length = 255) => mb_substr(str_repeat($text, (int) ceil($length / mb_strlen($text)) + 1), 0, $length);
+        $now = (string) $this->now->getTimestamp();
+
+        foreach (self::EDGE_CASES as $n => $case) {
+            $c = &$customers[$n];
+            switch ($case) {
+                case 'baja':
+                    $c['row']['disp_flg'] = '9';
+                    $c['row']['update_date'] = $now;
+                    if ($n === 302) {
+                        $c['visits'] = [];
+                        $c['row']['mailmaga_flg'] = '0';
+                    }
+                    break;
+                case 'provisional':
+                case 'provisional0':
+                    $c['row']['touroku_kubun'] = $case === 'provisional' ? '1' : '0';
+                    $c['visits'] = [];
+                    break;
+                case 'mailError':
+                    $c['row']['mailmaga_flg'] = '9';
+                    $c['row']['error_send_cnt'] = 3;
+                    break;
+                case 'long':
+                    $c['row']['name'] = '勅使河原 ' . $long('寿限無五劫の擦り切れ海砂利水魚', 60);
+                    $c['row']['name_kana'] = 'テシガワラ ' . $long('ジュゲムゴコウノスリキレカイジャリスイギョ', 60);
+                    $c['row']['add'] = $long('大阪府大阪市中央区心斎橋筋二丁目東心斎橋一丁目');
+                    $c['row']['add_kana'] = $long('オオサカフオオサカシチュウオウクシンサイバシスジ');
+                    $c['row']['add_number'] = $long('一丁目二番地三号');
+                    $c['row']['add_build'] = $long('グランドメゾン心斎橋ステーションタワー北棟');
+                    $c['row']['kinmusaki_name'] = $long('株式会社日本美容総合研究開発センター');
+                    $c['row']['kinmusaki_name_kana'] = $long('カブシキガイシャニホンビヨウソウゴウケンキュウ');
+                    $c['row']['hobby'] = $long('映画鑑賞・旅行・料理・カフェ巡り・');
+                    $c['row']['bikou'] = $long('初回来店時にカウンセリング長め希望。', 1000);
+                    break;
+                case 'halfKana':
+                    $c['row']['name_kana'] = mb_convert_kana($c['row']['name_kana'], 'k');
+                    $c['row']['add_kana'] = mb_convert_kana((string) $c['row']['add_kana'], 'k');
+                    break;
+                case 'empty':
+                    foreach (['tel', 'kojin_mobile', 'zip', 'pref', 'add', 'add_kana', 'add_number', 'add_build', 'kojin_sex',
+                        'kojin_bloodtype', 'job', 'mailmaga_email_type', 'bikou'] as $column) {
+                        $c['row'][$column] = '';
+                    }
+                    $c['row']['kojin_birth'] = '//';
+                    $c['row']['kojin_birth_date'] = null;
+                    foreach (['tb_staff_cd', 'tb_customer_group_cd', 'tb_raiten_douki_master_cd', 'tb_customer_level_cd', 'shoukai_tb_customer_cd'] as $column) {
+                        $c['row'][$column] = null;
+                    }
+                    $c['birth'] = null;
+                    break;
+                case 'leap':
+                    $c['birth'] = CarbonImmutable::create($n === 309 ? 1996 : 2004, 2, 29, 0, 0, 0, 'Asia/Tokyo');
+                    $c['row']['kojin_birth'] = $c['birth']->format('Y/m/d');
+                    $c['row']['kojin_birth_date'] = $c['birth']->getTimestamp();
+                    break;
+                case 'monthEnds':
+                    $c['registered'] = $this->now->subYears(2)->setTime(12, 0);
+                    $c['row']['touroku_date'] = $c['row']['update_date'] = (string) $c['registered']->getTimestamp();
+                    $c['row']['cd'] = (int) ($c['registered']->getTimestamp() . sprintf('%03s', $c['shop']) . sprintf('%06d', 900000 + $n));
+                    $c['visits'] = $this->monthEndVisits();
+                    break;
+            }
+            unset($c);
+        }
+    }
+
+    /** Último día de cada mes de los últimos 12 meses (incluye el 31/12) y el 1/1, antes de hoy */
+    private function monthEndVisits(): array
+    {
+        $from = $this->now->subYear()->startOfDay();
+        $today = $this->now->startOfDay();
+        $times = [];
+        for ($i = 12; $i >= 1; $i--) {
+            $day = $this->now->startOfMonth()->subMonths($i)->endOfMonth()->setTime(17, 30);
+            if ($day >= $from && $day < $today) {
+                $times[] = $day;
+            }
+        }
+        $newYear = CarbonImmutable::create($this->now->year, 1, 1, 11, 0, 0, 'Asia/Tokyo');
+        if ($newYear >= $from && $newYear < $today) {
+            $times[] = $newYear;
+        }
+        usort($times, fn ($a, $b) => $a <=> $b);
+
+        return $times;
     }
 
     /**
@@ -400,7 +488,7 @@ class SociosDemoSeeder extends Seeder
 
         $addresses = [];
         if ($rows->isNotEmpty()) {
-            for ($i = 0; $i < self::TOTAL; $i++) {
+            for ($i = 0; $i < self::TOTAL + count(self::EDGE_CASES); $i++) {
                 $r = $rows[$this->faker->numberBetween(0, $rows->count() - 1)];
                 $addresses[] = [
                     'zip' => (string) $r->zip,
@@ -413,7 +501,7 @@ class SociosDemoSeeder extends Seeder
             return $addresses;
         }
 
-        for ($i = 0; $i < self::TOTAL; $i++) {
+        for ($i = 0; $i < self::TOTAL + count(self::EDGE_CASES); $i++) {
             $addresses[] = [
                 'zip' => preg_replace('/\D/', '', $this->faker->postcode()),
                 'pref' => $this->faker->prefecture(),
@@ -428,13 +516,13 @@ class SociosDemoSeeder extends Seeder
     // ---------------------------------------------------------------- visitas, puntos y sellos
 
     /** Visitas con su ポイント y スタンプ (cd de hatuban reservados en bloque) y los saldos de cada socio */
-    private function buildHistory(array $customers, array $staff, array $menus, array $shops): array
+    private function buildHistory(array $customers, array $staff, array $shops): array
     {
         $f = $this->faker;
         $plans = [];
         $total = 0;
         foreach ($customers as $n => $c) {
-            $plans[$n] = $this->visitTimes($c['registered']);
+            $plans[$n] = $c['visits'] ?? $this->visitTimes($c['registered']);
             $total += count($plans[$n]);
         }
 
@@ -447,6 +535,7 @@ class SociosDemoSeeder extends Seeder
         $pointDays = $this->masterDays('point_shikkou_kikan');
         $stampDays = $this->masterDays('stamp_shikkou_kikan');
         $shopPoint = $this->shopPointSettings($shops);
+        $visitPlan = new DemoVisitPlan;
 
         $visits = $points = $stamps = $balances = $byCustomer = $stampInfo = [];
         foreach ($customers as $n => $c) {
@@ -459,14 +548,16 @@ class SociosDemoSeeder extends Seeder
                 $shop = count($shops) > 1 && $f->numberBetween(1, 100) <= 10 ? $f->randomElement($shops) : $c['shop'];
                 $staffCd = $row['tb_staff_cd'] && $shop === $c['shop'] && $f->numberBetween(1, 100) <= 80
                     ? $row['tb_staff_cd'] : $f->randomElement($staff[$shop]);
-                $menu = $this->pickMenus($menus[$shop]);
-                $kaikei = array_sum(array_column($menu, 1));
+                // Lo cobrado sale de DemoVisitPlan (lo mismo que grabará VentasDemoSeeder): kaikei = total de la venta
+                $plan = $visitPlan->for($visitCd, $shop);
+                $menu = $plan['menus']->map(fn ($m) => [(string) $m->name, (int) $m->kingaku])->all();
+                $kaikei = $plan['total'];
                 $epoch = $time->getTimestamp();
 
                 // ポイント (kanren_record_register.php): 還元率 y 上限 de la tienda; keisan_flg 1 = sobre el 差引金額
                 $setting = $shopPoint[$shop];
                 $cash = $f->numberBetween(1, 100) <= 55;
-                $use = $balance >= 300 && $f->numberBetween(1, 100) <= 20 ? min($balance, $setting['max'], $kaikei) : 0;
+                $use = $balance >= 300 && $kaikei > 0 && $f->numberBetween(1, 100) <= 20 ? min($balance, $setting['max'], $kaikei) : 0;
                 $percent = $cash ? $setting['genkin'] : $setting['card'];
                 $amount = $setting['keisan'] === '2' ? $kaikei : $kaikei - $use;
                 $earned = (int) floor($amount * $percent / 100);
@@ -493,7 +584,7 @@ class SociosDemoSeeder extends Seeder
                 $visits[] = [
                     'cd' => $visitCd, 'user_id' => $row['id'], 'user_cd' => $row['cd'], 'shop_cd' => $shop,
                     'raiten_time' => (string) $epoch, 'raiten_hiduke' => $time->format('Y/m/d'), 'stamp' => 1,
-                    'customer_age' => (int) $c['birth']->diffInYears($time), 'customer_sex' => $row['kojin_sex'],
+                    'customer_age' => $c['birth'] ? (int) $c['birth']->diffInYears($time) : null, 'customer_sex' => $row['kojin_sex'],
                     'customer_job' => $row['job'], 'tb_point_log_cd' => $pointCd, 'tb_stamp_log_cd' => $stampLog,
                 ];
                 $byCustomer[$n][] = ['cd' => $visitCd, 'time' => $time, 'shop' => $shop, 'staff' => $staffCd, 'menus' => $menu, 'kaikei' => $kaikei];
@@ -541,29 +632,6 @@ class SociosDemoSeeder extends Seeder
 
         return array_map(fn ($d) => CarbonImmutable::createFromTimestamp($from, 'Asia/Tokyo')->addDays($d)
             ->setTime($f->numberBetween(10, 19), $f->randomElement([0, 15, 30, 45]), $f->numberBetween(0, 59)), $offsets);
-    }
-
-    /** Menú principal (ponderado) y, a veces, una opción: [[nombre, precio]…] */
-    private function pickMenus(array $menus): array
-    {
-        $weighted = [];
-        $options = [];
-        foreach ($menus as $menu) {
-            if (in_array($menu[0], self::OPTION_MENUS, true)) {
-                $options[] = $menu;
-
-                continue;
-            }
-            $weighted = array_merge($weighted, array_fill(0, self::MENU_WEIGHTS[$menu[0]] ?? 1, $menu));
-        }
-        $weighted = $weighted ?: $menus;
-
-        $picked = [$this->faker->randomElement($weighted)];
-        if ($options && $this->faker->numberBetween(1, 100) <= 35) {
-            $picked[] = $this->faker->randomElement($options);
-        }
-
-        return $picked;
     }
 
     /** Días de caducidad de admin_master (vacío = 365, como el legacy) */

@@ -397,7 +397,7 @@ function deletePic() {
 <table class="tableBox">
 	<tr>
 	<th>ログインID</th>
-	<td>@if ($isAdminAccount)管理者用ID@else{{ $displayId }}@endif</td>
+	<td>@if ($isAdminAccount){{ '管理者用ID' }}@else{{ $displayId }}@endif</td>
 	</tr>
 	<tr>
 	<th>パスワード</th>

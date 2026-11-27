@@ -18,7 +18,12 @@ use Illuminate\Support\Facades\DB;
  * - 商品管理 (`sales_items`): productos de venta para todas las tiendas, algunos canjeables por puntos.
  * - 施術カテゴリー (`tb_sejutsu_cate`, 全店舗) que usa la カルテ; solo las que falten por nombre.
  *
- * Idempotente: el marcador es el producto con `display_title` = MARKER; si existe, no hace nada.
+ * Casos límite: 割引 全額サービス (100 %, ventas de 0円), menús その他 de importe alto (ventas de ~300.000円) y un
+ * producto con nombre de 255 caracteres.
+ *
+ * Idempotente por partes: cada tienda se siembra si no tiene aún su menú marcador (ブライダルプラン), así que una
+ * tienda creada después (NucleoDemoSeeder) recibe su catálogo al volver a ejecutar; los productos, si no existe el
+ * producto con `display_title` = MARKER (si existe, solo se añaden las tiendas nuevas); 施術カテゴリー, por nombre.
  * Reglas comunes en CONVENCIONES.md §4 «Datos de demostración».
  */
 class CatalogoDemoSeeder extends Seeder
@@ -45,6 +50,9 @@ class CatalogoDemoSeeder extends Seeder
         ['ヘアオイル', 2860, ServiceMenu::TYPE_RETAIL],
         ['スタイリングワックス', 2200, ServiceMenu::TYPE_RETAIL],
         ['指名料', 550, ServiceMenu::TYPE_OTHER],
+        // Importes altos (ventas de ~300.000円): その他, para que SociosDemoSeeder (solo type 1) no los elija al azar
+        ['前撮りヘアメイク', 33000, ServiceMenu::TYPE_OTHER],
+        ['ブライダルプラン', 110000, ServiceMenu::TYPE_OTHER],
     ];
 
     /** 割引: [nombre, valor, type (1 ％, 2 円), buai_flg (1 歩合に含む, 2 含まない)] */
@@ -54,6 +62,7 @@ class CatalogoDemoSeeder extends Seeder
         ['紹介割引', 1000, Discount::TYPE_YEN, '2'],
         ['誕生月割引', 10, Discount::TYPE_PERCENT, '2'],
         ['平日割引', 300, Discount::TYPE_YEN, '1'],
+        ['全額サービス', 100, Discount::TYPE_PERCENT, '2'], // caso límite: ventas de 0円
     ];
 
     /** 施術カテゴリー (カルテ) */
@@ -69,27 +78,45 @@ class CatalogoDemoSeeder extends Seeder
         ['スカルプローション 120ml', 'スカルプローション', 4180, 500],
         ['カラーケアシャンプー 300ml', 'カラーケアシャンプー', 3740, 0],
         ['ヘアブラシ', 'ヘアブラシ', 2750, 250],
+        [null, 'サロン限定ギフトセット', 9900, 1000], // null = longProductName()
     ];
+
+    /**
+     * Caso límite: nombre largo. `sales_items.name` es `text` (sin máximo en la BD ni en StoreProductRequest):
+     * se usan 255 caracteres, el máximo habitual de un campo de texto de formulario.
+     */
+    public const LONG_PRODUCT_NAME_LENGTH = 255;
+
+    private const LONG_PRODUCT_TEXT = 'サロン限定ギフトセット（モイストシャンプー300ml・リペアトリートメント250g・ヘアオイル100ml・スカルプローション120ml・ヘアブラシ・オリジナルポーチ付き）'
+        .'ご家族やご友人へのプレゼントにも最適な、当サロンのスタイリストが厳選したホームケアアイテムの詰め合わせです。'
+        .'髪質やお悩みに合わせてお選びいただけるよう、店頭でカウンセリングも承っております。お気軽にスタッフまでお声がけください。'
+        .'数量限定のため、なくなり次第終了となります。あらかじめご了承ください。季節限定のパッケージでお届けいたします。ラッピング無料。メッセージカードもご用意しております。';
 
     public function run(): void
     {
-        if (SalesItem::query()->withoutGlobalScopes()->where('display_title', self::MARKER)->exists()) {
-            $this->command?->info('CatalogoDemoSeeder: ya sembrado (marcador), se omite.');
-
-            return;
-        }
-
         $faker = FakerFactory::create('ja_JP');
         $faker->seed(self::SEED);
         $shopCds = self::activeShopCds();
+        $productsSeeded = SalesItem::query()->withoutGlobalScopes()->where('display_title', self::MARKER)->exists();
 
-        DB::transaction(function () use ($faker, $shopCds) {
+        DB::transaction(function () use ($faker, $shopCds, $productsSeeded) {
             foreach ($shopCds as $shopCd) {
-                $this->seedShopMasters($shopCd);
+                if (! $this->shopSeeded($shopCd)) {
+                    $this->seedShopMasters($shopCd);
+                }
             }
             $this->seedServiceCategories();
-            $this->seedProducts($faker, $shopCds);
+            $productsSeeded ? $this->addShopsToProducts($shopCds) : $this->seedProducts($faker, $shopCds);
         });
+    }
+
+    /** Marcador por tienda: su menú ブライダルプラン (también si se borró después, para no volver a crearlo) */
+    private function shopSeeded(int $shopCd): bool
+    {
+        [$name, $price] = self::MENUS[array_key_last(self::MENUS)];
+
+        return ServiceMenu::query()->withoutGlobalScopes()->where('tb_shop_cd', $shopCd)
+            ->where('name', $name)->where('kingaku', $price)->exists();
     }
 
     /** Tiendas activas (`disp_flg = '1'`); si no hay ninguna marcada, todas las no borradas */
@@ -130,10 +157,30 @@ class CatalogoDemoSeeder extends Seeder
         }
     }
 
+    /** Tiendas nuevas (p. ej. creadas después por NucleoDemoSeeder) en available_shop_cds de los productos demo */
+    private function addShopsToProducts(array $shopCds): void
+    {
+        $names = array_map(fn ($p) => $p[0] ?? self::longProductName(), self::PRODUCTS);
+        foreach (SalesItem::query()->whereIn('name', $names)->get() as $item) {
+            $cds = array_values(array_unique(array_merge($item->availableShopCds(), $shopCds)));
+            if (count($cds) !== count($item->availableShopCds())) {
+                $item->setAvailableShopCds($cds);
+                $item->save();
+            }
+        }
+    }
+
+    /** Nombre del caso límite: exactamente LONG_PRODUCT_NAME_LENGTH caracteres */
+    public static function longProductName(): string
+    {
+        return mb_substr(str_repeat(self::LONG_PRODUCT_TEXT, 2), 0, self::LONG_PRODUCT_NAME_LENGTH);
+    }
+
     /** 商品管理: disponibles en todas las tiendas; el primero lleva el marcador en display_title */
     private function seedProducts(\Faker\Generator $faker, array $shopCds): void
     {
         foreach (self::PRODUCTS as $i => [$name, $displayName, $price, $points]) {
+            $name ??= self::longProductName();
             $item = new SalesItem;
             $item->forceFill([
                 'disp_flg' => 1,

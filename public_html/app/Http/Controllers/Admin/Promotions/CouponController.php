@@ -45,7 +45,7 @@ class CouponController extends Controller
 
         $shopCd = (string) $request->input('shop_cd', '');
         $kubun = (string) $request->input('coupon_kubun', '');
-        $perPage = max(1, (int) $request->input('kensu', 20));
+        $perPage = max(1, (int) ($request->input('kensu') ?: 20));
         $scopeShop = $shopCd !== '' ? $shopCd : (string) $this->staff->shopCd();
 
         $coupons = MycouponMaster::query()

@@ -22,7 +22,7 @@
 
 @section('menu', 'clientes')
 @section('wrapClass', 'customerDetail')
-@section('title', '顧客登録情報 - ' . config('app.name'))
+@section('title', '顧客登録情報 - ' . app(\App\Services\Nucleo\LegacyUi::class)->siteName())
 
 @section('css')
 @if (str_contains(request()->userAgent() ?? '', 'Mac OS') && str_contains(request()->userAgent() ?? '', 'Safari'))

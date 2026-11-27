@@ -118,3 +118,13 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 - 2026-11-27 — Respuestas de Antony en `Doc/qa/para-japon.md` (§3 firmes/provisionales/pendientes de Japón y §5 deuda del enlace de `mpa_getTopBanner`; 28ff9b7). 勤怠管理 (`category5/kintai`) completo: lista del día, alta, edición, borrados, 端末パスワード変更, 各種設定 (horas e imagen de fondo) y CSV diario/mensual (`KintaiService`, `KintaiEntryValidator`, `KintaiCsv`, `KintaiBackground`; `KintaiTest` 11 pruebas).
 - 2026-11-27 — Diseño cerrado con S0: portada y paginador en hecho (S1/S2), filas «otro» en descartado o hecho (c72a70e); カードリーダー/カード descartadas (touchcation, reversible; en `para-japon.md` §4). Solo queda ⏸ `shukei`.
 - 2026-11-27 — Datos de demostración (`database/seeders/Demo/OperacionesDemoSeeder.php`, CONVENCIONES §4): 営業日設定 del mes actual y el siguiente (水曜 y 祝日 = 休日), turnos de esos dos meses (早番/遅番/通し con la シフト区分 existente; crea ホール/キッチン/レジ si no hay), 勤怠 de los últimos 30 días en `tb_work_time` y en el terminal kintai (entrada, 外出/戻り, salida, 遅刻/早出/残業/早退, algún 欠勤/有給), `kintai_tb_config` de las tiendas sin él (08-22), 3 インフォメーション y los menús de category5 activos (初期設定 y スケジュール管理 vienen apagados en el backup). Reproducible con crc32 por empleado y día; idempotente por día (solo rellena días vacíos). El master solo entra si no hay otro staff. CTI no siembra nada propio (lee clientes y visitas de S2); los terminales de señalización y カード son de S4. `DemoSeederTest`.
+- 2026-11-27 — Tercera pasada, fase A: `OperacionesDemoSeeder` dividido en `Demo/Operaciones/{Personal,Asistencia,Integraciones}DemoSeeder`.
+  - **Personal:** 所属, campos vacíos de la ficha del staff demo de S1 (uno con 備考 de 255 caracteres), 5 tarjetas FeliCa (3 asignadas), más campos en スタッフ検索項目設定 y 12 インフォメーション (por tienda, por 役職, larga y en kana de ancho medio).
+  - **Asistencia:**
+    - 92 días de 勤怠 en la jornada estándar de la tienda, con 残業 de hasta 4 h, sin salida o sin 戻り, 欠勤/有給 y 休日出勤;
+    - 残業 pasada la medianoche el último día de mes y el 31/12 → 1/1;
+    - la jornada de hoy en curso;
+    - turnos 締め que cruzan la medianoche, con huecos y solapes.
+  - **Integraciones:** passcode de la tienda móvil por tienda (uno con cero inicial).
+  - **Staff:** no crea ninguno (es de S1).
+- 2026-11-27 — Tercera pasada, fase B (primera vuelta en :8081). 2 fallos corregidos con prueba: ログインID vacía en スタッフ登録 (`管理者用ID@else` no compilaba) y error de JS en 勤怠一覧 day2 (comillas sin escapar). Detalle en `Doc/qa/regresion.md`. Pendiente: claves de API en el `.env` de :8081 (S0) y segunda vuelta tras la recarga.

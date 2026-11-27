@@ -42,11 +42,88 @@ El núcleo no tiene pantallas con CSV ni PDF (los helpers `LegacyCsv` y `LegacyP
 
 ### Clientes / ventas / reservas (S2)
 
+| pantalla (URL) | fallo | corrección + prueba Pest | commit |
+|---|---|---|---|
+| ficha `/admin/clientes/{cd}`, 来店処理 `customer_search.php` y 7 vistas más de clientes (lookup, photos, point-history, custom-records, visit-records, processing) | `<title>` «顧客登録情報 - Laravel»: usaban `config('app.name')` en vez del nombre del sitio (`$site_name` del legacy) | `LegacyUi::siteName()` en las 9 vistas de `resources/views/admin/clientes`; `QaClientesTest` («titula la ficha y 来店処理…») | 4df0081 |
+| ficha, pestaña 有料会員状況 (`?tab=14`) de un 無料会員 | Error de JS `Cannot read properties of null (reading 'addEventListener')`: sin botón 変更する el script lo usaba igual (bug heredado del legacy) | `tabs/tab14.blade.php` sale si no existe `#paidMemberSendBtn`; `QaClientesTest` («no lanza error de JS…») | 4df0081 |
+| CSV `/admin/clientes/export?format=standard o ex02`, 来店履歴 CSV `/admin/clientes/reports/visit-csv/download` | Cuerpo en Shift_JIS pero cabecera `text/x-csv; charset=utf-8` (Laravel añade utf-8 si no hay charset) | `text/x-csv; charset=Shift_JIS` en `CustomerCsvExporter` y `Reports/VisitCsvService`; `QaClientesTest` («declara Shift_JIS…») | 4df0081 |
+| 売上データ削除 `/system/category1/karute_menu/karute_delete_list.php` (`/admin/ventas/sales`) | El botón 削除 no borraba nada: `deleteHandler(1773810038002900241,11)` pasaba el `tb_customer_cd` de 19 cifras como número y JS lo redondea (…900200), así que el POST no casaba ninguna fila (bug heredado: el legacy hacía lo mismo) | `sales/index.blade.php`: cd y grupo como cadena con `Js::from((string) …)`; `QaVentasTest` («pasa el cd de 19 cifras como cadena…») | 65f178c |
+
+Clientes (master y umeda01): lista y paginación (10/50 por página, primera/última), búsqueda con filtros combinados AND/OR/NOT (tienda + sexo + edad, 来店回数, 会計金額, 予測来店日, 削除済; recuentos cotejados con la BD), alta y edición (master y umeda01, con 住所検索), borrado y 削除済, ficha con todas sus pestañas, 来店処理 (ficha y `customer_search.php`, インターバル), puntos (añadir/restar), sellos, 集計 (`customer_sumup_list` 業種別/県別, point1/point2/stamp1, 来店履歴 CSV), CSV estándar y DM, configuración (form_config, グループ, 来店動機, ランク, 振り分け, 追加情報, 入退室, カード). umeda01: solo 梅田店 (76), sin 削除 ni CSV (403). Sin 500 ni SQLSTATE. 3 fallos corregidos. Para S0/S1: en `crmsystem2` la contraseña de master no es `master` como dice el brief (ver `tb_staff.login_pass`); お問合せ de la cabecera abre `/system/contact/?wintype=no_headers` (404); `favicon.png`/`favicon.ico` 404 en el login. Datos demo: ningún `tb_stamp_log` tiene `kaikei`, así que el 集計 stamp1 sale a 0 (correcto según el SQL legacy). CSVインポート y table-export dan 403 a master (`nucleo.maintenance`, ya anotado). Ventas y reservas: pendientes (otra ronda). Reverificado en :8081 tras 005d388: `<title>` «顧客登録情報 - shop» y «来店処理 - shop» (sin «Laravel»), `?tab=14` de un 無料会員 sin errores de consola, CSV estándar con `text/x-csv; charset=Shift_JIS`.
+
+Ventas (master, qa_partial y umeda01): 売上データ作成 (tienda, búsqueda de socio, スタッフ, メニュー, 割引, total 9.240円 cotejado; grabada y borrada la venta QA-S2), 売上データ削除 (búsqueda por fechas y スタッフ, paginación, borrado), メニュー管理 y 割引管理 (alta QA-S2 con ｶﾅ normalizada, edición, ▲▼, borrado), 経費管理 (alta, edición, borrado, paginación), スタッフ別集計 y 日報・週報・月報 (día, semana, mes, 全店舗, sin fechas; totales cotejados con la BD), 商品管理 category2 (validación AJAX, alta, edición, búsqueda, borrado). qa_partial: menú solo con 集計; los POST de alta y borrado dan 403. umeda01: siempre 梅田店, aunque se pase `?shop=3`. Sin 500, SQLSTATE ni errores de JS. 1 fallo corregido (pendiente de reverificar tras la fusión). Igual que el legacy, sin cambios: 売上データ削除 muestra la hora en 12 h sin AM/PM (`h:i`); la fecha por defecto del formulario es la del calendario, pero el 履歴 usa el día de negocio (corte a las 5:00), así que una venta hecha entre las 0:00 y las 5:00 no sale en el 履歴; los botones 削除 se ven aunque falte el permiso (el servidor da 403); CKEditor sale en el idioma del navegador. No hay PDF ni CSV en ventas.
+
 ### Promoción (S3)
+
+Datos (fase A, `PromocionDemoSeeder`, marca `[demo-promocion-limites]`): 25 cupones más (caducado, 31/12, 29/02/2028, fin de mes, título de 100, oculto, 2 de baja, 0 y 999999 puntos) repartidos por tienda; 38 envíos más (fin de mes de 12 meses, 1/1 0:00, 29/02/2024, asunto de 100 y cuerpo largo, sin destinatarios, con 不達 —6 socios con `error_send_cnt`, 4 en `mailmaga_flg` 9—, 2 de baja, 16 デコメール, 3 de cupón) y 3 programados (fin de mes, 31/12, 29/02/2028), con 登録者 por tienda y 本部; 23 push (fin de mes, largo, 0 y 99999 puntos, sin destinatarios, de baja); 6 encuestas sin respuestas; rango oculto y rango de baja asignados a socios demo (los 4 niveles por tipo los crea S2); 新着情報 largo y de baja.
+
+| pantalla (URL) | fallo | corrección + prueba Pest | commit |
+|---|---|---|---|
+| Datos demo: 過去配信 de メルマガ/デコメール como usuario de tienda (umeda01) | No ve ningún envío: los demo tenían `登録者` = cd del staff, y la lista de tienda filtra por 登録者 = tienda (フッター表記店舗) | `登録者` = cd de tienda (o -1) en `PromocionDemoSeeder` · `DemoSeederTest` (`登録者`, reparto por tienda) | ver abajo |
+| テンプレート管理, テストメールアドレス, アンケートテスト, 過去配信詳細… (`/admin/promocion/*`) | 404 de los 絵文字: las plantillas del backup guardan `<img src="../decomail/js/tiny_mce/plugins/emoji…">`, relativo a `system/category3/<carpeta>/` | Ruta `admin/promocion/decomail/js/tiny_mce/…` → 301 a `legacy/system/category3/decomail/js/…` · `QaTerceraPasadaTest` | ver abajo |
+| DM発行 (`/admin/promocion/dm/customer_list`) | Error de JS `myFlexSelect is not a function` (el buscador de S2 sin su plugin ni el datepicker) | La vista carga `myFlexSelect.js` y `ui.datepicker` · `QaTerceraPasadaTest` | ver abajo |
+| クーポン一覧, 過去配信, 予定配信, クーポン利用数確認 (vuelta de 削除/修正 con `kensu=`) | 1 fila por página (`input('kensu', 20)` con '' → null → 1) | `(int) ($request->input('kensu') ?: 20)` · `QaTerceraPasadaTest` | ver abajo |
+| Envíos de メルマガ en :8081 | Cada envío de texto avisaba a **b.g-api.net** real (BD con `push_api_host = 1`, `domain = localhost`) | `config/promocion.php` `push_trigger`: en `APP_ENV=local` → `LogPushTrigger` (solo log); `CRM_PUSH_TRIGGER=gapi` lo fuerza · `QaTerceraPasadaTest` | ver abajo |
+| 確認 de 新規メール/予約メール (`mail_mag/mail_new_confirm`) | El aviso azul 「＊＊＊＊ここに簡単ログインが入ります＊＊＊＊」 salía como texto escapado (`<span style=…>`); el legacy imprime `nl2br($message)` | Se escapa solo el cuerpo y el aviso va como HTML · `M2MailFlowTest` (confirma) | ver abajo |
+
+Probado en :8081 hasta ahora: メルマガ y デコメール inmediatos a demo7@example.com (correo en el log, push solo log); 予約配信 31/12 23:55 alta → 修正 → 予定解除; テンプレート alta → 修正 → 表示 → 削除; ポイントルール 京都店 alta → 削除; push QA-S3 guardado (9490) pero la respuesta dio 500 por el permiso del laravel.log de :8081 (entorno, avisado a S0); recorrido de 145 pantallas como master y 131 como umeda01 (sin 500 ni 403 inesperados); cupón QA-S3 alta → lista (梅田店) → 修正 → 削除; CSV de クリックカウンタ (SJIS, `"	"` como el legacy); PDF de DM (300 socios). Sin fallo de código: imágenes de スタンプ `hp/uploads/c4/stamp/*.gif` (archivos subidos de producción, tampoco están en el repo legacy). スマトピ (404) espera F8.
 
 ### マイページ / 端末 / señalización (S4)
 
+Datos (fase A): `ContenidoDemoSeeder` añade casos límite: bajas (`disp_flg`/`flg` 9), ガチャリン caducadas, ペーパーサイネージ 停止 y de baja, japonés al máximo (100/400/1000), opcionales vacíos, kana de ancho medio, 3 tiendas, 11–20 filas más por lista (paginan), 12 ICカード 端末, ICカード sin socio, perdidas y de tipo oculto, y en signage/ ciclos por periodo que acaban a fin de mes, a fin de año, el 29-02, uno caducado, dos solapados y uno diario. Prueba: `tests/Feature/Contenido/DemoSeederTest.php`.
+
+| Pantalla (URL) | Fallo | Corrección + prueba Pest | Commit |
+|---|---|---|---|
+| 放映素材 `/admin/terminales/signage-materials` | Lista vacía: filtra por el primer display (como el legacy) y los 素材 de la demo no tenían `tb_display_cd` | El seeder los asigna al primer display; `DemoSeederTest` (assertSee ランチメニュー) | (este) |
+| オススメ `/admin/mypage/recommendations` | La demo guardaba 全店舗 como `tb_shop_cd = 0` (tienda inexistente); el legacy usa vacío/NULL | Seeder con NULL; `DemoSeederTest` | (este) |
+| signage/ reproductor `/signage/view?cd=` (también dentro de `/admin/senalizacion`, 端末一覧, パッケージ) | El sondeo `view/ajax.php` iba con `type: "GETT"` (errata del legacy, Apache lo aceptaba): **405** cada pocos segundos | `type: "GET"` en las 13 vistas `signage-view/*`; `SignagePlayerTest` (assertSee `type: "GET"`) | (este) |
+
+Probado en :8081 como master: alta/edición/borrado con imagen de オススメ, 求人 y 求人職種 (全店舗 sale en todas las tiendas); ガチャリン (valor no numérico rechazado); 放映素材, 放映プログラム (selección de 素材 → XML) y ディスプレイ, y el reproductor `digitalsignage/index2.php` con telop e imagen; ペーパーサイネージ (alta, 停止, edición, borrado, QR, `/ptag/` 302, 集計, CSV SJIS); ICカード (búsqueda 全/未/済 = legacy); マイコレ カバーフロー (subida y borrado); signage/ 端末 (alta/edición/borrado) y GoTel (入力→確認→送信). Como `qa_partial` (matriz vieja): マイコレ, 求人新規, 求人職種 y signage/ dan 403; 端末管理 abre (sin kengen, como el legacy).
+
+Ajenos a S4 (vistos en :8081): accesos directos de cabecera `tb_bookmark` a `/system/category3/mycoupon/mycoupon_list.php` y `/system/category5/staff/staff_list.php` dan 404, y お問合せ `/system/contact/` también (S1/S3/S5).
+
 ### Operaciones / 勤怠 / integraciones (S5)
+
+Recorrido en :8081 con los datos de fe7296c (antes de la recarga) como `master`, `tencho_umeda` (店長), `umeda01` y `qa_partial` (matriz vieja). Lo creado lleva «QA-S5» y se borró al terminar, salvo el empleado `QA-S5 試験 太郎` (梅田店), que se queda para la segunda vuelta. Muestra consultada en solo lectura.
+
+| Pantalla (URL) | Fallo | Corrección + prueba Pest | Commit |
+|---|---|---|---|
+| スタッフ新規登録 / 修正 y su 確認 (`/admin/operaciones/staff/create`, `/staff/confirm`) | La fila ログインID salía vacía. En Blade, `管理者用ID@else` no compila el `@else` porque la `@` va pegada a una letra latina, así que la rama del empleado nunca se pintaba | `{{ '管理者用ID' }}@else` en `form` y `partials/summary`; aserciones en `StaffEntryTest` (formulario y 確認) | 90b1daa |
+| 勤怠一覧 variante 2 (`/admin/operaciones/working/day2`) | Error de JS «Unexpected identifier 'selectBox'»: el `class="selectBox"` se insertaba sin escapar dentro de una cadena JS con comillas dobles, y se rompía todo el script de edición de la fila | Comillas escapadas en el `@include` de `edit-js`; aserción en `WorkingDayTest` | 90b1daa |
+| 勤怠一覧 / 集計 con los datos demo | Las marcas del seeder (fase A anterior) calculaban 出勤/遅刻/早出 y 退社/残業/早退 respecto al turno, no a la jornada de la tienda. Las pantallas calculan con `start_work_time` + 8 h + 休憩, y salían horas incoherentes (salida 17:10 con 退社 → 19:00) | `AsistenciaDemoSeeder::standardDay()`: el 勤怠 usa la jornada estándar de la tienda; los turnos (シフト) mantienen su variedad. Cubierto en `DemoSeederTest` | 90b1daa |
+
+Probado sin fallos:
+- **スタッフ:** búsqueda, paginación (10 por página), CSV (`user.csv`), alta → 確認 → registro, edición, 削除, 復元 y ficha con tarjeta (pestaña 2).
+- **グループ:** alta, 修正, ▲▼ y 削除.
+- **検索項目設定:** guardado sin pérdidas.
+- **インフォメーション:** alta con tienda y 役職, HTML escapado, 修正 y 削除.
+- **勤怠データ (kintai):**
+  - alta, edición y borrado (el borrado confirma con `jquery.alerts`);
+  - CSV diario y mensual (este último desde 各種設定);
+  - 端末パスワード: error y cambio, devuelto a 9999;
+  - 各種設定: guardado.
+- **勤怠一覧:** calendario → día, edición en la fila (cambio y vuelta atrás), CSV, スタッフ一覧 y 集計.
+- **シフト:**
+  - 日別: pintado y guardado de un turno, que luego se quitó;
+  - 月別: carga;
+  - シフト区分: alta, 修正, ▲ y 削除.
+- **営業日設定:** marcar y desmarcar un 休日.
+- **Usuario limitado:** el menú oculta alta, グループ, シフト区分, パスワード y 各種設定, y esas URL dan 403. La ficha solo ofrece 戻る y no hay botón CSV.
+- **API con curl:**
+  - CTI: `jGetCustomerData` (socio y `NO_DATA`), `customerDetailHtml` y `ctiWindow` (búsqueda, y agenda con `customerCd`);
+  - `mpa_corresponding`, `mpa_getTopBanner` y `mpa_getCoverFlow`;
+  - `appview`: `qr_code`, `memberId`, `coupon`, `used_coupon_list`, `stamp`, `visit_history`, `photo_gallery` y `member_kiyaku`, con un socio demo de S2.
+
+Paridad comprobada con la muestra:
+- スタッフ一覧 vacía hasta buscar.
+- El ID del formulario usa la tienda de la sesión y el registro, la elegida.
+- インフォメーション «No» = `cd`.
+- `rank` de un grupo nuevo = n.º de grupos + 1. Sale 2.º porque los grupos sembrados tienen `rank` 99–101 (S1).
+
+Pendientes:
+- `tool/api` y la API JWT de la tienda móvil no se pueden probar en :8081: su `.env` no tiene `CRM_API_KEY`, `MOBILESHOP_API_USER`/`PASS` ni las claves RSA. `tool/api` responde vacío y `/api/auth` da `Invalid config.`, como el legacy sin configuración. Hacen falta valores locales de prueba (S0).
+- Las columnas 普通残業/休日残業/休日出勤 de 集計 siguen vacías: pregunta de S2 en `para-japon.md` §3.
+- Segunda vuelta tras la recarga con los datos nuevos (fase A).
 
 Web local `http://localhost:8081` (checkout principal en `laravel13`, BD `crmsystem2` con el esquema `signage`). La muestra no se tocó.
 

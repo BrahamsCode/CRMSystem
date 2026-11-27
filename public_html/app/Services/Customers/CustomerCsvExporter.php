@@ -85,7 +85,7 @@ class CustomerCsvExporter
                 echo $this->sjis($buffer);
                 flush();
             }
-        }, 'user.csv', ['Content-Type' => 'text/x-csv']);
+        }, 'user.csv', ['Content-Type' => 'text/x-csv; charset=Shift_JIS']);
     }
 
     /**
@@ -116,7 +116,7 @@ class CustomerCsvExporter
                 echo $this->sjis($buffer);
                 flush();
             }
-        }, 'CRM_DM_List.csv', ['Content-Type' => 'text/x-csv']);
+        }, 'CRM_DM_List.csv', ['Content-Type' => 'text/x-csv; charset=Shift_JIS']);
     }
 
     /**
@@ -131,7 +131,7 @@ class CustomerCsvExporter
 
         return response()->streamDownload(function () use ($str): void {
             echo $this->sjis($str);
-        }, 'inputCustomerData.csv', ['Content-Type' => 'text/x-csv']);
+        }, 'inputCustomerData.csv', ['Content-Type' => 'text/x-csv; charset=Shift_JIS']);
     }
 
     /**
@@ -162,7 +162,7 @@ class CustomerCsvExporter
                 echo $this->sjis($buffer);
                 flush();
             }
-        }, $table.'_'.now('Asia/Tokyo')->format('YmdHis').'.csv', ['Content-Type' => 'text/x-csv']);
+        }, $table.'_'.now('Asia/Tokyo')->format('YmdHis').'.csv', ['Content-Type' => 'text/x-csv; charset=Shift_JIS']);
     }
 
     /** Valor de una columna de tb_koumoku con las conversiones del legacy */
