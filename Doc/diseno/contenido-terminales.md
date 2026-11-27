@@ -125,22 +125,22 @@ Todo category4 solo alimentaba `hp/` (sitio PC) → el módulo `web` queda **vac
 
 | Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas (legacy) | Estado |
 |---|---|---|---|---|---|
-| `signage/index.php` | ホーム (現在表示中のサイネージ) | `admin.senalizacion.index` | `Senalizacion\HomeController@index` | — | pendiente |
-| `signage/list/terminal.php` | 端末一覧 | `admin.senalizacion.terminals.*` | `Senalizacion\TerminalController@index/store/update/destroy` | BD `admin`: `terminal` | pendiente |
-| `signage/list/packages.php` | パッケージ一覧 | `admin.senalizacion.packages.*` | `Senalizacion\PackageController@…` (crea los ciclos de cada marco) | BD `admin`: `packages`, `cycle` | pendiente |
-| `signage/list/cycle.php` | サイネージ管理 (ciclos) | `admin.senalizacion.cycles.edit/update` | `Senalizacion\CycleController@edit/update` | BD `admin`: `cycle`, `contents` | pendiente |
-| `signage/list/contents_category.php` | 画像サイズ別一覧 | `admin.senalizacion.content-categories.*` | `Senalizacion\ContentCategoryController@…` | BD `admin`: `contents_category` | pendiente |
-| `signage/list/contents.php`, `contents_detail.php` | サイネージ管理 (画像) | `admin.senalizacion.contents.*` (`kind=image`) | `Senalizacion\ContentController@…` | BD `admin`: `contents` / `movie_contents` | pendiente |
-| `signage/list/movie_contents.php`, `movie_contents_detail.php`, `movie_contents_category.php` | サイネージ管理 (動画) | `admin.senalizacion.contents.*` (`kind=video`) | ídem | ídem | pendiente (corrige el borrado de categoría, ver Decisiones) |
-| `signage/list/signage.php` | サイネージ管理 (ファイル) | `admin.senalizacion.files.store/destroy` | `Senalizacion\FileController@store/destroy` | BD `admin`: `signage` | pendiente (lista blanca sin `swf`) |
-| `signage/list/inc/*`, `inc_flame_cd/*`, `inc_js/*` | (17 diseños de marco) | — | componentes Blade `resources/views/admin/senalizacion/layouts/*` | — | pendiente (fragmentos) |
-| `signage/view/index.php` + `view/h_*`, `v_*` | (pantalla) | `GET /signage/view/` y `/signage/view/index.php` (`?cd=`) — **público** | `Senalizacion\PlayerController@show` | — | pendiente |
-| `signage/view/ajax.php` | (sondeo de cambios) | `/signage/view/ajax.php` — público, JSON | `…@poll` | — | pendiente |
-| `signage/view/packages.php` | (vista previa de paquete) | `admin.senalizacion.packages.preview` | `Senalizacion\PackageController@preview` | — | pendiente |
+| `signage/index.php` | ホーム (現在表示中のサイネージ) | `admin.senalizacion.index` | `Senalizacion\HomeController@index` | — | hecho (esquema mínimo de desarrollo; falta el volcado de Antony) |
+| `signage/list/terminal.php` | 端末一覧 | `admin.senalizacion.terminals.*` | `Senalizacion\TerminalController@index/store/update/destroy` | BD `admin`: `terminal` | hecho (esquema mínimo de desarrollo; falta el volcado de Antony) |
+| `signage/list/packages.php` | パッケージ一覧 | `admin.senalizacion.packages.*` | `Senalizacion\PackageController@…` (crea los ciclos de cada marco) | BD `admin`: `packages`, `cycle` | hecho (esquema mínimo de desarrollo; falta el volcado de Antony) |
+| `signage/list/cycle.php` | サイネージ管理 (ciclos) | `admin.senalizacion.cycles.edit/update` | `Senalizacion\CycleController@edit/update` | BD `admin`: `cycle`, `contents` | hecho (esquema mínimo de desarrollo; falta el volcado de Antony) |
+| `signage/list/contents_category.php` | 画像サイズ別一覧 | `admin.senalizacion.content-categories.*` | `Senalizacion\ContentCategoryController@…` | BD `admin`: `contents_category` | hecho (esquema mínimo de desarrollo; falta el volcado de Antony) |
+| `signage/list/contents.php`, `contents_detail.php` | サイネージ管理 (画像) | `admin.senalizacion.contents.*` (`kind=image`) | `Senalizacion\ContentController@…` | BD `admin`: `contents` / `movie_contents` | hecho (esquema mínimo de desarrollo; falta el volcado de Antony) |
+| `signage/list/movie_contents.php`, `movie_contents_detail.php`, `movie_contents_category.php` | サイネージ管理 (動画) | `admin.senalizacion.contents.*` (`kind=video`) | ídem | ídem | hecho (esquema mínimo de desarrollo; falta el volcado de Antony) (corrige el borrado de categoría, ver Decisiones) |
+| `signage/list/signage.php` | サイネージ管理 (ファイル) | `admin.senalizacion.files.store/destroy` | `Senalizacion\FileController@store/destroy` | BD `admin`: `signage` | hecho (esquema mínimo de desarrollo; falta el volcado de Antony) (lista blanca sin `swf`) |
+| `signage/list/inc/*`, `inc_flame_cd/*`, `inc_js/*` | (17 diseños de marco) | — | componentes Blade `resources/views/admin/senalizacion/layouts/*` | — | hecho (esquema mínimo de desarrollo; falta el volcado de Antony) (fragmentos) |
+| `signage/view/index.php` + `view/h_*`, `v_*` | (pantalla) | `GET /signage/view/` y `/signage/view/index.php` (`?cd=`) — **público** | `Senalizacion\PlayerController@show` | — | hecho (esquema mínimo de desarrollo; falta el volcado de Antony) |
+| `signage/view/ajax.php` | (sondeo de cambios) | `/signage/view/ajax.php` — público, JSON | `…@poll` | — | hecho (esquema mínimo de desarrollo; falta el volcado de Antony) |
+| `signage/view/packages.php` | (vista previa de paquete) | `admin.senalizacion.packages.preview` | `Senalizacion\PackageController@preview` | — | hecho (esquema mínimo de desarrollo; falta el volcado de Antony) |
 | `signage/mail/index.php` | GoTel管理 (お問い合わせ) | `admin.senalizacion.contact.create/store` | `Senalizacion\ContactController@create/store` | BD `admin`: `contact`, `customer` | pendiente (confirmar uso; Mailable en cola) |
 | `signage/pdf/invoice.php` | 請求書 | `admin.senalizacion.invoices.show` | `Senalizacion\BillingPdfController@invoice` | — | pendiente (confirmar uso; PDF del paquete de S1) |
 | `signage/pdf/receipt.php` | 領収書 | `admin.senalizacion.receipts.show` | `…@receipt` | — | pendiente (ídem) |
-| `signage/inc/*`, `basic_authentication.php` | (núcleo, login `?s=`) | — | sesión del admin + Gate `manageSignage` | — | pendiente (reemplazado) |
+| `signage/inc/*`, `basic_authentication.php` | (núcleo, login `?s=`) | — | sesión del admin + Gate `manageSignage` | — | hecho (esquema mínimo de desarrollo; falta el volcado de Antony) (reemplazado) |
 | `signage/_tool.php` | (chmod 777) | — | — | — | descartado: peligroso, sin función |
 | `signage/sample.php` … `sample4.php` | (pruebas) | — | — | — | descartado: pruebas de desarrollo |
 

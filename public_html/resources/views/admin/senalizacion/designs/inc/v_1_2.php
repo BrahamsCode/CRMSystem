@@ -1,0 +1,51 @@
+
+<!-- 1の場合 -->
+<tr>
+	<td>
+		<label>
+			<?php if ( ($_detail_data['flame_cd'] ?? null) == 1 ) { ?>
+				<input type="radio" name="flame_cd" value="1" checked="checked">
+			<?php } else { ?>
+				<input type="radio" name="flame_cd" value="1">
+			<?php } ?>
+				パターン1 (2分割)
+		</label>
+	</td>
+	<td>
+		<table>
+			<colgroup>
+				<col width="100%">
+			</colgroup>
+			<tr>
+				<td align="center">A 画面</td>
+			<tr>
+			</tr>
+				<td align="center">B 画面</td>
+			</tr>
+		</table>
+	</td>
+</tr>
+
+<tr>
+	<td>
+		<label>
+			<?php if ( ($_detail_data['flame_cd'] ?? null) == 2 ) { ?>
+				<input type="radio" name="flame_cd" value="2" checked="checked">
+			<?php } else { ?>
+				<input type="radio" name="flame_cd" value="2">
+			<?php } ?>
+				パターン2 (分割なし)
+		</label>
+	</td>
+	<td>
+		<table>
+			<colgroup>
+				<col width="25%">
+			</colgroup>
+			<tr>
+				<td align="center">A 画面</td>
+			</tr>
+		</table>
+	</td>
+</tr>
+

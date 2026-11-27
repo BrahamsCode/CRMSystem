@@ -4,6 +4,8 @@ use App\Http\Controllers\Publico\Senalizacion\CouponPrintController;
 use App\Http\Controllers\Publico\Senalizacion\DisplayXmlController;
 use App\Http\Controllers\Publico\Senalizacion\PlayerController;
 use App\Http\Controllers\Publico\Senalizacion\PollController;
+use App\Http\Controllers\Publico\Senalizacion\SignageUploadController;
+use App\Http\Controllers\Publico\Senalizacion\SignageViewController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -53,5 +55,18 @@ Route::name('publico.senalizacion.')->group(function () {
         foreach ($coupons as $uri => [$method, $name]) {
             Route::match(['get', 'post'], $uri, [CouponPrintController::class, $method])->name($name);
         }
+    });
+
+    /*
+     * Reproductor de la señalización web signage/view/ (?cd=<terminal>) y su sondeo ajax.php
+     * (?packages_cd=<terminal>). La vista previa view/packages.php va en el admin (admin.senalizacion.packages.preview).
+     * /signage/upload/… sirve los archivos del disco public; /signage/css, img, js y view/css|js los sirve
+     * public/legacy/signage/ en su URL original.
+     */
+    Route::prefix('signage')->name('signage.')->group(function () {
+        Route::match(['get', 'post'], 'view', [SignageViewController::class, 'show'])->name('view');
+        Route::match(['get', 'post'], 'view/index.php', [SignageViewController::class, 'show'])->name('view.index');
+        Route::match(['get', 'post'], 'view/ajax.php', [SignageViewController::class, 'poll'])->name('view.poll');
+        Route::get('upload/{path}', SignageUploadController::class)->where('path', '.+')->name('upload');
     });
 });

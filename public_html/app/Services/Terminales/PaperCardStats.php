@@ -5,6 +5,7 @@ namespace App\Services\Terminales;
 use App\Models\Customers\Customer;
 use App\Models\Integraciones\UrlTransferData;
 use App\Models\Terminales\PaperCard;
+use App\Support\LegacyCsv;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -46,8 +47,8 @@ class PaperCardStats
         $row = $this->accesses($card)
             ->leftJoin($this->customerTable().' as tb3', 'tb3.cd', '=', 'tb1.tb_customer_cd')
             ->selectRaw('count(*) as count')
-            ->selectRaw("sum(case when tb3.kojin_sex = ? and tb1.tb_customer_cd is not null then 1 else 0 end) as man", [self::SEX_MALE])
-            ->selectRaw("sum(case when tb3.kojin_sex = ? and tb1.tb_customer_cd is not null then 1 else 0 end) as woman", [self::SEX_FEMALE])
+            ->selectRaw('sum(case when tb3.kojin_sex = ? and tb1.tb_customer_cd is not null then 1 else 0 end) as man', [self::SEX_MALE])
+            ->selectRaw('sum(case when tb3.kojin_sex = ? and tb1.tb_customer_cd is not null then 1 else 0 end) as woman', [self::SEX_FEMALE])
             ->selectRaw("sum(case when coalesce(tb3.kojin_sex, '') = '' and tb1.tb_customer_cd is not null then 1 else 0 end) as other")
             ->selectRaw('sum(case when tb1.tb_customer_cd is null then 1 else 0 end) as guest')
             ->toBase()
@@ -112,7 +113,7 @@ class PaperCardStats
 
     /**
      * csv_output.php: アクセス時間,顧客ID,カードID de todos los accesos (o de una tarjeta), en Shift_JIS
-     * (SJIS-win) como el legacy, con StreamedResponse. Sin helper común de CSV en app/Support todavía.
+     * (SJIS-win) como el legacy, con LegacyCsv (StreamedResponse por bloques).
      */
     public function csv(?int $cardCd): StreamedResponse
     {
@@ -128,14 +129,12 @@ class PaperCardStats
             ->selectRaw("to_char(data.access, 'YYYY-MM-DD HH24:MI:SS') as access, cst.id, data.data_id")
             ->orderBy('data.access');
 
-        return new StreamedResponse(function () use ($query) {
-            echo mb_convert_encoding('アクセス時間,顧客ID,カードID'.PHP_EOL, 'SJIS-win', 'UTF-8');
-            foreach ($query->cursor() as $row) {
-                echo mb_convert_encoding($row->access.','.$row->id.','.$row->data_id.PHP_EOL, 'SJIS-win', 'UTF-8');
-            }
-        }, 200, [
-            'Content-Type' => 'text/x-csv',
-            'Content-Disposition' => 'attachment; filename=shukei.csv',
-        ]);
+        // Como el legacy: sin comillas, fin de línea PHP_EOL (\n), text/x-csv, shukei.csv
+        return LegacyCsv::download(
+            'shukei.csv',
+            fn () => $query->cursor()->map(fn ($row) => [$row->access, $row->id, $row->data_id]),
+            ['アクセス時間', '顧客ID', 'カードID'],
+            ['quote' => 'none', 'eol' => PHP_EOL],
+        );
     }
 }
