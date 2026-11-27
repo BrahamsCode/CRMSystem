@@ -20,7 +20,9 @@ use Illuminate\Support\Facades\DB;
  *
  * - Una venta por cada visita (`tb_raiten_rireki`, la crea SociosDemoSeeder) de los clientes demo
  *   (`email1` demo%@example.com): mismo cliente, tienda y 営業日 (`raiten_hiduke`), registrada al terminar
- *   la visita. En el legacy grabar una venta (karute_new_register.php) NO crea el 来店: aquí tampoco.
+ *   la visita; con la スタッフ de su ポイント (`tb_point_log`) y total = su `kaikei` (incluidos 0円 y ~300.000円):
+ *   los menús y 割引 salen de DemoVisitPlan, el mismo plan con el que SociosDemoSeeder calculó ese `kaikei`.
+ *   En el legacy grabar una venta (karute_new_register.php) NO crea el 来店: aquí tampoco.
  *   Las filas siguen el formato de SaleService::store() (staff -1, menús -2, 割引 -3, 手動割引 -4, 合計 -5)
  *   y los importes salen de SaleService::calculate(), igual que el formulario.
  * - Gastos (経費, form -10) de los últimos 12 meses en cada tienda activa.
@@ -53,12 +55,15 @@ class VentasDemoSeeder extends Seeder
     /** Contador de la parte final de los cd de venta (createHatsuban: epoch + tienda + 6 cifras) */
     private int $sequence = 0;
 
+    private ?DemoVisitPlan $visitPlan = null;
+
     public function __construct(private Hatuban $hatuban) {}
 
     public function run(): void
     {
+        // También los dados de baja (disp_flg 9): sus visitas y ventas anteriores siguen contando en los informes
         $customers = DB::table('tb_customer')->where('email1', 'like', 'demo%@example.com')
-            ->whereRaw("COALESCE(disp_flg, '') <> '9'")->get(['cd', 'tb_shop_cd', 'tb_staff_cd'])->keyBy('cd');
+            ->get(['cd', 'tb_shop_cd', 'tb_staff_cd'])->keyBy('cd');
         if ($customers->isEmpty()) {
             $this->command?->warn('VentasDemoSeeder: no hay clientes demo (demo%@example.com); se omite.');
 
@@ -80,12 +85,21 @@ class VentasDemoSeeder extends Seeder
         });
     }
 
-    /** Una venta por visita, en orden cronológico por cliente (category_inner_group = máximo + 1) */
+    /**
+     * Una venta por visita, en orden cronológico por cliente (category_inner_group = máximo + 1). Si la visita tiene
+     * ポイント (`tb_point_log` de SociosDemoSeeder), la venta lleva su スタッフ y su total es exactamente `kaikei`
+     * (ver composeForAmount); sin ポイント, menús y 割引 al azar.
+     */
     private function seedSales(Collection $customers): void
     {
-        $visits = DB::table('tb_raiten_rireki')->whereIn('user_cd', $customers->keys())
-            ->whereRaw("COALESCE(disp_flg, '') <> '9'")->whereRaw("raiten_time ~ '^[0-9]+$'")
-            ->orderBy('user_cd')->orderByRaw('raiten_time::bigint')->get(['user_cd', 'shop_cd', 'raiten_time', 'raiten_hiduke']);
+        $visits = DB::table('tb_raiten_rireki as r')
+            ->leftJoin('tb_point_log as p', 'p.cd', '=', 'r.tb_point_log_cd')
+            ->whereIn('r.user_cd', $customers->keys())
+            ->whereRaw("COALESCE(r.disp_flg, '') <> '9'")->whereRaw("r.raiten_time ~ '^[0-9]+$'")
+            ->orderBy('r.user_cd')->orderByRaw('r.raiten_time::bigint')->orderBy('r.cd')
+            ->get(['r.cd', 'r.user_cd', 'r.shop_cd', 'r.raiten_time', 'r.raiten_hiduke', 'p.kaikei', 'p.tb_staff_cd as point_staff_cd']);
+        $hints = $this->karteMenus($customers->keys()->all());
+        $allStaff = DB::table('tb_staff')->get(['cd', 'name', 'kingaku_buai'])->keyBy('cd');
 
         $menusByShop = [];
         $discountsByShop = [];
@@ -95,22 +109,30 @@ class VentasDemoSeeder extends Seeder
 
         foreach ($visits as $visit) {
             $shopCd = (int) ($visit->shop_cd ?: $customers[$visit->user_cd]->tb_shop_cd);
-            $menus = $menusByShop[$shopCd] ??= ServiceMenu::query()->where('tb_shop_cd', $shopCd)->where('disp_flg', '1')->get();
-            $discounts = $discountsByShop[$shopCd] ??= Discount::query()->where('tb_shop_cd', $shopCd)->where('disp_flg', '1')->get();
+            $menus = $menusByShop[$shopCd] ??= ServiceMenu::query()->where('tb_shop_cd', $shopCd)->where('disp_flg', '1')
+                ->orderBy('rank')->orderBy('cd')->get();
+            $discounts = $discountsByShop[$shopCd] ??= Discount::query()->where('tb_shop_cd', $shopCd)->where('disp_flg', '1')
+                ->orderBy('rank')->orderBy('cd')->get();
             $staffList = $staffByShop[$shopCd] ??= $this->staffOf($shopCd);
             if ($menus->isEmpty() || $staffList->isEmpty()) {
                 continue; // sin catálogo o sin personal en la tienda no hay venta posible
             }
 
             $customer = $customers[$visit->user_cd];
-            $staff = $staffList->firstWhere('cd', (int) $customer->tb_staff_cd)
+            $staff = $allStaff->get((int) $visit->point_staff_cd)
+                ?? $staffList->firstWhere('cd', (int) $customer->tb_staff_cd)
                 ?? $staffList[(int) $customer->cd % $staffList->count()];
             $groups[$customer->cd] = ($groups[$customer->cd] ?? 0) + 1;
             $epoch = (int) $visit->raiten_time + $this->faker->numberBetween(40, 150) * 60; // la caja, al terminar
             $businessDay = $visit->raiten_hiduke ?: Carbon::createFromTimestamp((int) $visit->raiten_time, 'Asia/Tokyo')->format('Y/m/d');
 
+            [$saleMenus, $saleDiscounts, $other] = $visit->kaikei === null
+                ? [$this->pickMenus($menus), $this->pickDiscounts($discounts), $this->faker->boolean(5) ? 500 : 0]
+                : $this->forVisit((int) $visit->cd, $shopCd, (int) $visit->kaikei, $menus, $discounts,
+                    $hints[$customer->cd.'|'.$visit->raiten_time] ?? []);
+
             array_push($rows, ...$this->saleRows((int) $customer->cd, $staff, $shopCd, $businessDay, $epoch,
-                $groups[$customer->cd], $this->pickMenus($menus, $staff), $this->pickDiscounts($discounts)));
+                $groups[$customer->cd], $saleMenus, $saleDiscounts, $other));
 
             if (count($rows) >= self::CHUNK) {
                 DB::table('tb_customer_sub')->insert($rows);
@@ -121,6 +143,107 @@ class VentasDemoSeeder extends Seeder
         if ($rows) {
             DB::table('tb_customer_sub')->insert($rows);
         }
+    }
+
+    /**
+     * Venta de una visita con ポイント: el plan de DemoVisitPlan (lo mismo que SociosDemoSeeder cobró: mismos menús,
+     * 割引 y その他の割引) si su total coincide con `kaikei`; si no (visitas sembradas de otra forma), composeForAmount.
+     *
+     * @return array{0: Collection, 1: Collection, 2: int}
+     */
+    private function forVisit(int $visitCd, int $shopCd, int $kaikei, Collection $menus, Collection $discounts, array $hint): array
+    {
+        if (class_exists(DemoVisitPlan::class)) {
+            $plan = ($this->visitPlan ??= new DemoVisitPlan)->for($visitCd, $shopCd);
+            if ($plan['total'] === $kaikei && $plan['other_type'] === '2') {
+                return [$plan['menus'], $plan['discounts'], (int) $plan['other_value']];
+            }
+        }
+
+        return $this->composeForAmount(max(0, $kaikei), $menus, $discounts, $hint);
+    }
+
+    /** Menús que SociosDemoSeeder anotó en la カルテ de la visita (1.ª línea 'カット・トリートメント'), por 'cliente|epoch' */
+    private function karteMenus(array $customerCds): array
+    {
+        $hints = [];
+        foreach (array_chunk($customerCds, 1000) as $cds) {
+            $kartes = DB::table('tb_karute')->whereIn('tb_customer_cd', $cds)->whereRaw("COALESCE(disp_flg, '') <> '9'")
+                ->get(['tb_customer_cd', 'touroku_date', 'comment']);
+            foreach ($kartes as $karte) {
+                $first = trim(explode("\n", (string) $karte->comment)[0]);
+                $hints[$karte->tb_customer_cd.'|'.$karte->touroku_date] = $first === '' ? [] : explode('・', $first);
+            }
+        }
+
+        return $hints;
+    }
+
+    /**
+     * Menús y descuentos cuyo total (SaleService::calculate) es exactamente `$amount`:
+     * 1. Los menús de la カルテ si suman `$amount`; si no, uno o dos menús del catálogo que lo sumen (SociosDemoSeeder
+     *    elige un menú principal y a veces una opción del mismo catálogo).
+     * 2. `$amount` = 0: el menú de la カルテ (o カット) con el 割引 de 100 % (全額サービス).
+     * 3. Si no: la カルテ y menús de mayor precio hasta cubrir el importe (ventas grandes) y la diferencia como 割引
+     *    del catálogo que la dé exacta o, si no hay, como 手動割引 en 円.
+     *
+     * @return array{0: Collection, 1: Collection, 2: int}  menús, 割引 y 手動割引 (円)
+     */
+    private function composeForAmount(int $amount, Collection $menus, Collection $discounts, array $hintNames): array
+    {
+        $byName = $menus->keyBy('name');
+        $hint = collect($hintNames)->map(fn ($name) => $byName->get($name))->filter()->values();
+        if ($hint->count() !== count($hintNames)) {
+            $hint = collect(); // la カルテ nombra menús que esta tienda no tiene
+        }
+        $sum = fn (Collection $list) => (int) $list->sum(fn ($menu) => (int) $menu->kingaku);
+
+        if ($hint->isNotEmpty() && $sum($hint) === $amount) {
+            return [$hint, collect(), 0];
+        }
+        $services = $menus->where('type', ServiceMenu::TYPE_SERVICE); // SociosDemoSeeder solo usa 技術
+        if ($amount > 0 && ($exact = $this->exactCombination($services, $amount) ?? $this->exactCombination($menus, $amount))) {
+            return [$exact, collect(), 0];
+        }
+
+        $picked = $hint->isNotEmpty() ? $hint : collect([$byName->get('カット') ?? $menus->first()]);
+        $byPrice = $menus->filter(fn ($menu) => (int) $menu->kingaku > 0)->sortByDesc(fn ($menu) => (int) $menu->kingaku)->values();
+        for ($guard = 0; $sum($picked) < $amount && $guard < 50 && $byPrice->isNotEmpty(); $guard++) {
+            $remaining = $amount - $sum($picked);
+            $picked->push($byPrice->first(fn ($menu) => (int) $menu->kingaku <= $remaining) ?? $byPrice->last());
+        }
+
+        $gap = $sum($picked) - $amount;
+        if ($gap > 0) {
+            foreach ($discounts as $discount) {
+                $calc = app(SaleService::class)->calculate($picked, collect([$discount]), 0, '2');
+                if ($calc['total'] === $amount && abs($calc['total_float'] - $amount) < 0.001) {
+                    return [$picked, collect([$discount]), 0];
+                }
+            }
+        }
+
+        return [$picked, collect(), max(0, $gap)];
+    }
+
+    /** Uno o dos menús del catálogo que suman `$amount` (null si no hay) */
+    private function exactCombination(Collection $menus, int $amount): ?Collection
+    {
+        $list = $menus->values();
+        foreach ($list as $menu) {
+            if ((int) $menu->kingaku === $amount) {
+                return collect([$menu]);
+            }
+        }
+        foreach ($list as $i => $a) {
+            foreach ($list->slice($i + 1) as $b) {
+                if ((int) $a->kingaku + (int) $b->kingaku === $amount) {
+                    return collect([$a, $b]);
+                }
+            }
+        }
+
+        return null;
     }
 
     /** Personal activo de la tienda; si no hay, el activo de cualquier tienda; si tampoco, cualquiera (master) */
@@ -139,7 +262,7 @@ class VentasDemoSeeder extends Seeder
     }
 
     /** Menú principal + a veces トリートメント/ヘッドスパ, 物販 y 指名料 (si el catálogo los tiene) */
-    private function pickMenus(Collection $menus, object $staff): Collection
+    private function pickMenus(Collection $menus): Collection
     {
         $byName = $menus->keyBy('name');
         $picked = collect();
@@ -170,13 +293,12 @@ class VentasDemoSeeder extends Seeder
     }
 
     /**
-     * Filas de una venta con el formato de SaleService::store(). ~5 % lleva además un 手動割引 (その他の割引) de 500円.
+     * Filas de una venta con el formato de SaleService::store(); `$otherValue` = 手動割引 en 円.
      * Si el total saliera negativo, se graba sin descuentos (el formulario no permitía grabarla).
      */
     private function saleRows(int $customerCd, object $staff, int $shopCd, string $businessDay, int $epoch, int $group,
-        Collection $menus, Collection $discounts): array
+        Collection $menus, Collection $discounts, int $otherValue): array
     {
-        $otherValue = $this->faker->boolean(5) ? 500 : 0;
         $amounts = app(SaleService::class)->calculate($menus, $discounts, $otherValue, '2');
         if ($amounts['total_float'] < 0) {
             $amounts = app(SaleService::class)->calculate($menus, collect(), 0, '2');
