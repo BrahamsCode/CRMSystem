@@ -3,7 +3,7 @@
 /*
  * Menú lateral de 端末管理 (category7), copia de system/inc/left_navi7.php.
  * Formato: Doc/contratos/NUCLEO.md, "Menú lateral". 情報端末管理 (kiosk) queda fuera de alcance.
- * Las entradas con URL del legacy (.php) son pantallas aún no migradas (ペーパーサイネージ, ICカード, ビーコン).
+ * Las entradas con URL del legacy (.php) son pantallas aún no migradas (ICカード, ビーコン).
  */
 return [
     'category' => 7,
@@ -26,7 +26,7 @@ return [
             'child' => 'ペーパーサイネージ',
             'can' => 'terminales.paper-signage.enabled',
             'links' => [
-                ['label' => 'カード管理', 'url' => '/system/category7/card_signage/list.php'],
+                ['label' => 'カード管理', 'url' => '/admin/terminales/paper-cards'],
             ],
         ],
         [
@@ -35,8 +35,8 @@ return [
             'ac' => 'ac2',
             'child' => 'ICカード管理',
             'links' => [
-                ['label' => '端末管理', 'url' => '/system/category7/felica/terminal_list.php'],
-                ['label' => 'カード管理', 'url' => '/system/category7/felica/card_list.php?sesClear=card'],
+                ['label' => '端末管理', 'url' => '/admin/terminales/felica-terminals'],
+                ['label' => 'カード管理', 'url' => '/admin/terminales/felica-cards?sesClear=card'],
             ],
         ],
         [

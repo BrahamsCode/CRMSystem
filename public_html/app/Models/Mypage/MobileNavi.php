@@ -8,8 +8,7 @@ use App\Models\LegacyModel;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
- * Menú de la mypage/app (`tb_mobile_navi`): S4 lo usa para el nombre del menú de
- * オススメ y 新着情報. Sin columnas de fecha. Orden en `rank`.
+ * Menú de la mypage/app (`tb_mobile_navi`): S4 lo usa para el nombre del menú de オススメ. Sin columnas de fecha. Orden en `rank`.
  */
 class MobileNavi extends LegacyModel
 {
@@ -28,9 +27,17 @@ class MobileNavi extends LegacyModel
         $query->orderBy('rank');
     }
 
-    /** Nombre del menú cuyo enlace contiene el texto dado (p. ej. 'recommend'), o el valor por defecto */
-    public static function nameForLink(string $needle, string $default): string
+    /** cd de la fila de オススメ en tb_mobile_navi (fijo en el legacy: left_navi6.php y recommend.php) */
+    public const RECOMMEND_CD = 9;
+
+    /**
+     * Título del menú de オススメ como left_navi6.php: nombre de la fila 9 (mb_convert_kana 'KV') + 管理.
+     * Vacío si no hay nombre: el menú usa entonces su etiqueta fija (label_from de NUCLEO.md §6).
+     */
+    public static function recommendTitle(): string
     {
-        return static::query()->where('link', 'like', '%'.$needle.'%')->value('name') ?: $default;
+        $name = (string) static::query()->withDeleted()->whereKey(self::RECOMMEND_CD)->value('name');
+
+        return $name === '' ? '' : mb_convert_kana($name, 'KV').'管理';
     }
 }

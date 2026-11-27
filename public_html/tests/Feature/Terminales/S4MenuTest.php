@@ -42,7 +42,7 @@ it('muestra el menú de 端末管理 con ペーパーサイネージ solo en la 
     $this->get(route('admin.terminales.signage-programs.index'))
         ->assertOk()
         ->assertSee('/admin/terminales/signage-displays', false)
-        ->assertSee('/system/category7/card_signage/list.php', false); // seedNucleo usa la UI 2
+        ->assertSee('/admin/terminales/paper-cards', false); // seedNucleo usa la UI 2
 
     DB::table('tb_staff')->insert(['cd' => 2, 'office_cd' => 1, 'shop_cd' => 1, 'login_id' => 'otro', 'login_pass' => 'x', 'disp_flg' => '1']);
     $staff = \App\Models\Staff::find(2);

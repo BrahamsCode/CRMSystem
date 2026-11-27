@@ -7,6 +7,8 @@
  * フォトギャラリー y la parte de diseño de マイページデザイン管理 se descartaron (solo las leía hp/).
  * ガチャリン管理 no sale: en el legacy su bloque está comentado (se entra por URL).
  */
+use App\Models\Mypage\MobileNavi;
+
 return [
     'category' => 6,
     'blocks' => [
@@ -22,8 +24,9 @@ return [
                 ['label' => 'バナー画像設定管理', 'url' => '/admin/mypage/app-images/banner', 'can' => 'mypage.mycolle.enabled'],
                 ['label' => 'HOMEメインイメージ管理', 'url' => '/admin/mypage/app-images/main', 'can' => 'mypage.mycolle.enabled'],
                 ['label' => 'サムネイル画像管理', 'url' => '/admin/mypage/app-images/thumbnail', 'can' => 'mypage.mycolle.enabled'],
-                // El legacy pone el nombre de tb_mobile_navi + 管理; el menú es estático: el nombre por defecto
-                ['label' => 'オススメ管理', 'url' => '/admin/mypage/recommendations', 'can' => 'kengen.1016.1'],
+                // Como el legacy: nombre de tb_mobile_navi (cd 9) + 管理; si está vacío, la etiqueta fija
+                ['label' => 'オススメ管理', 'url' => '/admin/mypage/recommendations', 'can' => 'kengen.1016.1',
+                    'label_from' => [MobileNavi::class, 'recommendTitle']],
             ],
         ],
         [
