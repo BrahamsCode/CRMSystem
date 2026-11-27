@@ -61,6 +61,10 @@ Probado en :8081 como master: alta/edición/borrado con imagen de オススメ, 
 
 Ajenos a S4 (vistos en :8081): accesos directos de cabecera `tb_bookmark` a `/system/category3/mycoupon/mycoupon_list.php` y `/system/category5/staff/staff_list.php` dan 404, y お問合せ `/system/contact/` también (S1/S3/S5).
 
+Tras la recarga (:8081 en 738907f): 40 URL de S4 como master en 200 con datos y página 2 (solo 404 esperados: `paper-cards/aggregate` sin `cd` y `pdf_icon.png`, que tampoco existe en el legacy), sin 405 del sondeo; `qa_partial` / qa12345: listas en solo lectura, 403 en マイコレ, 求人新規, 求人職種 y signage/, 求人 limitado a 梅田店.
+
+**Resumen S4:** 41 pantallas probadas (master y qa_partial); 5 fallos encontrados y corregidos (放映素材 sin display, 全店舗 = NULL, `GETT` → 405, g-api sin interruptor, `DemoSeederTest` inestable); pendiente: comparar el HTML con development.crm-s.net (solo lectura) y las 4 filas de ビーコン, que esperan a Japón.
+
 ### Operaciones / 勤怠 / integraciones (S5)
 
 Recorrido en :8081 con los datos de fe7296c (antes de la recarga) como `master`, `tencho_umeda` (店長), `umeda01` y `qa_partial` (matriz vieja). Lo creado lleva «QA-S5» y se borró al terminar, salvo el empleado `QA-S5 試験 太郎` (梅田店), que se queda para la segunda vuelta. Muestra consultada en solo lectura.
