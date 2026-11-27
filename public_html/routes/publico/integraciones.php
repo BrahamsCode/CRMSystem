@@ -77,6 +77,8 @@ Route::name('publico.integraciones.')
             Route::any('member_kiyaku.php', [Appview\MemberRegistrationController::class, 'terms'])->name('member-kiyaku');
             Route::any('member_comfirm.php', [Appview\MemberRegistrationController::class, 'confirm'])->name('member-comfirm');
             Route::any('member_complete.php', [Appview\MemberRegistrationController::class, 'store'])->name('member-complete');
+            Route::any('member_regist.php', [Appview\MemberRegistrationController::class, 'form'])->name('member-regist');
+            Route::any('customerUpdate.php', [Appview\MemberController::class, 'updateProfile'])->name('customer-update');
             Route::any('privacyPage.php', [Appview\PageController::class, 'privacy'])->name('privacy');
             Route::any('coupon.php', [Appview\CouponController::class, 'index'])->name('coupon');
             Route::any('coupon_detail.php', [Appview\CouponController::class, 'show'])->name('coupon-detail');

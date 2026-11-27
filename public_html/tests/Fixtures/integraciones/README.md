@@ -73,6 +73,8 @@ Lo que mostraron: `memberId`/`qr_code` responden `error` (texto) si `customer_cd
 
 **Lote C1:** `member_complete` con token de sesión (sin token ni sesión, `null == null` deja pasar, como el legacy) y `anketo2` (sin la sesión de hp/user: 302 a `login.php?logerr=2`; hace falta `hp/user/inc/` en la copia). El INSERT de `member_complete` nombra columnas que no existen en el esquema del backup (`mobile_type`, `ec_member_cd`, `family_membership_id`, `visit_time_required`, `family_size`, `register_type`, `year_purchase_rank`, `pos_member_cd`): en el legacy falla en silencio y la página igual dice 登録完了.
 
+**Lote C2 (`member_regist`, `customerUpdate`):** `appview-seed.sql` agrega campos de `tb_koumoku`, campos personalizados (categoría 20 y una de 来店記録, que no debe salir), bonificaciones serializadas de la tienda 1, grupo por defecto y `stamp_shikkou_kikan`. En la copia del legacy `synchronizePRO` se anuló (abría un socket a `test.crm-s.net:80`, dominio real; marcado `FIXTURES S5`). La prueba fija la fecha de la grabación (años de los selects) y quita el alta de `member_complete` que Laravel guarda y el legacy no (para que los 会員番号 coincidan). Con `touroku_bonus` > 0 el legacy da un fatal (`new Hatuban`; la clase es `cHatuban`): se graba con 0 y Laravel se prueba aparte (`AppviewRegistrationTest`).
+
 ## setRaitenDetail (`srd/`, grabado el 2026-11-27)
 
 8 casos de `system/tool/api/category1/setRaitenDetail.php` sobre los datos de `tool-seed.sql` (`tools/cases-srd.json`, BD como la de `tool/`). Se comprueban en `SetRaitenDetailTest` con el `VisitRecordService` real de S2. Mostraron que el legacy valida (fecha, campos) **antes** de mirar `add_record_verify`; el JSONP de error sale roto (solo los pares) y Laravel emite el formato correcto.

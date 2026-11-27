@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Publico\Integraciones\Appview;
 
 use App\Http\Controllers\Controller;
+use App\Services\Integraciones\Appview\AppCustomer;
+use App\Services\Integraciones\Appview\AppviewDomain;
 use App\Services\Integraciones\Appview\GApi;
 use App\Services\Integraciones\Appview\LegacyPassword;
 use App\Services\Integraciones\Mpa\AppImages;
@@ -128,6 +130,48 @@ class MemberController extends Controller
         $data = GApi::get('/api/mpa/getComingHistory', 'domain='.$request->getHost().'&login_id='.urlencode(is_string($loginId) ? $loginId : ''));
 
         return $this->page('visit-history', $request, ['data' => $data]);
+    }
+
+    /**
+     * customerUpdate.php?domain=&customer_cd= (o id=): 個人情報の登録変更フォーム. Por GET rellena con el socio
+     * (customer_cd → su login_id); por POST guarda con AppCustomer (mismos campos que el alta).
+     */
+    public function updateProfile(Request $request, AppCustomer $customers): Response
+    {
+        $domain = $request->has('domain') ? $request->input('domain') : '';
+        if (empty($domain)) {
+            $domain = (string) $request->getHost();
+        }
+        $id = $request->has('id') ? $request->input('id') : '';
+        $id = $request->has('customer_cd') ? $request->input('customer_cd') : $id;
+        if (empty($domain) || empty($id) || ! is_string($domain) || ! is_scalar($id)) {
+            return Out::text('不正なリクエストです');
+        }
+        $package = AppviewDomain::package($domain);
+        if ($package === null) {
+            return Out::text('解析エラーです。');
+        }
+        if ($package !== 'crm' || ! AppviewDomain::usesCrmDatabase($domain)) {
+            return Out::text('接続できませんでした');
+        }
+
+        $loginId = DB::table('tb_customer')->where('cd', (int) $id)->value('login_id');
+        if ($loginId !== null) {
+            $id = (string) $loginId;
+        }
+
+        $isPost = $request->isMethod('POST');
+        $post = $isPost ? $customers->fromPost($request->post()) : $customers->fromId((string) $id);
+        $shopList = DB::table('tb_shop')->where('disp_flg', '1')->orderBy('cd')->pluck('kaishamei', 'cd')->all();
+        $form = $customers->form($post === false ? [] : $post);
+        $res = ['status' => null];
+        if ($isPost) {
+            $res = $customers->save($domain, $post, update: true);
+        }
+
+        return $this->page('customer-update', $request, [
+            'res' => $res, 'id' => (string) $id, 'domain' => $domain, 'shopList' => $shopList, 'form' => $form, 'post' => $post,
+        ]);
     }
 
     private function loginId(int $cd): ?string
