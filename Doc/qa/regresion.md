@@ -188,6 +188,23 @@ Probado sin fallos:
 
 Pendiente: las columnas 普通残業/休日残業/休日出勤 de 集計 siguen vacías (pregunta de S2 en `para-japon.md` §3).
 
+**Subidas de archivos** (:8081 en 9cd5981, `master` y `qa_partial`; `laravel.log` revisado tras cada una: solo líneas DEBUG/INFO):
+
+- **Foto del staff:**
+  - AjaxUpload: JPG y PNG (se guarda en JPG);
+  - un `.txt` lo frena el JS, como el legacy;
+  - alta → 確認 → registro con la foto servida en `hp/uploads/c5/staff/<cd>/`;
+  - cambio de foto, 画像解除 y baja del empleado QA-S5.
+- **各種設定 imagen de fondo:** `thum`, `0` y `moto` se generan y se sirven. Un PDF da el mensaje del legacy (※jpg,bmp,gif,png以外…).
+- **`mpa_albumUpdate` (curl):**
+  - OK, `err2` (no imagen) y `err1` (sin cd);
+  - `tb_photo_album` y las 5 imágenes (`moto`, `l`, `m`, `s`, `ss`), con propietario apache;
+  - el comentario japonés llega bien si curl lo manda en UTF-8: el `????` de una prueba era de la consola de Windows;
+  - las 2 filas QA-S5 y sus carpetas se borraron al terminar.
+- **CSV como `qa_partial`:** 勤怠 diario y CSV de 勤怠一覧, 200 (SJIS). CSV mensual y CSV de staff, 403 (solo master).
+- **Fuera de mi alcance:** la インフォメーション no admite imágenes. 帳票 no genera PDF (ni en el legacy: tabla HTML). `apli_temp` es de S4 (`Mypage/AppImageFiles`).
+- **Sin fallos nuevos.**
+
 **Resumen S5:** 25 pantallas de operaciones y 4 grupos de API probados con datos. 4 fallos encontrados y corregidos, con prueba: ログインID vacía, JS de day2, datos de 勤怠 incoherentes y turnos `undefined`. Pendiente solo la pregunta de 集計 para Japón.
 
 Web local `http://localhost:8081` (checkout principal en `laravel13`, BD `crmsystem2` con el esquema `signage`). La muestra no se tocó.
