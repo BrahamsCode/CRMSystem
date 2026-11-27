@@ -73,6 +73,8 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 
 - **tool/api y CTI (2026-11-27):** salida con `ToolApiOutput` (texto concatenado como el legacy, filas leídas como `col::text`); las consultas que el legacy rompía (cd no numérico, fecha inválida, offset negativo) dan el mismo `NO_DATA`, sin SQL armado con la entrada. Se mantiene sin cambios lo inseguro del contrato y se anota para Japón: `getStaffList` devuelve `tb_staff.*` con `login_pass`; CTI sin autenticación. `ctiWindow` redirige a las URL del legacy (las rutas de S2 que las sirvan son cosa de S2/S1). `htmlData` sale del parcial `custom_field` de S2 (mismo marcado, otros espacios). `setRaitenDetail` queda pendiente del servicio de S2 de `kanren_record_register`.
 
+- **mpa_* (2026-11-27):** imágenes de `hp/uploads/c6` y del álbum en el disco public (`AppImages` reproduce is_file/filemtime/glob); `mpa_setraiten` usa el `VisitService` de S2 (sin terminal ni personal) y con éxito responde `ok` (el legacy daba fatal 500); `mpa_albumUpdate` con Imagick (mismos tamaños 480x>, 240x>, 150x150, 75x75) y la misma URL fija de vuelta a la app. Las rutas quedan como `publico.integraciones.api.mpa.*`.
+
 ## Hecho
 
 - 2026-11-26 — Diseño con tablas nuevas, aprobado por S0 (obsoleto desde el cambio de base).
@@ -89,3 +91,4 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 - 2026-11-27 — スタッフ新規登録 / 修正 completos: formulario, confirmación con `LegacyCheck`, 書き直す, registro (createHatsuban/createID, `hatuban`, 所属部署 nuevo, `PosGateway`), 完了 y foto por AJAX (`StaffEntryController`, `StaffPhotoStore`, `StaffEntryTest` 8 pruebas). スタッフ管理 terminado salvo lo de 勤怠 (⏸). Suite: 403 en verde.
 - 2026-11-27 — Pedidos de S0: `MobileShopClient` como interfaz + `HttpMobileShopClient` (para S2) y `UrlTransferData::customer()` (para S4) (362b8f3).
 - 2026-11-27 — `tool/api` (7 de 8 endpoints + `CheckCrmApiKey`) y CTI (3) con fixtures del legacy grabadas sobre datos sintéticos (`tool-seed.sql`, 47 casos) y `ToolApiContractTest`: todo coincide byte a byte (salvo espacios del `htmlData`). Pendiente: `setRaitenDetail` (servicio de S2). Suite: 442 en verde.
+- 2026-11-27 — `mpa_*` (5 endpoints: corresponding, getTopBanner, getCoverFlow, setraiten, albumUpdate): los 12 casos grabados coinciden (setraiten_ok corregido) y `MpaTest` cubre imágenes por tienda, beacon y álbum. Suite: 503 en verde (con laravel13 fusionado por S0).

@@ -119,11 +119,11 @@ Todas con HTTP 200 también en error y leyendo el **cuerpo JSON incluso en GET**
 
 | Archivo legacy | URL | Ruta Laravel | Controlador@método | Tablas legacy | Estado |
 |---|---|---|---|---|---|
-| `mpa_corresponding.php` | `/api/mpa_corresponding.php` | `publico.integraciones.mpa.corresponding` | `MpaController@corresponding` | L `admin_master`, `tb_customer`, `contents_master` (`mypage_config`) + archivos `hp/uploads/c6/` | pendiente |
-| `mpa_getTopBanner.php` | `/api/mpa_getTopBanner.php` | `publico.integraciones.mpa.top-banner` | `MpaController@topBanner` | L `tb_customer`, `contents_master` + `hp/uploads/c6/aplibanner/` | pendiente (enlace con `md5(login_pass)` igual que hoy; anotado para Japón) |
-| `mpa_getCoverFlow.php` | `/api/mpa_getCoverFlow.php` | `publico.integraciones.mpa.cover-flow` | `MpaController@coverFlow` | L `tb_customer`, `contents_master` (`aplicover`) + `hp/uploads/c6/aplicover/` | pendiente |
-| `mpa_albumUpdate.php` | `POST /api/mpa_albumUpdate.php` | `publico.integraciones.mpa.album-update` | `MpaController@albumUpdate` | E `tb_photo_album`, `hatuban` + `hp/uploads/c1/photoalbum/<cd>/` | pendiente (Intervention Image o Imagick en lugar de `system('convert')`) |
-| `mpa_setraiten.php` | `/api/mpa_setraiten.php` | `publico.integraciones.mpa.set-raiten` | `MpaController@setRaiten` | E `tb_raiten_rireki` y lo que haga `raitenFunc` (sellos, puntos) o `tb_beacon_history` | pendiente |
+| `mpa_corresponding.php` | `/api/mpa_corresponding.php` | `publico.integraciones.mpa.corresponding` | `MpaController@corresponding` | L `admin_master`, `tb_customer`, `contents_master` (`mypage_config`) + archivos `hp/uploads/c6/` | hecho (contrato + pruebas con imágenes) |
+| `mpa_getTopBanner.php` | `/api/mpa_getTopBanner.php` | `publico.integraciones.mpa.top-banner` | `MpaController@topBanner` | L `tb_customer`, `contents_master` + `hp/uploads/c6/aplibanner/` | hecho (contrato + pruebas con imágenes; enlace con `md5(login_pass)` igual que hoy, anotado para Japón) |
+| `mpa_getCoverFlow.php` | `/api/mpa_getCoverFlow.php` | `publico.integraciones.mpa.cover-flow` | `MpaController@coverFlow` | L `tb_customer`, `contents_master` (`aplicover`) + `hp/uploads/c6/aplicover/` | hecho (contrato + pruebas con imágenes) |
+| `mpa_albumUpdate.php` | `POST /api/mpa_albumUpdate.php` | `publico.integraciones.mpa.album-update` | `MpaController@albumUpdate` | E `tb_photo_album`, `hatuban` + `hp/uploads/c1/photoalbum/<cd>/` | hecho (Imagick en lugar de `convert`; pruebas propias) |
+| `mpa_setraiten.php` | `/api/mpa_setraiten.php` | `publico.integraciones.mpa.set-raiten` | `MpaController@setRaiten` | E `tb_raiten_rireki` y lo que haga `raitenFunc` (sellos, puntos) o `tb_beacon_history` | hecho (contrato; con éxito responde ok en vez del fatal 500 del legacy) |
 | `mpa_customerSync.php` | `/api/mpa_customerSync.php` | — | — | — | diferido: POS fuera de alcance (`PosGateway::syncCustomers()`); al retomarlo, comando Artisan, no ruta pública |
 | `mpa_registCustomer.php` | — | — | — | — | descartado: archivo vacío |
 

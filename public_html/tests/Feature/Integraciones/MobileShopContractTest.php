@@ -74,26 +74,38 @@ function replayMobileShopCase(array $case, ?string $jwt)
         $server['CONTENT_TYPE'] = 'application/json';
     }
 
-    return test()->call($case['method'], $case['path'], [], [], [], $server, $content);
+    return test()->call($case['method'], $case['path'], $case['form'] ?? [], [], [], $server, $content);
 }
 
-it('reproduce byte a byte las respuestas del legacy de /api/* (salvo mpa_*)', function () {
+it('reproduce byte a byte las respuestas del legacy de /api/* y mpa_*', function () {
     $manifest = json_decode(file_get_contents(MS_FIXTURES.'/legacy/manifest.json'), true, flags: JSON_THROW_ON_ERROR);
     $jwt = null;
     $compared = 0;
+    // Misma hora en mpa_setraiten_ok y _interval: la segunda visita cae en el intervalo, como al grabar
+    \Illuminate\Support\Carbon::setTestNow(now());
+    \Illuminate\Support\Facades\Storage::fake('public');
 
     foreach ($manifest as $case) {
         $name = $case['name'];
-        if (str_starts_with($name, 'mpa_') || in_array($name, MS_PENDING, true) || $name === 'api_unknown_route') {
+        if (in_array($name, MS_PENDING, true) || $name === 'api_unknown_route') {
             continue;
         }
 
         $response = replayMobileShopCase($case, $jwt);
+
+        if ($name === 'mpa_setraiten_ok') {
+            // El legacy registraba la visita y daba un fatal (500); Laravel responde ok (corrección anotada)
+            expect($response->getStatusCode())->toBe(200)
+                ->and(json_decode($response->getContent(), true))->toBe(['status' => 'ok', 'customer_info' => ['cd' => '1610793770001489815', 'id' => '1000002', 'name' => '佐藤 花子']]);
+
+            continue;
+        }
         $expected = $case['response'];
         $expectedBody = file_get_contents(MS_FIXTURES.'/legacy/'.$expected['body_file']);
 
         expect($response->getStatusCode())->toBe($expected['status'], "estado de {$name}")
-            ->and(strtolower((string) $response->headers->get('Content-Type')))->toBe(strtolower((string) $expected['content_type']), "Content-Type de {$name}");
+            ->and((string) $response->headers->get('Content-Type'))->toBe((string) $expected['content_type'], "Content-Type de {$name}")
+            ->and($response->headers->get('Location'))->toBe($expected['location'] ?? null, "Location de {$name}");
 
         if ($name === 'api_auth_ok') {
             // El token cambia en cada emisión: misma forma y claims válidos

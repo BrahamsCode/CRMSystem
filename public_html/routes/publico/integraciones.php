@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Publico\Integraciones\CtiController;
 use App\Http\Controllers\Publico\Integraciones\MobileShopController;
+use App\Http\Controllers\Publico\Integraciones\MpaController;
 use App\Http\Controllers\Publico\Integraciones\ToolApi;
 use App\Http\Middleware\Integraciones\CheckCrmApiKey;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
@@ -31,6 +32,13 @@ Route::name('publico.integraciones.')
                 Route::any('point_use', [MobileShopController::class, 'pointUse'])->name('point-use');
                 Route::any('point_exchange_item', [MobileShopController::class, 'pointExchangeItem'])->name('point-exchange');
             });
+
+            // API de la app マイページ (api/mpa_*.php), sin autenticación como el legacy
+            Route::any('mpa_corresponding.php', [MpaController::class, 'corresponding'])->name('mpa.corresponding');
+            Route::any('mpa_getTopBanner.php', [MpaController::class, 'topBanner'])->name('mpa.top-banner');
+            Route::any('mpa_getCoverFlow.php', [MpaController::class, 'coverFlow'])->name('mpa.cover-flow');
+            Route::any('mpa_setraiten.php', [MpaController::class, 'setRaiten'])->name('mpa.set-raiten');
+            Route::any('mpa_albumUpdate.php', [MpaController::class, 'albumUpdate'])->name('mpa.album-update');
 
             // Cualquier otra ruta /api/* (salvo los mpa_*.php): 404 JSON (debe quedar al final del grupo api)
             Route::any('{any}', [MobileShopController::class, 'notFound'])
