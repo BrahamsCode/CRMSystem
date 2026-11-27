@@ -36,11 +36,11 @@ if (-not $hayDocker) { Write-Aviso 'No se encontro docker: las sesiones no podra
 function Set-SettingsProyecto([string]$dir) {
     $carpeta = Join-Path $dir '.claude'
     $archivo = Join-Path $carpeta 'settings.json'
-    if (Test-Path $archivo) { return }
-    if ($SoloVerificar) { Write-Paso "   crearia $archivo"; return }
+    if ($SoloVerificar) { Write-Paso "   copiaria scripts/claude-settings.json a $archivo"; return }
+    # Se copia siempre: scripts/claude-settings.json es la unica fuente de las reglas
     New-Item -ItemType Directory -Force $carpeta | Out-Null
-    Copy-Item $settingsFuente $archivo
-    Write-Paso "   configuracion creada: $archivo"
+    Copy-Item $settingsFuente $archivo -Force
+    Write-Paso "   configuracion al dia: $archivo"
 }
 Set-SettingsProyecto $repo
 
@@ -85,16 +85,19 @@ if ($hayDocker -and -not $SinDocker) {
 }
 
 # 5. Worktrees de S1 a S6
-# Permisos locales de los trabajadores: sin commit, push ni merge (solo S0 integra).
+# Permisos locales de los trabajadores: commit y push SOLO de su rama l13/<grupo>.
+# Lo unico bloqueado es lo que los haria pisarse: merge (lo hace S0), cambiar de rama,
+# tocar otro worktree (git -C) y subir a la rama de integracion.
 $permisosTrabajador = @'
 {
   "permissions": {
     "deny": [
-      "Bash(git commit *)",
-      "Bash(git push *)",
       "Bash(git merge *)",
       "Bash(git switch *)",
-      "Bash(git -C *)"
+      "Bash(git checkout *)",
+      "Bash(git -C *)",
+      "Bash(git push * laravel13*)",
+      "Bash(git push * HEAD:laravel13*)"
     ]
   }
 }
@@ -102,9 +105,10 @@ $permisosTrabajador = @'
 function Set-PermisosTrabajador([string]$dir) {
     Set-SettingsProyecto $dir
     $archivo = Join-Path $dir '.claude\settings.local.json'
-    if ((Test-Path $archivo) -or $SoloVerificar) { return }
+    if ($SoloVerificar) { return }
+    # Se reescribe siempre: asi un cambio de reglas llega a los worktrees existentes
     Set-Content -Path $archivo -Value $permisosTrabajador -Encoding Ascii
-    Write-Paso "   permisos locales creados: $archivo (sin commit, push ni merge)"
+    Write-Paso "   permisos locales: $archivo (commit y push de su rama; sin merge ni cambio de rama)"
 }
 
 $abrir = @()

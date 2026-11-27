@@ -8,3 +8,6 @@ Doc/legacy-crm2/env-legacy.example
 # Certificados y claves locales
 docker/*.key
 docker/*.crt
+
+# Capturas y logs locales del MCP de Playwright
+.playwright-mcp/

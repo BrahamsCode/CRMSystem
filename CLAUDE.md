@@ -18,13 +18,14 @@ Reescritura en **Laravel 13 + PHP 8.5** del CRM legacy (VivaTech / Japón). El c
 
 - **Paridad funcional:** todo lo que el legacy hace, Laravel lo hace. Los servicios viejos se reemplazan por los de Laravel (Mail + colas, Scheduler, Storage, Policies, StreamedResponse…), paso a paso.
 - **Fuera de alcance:** `hp/` (sitio viejo), `admin/` y `system/category8` (女の子管理).
-- **Integraciones externas** (POS, quiosco, APIs): mantener URL y contrato. Ver `Doc/legacy-crm2/INTEGRATIONS.md` y `Doc/analisis-legacy/07-*.md`, `08-*.md`.
+- **Fuera de alcance por ahora:** POS (`system/category11`, terminales `CRMPOS-<id>` y conexión a los servidores POS de tienda), SNS (`system/category12`) y la serie N de touchcation.
+- **Integraciones externas** (quiosco, APIs, app): mantener URL y contrato. Ver `Doc/legacy-crm2/INTEGRATIONS.md` y `Doc/analisis-legacy/07-*.md`, `08-*.md`.
 - **Idioma:** respuestas, documentos y comentarios en español; textos de pantalla en japonés (`lang/ja`); identificadores en inglés, salvo términos de dominio que ya existen.
 - **Nombres:** PHP `camelCase` en métodos y variables como Laravel, clases `PascalCase`; BD `snake_case`.
-- **Secretos:** nunca en el código ni en git. `Doc/legacy-crm2/env-legacy.example` tiene claves reales de producción: solo para consultar nombres de variables; nunca copiar valores.
+- **Secretos:** nunca en el código ni en git. `Doc/legacy-crm2/env-legacy.example` (copia del `.env.example` de crm2-php8) tiene claves reales de producción: se puede leer para configurar el `.env` local, pero sus valores nunca van a un archivo versionado.
 - **Nunca** lanzar contra el legacy `system/login.php?activation=1`, `create_customer.php` ni `create_shop.php`.
 - **Pruebas:** Pest. Desde cualquier worktree: `bash scripts/en-docker.sh php artisan test` (usa la BD propia de la sesión).
-- **Git:** nunca `push`. Los commits y merges los hace solo S0 (ver `Doc/planificacion/ORCHESTRATION.md`).
+- **Git:** rama de integración `laravel13`. Cada sesión hace commit y `git push origin l13/<grupo>` de **su** rama al terminar un entregable con pruebas en verde; **solo S0** fusiona en `laravel13`. Nunca `push --force`, nunca a `main` ni a `brahamscode/*`.
 
 ## Al compactar
 

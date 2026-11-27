@@ -5,7 +5,7 @@
 
 ## Modo autónomo
 
-Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). No haces commits, merges ni push.
+Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
 ## Próximo paso — Diseño (sin código)
 
@@ -19,10 +19,10 @@ Criterio de terminado: todas las vistas del análisis tienen fila; avisar a S0 y
 
 ## Después (cuando S0 apruebe el diseño y el núcleo esté integrado)
 
-Implementar submódulo por submódulo en el orden del diseño: migraciones, modelos, Form Requests, controladores, vistas Blade (textos en `lang/ja/<modulo>.php`), rutas en `routes/modulos/<modulo>.php`, menú en `config/menu/<modulo>.php`, pruebas Pest. Cada submódulo terminado: pruebas en verde (`bash scripts/en-docker.sh php artisan test`), filas en `hecho` y aviso a S0 para el commit.
+Implementar submódulo por submódulo en el orden del diseño: migraciones, modelos, Form Requests, controladores, vistas Blade (textos en `lang/ja/<modulo>.php`), rutas en `routes/modulos/<modulo>.php`, menú en `config/menu/<modulo>.php`, pruebas Pest. Cada submódulo terminado: pruebas en verde (`bash scripts/en-docker.sh php artisan test`), filas en `hecho`, commit y push de tu rama, y aviso a S0.
 
 **Contrato de la APK:** la APK pide `index.php?shop_cd&terminal_cd&androidId&orientation&key` a una URL base de su `ini.ini`, `check.php?check=1`, `/version/sharp/v.php`, usa la cookie de sesión PHP y el puente JS `roid.*`. **Mantener URL, parámetros y formatos de respuesta** (JSON a mano, JSONP, ESC/POS); cambiarlos exige publicar una APK nueva: avisar a S0 antes. Rutas en `routes/modulos/quiosco.php`, en el grupo sin `auth:admin` ni CSRF que prepara S1 (mientras no exista, usa un stub en tu archivo de rutas y anótalo en Pedidos).
-**Duplicados:** 15 copias de `check.php`, wrappers `point_s`/`stamp_s`/`all_in_one_apk_s` que solo cambian `$application_number` y `$temp_member_flg`: un solo controlador con parámetros. La serie N y `common_s` probablemente no se usan: márcalas `pendiente de Japón` y diséñalas al final.
+**Duplicados:** 15 copias de `check.php`, wrappers `point_s`/`stamp_s`/`all_in_one_apk_s` que solo cambian `$application_number` y `$temp_member_flg`: un solo controlador con parámetros. **Fuera de alcance (Antony, 2026-11-26):** la serie N (`common_n`, `point/`, `stamp/`, `all_in_one_apk/`): la APK actual usa la serie S. `common_s` (nadie la llama) tampoco se migra.
 
 ## Lee solo
 

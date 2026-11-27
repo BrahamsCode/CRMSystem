@@ -10,7 +10,7 @@
 3. **Orquestación autónoma.** S0 delega y decide; S1 a S6 trabajan sin pedir confirmación y avisan a S0 al terminar o al bloquearse (`ListAgents`, `SendMessage`, `notify_when_idle`). Las pestañas siguen visibles: Antony mira y corrige cuando quiera.
 4. **Modelo según la dificultad:** Opus donde hay incertidumbre (coordinación, núcleo, integraciones); Sonnet donde el análisis ya dejó el trabajo especificado (módulos).
 5. **Antony solo interviene en lo suyo:** decisiones de producto que no están en los md y datos que solo él tiene (volcado de producción, credenciales). S0 se lo pide con un mensaje que empieza con **"ANTONY:"**.
-6. **Commits y merges locales: solo S0. Nunca push.**
+6. **Git:** cada sesión hace commit y push de **su** rama `l13/<grupo>` al terminar un entregable con pruebas en verde. **Solo S0 fusiona** en la rama de integración **`laravel13`** y la sube. Nunca `push --force`. Así avanzan rápido sin pisarse: nadie escribe en la rama de otro.
 
 ## 2. Dimensionamiento: cuántos agentes
 
@@ -20,12 +20,12 @@ Ver la sección 7 (se basa en los puntos del análisis, `Doc/analisis-legacy/REA
 
 | Sesión | Carpeta | Rama | Modelo y esfuerzo | Grupo |
 |---|---|---|---|---|
-| S0 Coordinador CRM | `CRMSystem/` | la de integración (la que tenga `CRMSystem/`) | opus, alto | Coordina, revisa diseños, integra, QA final |
+| S0 Coordinador CRM | `CRMSystem/` | `laravel13` (integración) | opus, alto | Coordina, revisa diseños, integra, QA final |
 | S1 Núcleo | `CRMSystem-nucleo/` | `l13/nucleo` | opus, alto | Laravel 12 → 13, núcleo (auth del personal, permisos, tiendas, módulos activables, menú, layout), 基本情報管理, importador legacy |
 | S2 Clientes | `CRMSystem-clientes/` | `l13/clientes` | sonnet, medio | 顧客管理, 販売管理 y 予約管理 |
 | S3 Promoción | `CRMSystem-promocion/` | `l13/promocion` | sonnet, medio | 販売促進管理 (mensajería y fidelización) |
 | S4 Contenido | `CRMSystem-contenido/` | `l13/contenido` | sonnet, medio | マイページ管理, ホームページ管理, 端末管理 y señalización |
-| S5 Operaciones | `CRMSystem-operaciones/` | `l13/operaciones` | sonnet, **alto** | 業務支援管理 e integraciones externas (API, app, POS, CTI): contratos de alto riesgo |
+| S5 Operaciones | `CRMSystem-operaciones/` | `l13/operaciones` | sonnet, **alto** | 業務支援管理 e integraciones externas (API, app, CTI): contratos de alto riesgo |
 | S6 Quiosco | `CRMSystem-quiosco/` | `l13/quiosco` | sonnet, medio | Touchcation (contrato de la APK) |
 | QA y revisión | subagente dentro de cada sesión | — | sonnet (`CLAUDE_CODE_SUBAGENT_MODEL`) | `senior`, `debugger`, `/code-review` |
 
@@ -41,8 +41,8 @@ Configuración única de sesiones: [scripts/config-sesiones.ps1](../../scripts/c
 | 2 | S1 | **Núcleo:** carga de `routes/modulos/*.php` y `config/menu/*.php`, layout del sistema del personal, login del personal, permisos (Policies), tiendas, módulos activables (システム選択). Documentado en `Doc/contratos/NUCLEO.md` | 1 |
 | 3 | S0 | Revisa los diseños y `NUCLEO.md`; ajusta `CONVENCIONES.md`; integra la rama de S1 y actualiza las demás | 1', 2 |
 | 4 | S2–S6 | **Implementación** submódulo por submódulo, en el orden de su diseño, con pruebas Pest y la tabla de paridad al día | 3 |
-| 5 | S1 · S5 | S1: importador de datos legacy (`tb_*` → tablas nuevas). S5: integraciones externas (API tienda móvil, app, POS, `tool/api`, CTI) con el mismo contrato | 2 |
-| 6 | S0 | Integración continua: cada submódulo terminado con pruebas en verde → commit en su rama → merge en integración → actualizar las demás ramas | 4 |
+| 5 | S1 · S5 | S1: importador de datos legacy (`tb_*` → tablas nuevas). S5: integraciones externas (API tienda móvil, app, `tool/api`, CTI) con el mismo contrato | 2 |
+| 6 | S0 | Integración continua: cada sesión sube su rama con pruebas en verde → S0 corre las pruebas, fusiona en `laravel13`, sube y actualiza las demás ramas | 4 |
 | 7 | S0 | QA de punta a punta (Playwright) contra la muestra de desarrollo, módulo por módulo | 6 |
 
 **Criterio de salida:** todas las vistas del análisis en `hecho` o `descartado` con motivo; integraciones externas con su contrato probado; pruebas en verde.
@@ -79,4 +79,4 @@ Base: [Doc/analisis-legacy/README.md](../analisis-legacy/README.md): **≈ 1.020
 
 **Si se acaba el límite de uso:** priorizar S0 + S1 + S2 + S3 (núcleo, clientes y promoción son lo que más usa el negocio) y abrir S4–S6 después: `scripts\iniciar-sesiones.ps1 -Sesiones S0,S1,S2,S3`.
 
-**Recortes posibles** (confirmar con Japón, ver hallazgos en el README del análisis): POS `category11`, SNS `category12`, serie N de touchcation, `tagsignage`, `digitalsignage` → ≈ −60 puntos.
+**Recortes aplicados (Antony, 2026-11-26):** POS (`category11`), SNS (`category12`) y la serie N de touchcation quedan fuera por ahora (≈ −35 puntos: S5 baja a ~90). `digitalsignage` **se mantiene** (Antony cree que se usa); en desarrollo no hay displays registrados para verlo funcionar, y su reproductor Flash se rehace en HTML5. `tagsignage` sigue pendiente de confirmar.

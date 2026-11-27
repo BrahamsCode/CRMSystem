@@ -60,8 +60,8 @@ Contado en `crm2-php8/public_html` (2,441 archivos PHP). Nombres de módulo seg�
 | 8 | 予約管理 | `system/category9/` | 67 | タイムテーブル | Pendiente |
 | 9 | 女の子管理 | `system/category8/` | 15 | — | **Fuera de alcance** (retirado) |
 | 10 | 基本情報管理 | `system/category0/` | 65 | 店舗, 設定, システム選択 | Parcial: `システム選択` (commit `7cf0c1c`) |
-| — | POS | `system/category11/` | 139 | — | Pendiente de decisión (¿se sigue usando? pregunta a Japón) |
-| — | SNS | `system/category12/` | 24 | — | APIs de Twitter/Facebook muertas: pendiente de decisión |
+| — | POS | `system/category11/` | 139 | — | **Fuera por ahora** (Antony, 2026-11-26) |
+| — | SNS | `system/category12/` | 24 | — | **Fuera por ahora** (APIs de Twitter/Facebook muertas) |
 
 ### Fuera de `/system`
 
@@ -100,11 +100,11 @@ Contado en `crm2-php8/public_html` (2,441 archivos PHP). Nombres de módulo seg�
 
 Resumen de [legacy-crm2/INTEGRATIONS.md](legacy-crm2/INTEGRATIONS.md):
 
-- **Terminal POS:** `User-Agent: CRMPOS-<id>`, 62 archivos cargan `pos_session.php`. Riesgo alto. No cambiar el token hasta saber qué dispositivos lo usan.
+- **Terminal POS:** `User-Agent: CRMPOS-<id>`, 62 archivos cargan `pos_session.php`. **Fuera por ahora**: el legacy sigue atendiéndolo hasta que se decida.
 - **Quiosco Touchcation:** APK compilada; cambiar URLs obliga a publicar una APK nueva.
 - **API `system/tool/api/*`** (9 endpoints, `CRM_API_KEY`), `get_touroku_data.php`, `get_shukei_data*.php`: llamadores desconocidos.
 - **CTI de escritorio** (`desktop_request/*`).
-- **Servidores POS de cada tienda** (`$posConnect`, BD compartida).
+- **Servidores POS de cada tienda** (`$posConnect`, BD compartida). **Fuera por ahora**: interfaz `PosGateway` sin implementar.
 - **Enlaces con `md5(login_pass)`** en correos y `hp/user`.
 - **API extlink de la tienda móvil** y buzón POP3 (`mm_add.php`).
 - **Restricción por IP** solo con `REMOTE_ADDR`: tenerla en cuenta si producción va detrás de un proxy.
@@ -144,7 +144,7 @@ Diferencias con crm2-php8, a propósito: `DocumentRoot /var/www/public` (Laravel
 
 - Esquema de BD: nuevo con estándares o compatible con `tb_*` (afecta a integraciones que leen la BD: POS).
 - ¿Se reescriben `hp/`, `touchcation/`, `signage/` y `api/` en Laravel, o conviven con el legacy al principio?
-- POS (`category11`), SNS (`category12`), Flash CSV, CKEditor, `password_hash`.
+- Cuándo entra el POS (`category11`); SNS (`category12`) probablemente nunca. Flash CSV, CKEditor, `password_hash`.
 - Las de [legacy-crm2/PENDING.md](legacy-crm2/PENDING.md), sección 7 (servidor POS de prueba, staging con datos reales, IPs de desarrollo, `activation=1`).
 
 ## 10. Inconsistencias vistas al preparar esto

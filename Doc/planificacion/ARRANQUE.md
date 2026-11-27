@@ -4,7 +4,7 @@
 
 ## 1. Preparación (una sola vez)
 
-1. **Commit del contexto** en la rama de integración (la que tenga `CRMSystem/`): `CLAUDE.md`, `INICIAR-CRM.bat`, `Doc/`, `scripts/`, `docker/`, `.gitignore`. Los worktrees solo ven lo que está en commit; el lanzador avisa si falta algo.
+1. **Hecho (2026-11-26):** el contexto está en commit en la rama de integración **`laravel13`** (subida a GitHub). `CRMSystem/` debe estar en `laravel13`; los worktrees salen de ahí.
 2. **Acceso directo en el Escritorio** ("CRM Laravel 13"):
    ```powershell
    powershell -ExecutionPolicy Bypass -File C:\Users\User\VivaTech\CRMSystem\scripts\crear-acceso-directo.ps1
@@ -17,9 +17,9 @@
 **Doble clic en "CRM Laravel 13"** (o en `INICIAR-CRM.bat`). El lanzador ([scripts/iniciar-sesiones.ps1](../../scripts/iniciar-sesiones.ps1)):
 
 1. Verifica Claude Code, git y Docker, y que el contexto esté en commit.
-2. Copia `scripts/claude-settings.json` a `.claude/settings.json` de cada carpeta si falta (`.claude/` está en `.gitignore`).
+2. Copia `scripts/claude-settings.json` a `.claude/settings.json` de cada carpeta en cada arranque (es la única fuente de las reglas; `.claude/` está en `.gitignore`).
 3. **Levanta Docker** (`docker compose up -d`: app PHP 8.5 FPM, web Apache, PostgreSQL 18, Mailpit).
-4. Crea los worktrees que falten (`CRMSystem-nucleo`, `-clientes`, `-promocion`, `-contenido`, `-operaciones`, `-quiosco`, al lado de `CRMSystem`) con `settings.local.json` sin commit, merge ni push.
+4. Crea los worktrees que falten (`CRMSystem-nucleo`, `-clientes`, `-promocion`, `-contenido`, `-operaciones`, `-quiosco`, al lado de `CRMSystem`) y les escribe `settings.local.json` (commit y push de su rama; sin merge ni cambio de rama).
 5. Abre **una pestaña de Windows Terminal por sesión**, con su modelo, su esfuerzo y su prompt: cada sesión lee su archivo de `Doc/coordinacion/` y sigue desde "Próximo paso". S0 se abre al final y reparte el trabajo.
 
 **Al terminar el día:** en cada pestaña, *"actualiza tu archivo de estado y termina"*.
@@ -50,9 +50,10 @@ La web (`http://localhost:8081`) sirve el código de `CRMSystem/` (rama de integ
 
 ## 4. Permisos
 
-- Modo `bypassPermissions` (lo pasa el lanzador); las reglas `deny` se aplican siempre.
-- **Prohibido para todas:** `git push`, `reset --hard`, `clean`, `rebase`, `checkout`, `stash`, `worktree remove`, `rm -rf`, leer `env-legacy.example` (claves reales), `vendor/`, `node_modules/` y los `.backup`.
-- **S1 a S6:** además, sin `commit`, `merge`, `switch` ni `git -C` (`settings.local.json` de su worktree, lo crea el lanzador).
+**Todos los permisos** (Antony, 2026-11-26), salvo lo que haría que las sesiones se pisen o lo que no tiene vuelta atrás:
+- Modo `bypassPermissions` (lo pasa el lanzador) y `allow` amplio: Bash, lectura y edición, web, Playwright, Docker y git (incluido `push`). Pueden leer `Doc/legacy-crm2/env-legacy.example`.
+- **Prohibido para todas:** `push --force`, push a `main` o a `brahamscode/*`, `reset --hard`, `clean`, `rebase`, `worktree remove`, `rm -rf /` o `~`; leer `vendor/`, `node_modules/` y los `.backup` (solo por tamaño).
+- **S1 a S6:** además, sin `merge`, `switch`, `checkout`, `git -C` ni push a `laravel13`: cada una escribe solo en su rama `l13/<grupo>`; S0 integra.
 - `crossSessionInbound: accept`: los mensajes entre sesiones llegan sin diálogo de aprobación.
 
 ## 5. Problemas comunes

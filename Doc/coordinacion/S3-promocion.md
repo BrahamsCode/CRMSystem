@@ -5,7 +5,7 @@
 
 ## Modo autónomo
 
-Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). No haces commits, merges ni push.
+Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
 ## Próximo paso — Diseño (sin código)
 
@@ -19,7 +19,7 @@ Criterio de terminado: todas las vistas del análisis tienen fila; avisar a S0 y
 
 ## Después (cuando S0 apruebe el diseño y el núcleo esté integrado)
 
-Implementar submódulo por submódulo en el orden del diseño: migraciones, modelos, Form Requests, controladores, vistas Blade (textos en `lang/ja/<modulo>.php`), rutas en `routes/modulos/<modulo>.php`, menú en `config/menu/<modulo>.php`, pruebas Pest. Cada submódulo terminado: pruebas en verde (`bash scripts/en-docker.sh php artisan test`), filas en `hecho` y aviso a S0 para el commit.
+Implementar submódulo por submódulo en el orden del diseño: migraciones, modelos, Form Requests, controladores, vistas Blade (textos en `lang/ja/<modulo>.php`), rutas en `routes/modulos/<modulo>.php`, menú en `config/menu/<modulo>.php`, pruebas Pest. Cada submódulo terminado: pruebas en verde (`bash scripts/en-docker.sh php artisan test`), filas en `hecho`, commit y push de tu rama, y aviso a S0.
 
 **Ya existe en CRMSystem:** `Admin/Promotions`, modelos `Message*`, `Coupon*`, `Point*`, `Stamp*`, `Rank*`, `Survey`, job `SendMessageBatch`, `PromotionMail`, comandos `promotions:*` y `Doc/database/TABLAS_MODULO_PROMOCIONES.md`. Parte de eso: marca lo que ya cumple. **El crontab del legacy (`cSendSchedule`) se reemplaza por el Scheduler**, registrado en `app/Providers/PromocionServiceProvider.php`; las tareas de puntos, sellos y rangos también son tuyas. Es el grupo más grande: si S0 lo decide, se parte en dos sesiones (mensajería / fidelización).
 

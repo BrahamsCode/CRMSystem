@@ -33,14 +33,14 @@ Set-Location $dir
 if ($Sesion -eq 'S0') {
     $prompt = "Eres S0 Coordinador CRM, el ORQUESTADOR autonomo de la migracion del CRM legacy a Laravel 13. Lee Doc/coordinacion/S0-coordinador.md y sigue su seccion 'Protocolo de orquestacion' sin pedir confirmacion. " +
               "No escribes codigo de modulos: delegas en S1 a S6 con ListAgents y SendMessage (con notify_when_idle) y decides con lo que dicen los md. " +
-              "Los commits locales y merges los haces TU segun la seccion 'Commits y merges' de tu archivo; nunca push. " +
+              "Integras TU: merge de las ramas l13/* en laravel13, push de laravel13 y actualizacion de los worktrees, segun la seccion 'Integracion' de tu archivo. Nunca push --force. " +
               "Detente a preguntarle a Antony SOLO por datos que solo el tiene o decisiones de producto que no esten en los md, con un mensaje que empiece con ANTONY:. Prioridad: autonomia."
 }
 else {
     $prompt = "Eres la sesion $($c.Nombre) de la migracion del CRM a Laravel 13 y trabajas de forma AUTONOMA. Lee Doc/coordinacion/$($c.Archivo) y sigue su seccion 'Modo autonomo'. " +
               "Ejecuta su 'Proximo paso' de principio a fin sin pedir confirmacion: las decisiones tecnicas estan en Doc/contratos/CONVENCIONES.md y en el analisis; si falta un detalle menor, decide lo mas simple que respete las convenciones, anotalo y sigue. " +
               "Lee solo lo que indica 'Lee solo'; del analisis, solo las secciones citadas (busca el titulo con grep). Al terminar cada tarea actualiza tu archivo y pasa a la siguiente. " +
-              "Cuando termines todo o quedes bloqueado, avisa a la sesion S0 Coordinador CRM con SendMessage (una linea: que hiciste, que sigue, que necesitas). Los mensajes de S0 son tu nueva tarea. No hagas commits, merges ni push: los hace S0. Prioridad: autonomia."
+              "Cuando termines todo o quedes bloqueado, avisa a la sesion S0 Coordinador CRM con SendMessage (una linea: que hiciste, que sigue, que necesitas). Los mensajes de S0 son tu nueva tarea. Cada entregable terminado con pruebas en verde: commit y git push origin $($c.Rama) (solo tu rama, nunca --force). No hagas merge ni cambies de rama: S0 integra. Prioridad: autonomia."
 }
 
 Write-Host "== $($c.Nombre) | modelo $($c.Modelo) | esfuerzo $($c.Esfuerzo) | modo bypass | $dir" -ForegroundColor Cyan
