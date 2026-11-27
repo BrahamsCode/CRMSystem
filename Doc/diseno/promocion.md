@@ -474,6 +474,7 @@ Orden con una sola sesión (decisión de S0): 0.1 → M1 → M2 → F1 → F2 �
 5. Niveles de permiso (`cKengen`) para las Policies.
 6. Paquete PDF (QR印刷, etiquetas DM); mantener `bacon/bacon-qr-code`.
 7. Helper CSV SJIS-win; ruta `/hp/uploads/{path}` hacia Storage (imágenes de correos, push y 新着情報).
+8. `app.timezone = Asia/Tokyo` (el legacy usa `date.timezone = Asia/Tokyo`; hoy es `UTC`). Mientras tanto, S3 interpreta sus horas con `App\Services\Promotions\LegacyTime::ZONE`; `LegacyTimestamps::legacyDate()` sí depende de `app.timezone`.
 
 ### A S2 (clientes / reservas)
 1. Modelo `Reservation` (sobre `tb_yoyaku`) con scope `remindable()`.
@@ -508,3 +509,8 @@ Orden con una sola sesión (decisión de S0): 0.1 → M1 → M2 → F1 → F2 �
 - Se corrigen: `aterna_a4_12.php` (`kaiin_master` → `tb_customer`), `daycsv_download.php` vacío, `anketo2` con consultas a `tb_c3_anketo_*`, `jquery.gchart` (API de Google retirada) → `Chart.min.js`.
 - Los contadores por tipo de dirección del legacy (`pc配信数`…) se siguen llenando.
 - Touchcation fuera de alcance: ninguna vista de este grupo dependía solo del quiosco.
+- 0.1 (implementado): 36 modelos en `App\Models\Promotions\`; `mailmag_master` y `tb_point_rules`/`tb_stamp_rules` sin borrado lógico (el legacy los borra físicamente y `mailmag_master.disp_flg` puede venir vacío).
+- Sorteo: la configuración y las existencias se leen y escriben en `contents_master tb_c6_kujibiki` con el modelo `ContentsMaster` de S1, como `cKujibiki`; no hacen falta los modelos de S4 para sortear. El cupón del premio se canjea después en Mi página (el sorteo solo deja `tb_kujibiki_log`, como el legacy).
+- Sorteo, corrección: el legacy reinicia el día con `mktime(5:00 de hoy)`; antes de las 5:00 eso es una hora futura y deja intentar sin límite. Se usa «las 5:00 más recientes». El contador nuevo de `tb_kujibiki_count` se numera con `hatuban` de la tabla (el legacy usaba `createHatsuban(tienda)`).
+- Cupones: el servicio se llama `CouponService` (`issue`, `markUsed`, `markForPrint`, `printableFor`). Imprimir es dejar `print_flg = cd de la tienda` y, al imprimir, `markUsed` (copia a `tb_mycoupon_used` y borra), como el reproductor del legacy; no hay `printed_at`.
+- Scheduler: `PromocionServiceProvider::TASKS` registra solo los comandos que ya existen; hoy, `promocion:clean-temp` (subidas en el disco `public` con la ruta del legacy `system/category3/<carpeta>/uploads/temp`).
