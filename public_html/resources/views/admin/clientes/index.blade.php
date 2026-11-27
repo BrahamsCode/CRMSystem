@@ -183,10 +183,11 @@ function kensuSet(parts){
 <!-- / .contents --></div>
 
 
+{{-- Como el legacy, el bloque ■顧客一覧 solo se pinta tras buscar (se_flg=1 o act=up) --}}
+@if ($searched)
 <div class="contents">
 <p id="customerSearchList" class="h2Title">■顧客一覧</p>
 
-@if ($searched)
 @if ($total > 0)
 @php
     $from = max(0, ($page - 1) * $kensu);
@@ -281,9 +282,8 @@ SoftBank：{{ $carrierCounts['softbank'] }}</span>件
 @include('admin.clientes.partials.page_control', ['maxPage' => $kensu ? (int) ceil($total / $kensu) : 0])
 </ul>
 
-@endif
-
 <!-- / .contents --></div>
+@endif
 
 {{-- Fuera de #container en el legacy: diálogo LINE配信 (lo maneja smatopiLine.js; envía a /system/category3/smatopi/ajax_smatopiLine.php) --}}
 <div id="smatopiLineDialog" style="display: none;padding:20px;">

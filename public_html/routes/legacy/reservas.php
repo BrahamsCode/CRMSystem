@@ -34,4 +34,14 @@ Route::match(['get', 'post'], 'system/category9/yoyaku/ajax_uketsuke_status.php'
 // --- fin R4 ---
 
 // --- R5 ---
+// 予約一覧 y 年間カレンダー (enlaces y window.open del legacy)
+Route::get('system/category9/yoyaku/view_shop.php', [\App\Http\Controllers\Admin\Reservations\ReservationListController::class, 'byShop'])->name('reservas.by-shop');
+Route::match(['get', 'post'], 'system/category9/yoyaku/yoyaku_list_calendar.php', [\App\Http\Controllers\Admin\Reservations\ReservationListController::class, 'calendar'])->name('reservas.list-calendar');
+Route::get('system/category9/yoyaku/pop_calendar.php', [\App\Http\Controllers\Admin\Reservations\ReservationListController::class, 'popCalendar'])->name('reservas.pop-calendar');
+// 予約一覧出力 y su CSV
+Route::get('system/category9/yoyaku/print/yoyaku_list_print.php', [\App\Http\Controllers\Admin\Reservations\ReservationListController::class, 'print'])->name('reservas.print');
+Route::match(['get', 'post'], 'system/category9/yoyaku/print/csv_download.php', [\App\Http\Controllers\Admin\Reservations\ReservationListController::class, 'csv'])->name('reservas.csv');
+// 予約プリント (página del iframe y su sondeo cada 3 s)
+Route::get('system/category9/yoyaku/yoyakuPrint.php', [\App\Http\Controllers\Admin\Reservations\PrinterController::class, 'index'])->name('reservas.printer');
+Route::match(['get', 'post'], 'system/category9/yoyaku/ajaxYoyakuPrint.php', [\App\Http\Controllers\Admin\Reservations\PrinterController::class, 'poll'])->name('reservas.printer.poll');
 // --- fin R5 ---

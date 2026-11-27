@@ -19,7 +19,7 @@
 <ul id="yoyakuNavi" class="yoyakuMenu">
 <li><a href="{{ route('nucleo.select') }}">総合TOPへ</a></li>
 <li><a href="{{ route('admin.reservas.timetable') }}">本日</a></li>
-<li><a href="{{ \Illuminate\Support\Facades\Route::has('admin.reservas.by-shop') ? route('admin.reservas.by-shop', ['d' => $naviD]) : 'javascript:void(0);' }}">店舗毎予約数</a></li>
+<li><a href="{{ route('admin.reservas.by-shop', ['d' => $naviD]) }}">店舗毎予約数</a></li>
 @can('kengen', [1027, 1])<li><a href="javascript:void(0);" class="popWindowAnchor" onclick="{{ $naviPopScript(route('admin.reservas.menus.index'), '600', '') }}">予約項目管理</a></li>@endcan
 @can('kengen', [1028, 1])<li><a href="javascript:void(0);" class="popWindowAnchor" onclick="{{ $naviPopScript(route('admin.reservas.staff-works'), '600', '') }}">{{ $staffWord ?? 'スタッフ' }}割当</a></li>@endcan
 @can('kengen', [1029, 1])<li><a href="javascript:void(0);" class="popWindowAnchor" onclick="{{ $naviPopScript(route('admin.reservas.settings.shop'), '600', '600') }}">予約設定</a></li>@endcan
