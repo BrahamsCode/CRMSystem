@@ -4,7 +4,7 @@ Revisión visual S1, 2026-11-27 (método en [README.md](README.md)). Pantallas: 
 
 | Pantalla | Qué difiere | Detalle |
 |---|---|---|
-| `/system/category9/` | Desde `7d54d3a` redirige a `yoyaku/time_table.php` como el legacy, pero esa pantalla (la agenda) **no existe** en local: 404 | Es la entrada del módulo (pestaña 予約管理 de la cabecera); los popups de ajustes se abren desde ella. |
+| `/system/category9/` | ~~La agenda no existía (404)~~ **Resuelto**: S2 migró `yoyaku/time_table.php` (R5) y la portada redirige a ella (`f9ec252`) | Ver la segunda pasada. |
 | `yoyaku_config.php` (各店舗設定) | Sin diferencias | Popup `layouts.legacy-popup`. |
 
 ## Segunda pasada (S1, 2026-11-27): R5 y R6 de S2
