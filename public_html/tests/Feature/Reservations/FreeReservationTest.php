@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/helpers.php';
+
 use App\Models\ContentsMaster;
 use Illuminate\Support\Facades\DB;
 use Tests\Unit\Customers\LegacyFixtures;
@@ -9,7 +11,7 @@ use Tests\Unit\Customers\LegacyFixtures;
  */
 
 beforeEach(function () {
-    \Tests\Feature\Reservations\ScreenSetup::boot();
+    reservasLogin();
 });
 
 function freeSetting(string $field, int $shopCd = 1): ?string
@@ -17,7 +19,7 @@ function freeSetting(string $field, int $shopCd = 1): ?string
     return ContentsMaster::query()->entry('tb_c9_yoyaku', $field)->where('int_data', $shopCd)->value('text_data');
 }
 
-/** Empleados 11 y 12 en la tienda 1 con menús asignados (10 viene de ScreenSetup) */
+/** Empleados 11 y 12 en la tienda 1 con menús asignados (10 viene de reservasLogin) */
 function freeStaff(): void
 {
     LegacyFixtures::staff(11, 1, '佐藤');
@@ -40,7 +42,7 @@ it('sin tienda elegida, master solo ve el selector', function () {
     $this->get(route('admin.reservas.free'))
         ->assertOk()
         ->assertSee('※登録・閲覧したい店舗を選択してください。')
-        ->assertSee('テスト店舗')
+        ->assertSee('本店')
         ->assertDontSee('フリー予約の使用');
 });
 
@@ -50,7 +52,7 @@ it('muestra el formulario de la tienda con los valores guardados', function () {
 
     $html = $this->get(route('admin.reservas.free', ['shop' => 1]))
         ->assertOk()
-        ->assertSee('■テスト店舗')
+        ->assertSee('■本店')
         ->assertSee('フリー予約設定')
         ->assertSee('タイムラインのスタッフ名表示')
         ->assertSee('value="おまかせ"', false)

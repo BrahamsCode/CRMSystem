@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/helpers.php';
+
 use App\Models\Reservations\Reservation;
 use App\Models\Reservations\ReservationConfig;
 use App\Models\Reservations\ReservationSlot;
@@ -11,7 +13,7 @@ use Illuminate\Support\Str;
 // yoyaku_multi_uketsuke_day.php, _register.php y ajax_uketsuke_status.php)
 
 beforeEach(function () {
-    \Tests\Feature\Reservations\ScreenSetup::boot();
+    reservasLogin();
 
     // 時間選択 y スタッフ別予約表 son de otra pantalla aún sin publicar: rutas de prueba para poder redirigir
     foreach (['admin.reservas.calendar-select' => '__test/calendar-select', 'admin.reservas.timetable.staff' => '__test/timetable-staff'] as $name => $uri) {

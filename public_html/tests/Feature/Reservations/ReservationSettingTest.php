@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/helpers.php';
+
 use App\Models\Reservations\ReservationConfig;
 use Illuminate\Support\Facades\DB;
 
@@ -8,7 +10,7 @@ use Illuminate\Support\Facades\DB;
  */
 
 beforeEach(function () {
-    \Tests\Feature\Reservations\ScreenSetup::boot();
+    reservasLogin();
     $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
 });
 
@@ -24,13 +26,13 @@ function shopSettingInput(array $overrides = []): array
 // ---------------------------------------------------------------- 各店舗設定
 
 it('muestra 各店舗設定 con las tiendas', function () {
-    DB::table('admin_master')->insert(['cd' => 1, 'yoyaku_setsubi_flg' => '1']);
+    DB::table('admin_master')->where('cd', 1)->update(['yoyaku_setsubi_flg' => '1']);
 
     $this->get(route('admin.reservas.settings.shop'))
         ->assertOk()
         ->assertSee('各店舗設定')
         ->assertSee('店舗受付開始時間')
-        ->assertSee('テスト店舗')
+        ->assertSee('本店')
         ->assertSee('キャパ')
         ->assertSee('reservas\/settings\/shop\/data', false);
 });
@@ -134,7 +136,7 @@ it('muestra y guarda 予約フォーム設定 (tb_koumoku de tb_yoyaku)', functi
 // ---------------------------------------------------------------- 機能設定
 
 it('muestra y guarda 機能設定 en admin_master', function () {
-    DB::table('admin_master')->insert(['cd' => 1, 'yoyaku_time_interval' => '7', 'meyasu_jikan_flg' => '']);
+    DB::table('admin_master')->where('cd', 1)->update(['yoyaku_time_interval' => '7', 'meyasu_jikan_flg' => '']);
 
     // 7 no es un intervalo permitido: se muestra 30
     $this->get(route('admin.reservas.settings.features'))
