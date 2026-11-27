@@ -1,0 +1,411 @@
+[
+  {
+    "name": "api_auth_ok",
+    "method": "POST",
+    "path": "/api/auth",
+    "json": {
+      "user_id": "fixture-user",
+      "password": "fixture-pass"
+    }
+  },
+  {
+    "name": "api_auth_invalid_user",
+    "method": "POST",
+    "path": "/api/auth",
+    "json": {
+      "user_id": "fixture-user",
+      "password": "wrong"
+    }
+  },
+  {
+    "name": "api_auth_query_params_ignored",
+    "method": "POST",
+    "path": "/api/auth?user_id=fixture-user&password=fixture-pass"
+  },
+  {
+    "name": "api_shop_without_authorization",
+    "method": "GET",
+    "path": "/api/shop"
+  },
+  {
+    "name": "api_shop_invalid_token",
+    "method": "GET",
+    "path": "/api/shop",
+    "headers": [
+      "Authorization: Bearer abc.def.ghi"
+    ]
+  },
+  {
+    "name": "api_shop_ok",
+    "method": "GET",
+    "path": "/api/shop",
+    "auth": true
+  },
+  {
+    "name": "api_customer_without_filters",
+    "method": "GET",
+    "path": "/api/customer",
+    "auth": true,
+    "json": {}
+  },
+  {
+    "name": "api_customer_by_id",
+    "method": "GET",
+    "path": "/api/customer",
+    "auth": true,
+    "json": {
+      "id": "1000001"
+    }
+  },
+  {
+    "name": "api_customer_by_mobile",
+    "method": "GET",
+    "path": "/api/customer",
+    "auth": true,
+    "json": {
+      "kojin_mobile": "08098765432"
+    }
+  },
+  {
+    "name": "api_customer_by_address",
+    "method": "GET",
+    "path": "/api/customer",
+    "auth": true,
+    "json": {
+      "user_address": "大阪"
+    }
+  },
+  {
+    "name": "api_customer_by_birth",
+    "method": "GET",
+    "path": "/api/customer",
+    "auth": true,
+    "json": {
+      "kojin_birth": "12/31"
+    }
+  },
+  {
+    "name": "api_customer_by_shop",
+    "method": "GET",
+    "path": "/api/customer",
+    "auth": true,
+    "json": {
+      "tb_shop_cd": 1
+    }
+  },
+  {
+    "name": "api_customer_other_column_like",
+    "method": "GET",
+    "path": "/api/customer",
+    "auth": true,
+    "json": {
+      "name_kana": "ハナ"
+    }
+  },
+  {
+    "name": "api_customer_not_found",
+    "method": "GET",
+    "path": "/api/customer",
+    "auth": true,
+    "json": {
+      "id": "9999999"
+    }
+  },
+  {
+    "name": "api_point_missing_user",
+    "method": "GET",
+    "path": "/api/point",
+    "auth": true,
+    "json": {}
+  },
+  {
+    "name": "api_point_ok",
+    "method": "GET",
+    "path": "/api/point",
+    "auth": true,
+    "json": {
+      "user_id": 1000001
+    }
+  },
+  {
+    "name": "api_point_page2",
+    "method": "GET",
+    "path": "/api/point",
+    "auth": true,
+    "json": {
+      "user_id": 1000001,
+      "page": 2,
+      "limit": 5
+    }
+  },
+  {
+    "name": "ms_customer_detail_by_cd",
+    "method": "GET",
+    "path": "/api/mobile_shop/customer/1609897927001809158",
+    "auth": true
+  },
+  {
+    "name": "ms_customer_detail",
+    "method": "GET",
+    "path": "/api/mobile_shop/customer/1000001",
+    "auth": true
+  },
+  {
+    "name": "ms_customer_search_ids",
+    "method": "GET",
+    "path": "/api/mobile_shop/customer",
+    "auth": true,
+    "json": {
+      "id": "1000001 1000002"
+    }
+  },
+  {
+    "name": "ms_customer_search_mobile",
+    "method": "GET",
+    "path": "/api/mobile_shop/customer",
+    "auth": true,
+    "json": {
+      "kojin_mobile": "09012345678"
+    }
+  },
+  {
+    "name": "ms_customer_without_filters",
+    "method": "GET",
+    "path": "/api/mobile_shop/customer",
+    "auth": true,
+    "json": {}
+  },
+  {
+    "name": "ms_passcode_ok",
+    "method": "POST",
+    "path": "/api/mobile_shop/passcode",
+    "auth": true,
+    "json": {
+      "shop_cd": 1,
+      "passcode": "4321"
+    }
+  },
+  {
+    "name": "ms_passcode_ng",
+    "method": "POST",
+    "path": "/api/mobile_shop/passcode",
+    "auth": true,
+    "json": {
+      "shop_cd": 1,
+      "passcode": "0000"
+    }
+  },
+  {
+    "name": "ms_passcode_leading_zero",
+    "method": "POST",
+    "path": "/api/mobile_shop/passcode",
+    "auth": true,
+    "json": {
+      "shop_cd": 1,
+      "passcode": "04321"
+    }
+  },
+  {
+    "name": "ms_passcode_without_authorization",
+    "method": "POST",
+    "path": "/api/mobile_shop/passcode",
+    "json": {
+      "shop_cd": 1,
+      "passcode": "4321"
+    }
+  },
+  {
+    "name": "ms_point_ok",
+    "method": "POST",
+    "path": "/api/mobile_shop/point",
+    "auth": true,
+    "json": {
+      "customer_id": 1000001
+    }
+  },
+  {
+    "name": "ms_point_get",
+    "method": "GET",
+    "path": "/api/mobile_shop/point",
+    "auth": true,
+    "json": {
+      "customer_id": 1000001
+    }
+  },
+  {
+    "name": "ms_point_missing_id",
+    "method": "POST",
+    "path": "/api/mobile_shop/point",
+    "auth": true,
+    "json": {}
+  },
+  {
+    "name": "ms_point_not_found",
+    "method": "POST",
+    "path": "/api/mobile_shop/point",
+    "auth": true,
+    "json": {
+      "customer_id": 9999999
+    }
+  },
+  {
+    "name": "ms_sales_items_list",
+    "method": "GET",
+    "path": "/api/mobile_shop/sales_items",
+    "auth": true,
+    "json": {}
+  },
+  {
+    "name": "ms_sales_items_detail",
+    "method": "GET",
+    "path": "/api/mobile_shop/sales_items/2",
+    "auth": true
+  },
+  {
+    "name": "ms_sales_items_search",
+    "method": "GET",
+    "path": "/api/mobile_shop/sales_items",
+    "auth": true,
+    "json": {
+      "discription": "コーヒー",
+      "is_exchangeable_of_point": 1
+    }
+  },
+  {
+    "name": "ms_point_exchange_not_exchangeable",
+    "method": "POST",
+    "path": "/api/mobile_shop/point_exchange_item",
+    "auth": true,
+    "json": {
+      "customer_id": 1000001,
+      "salesItemCd": 1,
+      "shop_cd": 1
+    }
+  },
+  {
+    "name": "ms_point_exchange_missing",
+    "method": "POST",
+    "path": "/api/mobile_shop/point_exchange_item",
+    "auth": true,
+    "json": {}
+  },
+  {
+    "name": "ms_point_exchange_ok",
+    "method": "POST",
+    "path": "/api/mobile_shop/point_exchange_item",
+    "auth": true,
+    "json": {
+      "customer_id": 1000001,
+      "salesItemCd": 2,
+      "shop_cd": 1
+    }
+  },
+  {
+    "name": "ms_point_use_missing",
+    "method": "POST",
+    "path": "/api/mobile_shop/point_use",
+    "auth": true,
+    "json": {}
+  },
+  {
+    "name": "ms_point_use_ok",
+    "method": "POST",
+    "path": "/api/mobile_shop/point_use",
+    "auth": true,
+    "json": {
+      "customer_id": 1000001,
+      "shop_cd": 1,
+      "use_points": 10
+    }
+  },
+  {
+    "name": "ms_point_use_insufficient",
+    "method": "POST",
+    "path": "/api/mobile_shop/point_use",
+    "auth": true,
+    "json": {
+      "customer_id": 1000001,
+      "shop_cd": 1,
+      "use_points": 999999
+    }
+  },
+  {
+    "name": "ms_fetch_paid_member_extlink_down",
+    "method": "POST",
+    "path": "/api/mobile_shop/fetch_paid_member",
+    "auth": true,
+    "json": {
+      "customer_id": 1000001
+    }
+  },
+  {
+    "name": "api_unknown_route",
+    "method": "GET",
+    "path": "/api/nope",
+    "auth": true
+  },
+  {
+    "name": "mpa_corresponding",
+    "method": "GET",
+    "path": "/api/mpa_corresponding.php"
+  },
+  {
+    "name": "mpa_corresponding_login",
+    "method": "GET",
+    "path": "/api/mpa_corresponding.php?login_id=1000001"
+  },
+  {
+    "name": "mpa_top_banner",
+    "method": "GET",
+    "path": "/api/mpa_getTopBanner.php"
+  },
+  {
+    "name": "mpa_top_banner_login",
+    "method": "GET",
+    "path": "/api/mpa_getTopBanner.php?login_id=1000001"
+  },
+  {
+    "name": "mpa_cover_flow",
+    "method": "GET",
+    "path": "/api/mpa_getCoverFlow.php"
+  },
+  {
+    "name": "mpa_cover_flow_login",
+    "method": "GET",
+    "path": "/api/mpa_getCoverFlow.php?login_id=1000001"
+  },
+  {
+    "name": "mpa_setraiten_not_numeric",
+    "method": "GET",
+    "path": "/api/mpa_setraiten.php?regist_id=abc&shop_cd=1"
+  },
+  {
+    "name": "mpa_setraiten_not_found",
+    "method": "GET",
+    "path": "/api/mpa_setraiten.php?regist_id=9999999&shop_cd=1"
+  },
+  {
+    "name": "mpa_setraiten_ok",
+    "method": "GET",
+    "path": "/api/mpa_setraiten.php?regist_id=1000002&shop_cd=1"
+  },
+  {
+    "name": "mpa_setraiten_interval",
+    "method": "GET",
+    "path": "/api/mpa_setraiten.php?regist_id=1000002&shop_cd=1"
+  },
+  {
+    "name": "mpa_setraiten_beacon",
+    "method": "GET",
+    "path": "/api/mpa_setraiten.php?regist_id=1000001&membership=1&shop_cd=1&beacon_cd=7"
+  },
+  {
+    "name": "mpa_album_update_missing",
+    "method": "POST",
+    "path": "/api/mpa_albumUpdate.php",
+    "form": {
+      "domain": "test",
+      "cd": "1000001"
+    }
+  }
+]

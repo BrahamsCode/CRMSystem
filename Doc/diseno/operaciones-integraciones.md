@@ -12,8 +12,8 @@
 
 Estados: `pendiente`, `pendiente ⏸` (espera a Antony, ver arriba), `hecho`, `descartado: motivo`, `diferido: motivo` (fuera de alcance por ahora).
 Tablas: **L** = lee, **E** = escribe. Todas son las del legacy, sin tablas nuevas (§2).
-Pantallas: grupo `admin` (`routes/modulos/operaciones.php`, nombre `admin.operaciones.*`), controladores en `App\Http\Controllers\Admin\Operaciones\`, vistas Blade con el HTML del legacy (§2b).
-Integraciones: `routes/publico/integraciones.php`, que S1 carga fuera del grupo `admin`, sin `auth:admin`, sin CSRF y sin prefijo, con la URL legacy literal (incluido `.php`) y nombre `publico.integraciones.*`. Controladores en `App\Http\Controllers\Admin\Integraciones\`.
+Pantallas: grupo `admin` (`routes/modulos/operaciones.php`, nombre `admin.operaciones.*`), controladores en `App\Http\Controllers\Admin\Operaciones\`, vistas Blade con el HTML del legacy (§2b) sobre `layouts.legacy`. Las URL literales que llaman los JS del legacy (`/system/category5/…/change_syukkin.php`, `ajax_session_update.php`, formularios con `action` relativo) van en `routes/legacy/operaciones.php`, nombre `legacy.operaciones.*`, con el guard del personal.
+Integraciones: `routes/publico/integraciones.php`, que S1 carga fuera del grupo `admin`, sin `auth:admin`, sin CSRF y sin prefijo, con la URL legacy literal (incluido `.php`) y nombre `publico.integraciones.*`. Controladores en `App\Http\Controllers\Publico\Integraciones\` (CONVENCIONES §2).
 
 ### 1.1 スタッフ管理 (`system/category5/staff/`)
 
@@ -129,7 +129,7 @@ Todas con HTTP 200 también en error y leyendo el **cuerpo JSON incluso en GET**
 
 ### 1.8 `appview/` (WebView de la app del cliente)
 
-Rutas `appview/<archivo>.php` idénticas, con sesión (la reserva rápida usa `session_id()` como `sess`). Controladores en `Admin\Integraciones\Appview\`.
+Rutas `appview/<archivo>.php` idénticas, con sesión (como el legacy). Controladores en `Publico\Integraciones\Appview\`.
 
 | Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas legacy | Estado |
 |---|---|---|---|---|---|
@@ -154,13 +154,13 @@ Rutas `appview/<archivo>.php` idénticas, con sesión (la reserva rápida usa `s
 | `anketo2.php` | 問診表 | `publico.integraciones.appview.anketo2` | `SurveyController@show` | L `tb_c3_anketo2*` | pendiente |
 | `anketo2_register.php` | 問診表 (registro) | `publico.integraciones.appview.anketo2-register` | `SurveyController@store` | E `tb_c3_anketo2_sub`, `tb_anketo_present`, `tb_mycoupon`, `tb_customer`, `hatuban` | pendiente |
 | `reservation.php` | (予約) | `publico.integraciones.appview.reservation` | `ReservationController@show` | — (contenedor de `r/`, de S2) | pendiente |
-| `quick_reservation.php` | (クイック予約) | `publico.integraciones.appview.quick-reservation` | `QuickReservationController@show` | L `tb_yoyaku`, `numbered_ticket`, `tb_staff` | pendiente |
-| `quick_reservation_register.php` | (registro, JSON) | `publico.integraciones.appview.quick-reservation-register` | `QuickReservationController@store` | E `tb_yoyaku`, `numbered_ticket` | pendiente |
+| `quick_reservation.php` | (クイック予約) | — | — | — | descartado: クイック予約 es de touchcation y `numbered_ticket` no está en el backup (S0, 2026-11-27) |
+| `quick_reservation_register.php` | (registro, JSON) | — | — | — | descartado: ídem |
 | `privacyPage.php` | プライバシーポリシー | `publico.integraciones.appview.privacy` | `PageController@privacy` | L `contents_master`, `tb_shop` | pendiente |
 | `introduction.php` | プレビュー | `publico.integraciones.appview.introduction` | `PageController@introduction` | — | pendiente |
 | `detail_view.php` | プレビュー | `publico.integraciones.appview.detail-view` | `PageController@detailView` | — | pendiente |
 | `ms_paid_member_regist.php`, `ms_paid_member_test.php` | (prueba) | — | — | — | descartado: código de prueba con cliente fijo |
-| `class/*` | — | servicios | — | — | descartado como archivos: su lógica pasa a servicios (`QuickReservation`, `Util::` de オススメ) |
+| `class/*` | — | servicios | — | — | descartado como archivos: su lógica pasa a servicios (``Util::` de オススメ) |
 
 ### 1.9 `system/tool/api` y CTI (`system/desktop_request`)
 
@@ -254,7 +254,6 @@ Reglas comunes (CONVENCIONES §0 y §4), que aplican todos los modelos de S5:
 | `tb_raiten_rireki`, `tb_search_cate`, `tb_search_form` | (S2) | `tool/api`, CTI, `mpa_setraiten` |
 | `sales_items` | (S2, ya Eloquent en el legacy) | API de canje |
 | `tb_photo_album` | (S2) | `mpa_albumUpdate`, `appview/photo_gallery` |
-| `tb_yoyaku`, `numbered_ticket` | (S2) | `appview/quick_reservation*` |
 | `tb_customer_point`, `tb_point_log`, `tb_stamp_log`, `tb_stamp_config` | (S3) | API de puntos, `tool/api`, `appview/stamp` |
 | `tb_mycoupon`, `tb_mycoupon_master`, `tb_mycoupon_used`, `tb_c3_anketo2*`, `tb_anketo_present` | (S3) | `appview` |
 | `tb_url_list`, `tb_beacon_history` | (S4) | `ptag`, `mpa_setraiten` (`membership=1`) |
@@ -269,19 +268,19 @@ Las rutas guardadas en la BD (`tb_staff.pic_name`, `kintai_tb_config.pic_name`, 
 
 Cada pantalla de `admin.operaciones.*` es el HTML del archivo legacy pasado a Blade, con las mismas clases, ids y textos japoneses, dentro del layout de S1 (cabecera, menú lateral, `mainStyle.css`, jQuery 3.7.1 + compat). Cambios obligados: los botones Flash de CSV (`AC_RunActiveContent.js` + `.swf`) pasan a un botón HTML con la misma imagen que llama a la ruta CSV; los formularios llevan `@csrf`; los `<script>` de jQuery 1.3.2/1.4.4/1.11 de cada pantalla se quitan (usa el del layout).
 
-**Estáticos de category5.** Varios JS/CSS no están en `system/js` ni `system/css` (lo que copia S1) sino dentro de `system/category5/**`. S5 los copia a `public/legacy/system/category5/` conservando la ruta relativa (pedido 5.1, a confirmar con S0 como carpeta del módulo):
+**Estáticos de category5.** Varios JS/CSS no están en `system/js` ni `system/css` (lo que copia S1) sino dentro de `system/category5/**`. S5 los copia a `public/legacy/system/category5/` conservando la ruta relativa (**hecho**, confirmado por S0; sin `AC_RunActiveContent.js` ni lo de `csv_download/`, que es Flash):
 
 | Submódulo | CSS | JS (además del layout) | Notas |
 |---|---|---|---|
 | スタッフ管理 (`staff_entry*`, `staff_recover_confirm`, `work_list_update`) | — | `system/js/jquery.maskedinput-1.2.2.js`, `system/js/ajaxupload-3.5.js`, `category5/staff/js/staff_entry.js` | subida de foto por AJAX |
 | `staff_list`, `staff_detail`, `staff_group`, `form_config`, `information` | layout | layout | CSV con botón HTML |
-| 勤怠 `kintai/index`, `kintai_new*`, `kintai_update*` ⏸ | `category5/kintai/css/{default,layout,main,import}.css`, `jquery.alerts.css` | `jquery.alerts.js` (`jConfirm`/`jAlert`), `system/js/default.js`, `system/js/scrollsmoothly.js`; `jquery-ui` del layout | el legacy pide `../css/jquery.alerts.css` y `../js/jquery.alerts.js` en `system/category5/`, que **no existen** (404): se usa la copia de `system/category11/*/js/` |
+| 勤怠 `kintai/index`, `kintai_new*`, `kintai_update*` ⏸ | `category5/kintai/css/{default,layout,main,import}.css`, `jquery.alerts.css` | `jquery.alerts.js` (`jConfirm`/`jAlert`), `system/js/default.js`, `system/js/scrollsmoothly.js`; `jquery-ui` del layout | el legacy pide `../css/jquery.alerts.css` y `../js/jquery.alerts.js` en `system/category5/`, que **no existen** (404): el Blade usa `system/css/jquery.alerts.css` y `system/js/jquery.alerts.js` (estáticos comunes de S1) |
 | `kintai/config` ⏸ | `category5/kintai/css/colorpicker.css` | `category5/kintai/js/colorpicker.js`, `jquery.alerts.js` | imágenes en `category5/kintai/images/` (26) |
 | スケジュール `staff_shift`, `staff_shift_month` | `category5/schedule/css/{time_table,add.style,bootstrap.min,bootstrap-modal,bootstrap-modal-bs3patch}.css` | `category5/schedule/js/{add.shift,bootstrap.min,bootstrap-modal,bootstrap-modalmanager,html2canvas}.js` | Bootstrap 3 solo en estas pantallas, como el legacy |
 | `working/working_chouhyou` ⏸ | lo mismo que スケジュール + `datepicker.css` | lo mismo + `bootstrap-datepicker.js`, `bootstrap-datepicker.ja.min.js` | |
 | `working/*` resto, `config/*` | layout | layout (`working/js/` 1 archivo) | |
 
-**`appview/`** (fuera del layout del admin, páginas de WebView) referencia sus estáticos con rutas absolutas `/appview/css|js|img|images/…` y `/appview/bower_components/…` (Bootstrap, Bootswatch, bootstrap-validator, jQuery), más `/admin/css/font-awesome(.min).css`. S5 copia `appview/{css,js,img,images}` y solo los archivos `dist` usados de `bower_components` a `public/appview/` (mismas URL); `font-awesome` de `admin/css` lo pide a S1 (pedido 5.1). JS propios: `jquery-2.0.3.min.js` (se mantiene en estas páginas: el WebView no carga el layout), `lightbox.js`, `jquery.qrcode.min.js`, `jquery.jpostal.js`, `common.js`, `base.js`.
+**`appview/`** (fuera del layout del admin, páginas de WebView) referencia sus estáticos con rutas absolutas `/appview/css|js|img|images/…` y `/appview/bower_components/…` (Bootstrap, Bootswatch, bootstrap-validator, jQuery), más `/admin/css/font-awesome(.min).css`. S5 copió `appview/{css,js,img,images}` y solo los archivos `dist` usados de `bower_components` (más las fuentes de Bootswatch) a `public/appview/` (mismas URL), y `admin/css/font-awesome(.min).css` con `admin/fonts/` a `public/admin/` (**hecho**). `appview/css/font-awesome.css` pide `../fonts/`, que tampoco existe en el legacy. JS propios: `jquery-2.0.3.min.js` (se mantiene en estas páginas: el WebView no carga el layout), `lightbox.js`, `jquery.qrcode.min.js`, `jquery.jpostal.js`, `common.js`, `base.js`.
 
 ---
 
@@ -330,7 +329,7 @@ Cada pantalla de `admin.operaciones.*` es el HTML del archivo legacy pasado a Bl
 | 8 | API JWT tienda móvil (13 endpoints + 404) con pruebas de contrato | S1 paquete JWT y config; S2 `tb_customer`, `sales_items`; S3 puntos | 6 |
 | 9 | `tool/api` (8 endpoints) y CTI (3) | S2 clientes y visitas; S3 puntos y sellos | 5 |
 | 10 | `mpa_*` (5 endpoints) | S1 `contents_master` y `/hp/uploads`; S2 visitas y fotos; S4 beacon | 3 |
-| 11 | `appview/*` (26 pantallas) | S2 clientes y reservas rápidas; S3 cupones, sellos, encuestas, puntos | 7 |
+| 11 | `appview/*` (24 pantallas) | S2 clientes; S3 cupones, sellos, encuestas, puntos | 7 |
 | 12 | Utilitarios: `crm_version`, `ptag`, `air` (condicional), `integraciones:shukei` | S4 `tb_url_list` | 2 |
 | | **Total** (⏸ = 22 de 63) | | **63** |
 
@@ -345,7 +344,7 @@ Sin respuesta de Antony se hace 1-4 y 8-12 (41 puntos). Si 勤怠 no se usa, las
 - **Modelos y servicios base:** `Staff` (`tb_staff`), `Shop`, `Hatuban` (numeración en transacción), `AdminMaster`, `ContentsMaster`, el trait/scope de `disp_flg = '9'` y el cast/mutator que reproduce `form2Db` (kana de ancho medio → completo, recorte).
 - **Rutas:** `routes/modulos/operaciones.php` dentro del grupo `admin` y `routes/publico/integraciones.php` fuera, sin CSRF y sin prefijo, con sesión para `appview/*`; que el prefijo `api` de `routes/api.php` no capture `/api/*` legacy.
 - **Providers y seeders:** registrar `OperacionesServiceProvider` e `IntegracionesServiceProvider` en `bootstrap/providers.php`.
-- **Estáticos:** confirmar que S5 copia `system/category5/**/{css,js,images}` a `public/legacy/system/category5/` y `appview/*` a `public/appview/`; copiar `admin/css/font-awesome(.min).css` (y sus fuentes) a `public/admin/css/`, que usa `appview`.
+- **Estáticos:** hechos por S5 (category5, `appview` y `public/admin/{css,fonts}` con el font-awesome que usa `appview`); S1 copia los comunes (`system/css`, `system/js`…), de los que salen `jquery.alerts.*`.
 - **Uploads:** disco de Storage sobre la carpeta `hp/uploads` del legacy y la redirección `/hp/uploads/*`.
 - **Configuración y paquetes:** `firebase/php-jwt`, `intervention/image` (o Imagick); `MOBILESHOP_API_USER`, `MOBILESHOP_API_PASS`, `MOBILESHOP_EXTLINK_PASS` y su URL, `keys/private.pem`/`public.pem`, `CRM_API_KEY`, `DOMAIN_LIST` con una conexión de BD por dominio para `mobile_shop/customer`, host de `g-api.net`.
 - **Permisos:** niveles equivalentes a `cKengen` para las Policies de S5 y el Gate `viewWorkReport`.
@@ -353,8 +352,8 @@ Sin respuesta de Antony se hace 1-4 y 8-12 (41 puntos). Si 勤怠 no se usa, las
 
 ### 5.2 A S2 (clientes, ventas, reservas)
 
-- Modelos sobre `tb_customer`, `tb_customer_sub`, `tb_raiten_rireki`, `tb_koumoku`, `tb_search_cate/form`, `sales_items`, `tb_photo_album`, `tb_yoyaku`, `numbered_ticket`.
-- Servicio de visitas (lo que hace `raitenFunc`: intervalo mínimo, sellos y puntos) para `mpa_setraiten`, `tool/api` y CTI; búsqueda de clientes por teléfono (CTI); alta de socio desde `appview/member_*`; reserva rápida.
+- Modelos sobre `tb_customer`, `tb_customer_sub`, `tb_raiten_rireki`, `tb_koumoku`, `tb_search_cate/form`, `sales_items`, `tb_photo_album`.
+- Servicio de visitas (lo que hace `raitenFunc`: intervalo mínimo, sellos y puntos) para `mpa_setraiten`, `tool/api` y CTI; búsqueda de clientes por teléfono (CTI); alta de socio desde `appview/member_*`.
 - Las rutas nuevas de alta y búsqueda de clientes y de la agenda de reservas, para las redirecciones de `ctiWindow.php`.
 - `tb_felica_mode` fila `cd=2` (intervalo y textos de entrada/salida de category1) la edita S2 con el modelo `FelicaMode` de S5.
 - S5 publica `MobileShopClient` (有料会員) para el Job de S2, y `ShopWork` (`tb_shop_work`) para su calendario.
@@ -381,25 +380,27 @@ Regla: misma URL, mismos parámetros, misma respuesta byte a byte (claves, orden
 
 **Con la BD del legacy los `cd` y las columnas son los mismos:** la API lee las mismas tablas y columnas que el legacy y no hay mapeo de claves ni de nombres (`email1`, `kojin_mobile`, `add`, `touroku_date`… salen tal cual). `/api/point` devuelve las filas de `tb_point_log` con sus columnas en el orden de la tabla. Lo único que hay que reproducir es la serialización: el legacy hace `json_encode` sin flags de filas de `pg_fetch_assoc` (todo texto), mientras que PDO entrega enteros como `int`. Lo cubre `LegacyJson::pgText()` + `LegacyJson::encode()` (japonés como secuencias de escape unicode, `\/` en URLs, `1.0` como `1`, cuerpo vacío si falla la codificación). Algunas ramas de error hacen `echo` antes de `header()`: Content-Type por defecto de PHP (`LegacyJson::response(..., jsonHeader: false)`).
 
+**Fixtures grabadas (2026-11-27):** `public_html/tests/Fixtures/integraciones/` — 53 casos de `/api/*` y `mpa_*` con su README (cómo se grabaron y lo que mostraron). `LegacyJson::encode()` reproduce byte a byte todos los cuerpos JSON. Tipos: `/api/shop`, `/api/customer` y `mobile_shop/point` salen de `pg_fetch_*` (texto, `pgText`); `/api/point`, `mobile_shop/customer/<id>` y `sales_items` salen de Eloquent/PDO (números).
+
 ### 6.1 API JWT tienda móvil — `/api/*` (`Content-Type: application/json; charset=UTF-8`, siempre HTTP 200)
 
 | Endpoint | Entrada | Éxito | Errores |
 |---|---|---|---|
 | `POST /api/auth` | cuerpo JSON `user_id`, `password` | `{"message":"Success.","jwt":"<RS256, claims iat, exp=+30 días, user_id>"}` | `{"message":"Invalid config."}`, `{"message":"Invalid User."}` |
-| (todas las demás) | cabecera `Authorization: Bearer <jwt>` | — | token inválido: `{"status":"ng","message":"<mensaje de firebase/php-jwt>"}`; `passcode` sin cabecera: hoy error de índice → mismo JSON de token inválido (anotado) |
-| `GET /api/customer` | cuerpo: `id`, `kojin_mobile` (=), `tb_shop_cd` (num.), `user_address` (LIKE sobre `add`), `kojin_birth` (LIKE `%v`), otras claves de una lista blanca de columnas de `tb_customer` (LIKE `%v%`); sin filtros → nada | `{"message":"Success.","user_id":…,"payload":<cuerpo>,"result":[{id,email1,zip,user_address,name,name_kana,kojin_mobile,kojin_birth,tb_shop_cd}]}`; `result:""` si vacío; `disp_flg='1'`, orden `cd` | — |
+| (todas las demás) | cabecera `Authorization: Bearer <jwt>` | — | token inválido: `{"status":"ng","message":"<mensaje de firebase/php-jwt>"}`; **sin cabecera: fatal, HTTP 500 sin cuerpo** (fixture); Laravel responde lo mismo (500 vacío) para no cambiar lo que ve el cliente |
+| `GET /api/customer` | cuerpo: `id`, `kojin_mobile` (=), `tb_shop_cd` (num.), `user_address` (LIKE sobre `add`), `kojin_birth` (LIKE `%v`), otras claves de una lista blanca de columnas de `tb_customer` (LIKE `%v%`); **sin filtros → 200 con cuerpo vacío** | `{"message":"Success.","user_id":…,"payload":<cuerpo>,"result":[{id,email1,zip,user_address,name,name_kana,kojin_mobile,kojin_birth,tb_shop_cd}]}`; `result:""` si vacío; `disp_flg='1'`, orden `cd` | — |
 | `GET /api/shop` | — | `result:[{cd,kaishamei,kaishamei_kana}]` (`disp_flg='1'`, orden `cd`) | — |
 | `GET /api/point` | cuerpo: `user_id` (= `tb_customer.id`, entero > 0), `page`, `limit` (10), `range` | `result:{count,data:[filas de tb_point_log],limit,page}`, orden `touroku_date DESC` | `{"status":"ng","message":"必須情報がありません。"}` |
-| `GET /api/mobile_shop/customer/<cd>` | `<cd>` entero | `result:{cd,id,email1,name,name_kana,zip,pref,add,add_build,add_number,kojin_birth,kojin_mobile,touroku_date,update_date}` | — |
+| `GET /api/mobile_shop/customer/<id>` | `<id>` = **`tb_customer.id`** (no `cd`: con un `cd` todas las claves salen `null`) | `result:{cd,id,email1,name,name_kana,zip,pref,add,add_build,add_number,kojin_birth,kojin_mobile,touroku_date,update_date}` | — |
 | `GET /api/mobile_shop/customer` | cuerpo: `disp_flg`, `user_id` (`<dominio><id lpad 9>`), `id` (varios separados por espacio = OR), `kojin_mobile`; al menos uno | `result:{count,data:[{mycolle_cateogry,id,user_id,email1,zip,user_address,name,name_kana,kojin_mobile,kojin_birth,tb_shop_cd,disp_flg}]}` en N BD, `touroku_kubun='2'`, orden `id DESC`; sin filtros `result:false` | sin dominios: `ERROR: No domain list.` |
 | `POST /api/mobile_shop/fetch_paid_member` | `customer_id` | resultado de extlink (`apiSnderAuth` → `apiJudServiceTgt`) | los de extlink |
 | `POST /api/mobile_shop/send_unpaid_member_status` | `customer_id` | resultado de extlink (`apiSnderCan`) | los de extlink |
-| `POST /api/mobile_shop/passcode` | `shop_cd`, `passcode` | `{"status":"ok"}` | `{"status":"ng","message":"invalid passcode"}` |
+| `POST /api/mobile_shop/passcode` | `shop_cd`, `passcode` | `{"status":"ok"}` (compara con `==`: `"04321"` coincide con `"4321"`) | `{"status":"ng","message":"invalid passcode"}` |
 | `GET/POST /api/mobile_shop/point` | `customer_id` (entero > 0) | `result:{service_point,point_yukoukigen}` o `result:false` | `{"status":"ng","message":"IDがありません。"}`, `{"status":"ng","message":"顧客コードが見つかりません。"}` |
-| `POST /api/mobile_shop/point_use` | `customer_id`, `shop_cd`, `use_points` (enteros > 0) | resultado de `setPoint` **sin envoltorio** | los de `setPoint` |
+| `POST /api/mobile_shop/point_use` | `customer_id`, `shop_cd`, `use_points` (enteros > 0) | **sin envoltorio**: `{"status":"ok","res":"<n>ポイントを削減しました。"}` | `{"status":"ng","message":"<n>ポイントを削減することは出来ません"}` y los de validación |
 | `POST /api/mobile_shop/point_exchange_item` | `customer_id`, `salesItemCd`, `shop_cd` | resultado del canje sin envoltorio | `{"status":"ng","res":"不正なリクエスト。"}` / `顧客情報がありません。` / `交換可能商品ではありません。` / `使用可能な店舗ではありません。` / `ポイントが不足です。` |
 | `GET /api/mobile_shop/sales_items[/<cd>]` | cuerpo: `page`, `limit` (10), `range` (3), `name`, `discription` (sic, ILIKE por palabras con espacio normal o ancho), `available_shop_cds`, `is_exchangeable_of_point`, `number_of_points_exchanged_start/_end`, `hyouji_flg` | `result`: ítem, o `{count,data,limit,page}` (`disp_flg=1`); `sales_items` ya es Eloquent en el legacy: tipos de Eloquent, sin `pgText` | — |
-| `GET /api/<desconocido>` | — | — | legacy: fatal (500). Laravel: `{"message":"Not Found."}` con 404 (no se reproduce un fatal) |
+| `GET /api/<desconocido>` | — | — | legacy: fatal (500 sin cuerpo). Laravel: `{"message":"Not Found."}` con 404 (no se reproduce un fatal) |
 
 Contrato que no se rompe: erratas (`discription`, `cutomer_cd`, `mycolle_cateogry`), HTTP 200 en error, GET con cuerpo JSON, `user_id`/`customer_id` = `tb_customer.id` (no `cd`), `tb_terminal_cd = -3` / `tb_staff_cd = -1` (0 en el canje) en `tb_point_log`.
 
@@ -411,11 +412,11 @@ Contrato que no se rompe: erratas (`discription`, `cutomer_cd`, `mycolle_cateogr
 | `mpa_getTopBanner.php` | `login_id` (opc.) | `{"status":"ok","errMsg":"","data":[{"imageUrl","url"}]}` |
 | `mpa_getCoverFlow.php` | `login_id` (opc.) | `{"status","errMsg","data":[{"imageUrl","url"}]}` |
 | `mpa_albumUpdate.php` | POST multipart `domain`, `cd` (`tb_customer.id`), `pic_name` (imagen), `comment` | **302** a `http://b-develop.g-api.net/api/mpa/myAlbumPage?domain=…&cd=…&status=ok\|err1\|err2&comment=…` (host en config) |
-| `mpa_setraiten.php` | `regist_id` (numérico), `membership` (1 = beacon), `shop_cd`, `beacon_cd` | `{"status":"ok","customer_info":{"cd","id","name"}}` o `{"status":"error","errMsg","errorMsg"}` con `入力される内容は数字のみでお願いいたします。` / `顧客が特定できませんでした。` / `来店処理できませんでした。インターバルなどをご確認ください。` |
+| `mpa_setraiten.php` | `regist_id` (numérico), `membership` (1 = beacon), `shop_cd`, `beacon_cd`; con un socio válido el legacy registra la visita y luego da **fatal 500** (línea 43): se reproduce el registro y se responde el JSON `ok` (anotado para Japón) | `{"status":"ok","customer_info":{"cd","id","name"}}` o `{"status":"error","errMsg","errorMsg"}` con `入力される内容は数字のみでお願いいたします。` / `顧客が特定できませんでした。` / `来店処理できませんでした。インターバルなどをご確認ください。` |
 
 ### 6.3 `appview/*.php` (HTML para el WebView)
 
-Contrato = URL y parámetros (`customer_cd`, `cutomer_cd` en `visit_history`, `shop_cd`, `staff_cd`, `kensu`, `page`, `demo`, `sess`) y el mismo HTML del legacy (§2b). Con formato fijo byte a byte: `memberId.php` (texto `login_id` o `error`), `quick_reservation_register.php` y `coupon_control.php` (JSON `{status…}`).
+Contrato = URL y parámetros (`customer_cd`, `cutomer_cd` en `visit_history`, `shop_cd`, `staff_cd`, `kensu`, `page`, `demo`, `sess`) y el mismo HTML del legacy (§2b). Con formato fijo byte a byte: `memberId.php` (texto `login_id` o `error`), `coupon_control.php` (JSON `{status…}`).
 
 ### 6.4 `tool/api` — `/system/tool/api/<categoryN>/<archivo>.php`
 

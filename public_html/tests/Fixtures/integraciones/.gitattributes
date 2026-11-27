@@ -1,0 +1,3 @@
+# Respuestas grabadas del legacy: se comparan byte a byte, git no debe tocarlas
+legacy/** -text
+keys/** -text

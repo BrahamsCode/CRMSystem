@@ -1,0 +1,35 @@
+h2{
+    font-size: 25px;
+}
+h3 {
+    background: url('../img/h_under.png');
+    background-position: bottom;
+    background-repeat: repeat no-repeat;
+    padding-bottom: 10px;
+}
+.row > div.deco {
+    padding: 9px 10px;
+    box-shadow: rgba(26, 26, 26, 0.079804) 0px 0px 6px 3px;
+    -webkit-box-shadow: rgba(26, 26, 26, 0.079804) 0px 0px 6px 3px;
+    -moz-box-shadow: rgba(26, 26, 26, 0.079804) 0px 0px 6px 3px;
+    background: #FFF;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    border: 1px solid #DEDEDE;
+}
+.row > div.deco h3 {
+    margin-top: 10px;
+    color: #666;
+    font-size: 20px;
+    font-weight: bold;
+}
+img {
+    background: #FFF;
+    padding: 2px;
+    box-shadow: rgba(26, 26, 26, 0.079804) 0px 0px 6px 3px;
+    -webkit-box-shadow: rgba(26, 26, 26, 0.079804) 0px 0px 6px 3px;
+    -moz-box-shadow: rgba(26, 26, 26, 0.079804) 0px 0px 6px 3px;
+    /* border: 1px solid #B9B9B9; */
+    border: 1px solid #DEDEDE;
+}

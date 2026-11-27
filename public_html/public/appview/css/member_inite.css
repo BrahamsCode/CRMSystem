@@ -1,0 +1,103 @@
+.member_init_page {
+}
+
+.member_init_link {
+}
+
+.member_init_link li {
+    background: #AAA;
+    text-align: center;
+}
+
+.member_init_link li a {
+    display: block;
+    font-size: 20px;
+    margin-bottom: 10px;
+    padding: 30px;
+    color: #FFF;
+}
+
+.member_init_link li a i {
+    display: block;
+    font-size: 110px;
+    margin-bottom: 20px;
+}
+
+.member_comp {
+}
+
+.member_comp div {
+    background: #ffffff;
+    box-shadow: 0px 0px 2px #9a9a9a;
+    text-align: center;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.member_comp div i {
+    font-size: 110px;
+    margin-bottom: 10px;
+    color: #5db568;
+}
+
+.member_form {
+    /* background: #ffffff; */
+    max-width: 330px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 10px;
+    /* border: 3px solid #989898; */
+}
+
+.member_form div {
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.member_form div i {
+    display: inline-block;
+    width: 40px;
+    font-size: 25px;
+    margin-bottom: 0px;
+    position: absolute;
+    top: 43px;
+    left: 10px;
+    color: #797979;
+}
+
+.member_form div p {
+    display: inline-block;
+    height: 40px;
+    vertical-align: bottom;
+    line-height: 40px;
+    margin-bottom: -7px;
+}
+
+.member_form div input[type=password], .member_form div input[type=text] {
+    width: 100%;
+    border: 1px solid #a0a0a0;
+    padding: 8px;
+    text-indent: 30px;
+    border-radius: 8px;
+}
+
+.member_form input[type=submit] {
+    width: 200px;
+    margin: 0 auto;
+    display: block;
+    border: none;
+    padding: 14px;
+    background: #FFF;
+    border-radius: 4px;
+    margin-top: 40px;
+    border: 1px solid #a0a0a0;
+}
+
+.member_login_error{
+background: #ffeeee;
+    padding: 10px;
+    color: #ff0000;
+    border: 1px solid;
+    margin-bottom: 10px;
+    word-break: break-all;
+}

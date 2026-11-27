@@ -1,0 +1,161 @@
+body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	background-color: #F5EFE9;
+	font-family: "ヒラギノ明朝 ProN W3", "HiraMinProN-W3", serif;
+}
+
+button{
+	background-color: transparent;
+	border: none;
+	cursor: pointer;
+	outline: none;
+	padding: 0;
+	-webkit-appearance: none;
+	   -moz-appearance: none;
+	        appearance: none;
+}
+.wrapper {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+
+}
+.news_header {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	width: 100%;
+	width: 100vw;
+	height: 60px;
+	-webkit-box-pack: end;
+	    -ms-flex-pack: end;
+	        justify-content: flex-end;
+	-webkit-box-align: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+	margin-top: 30px;
+	
+}
+.news-date {
+	margin-right: 60px;
+	font-size: 18px;
+}
+.news_body {
+	width: 90vw;
+	margin: 0 auto;
+	margin-top: 30px;
+}
+
+.content-title h1 {
+	font-size: 24px;
+}
+
+.content-body {
+	font-size: 18px;
+	line-height: 36px;
+}
+.content-body img {
+	max-width: 90%;
+	max-width: 90vw;
+	height: auto;
+}
+
+.news_image {
+	width: 90vw;
+	margin: 60px auto;
+}
+
+.news_image img {
+	max-width: 90%;
+	max-width: 90vw;
+	height: auto	
+}
+
+.news_like_button {
+	width: 100vw;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-pack: end;
+	    -ms-flex-pack: end;
+	        justify-content: flex-end;
+	-webkit-box-align: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+	height: 100px;
+}
+.like-button {
+	margin-right: 60px;
+	background-color: #F4842B;
+	border-radius: 14px;
+	width: 145px;
+	height: 36px;
+	text-align: center;
+
+	color: #fff;
+}	
+
+.like-button_shadow {
+	-webkit-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+	        box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.news_like_button button:disabled {
+	background: #F4842B;
+	cursor: context-menu;
+}
+
+.news_like_button button:disabled span{
+	
+}
+
+.news_like_button button span {
+	color: #fff;
+	padding: 0 3px;	
+}
+.news_like_button button i {
+	margin-right: 5px;
+	color: #fff;	
+}
+
+ul.new_list li {
+	word-break: break-all;
+}
+
+
+@media screen and (max-width: 640px) {
+	.news_header {
+		margin-top: 10px;	
+	}
+	
+	.news-date {
+		margin-right: 30px;	
+	}
+	.news_body {
+		width: 90vw;
+		margin: 0 auto;
+		margin-top: 10px;
+	}
+	
+	.content-title h1{
+		font-size: 24px;
+		margin:0;
+	}
+	
+	.news_like_button {
+		-webkit-box-pack: center;
+		    -ms-flex-pack: center;
+		        justify-content: center;
+	}
+	.news_like_button button {
+		height: 40px;
+		width: 160px;
+		font-size: 16px;
+		margin: 0;	
+	}
+	.news_like_button button span {
+		margin-left: 10px;	
+	}
+}

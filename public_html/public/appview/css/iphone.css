@@ -1,0 +1,58 @@
+@charset utf-8;
+/*====================================================================
+
+iPhone、iPad用画面サイズ用Media query
+
+iPhone 5, 5s, 5c, SE：320x568
+iPhone 6, 6s, 7, 8 : 375x667
+iPhone (6 6s,7,8)Plus : 414x736
+
+iPad(9.7inch) : 768x1024
+iPad Pro(12.9inch): 1366x1024
+
+
+アプリ側headerの高さ
+iPhone：56px
+iPad：64px
+
+=====================================================================*/
+
+body {
+    width: 100%;
+      min-height: 1500px;
+    height: auto;
+}
+
+/* iPhone5, SE*/
+@media screen and (max-width: 320px) {
+    body {
+        /*min-height: 568px;*/
+        min-height: 512px;
+    }
+}
+
+/* iPhone6, 7, 8*/
+@media screen and (min-width: 321px ) and (max-width: 375px) {
+    body {
+        min-height: 611px;
+    }
+}
+/* iPhone Plus*/
+@media screen and (min-width: 376px ) and (max-width: 414px) {
+    body {
+        min-height: 680px;
+    }
+}
+/* iPad */
+@media screen and (min-width:415px ) and (max-width: 834px) {
+    body {
+        min-height: 960px;
+    }
+}
+
+/* iPad Pro */
+@media screen and (min-width:835px ) and (max-width: 1024px) {
+    body {
+        min-height: 1302px;
+    }
+}
