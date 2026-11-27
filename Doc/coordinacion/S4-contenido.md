@@ -77,6 +77,8 @@ Ver diseño §5. A S0: BD `admin` de `signage/` (no está en el esquema); GoTel/
 
 ## Hecho
 
+- 2026-11-28 Quitadas de `routes/legacy/promocion.php` las rutas `system/inc/ajax_picupload.php` y `system/uploads/{file}` (las sirve el núcleo); `PushImageStore::promote()` usa `TempUploads` (sin GD propio). Paridad: reproductores `digitalsignage/` y portadas category6/7 marcados como hechos en `contenido-terminales.md` y `Doc/qa/paridad.md` (S4: 67 hechos, 7 pendientes ⏸ de Antony: ビーコン ×4, GoTel/PDF ×3). Suite 940 verde.
+
 - 2026-11-28 `AnketoMailController` simplificado (rutas directas a MailController con defaults; emitida la marca MailRegistrar); filas F6/F7/M5/M7/M8 de `promocion.md` en hecho. Suite 931 verde.
 
 - 2026-11-28 M5 プッシュ通知 (alta, listas, pasados, historial, comando follow push) y M7 QR/基本情報 (4 variantes, `QrImage`, `qr_img.php` público, QR印刷 con `LegacyPdf`); etiquetas DM con `LegacyPdf`. Suite 893 verde.

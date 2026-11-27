@@ -93,8 +93,4 @@ Route::prefix('system/category3')->name('promocion.')->group(function () {
     });
 });
 
-// Subida de imágenes de push_new.js (S4, M5): URL absolutas de system/inc y system/uploads que el JS tiene fijas.
-// Pedido a S1: si otra pantalla las necesita, pasarlas al núcleo (hoy solo las usa push_new.js).
-Route::match(['get', 'post'], 'system/inc/ajax_picupload.php', [\App\Http\Controllers\Admin\Promotions\PushAjaxController::class, 'picUpload'])->name('promocion.push.picupload');
-Route::get('system/uploads/{file}', [\App\Http\Controllers\Admin\Promotions\PushAjaxController::class, 'tempImage'])
-    ->where('file', '[A-Za-z0-9_.-]+')->name('promocion.push.picupload-temp');
+// Subida de imágenes de push_new.js: /system/inc/ajax_picupload.php y /system/uploads/ son del núcleo (NUCLEO.md §12)

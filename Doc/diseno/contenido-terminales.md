@@ -20,7 +20,7 @@
 
 | Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas (legacy) | Estado |
 |---|---|---|---|---|---|
-| `category6/index.php`, `inc/page_control.php`, `inc/left_navi6.php` | マイページ管理 | `admin.mypage.index` | `Mypage\MenuController@index` | — | pendiente (menú en `config/menu/mypage.php`) |
+| `category6/index.php`, `inc/page_control.php`, `inc/left_navi6.php` | マイページ管理 | `legacy.nucleo.category-top.6` | `Nucleo\CategoryTopController@show` | — | hecho (portada común del núcleo; menú en `config/menu/mypage.php`) |
 | `user_hp/mobile_mycolle_edit.php` + `ajax_apliFileUpload.php` | マイコレ管理 | `admin.mypage.app-images.edit` (`?section=`) | `Mypage\AppImageController@edit/update/upload/destroy` | `contents_master` (`tb_c6_user_hp`: `aplicover`, `aplibanner`, `mainimage`, `apli_home_thumbnail`, `mypage_config`) + archivos `hp/uploads/c6/<carpeta>/` | hecho (falta verlo con el layout real en navegador) |
 | `user_hp/mobile_mycolle_edit_coverflow.php` | カバーフロー画像設定管理 | `admin.mypage.app-images.edit` `section=cover` | ídem | ídem | hecho (falta verlo con el layout real en navegador) |
 | `user_hp/mobile_mycolle_edit_banner.php` | バナー画像設定管理 | ídem `section=banner` | ídem | ídem | hecho (falta verlo con el layout real en navegador) |
@@ -82,11 +82,11 @@ Todo category4 solo alimentaba `hp/` (sitio PC) → el módulo `web` queda **vac
 
 | Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas (legacy) | Estado |
 |---|---|---|---|---|---|
-| `category7/index.php`, `inc/*` | 端末管理 | `admin.terminales.index` | `Terminales\MenuController@index` | — | pendiente |
-| `beacon/beacon_list.php` | ビーコン管理 | `admin.terminales.beacons.index` | `Terminales\BeaconController@index` | BD externa (conexión `beacon`) | pendiente — **bloqueado**: BD externa `b-develop.g-api.net` no responde |
-| `beacon/beacon_detail.php` + `ajax_beaconSave.php` | ビーコン詳細 | `admin.terminales.beacons.show/update` | `…@show/update` | — | pendiente (bloqueado, ídem) |
-| `beacon/terminal_list.php` | 受信端末一覧 | `admin.terminales.beacon-receivers.index` | `Terminales\BeaconReceiverController@index` | — | pendiente (bloqueado, ídem) |
-| `beacon/terminal_detail.php` + `ajax_terminalSave.php` | 受信端末詳細 | `admin.terminales.beacon-receivers.show/update` | `…@show/update` | — | pendiente (bloqueado, ídem) |
+| `category7/index.php`, `inc/*` | 端末管理 | `legacy.nucleo.category-top.7` | `Nucleo\CategoryTopController@show` | — | hecho (portada común del núcleo; menú en `config/menu/terminales.php`) |
+| `beacon/beacon_list.php` | ビーコン管理 | `admin.terminales.beacons.index` | `Terminales\BeaconController@index` | BD externa (conexión `beacon`) | pendiente ⏸ — espera a Antony: la BD externa `b-develop.g-api.net` (conexión `beacon`) no responde; confirmar si sigue en uso y su acceso |
+| `beacon/beacon_detail.php` + `ajax_beaconSave.php` | ビーコン詳細 | `admin.terminales.beacons.show/update` | `…@show/update` | — | pendiente ⏸ — espera a Antony: la BD externa `b-develop.g-api.net` (conexión `beacon`) no responde; confirmar si sigue en uso y su acceso |
+| `beacon/terminal_list.php` | 受信端末一覧 | `admin.terminales.beacon-receivers.index` | `Terminales\BeaconReceiverController@index` | — | pendiente ⏸ — espera a Antony: la BD externa `b-develop.g-api.net` (conexión `beacon`) no responde; confirmar si sigue en uso y su acceso |
+| `beacon/terminal_detail.php` + `ajax_terminalSave.php` | 受信端末詳細 | `admin.terminales.beacon-receivers.show/update` | `…@show/update` | — | pendiente ⏸ — espera a Antony: la BD externa `b-develop.g-api.net` (conexión `beacon`) no responde; confirmar si sigue en uso y su acceso |
 | `card_signage/list.php` (+ `cPageControl`, descarga QR) | ペーパーサイネージ (カード管理) | `admin.terminales.paper-cards.index`, `…qr` | `Terminales\PaperCardController@index/qr` | `tb_url_list`, `hatuban` | hecho (falta verlo con el layout real en navegador) |
 | `card_signage/new.php` + `control.php` (`insert`) | ペーパーサイネージ 新規 | `admin.terminales.paper-cards.create/store` | `…@create/store` | ídem | hecho (falta verlo con el layout real en navegador) |
 | `card_signage/edit.php` + `control.php` (`update`, `hyoujiOff`, `delete`) | ペーパーサイネージ 編集 | `admin.terminales.paper-cards.edit/update/stop/destroy` | `…@edit/update/stop/destroy` | ídem | hecho (falta verlo con el layout real en navegador) |
@@ -137,9 +137,9 @@ Todo category4 solo alimentaba `hp/` (sitio PC) → el módulo `web` queda **vac
 | `signage/view/index.php` + `view/h_*`, `v_*` | (pantalla) | `GET /signage/view/` y `/signage/view/index.php` (`?cd=`) — **público** | `Senalizacion\PlayerController@show` | — | hecho (esquema mínimo de desarrollo; falta el volcado de Antony) |
 | `signage/view/ajax.php` | (sondeo de cambios) | `/signage/view/ajax.php` — público, JSON | `…@poll` | — | hecho (esquema mínimo de desarrollo; falta el volcado de Antony) |
 | `signage/view/packages.php` | (vista previa de paquete) | `admin.senalizacion.packages.preview` | `Senalizacion\PackageController@preview` | — | hecho (esquema mínimo de desarrollo; falta el volcado de Antony) |
-| `signage/mail/index.php` | GoTel管理 (お問い合わせ) | `admin.senalizacion.contact.create/store` | `Senalizacion\ContactController@create/store` | BD `admin`: `contact`, `customer` | pendiente (confirmar uso; Mailable en cola) |
-| `signage/pdf/invoice.php` | 請求書 | `admin.senalizacion.invoices.show` | `Senalizacion\BillingPdfController@invoice` | — | pendiente (confirmar uso; PDF del paquete de S1) |
-| `signage/pdf/receipt.php` | 領収書 | `admin.senalizacion.receipts.show` | `…@receipt` | — | pendiente (ídem) |
+| `signage/mail/index.php` | GoTel管理 (お問い合わせ) | `admin.senalizacion.contact.create/store` | `Senalizacion\ContactController@create/store` | BD `admin`: `contact`, `customer` | pendiente ⏸ — espera a Antony: confirmar si GoTel (お問い合わせ, 請求書, 領収書) sigue en uso y con qué datos; si sí: Mailable en cola / `LegacyPdf` |
+| `signage/pdf/invoice.php` | 請求書 | `admin.senalizacion.invoices.show` | `Senalizacion\BillingPdfController@invoice` | — | pendiente ⏸ — espera a Antony: confirmar si GoTel (お問い合わせ, 請求書, 領収書) sigue en uso y con qué datos; si sí: Mailable en cola / `LegacyPdf` |
+| `signage/pdf/receipt.php` | 領収書 | `admin.senalizacion.receipts.show` | `…@receipt` | — | pendiente ⏸ — espera a Antony: confirmar si GoTel (お問い合わせ, 請求書, 領収書) sigue en uso y con qué datos; si sí: Mailable en cola / `LegacyPdf` |
 | `signage/inc/*`, `basic_authentication.php` | (núcleo, login `?s=`) | — | sesión del admin + Gate `manageSignage` | — | hecho (esquema mínimo de desarrollo; falta el volcado de Antony) (reemplazado) |
 | `signage/_tool.php` | (chmod 777) | — | — | — | descartado: peligroso, sin función |
 | `signage/sample.php` … `sample4.php` | (pruebas) | — | — | — | descartado: pruebas de desarrollo |
@@ -148,20 +148,20 @@ Todo category4 solo alimentaba `hp/` (sitio PC) → el módulo `web` queda **vac
 
 | Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas (legacy) | Estado |
 |---|---|---|---|---|---|
-| `digitalsignage/index.php` → `index2.php` | digital signage | `GET /digitalsignage/`, `/digitalsignage/index.php`, `/index2.php` (`?shop_cd=&display_cd=`) — público | `Senalizacion\DigitalPlayerController@show` | `tb_display`, `tb_c7_movie_program` (L) | pendiente (reproductor HTML5 que lee el mismo XML; orientación por `terminal_type`) |
-| `hp/uploads/c7/display/<cd>.xml` (generado por `xml_up.php`) | (programa XML) | `GET /hp/uploads/c7/display/{cd}.xml` — público | `Senalizacion\DigitalFeedController@program` | — | pendiente (misma forma XML `<p cd time title …>`) |
-| `ajax_xml_check.php`, `ajax_xml_check_2.php` | (sondeo XML) | mismas URL — público | `Senalizacion\DigitalPollController@xml` | — | pendiente (responde `<script>` igual que hoy) |
-| `ajax_display_config_check.php`, `_2.php` | (sondeo config) | mismas URL | `…@displayConfig` | — | pendiente |
-| `ajax_network_check.php` | (red) | misma URL | `…@network` (texto `確認できました`) | — | pendiente |
-| `ajax_print_coupon_crawl.php`, `ajax_print_coupon_craw_2l.php` | (cupón impreso por visita) | mismas URL | `Senalizacion\CouponCrawlController@visit` | `tb_raiten_rireki`, `tb_mycoupon_master`, `tb_shop` (L) | pendiente |
-| `ajax_touch_print_coupon_crawl*.php` | (cupón táctil) | mismas URL | `…@touch` | — | pendiente |
-| `ajax_shinkyaku_print_coupon_crawl*.php` | (cupón cliente nuevo) | mismas URL | `…@newCustomer` | — | pendiente |
-| `ajax_kaiin_raiten_print_coupon_crawl.php` | (cupón socio por visita) | misma URL | `…@memberVisit` | — | pendiente |
-| `ajax_Mujyouken_print_coupon_crawl_2.php` | (cupón sin condición) | misma URL | `…@unconditional` | — | pendiente |
-| `ajax_kaiin_mycoupon_print_crawl.php` | (cupón del socio, marca impreso/usado) | misma URL | `…@memberCoupon` | `tb_mycoupon*` vía `CouponIssuer` de S3 | pendiente |
-| `roulette.php` (+ `.swf`, `tig_game/`) | ルーレット | `/digitalsignage/roulette.php` | `Senalizacion\DigitalGameController@roulette` | — | pendiente (rehacer en HTML5/Canvas) |
-| `slot.php` (+ `.swf`) | スロット | `/digitalsignage/slot.php` | `…@slot` | — | pendiente (ídem) |
-| `fla/floormap/ajax_print_crawl.php` | (mapa de planta + 求人) | misma URL | `Senalizacion\DigitalFeedController@floormap` | `tb_recruit*`, `tb_mycoupon_master`, `tb_shop` (L) | pendiente |
+| `digitalsignage/index.php` → `index2.php` | digital signage | `GET /digitalsignage/`, `/digitalsignage/index.php`, `/index2.php` (`?shop_cd=&display_cd=`) — público | `Publico\Senalizacion\PlayerController@show` | `tb_display`, `tb_c7_movie_program` (L) | hecho (reproductor HTML5 sobre el mismo XML; orientación por `terminal_type`; PlayerTest) |
+| `hp/uploads/c7/display/<cd>.xml` (generado por `xml_up.php`) | (programa XML) | `GET /hp/uploads/c7/display/{cd}.xml` — público | `Publico\Senalizacion\DisplayXmlController` (`SignageFeedBuilder`)` | — | hecho (misma forma XML `<p cd time title …>`) |
+| `ajax_xml_check.php`, `ajax_xml_check_2.php` | (sondeo XML) | mismas URL — público | `Publico\Senalizacion\PollController@xmlCheck/xmlCheck2` | — | hecho (responde `<script>` igual que hoy; PollsTest) |
+| `ajax_display_config_check.php`, `_2.php` | (sondeo config) | mismas URL | `…@displayConfigCheck` | — | hecho (PollsTest) |
+| `ajax_network_check.php` | (red) | misma URL | `…@network` (texto `確認できました`)` | — | hecho (PollsTest) |
+| `ajax_print_coupon_crawl.php`, `ajax_print_coupon_craw_2l.php` | (cupón impreso por visita) | mismas URL | `Publico\Senalizacion\CouponPrintController@visit/visit2` (`CouponPrintCrawler`)` | `tb_raiten_rireki`, `tb_mycoupon_master`, `tb_shop` (L) | hecho (CouponPrintTest) |
+| `ajax_touch_print_coupon_crawl*.php` | (cupón táctil) | mismas URL | `…@touch/touch2` | — | hecho (CouponPrintTest) |
+| `ajax_shinkyaku_print_coupon_crawl*.php` | (cupón cliente nuevo) | mismas URL | `…@shinkyaku/shinkyaku2` | — | hecho (CouponPrintTest) |
+| `ajax_kaiin_raiten_print_coupon_crawl.php` | (cupón socio por visita) | misma URL | `…@kaiinRaiten` | — | hecho (CouponPrintTest) |
+| `ajax_Mujyouken_print_coupon_crawl_2.php` | (cupón sin condición) | misma URL | `…@mujyouken` | — | hecho (CouponPrintTest) |
+| `ajax_kaiin_mycoupon_print_crawl.php` | (cupón del socio, marca impreso/usado) | misma URL | `…@mycoupon` | `tb_mycoupon*` vía `CouponIssuer` de S3 | hecho (CouponPrintTest) |
+| `roulette.php` (+ `.swf`, `tig_game/`) | ルーレット | `/digitalsignage/roulette.php` | `Publico\Senalizacion\PlayerController@roulette` | — | hecho (rehecha en HTML5 con vuelta al reproductor; PlayerTest) |
+| `slot.php` (+ `.swf`) | スロット | `/digitalsignage/slot.php` | `…@slot` | — | hecho (ídem) |
+| `fla/floormap/ajax_print_crawl.php` | (mapa de planta + 求人) | misma URL | `Publico\Senalizacion\CouponPrintController@floormap` (`FloormapPrinter`)` | `tb_recruit*`, `tb_mycoupon_master`, `tb_shop` (L) | hecho (CouponPrintTest) |
 | `fla/immovables/getFlash.php`, `html/immovables/*` (6) | 不動産 | — | — | — | descartado: micro-sitio de otro sistema (`tb_madori`, `tb_item` no están en el CRM) y `index.php` roto en el legacy |
 | `html/recipe/index.php`, `recipe_detail.php` | レシピ | — | — | — | descartado: contenido estático de demostración, sin datos; se rehace solo si el cliente lo pide |
 
