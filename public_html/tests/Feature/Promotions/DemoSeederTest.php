@@ -94,3 +94,19 @@ it('sin socios siembra solo la configuración y completa la parte por cliente cu
         ->and(DB::table('mailmag_sended_log')->count())->toBeGreaterThan(0)
         ->and(DB::table('tb_c3_anketo_sub')->count())->toBe(15);
 });
+
+it('no se sale de hatuban.kazu cuando la tabla ya tiene cd en formato legacy (epoch + tienda + aleatorio)', function () {
+    seedNucleo();
+    // Filas que crea la pantalla ポイント仕様管理 (createHatsuban) y una tabla de hatuban con un cd legacy
+    DB::table('point_shikkou_alert')->insert(['cd' => 1795779603001977718, 'tb_shop_cd' => 1, 'flg' => '1', 'title' => '', 'sort' => 0]);
+    DB::table('tb_stamp_rules')->insert(['cd' => 1795779603001977719, 'tb_shop_cd' => 1, 'type_flg' => '1', 'hyouji_flg' => '1']);
+    DB::table('hatuban')->where('koumoku', 'tb_stamp_rules')->delete();
+
+    $this->seed(PromocionDemoSeeder::class);
+
+    expect(DB::table('point_shikkou_alert')->count())->toBe(3)
+        ->and(DB::table('tb_stamp_rules')->count())->toBe(3)
+        ->and(DB::table('point_shikkou_alert')->distinct()->count('cd'))->toBe(3)
+        ->and(DB::table('tb_stamp_rules')->distinct()->count('cd'))->toBe(3)
+        ->and(DB::table('hatuban')->whereIn('koumoku', ['point_shikkou_alert', 'tb_stamp_rules'])->exists())->toBeFalse();
+});
