@@ -73,6 +73,7 @@ Recibidos de S0 el 2026-11-26 (para la Cola, después de la Fase 1; S0 los asign
 
 ## Hecho
 
+- **基本情報管理: CRM端末管理 (2026-11-27):** `slim_list.php` (mapeo シリアル → tienda, 設定する que sí guarda) y la vuelta del popup de ac.crm-s.jp (`slim_href.php`, `slim_del_href.php`), con `nucleo.maintenance`. `tests/Feature/Base/AccessTerminalTest.php`. Suite: 572 en verde.
 - **基本情報管理: 権限項目管理 (2026-11-27):** lista con 表示, popup de alta/edición (cd por rango de タイプ) y su AJAX, con `nucleo.maintenance`. `tests/Feature/Base/AuthorityContentsTest.php`. Suite: 509 en verde.
 - **Pedidos S4 (2026-11-27):** conexión `signage` (DB_SIGNAGE_*, por defecto la principal con esquema `signage`) y `App\Support\LegacyCsv` (SJIS-win por bloques), firma en NUCLEO.md §10. Suite: 506 en verde.
 - **基本情報管理: 機能設定 (2026-11-27):** los 16 bloques de `features_config.php` (admin_master, contents_master, 不達配信 y パスコード de モバイルショップ), igual a la muestra con Playwright; `LegacyText::db()`. Plantillas de caducidad y ajax de vigencia de category0 descartados (sin entrada). `tests/Feature/Base/FeaturesTest.php`. Suite: 444 en verde.
