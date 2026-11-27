@@ -67,10 +67,16 @@ esac
 TTY_FLAGS="-i"
 [ -t 0 ] && [ -t 1 ] && TTY_FLAGS="-it"
 
-# vendor/ propio de cada worktree (en su public_html, fuera de git)
-if [ ! -f "$ROOT/public_html/vendor/autoload.php" ] && [ "${1:-}" != "composer" ]; then
-  echo "Instalando dependencias de Composer en este worktree…"
-  MSYS_NO_PATHCONV=1 docker run --rm -i --network "$RED" -v "$ROOT/public_html:/var/www" -w /var/www "$IMAGEN" composer install --no-interaction --no-progress
+# vendor/ propio de cada worktree (en su public_html, fuera de git). Se reinstala también cuando
+# composer.lock cambió desde la última instalación (p. ej. tras un merge de laravel13 con paquetes
+# nuevos): sin esto, las pruebas fallan o se saltan por clases que faltan en vendor/.
+LOCK="$ROOT/public_html/composer.lock"
+MARCA="$ROOT/public_html/vendor/.composer-lock.md5"
+LOCK_MD5="$( [ -f "$LOCK" ] && md5sum "$LOCK" | cut -d' ' -f1 || echo sin-lock )"
+if [ "${1:-}" != "composer" ] && { [ ! -f "$ROOT/public_html/vendor/autoload.php" ] || [ "$(cat "$MARCA" 2>/dev/null)" != "$LOCK_MD5" ]; }; then
+  echo "Instalando dependencias de Composer en este worktree (composer.lock nuevo o sin vendor)…"
+  MSYS_NO_PATHCONV=1 docker run --rm -i --network "$RED" -v "$ROOT/public_html:/var/www" -w /var/www "$IMAGEN" composer install --no-interaction --no-progress \
+    && echo "$LOCK_MD5" > "$MARCA"
 fi
 
 MSYS_NO_PATHCONV=1 exec docker run --rm $TTY_FLAGS \

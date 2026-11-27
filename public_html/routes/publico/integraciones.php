@@ -26,7 +26,7 @@ Route::name('publico.integraciones.')
                 Route::any('fetch_paid_member', [MobileShopController::class, 'fetchPaidMember'])->name('fetch-paid-member');
                 Route::any('send_unpaid_member_status', [MobileShopController::class, 'sendUnpaidMemberStatus'])->name('send-unpaid');
                 Route::any('point_use', [MobileShopController::class, 'pointUse'])->name('point-use');
-                // point_exchange_item: cuando S0 integre exchangeSalesItem() de S3 (l13/promocion b2ab4e3)
+                Route::any('point_exchange_item', [MobileShopController::class, 'pointExchangeItem'])->name('point-exchange');
             });
 
             // Cualquier otra ruta /api/* (salvo los mpa_*.php): 404 JSON
