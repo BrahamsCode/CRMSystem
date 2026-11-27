@@ -97,10 +97,32 @@ Paridad comprobada con la muestra:
 - インフォメーション «No» = `cd`.
 - `rank` de un grupo nuevo = n.º de grupos + 1. Sale 2.º porque los grupos sembrados tienen `rank` 99–101 (S1).
 
-Pendientes:
-- `tool/api` y la API JWT de la tienda móvil no se pueden probar en :8081: su `.env` no tiene `CRM_API_KEY`, `MOBILESHOP_API_USER`/`PASS` ni las claves RSA. `tool/api` responde vacío y `/api/auth` da `Invalid config.`, como el legacy sin configuración. Hacen falta valores locales de prueba (S0).
-- Las columnas 普通残業/休日残業/休日出勤 de 集計 siguen vacías: pregunta de S2 en `para-japon.md` §3.
-- Segunda vuelta tras la recarga con los datos nuevos (fase A).
+**Segunda vuelta** (:8081 en 738907f, con los datos de las 5 fases A; `master` y `qa_partial`/`qa12345`):
+
+| Pantalla (URL) | Fallo | Corrección + prueba Pest | Commit |
+|---|---|---|---|
+| 日別 / 月別シフト管理 (`/admin/operaciones/shifts/day`, `/shifts/month`) en 難波店 y 京都店 | Las filas de `kintai_tb_config` de esas tiendas vienen del backup con el horario por defecto del legacy (08:00–10:00). Los turnos caen fuera del tablero y `add.shift.js` manda `sch[]` con `undefined`; al pulsar 更新 se guardaba `undefined` y el turno se perdía (también en el legacy) | `ShiftBoard::allComplete()`: un turno sin inicio o fin en epoch no se guarda y ese día de ese empleado queda como estaba. El seeder pone el horario de la demo a las tiendas que siguen con 08:00–10:00. Pruebas en `StaffShiftTest` y `DemoSeederTest` | 21b8635 |
+
+Probado sin fallos:
+- Las 20 pantallas de operaciones como master y como `qa_partial`: 0 errores 500 o de JS. `qa_partial` recibe 403 en alta, グループ, パスワード, 各種設定 y シフト区分, y solo ve su tienda en el calendario.
+- Datos nuevos visibles:
+  - ficha con 所属, 役職, dirección y 交通費;
+  - tarjeta asignada;
+  - 14 empleados en 2 páginas;
+  - 12 インフォメーション (se muestran las 10 últimas, por tienda y por 役職);
+  - 勤怠 coherente con la jornada de la tienda (09:37 con apertura a las 10:00 → 早出);
+  - turnos 締め 17:00–01:00 y solapes (応援).
+- **`tool/api`** con la clave local: `getStaffList`, `searchCustomerList` (`keyword`), `getCustomerDetail`, `getRaitenList`, y `getSearchCateFormData` (`NO_DATA`). Con una clave errónea la respuesta sale vacía.
+- **API JWT de la tienda móvil:**
+  - `/api/auth`: credenciales erróneas → `Invalid User.`, y con las buenas emite el JWT;
+  - `shop`, `point`, `mobile_shop/customer/<id>`, `mobile_shop/point`, `mobile_shop/sales_items`;
+  - `passcode` por tienda: `04321` acepta `4321`, como el `==` del legacy;
+  - sin token: 500 sin cuerpo, como el legacy.
+- **g-api:** `appview/photo_gallery` y `visit_history` pasan por el interruptor común `App\Support\GApi`; con `CRM_GAPI_ENABLED=false` no sale ninguna petición. `PhotoAlbumUploader` no llama a g-api: solo devuelve a la app la URL `myAlbumPage`.
+
+Pendiente: las columnas 普通残業/休日残業/休日出勤 de 集計 siguen vacías (pregunta de S2 en `para-japon.md` §3).
+
+**Resumen S5:** 25 pantallas de operaciones y 4 grupos de API probados con datos. 4 fallos encontrados y corregidos, con prueba: ログインID vacía, JS de day2, datos de 勤怠 incoherentes y turnos `undefined`. Pendiente solo la pregunta de 集計 para Japón.
 
 Web local `http://localhost:8081` (checkout principal en `laravel13`, BD `crmsystem2` con el esquema `signage`). La muestra no se tocó.
 
