@@ -7,9 +7,9 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — Menú lateral (`config/menu/mypage.php`, `terminales.php`) y luego ペーパーサイネージ / ICカード
+## Próximo paso — 6 `digitalsignage` HTML5 (reproductor con el mismo contrato)
 
-Hecho: submódulos 1–5 (マイコレ, オススメ, 求人+職種, ガチャリン, 電子看板) con el login y layout reales de S1. Siguiente: menús desde `left_navi6`/`left_navi7`; después 6 `digitalsignage` HTML5, 9 ペーパーサイネージ, 10 ICカード (orden del diseño §4).
+Hecho: submódulos 1–5 y menús (`config/menu/mypage.php`, `terminales.php`). Siguiente: reproductor `/digitalsignage/?shop_cd=&display_cd=` en HTML5 (XML del programa, sondeos `ajax_*`, cupones impresos con `CouponService` de S3, ruleta y tragaperras) en `routes/publico/senalizacion.php`. Luego 9 ペーパーサイネージ y 10 ICカード.
 
 ## Tarea anterior — Diseño (sin código, hecho)
 
@@ -41,6 +41,8 @@ Ver diseño §5. A S0: BD `admin` de `signage/` (no está en el esquema); GoTel/
 
 ## Decisiones
 
+- Menús: solo entradas vivas; ガチャリン sin entrada (comentada en left_navi6); オススメ con etiqueta fija (el legacy usa el nombre de tb_mobile_navi); ペーパーサイネージ/ICカード/ビーコン con URL legacy hasta migrarse.
+
 - コメント HOME de マイコレ: sin get_form2 (mobile_mycolle_edit.php no lo usa); `"`→`'` y serialize, se imprime con `{{ }}`. ガチャリン: premios en `field='rate'` (float_data %, int_data 本数), `prize_count` = contador del día.
 
 - Texto de formularios: 電子看板, 求人 y 職種 usan `get_form()` → `LegacyText::form()`; オススメ y マイコレ `get_form2()` → `LegacyText::input()`; ガチャリン `form2Db`. Pendiente de que S1 integre `LegacyText`/`LegacyCheck`. `SignageFeedBuilder` sigue escapando para XML: los textos de get_form() no llegan escapados a la BD.
@@ -56,6 +58,8 @@ Ver diseño §5. A S0: BD `admin` de `signage/` (no está en el esquema); GoTel/
 - Config de マイコレ y ガチャリン en `contents_master` (modelo de S1) vía servicios de S4; `mypage_config` sigue con `serialize()` (lo leen `mpa_*`).
 
 ## Hecho
+
+- 2026-11-27 Menús laterales de category6/7 con Gates `mypage.mycolle` (app activa + 1035) y `terminales.paper-signage` (UI CRM2): suite 310 verde.
 
 - 2026-11-27 オススメ (+push), 求人 + 職種 (+floormap), ガチャリン (`LotteryConfig`, filas `rate`/`prize_count` como lee S3), LegacyText por pantalla, pruebas con login real: suite 308 verde.
 
