@@ -14,4 +14,11 @@ return [
         'upload_ng' => ':n枚目アップロード失敗。',
         'kept' => ':n枚目は現状保存。',
     ],
+
+    // recruit_new.php / recruit_update.php ($error_disp)
+    'recruit' => [
+        'headline_required' => '※必須項目です。',
+        'shop_required' => '※店舗を選択して下さい。',
+        'category_required' => '※職種を選択して下さい。',
+    ],
 ];

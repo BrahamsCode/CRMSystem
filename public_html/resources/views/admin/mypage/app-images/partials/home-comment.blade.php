@@ -25,7 +25,7 @@
 		@foreach ($shops as $shop)
 			<div style="display:inline-block;margin-bottom: 5px">
 				<div>【{{ $shop['kaishamei'] }}】</div>
-				{{-- El legacy quita el \" solo en los textos por tienda --}}
+				{{-- El legacy quita el \" solo en los textos por tienda. {!! !!}: guardado con LegacyText::input() --}}
 				<textarea name="home_comment[{{ $shop['cd'] }}]" id="home_comment_{{ $shop['cd'] }}" class="inputL" cols="100" rows="10">{{ isset($homeComments[$shop['cd']]) ? str_replace('\"', '"', $homeComments[$shop['cd']]) : '' }}</textarea>
 				<br>
 				<label for="mypage_config_comment_flg_{{ $shop['cd'] }}">

@@ -22,8 +22,8 @@
     $applicationUseFlg  bool  admin_master.application_use_flg == 1 (cd = 1). Si es false el legacy no
                         imprime nada dentro de .main.
 
-    $siteName  string|null  Nombre del sitio para el <title> (legacy: $site_name). Si es null se usa config('app.name').
-               AppImageScreen pasa '' porque el legacy no lo define en esta pantalla (「ショップページ設定 - 」).
+    $siteName  string  Nombre del sitio para el <title> (legacy: $site_name de inc/db.php). Lo pone
+               MypageServiceProvider (composer de admin.mypage.*).
 
     $shops  iterable (Collection o array) de filas de tb_shop con disp_flg = '1' ORDER BY cd
             (legacy: $shop_data_ary). Cada fila admite acceso por índice (array o modelo Eloquent) con:
@@ -107,6 +107,10 @@
 @section('title', 'ショップページ設定 - ' . ($siteName ?? config('app.name')))
 
 @section('menu', 'mypage')
+
+{{-- El legacy usa $useLatestJquery = true (inc/head.php): jQuery 1.11.2 + jQuery UI 1.11.4 --}}
+@section('jquery', 'jquery-1.11.2.min.js')
+@section('jquery_ui', 'jquery-ui-1.11.4.min.js')
 
 @section('css')
     @include('admin.mypage.app-images.partials.styles')
