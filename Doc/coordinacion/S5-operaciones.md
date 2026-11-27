@@ -77,6 +77,8 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 
 - **Menú スケジュール管理 (2026-11-27):** シフト区分管理 y los turnos van en el bloque スケジュール管理 (vacío en el legacy; allí los turnos solo salían en 勤怠管理 para un `SERVER_ADDR` concreto). シフト区分管理 es pantalla propia (en el legacy era una sección de 各種設定, ⏸).
 
+- **Turnos (2026-11-27):** el master elige cualquier tienda (el legacy volvía siempre a la primera por un bug) y el horario es el de la tienda elegida; sin `kintai_tb_config` se usan sus valores por defecto (el legacy redirigía a 勤怠一覧, ⏸). 月別 pinta solo los días del mes (el legacy, 31 filas siempre) y solo guarda empleados activos de la tienda. Los datos del JS se emiten con `@json`.
+
 ## Hecho
 
 - 2026-11-26 — Diseño con tablas nuevas, aprobado por S0 (obsoleto desde el cambio de base).
@@ -96,3 +98,4 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 - 2026-11-27 — `mpa_*` (5 endpoints: corresponding, getTopBanner, getCoverFlow, setraiten, albumUpdate): los 12 casos grabados coinciden (setraiten_ok corregido) y `MpaTest` cubre imágenes por tienda, beacon y álbum. Suite: 503 en verde (con laravel13 fusionado por S0).
 - 2026-11-27 — 営業日設定 (`ShopWorkController`, `LegacyHolidays` con las reglas de `check_holiday` tal cual) y bloque 初期設定管理 del menú (`ShopWorkTest`).
 - 2026-11-27 — シフト区分管理 (`StaffShiftKindController`, `LegacyRanking` compartido con スタッフグループ) (`ShiftKindTest`).
+- 2026-11-27 — 日別シフト管理 y 月別シフト管理 (`StaffShiftController`, `ShiftBoard`, vistas con el JS/CSS del legacy) (`StaffShiftTest`). Pasos 1-4 y 8-10 hechos; suite 573 en verde.

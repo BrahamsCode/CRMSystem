@@ -67,6 +67,56 @@ class StaffShiftController extends Controller
         return to_route('admin.operaciones.shifts.day', ['shop_cd' => $shopCd, 'd' => $day->format('Ymd')]);
     }
 
+    /**
+     * 月別シフト管理 (schedule/staff_shift_month.php): un empleado, una fila por día del mes (el legacy pintaba 31
+     * filas en todos los meses; aquí solo los días que existen). Sin staff_cd elige el primero.
+     */
+    public function month(Request $request): View
+    {
+        $shops = $this->shops();
+        $shopCd = $this->selectedShop($request, $shops);
+        $first = $this->parseDay($request->query('d') ?? now(LegacyMonth::TIMEZONE)->format('Ym01'));
+        $month = LegacyMonth::of($first->year, $first->month);
+        $hours = $this->board->hours($shopCd);
+        $staff = $this->staffOf($shopCd);
+        $staffCd = $request->has('staff_cd') ? (int) $request->query('staff_cd') : (int) $staff->first()?->cd;
+        $member = $staff->firstWhere('cd', $staffCd);
+        $row = $member ? StaffShift::query()->where('shop_cd', $shopCd)->where('staff_cd', $staffCd)->forMonth($month)->first() : null;
+        $thisMonth = now(LegacyMonth::TIMEZONE)->startOfMonth();
+
+        return view('admin.operaciones.shifts.month', [
+            'day' => $first,
+            'month' => $month,
+            'd' => $first->format('Ymd'),
+            'shops' => $shops,
+            'shopCd' => $shopCd,
+            'staff' => $staff,
+            'staffCd' => $staffCd,
+            'member' => $member,
+            'slots' => $this->board->slots($first, $hours),
+            'hours' => $hours,
+            'shifts' => $this->board->monthShifts($row, $month),
+            'kinds' => StaffShiftKind::ordered()->get(['cd', 'name', 'color']),
+            'months' => array_map(fn (int $i) => $thisMonth->copy()->addMonths($i), range(0, 5)),
+        ]);
+    }
+
+    /** 更新 del mes del empleado */
+    public function saveMonth(Request $request): RedirectResponse
+    {
+        $shopCd = $this->selectedShop($request, $this->shops());
+        $first = $this->parseDay($request->input('d'));
+        $staffCd = (int) $request->input('staff_cd');
+        $values = array_values(array_filter((array) $request->input('sch', []), 'is_string'));
+
+        // Solo empleados activos de la tienda (el legacy aceptaba cualquier staff_cd numérico)
+        if ($this->staffOf($shopCd)->contains('cd', $staffCd)) {
+            $this->board->saveMonth($shopCd, $staffCd, LegacyMonth::of($first->year, $first->month), $values);
+        }
+
+        return to_route('admin.operaciones.shifts.month', ['shop_cd' => $shopCd, 'staff_cd' => $staffCd, 'd' => $first->format('Ymd')]);
+    }
+
     /** Tiendas que puede ver: todas (master) o la suya */
     private function shops(): Collection
     {

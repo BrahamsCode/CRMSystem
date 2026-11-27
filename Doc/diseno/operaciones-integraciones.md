@@ -77,8 +77,8 @@ Integraciones: `routes/publico/integraciones.php`, que S1 carga fuera del grupo 
 
 | Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas legacy | Estado |
 |---|---|---|---|---|---|
-| `staff_shift.php` | 日別シフト管理 | `admin.operaciones.shifts.day` + `.save` (POST) | `StaffShiftController@day` / `@save` | L `kintai_tb_config`, `tb_shop`, `tb_staff`, `tb_staff_shift_kind`; L/E `tb_staff_shift`, `hatuban` | pendiente (sin el enlace roto a `time_table.php`; comentario con comillas bien guardado; solo crea la fila del mes del empleado editado) |
-| `staff_shift_month.php` | 月別シフト管理 | `admin.operaciones.shifts.month` | `StaffShiftController@month` | L las mismas | pendiente |
+| `staff_shift.php` | 日別シフト管理 | `admin.operaciones.shifts.day` + `.save` (POST) | `StaffShiftController@day` / `@save` | L `kintai_tb_config`, `tb_shop`, `tb_staff`, `tb_staff_shift_kind`; L/E `tb_staff_shift`, `hatuban` | hecho (`ShiftBoard`; JS add.shift.js del legacy; horario por defecto sin kintai_tb_config) |
+| `staff_shift_month.php` | 月別シフト管理 | `admin.operaciones.shifts.month` | `StaffShiftController@month` | L las mismas | hecho (`ShiftBoard`; JS add.shift.js del legacy; horario por defecto sin kintai_tb_config) |
 | `ajax_staff_shift_hatuban.php` | — | — | — | — | descartado: el `cd` se numera al guardar (`hatuban` en el servicio de S1) |
 | `schedule.php` | 営業日設定 (sin enlace) | — | — | — | descartado: duplicado de `config/shop_work_calendar.php` |
 | `shift.php` | 営業日設定 (sin enlace) | — | — | — | descartado: sin lógica, sin enlace |

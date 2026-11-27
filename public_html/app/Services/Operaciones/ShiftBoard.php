@@ -90,6 +90,51 @@ class ShiftBoard
         return $data;
     }
 
+    /**
+     * Turnos del mes de un empleado (staff_shift_month.php): como dayShifts, pero `staff_cd` es el índice del
+     * día (día - 1), que es lo que el JS usa como fila.
+     */
+    public function monthShifts(?StaffShift $row, LegacyMonth $month): array
+    {
+        if (! $row) {
+            return [];
+        }
+
+        $data = [];
+        foreach (range(1, $month->daysInMonth()) as $day) {
+            foreach ($this->dayShifts([$row], $month->day($day)) as $shift) {
+                $data[] = ['staff_cd' => $day - 1] + $shift;
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Guarda el mes de un empleado (staff_shift_month.php, mode=update): sch[] = "<día-1>_<inicio>_<fin>_<区分>_<comentario>";
+     * los días sin turnos quedan vacíos.
+     *
+     * @param  list<string>  $values
+     */
+    public function saveMonth(int $shopCd, int $staffCd, LegacyMonth $month, array $values): void
+    {
+        $byDay = [];
+        foreach ($values as $value) {
+            $shift = self::parse($value);
+            if (is_numeric($shift['staff_cd'])) {
+                $byDay[(int) $shift['staff_cd'] + 1][] = $shift;
+            }
+        }
+
+        DB::transaction(function () use ($shopCd, $staffCd, $month, $byDay) {
+            $row = $this->row($shopCd, $staffCd, $month);
+            foreach (range(1, $month->daysInMonth()) as $day) {
+                $row->setShifts($day, $byDay[$day] ?? []);
+            }
+            $row->save();
+        });
+    }
+
     /** `sch[]` del formulario: "<staff_cd>_<inicio>_<fin>_<区分>_<comentario>" */
     public static function parse(string $value): array
     {

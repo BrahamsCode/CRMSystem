@@ -86,3 +86,34 @@ it('日別シフト管理: quien no es master solo ve su tienda', function () {
         ->assertDontSee('田中')
         ->assertSee('一般'); // él mismo, de la tienda 1
 });
+
+it('月別シフト管理: un empleado, una fila por día del mes, guardado de todo el mes', function () {
+    seedShiftBoard();
+    loginAs('master', 'secreto1');
+
+    $this->get('/admin/operaciones/shifts/month?shop_cd=2&d=20260201')
+        ->assertOk()
+        ->assertSee('<title>月別シフト管理 - shop</title>', false)
+        ->assertSee('鈴木 2026年02月 シフト一覧') // sin staff_cd: el primero (touroku_date DESC)
+        ->assertSee('data-day="28"', false)
+        ->assertDontSee('data-day="29"', false);
+
+    $day3 = CarbonImmutable::create(2026, 2, 3, 12, 0, 0, 'Asia/Tokyo')->getTimestamp();
+    $this->post('/admin/operaciones/shifts/month', [
+        'mode' => 'update', 'shop_cd' => '2', 'staff_cd' => '20', 'd' => '20260201',
+        'sch' => ['2_'.$day3.'_'.($day3 + 3600).'_3_', '2_'.($day3 + 7200).'_'.($day3 + 9000).'__'],
+    ])->assertRedirect('/admin/operaciones/shifts/month?shop_cd=2&staff_cd=20&d=20260201');
+
+    $row = DB::table('tb_staff_shift')->where('staff_cd', 20)->first();
+    expect($row->gaisyutu_time_3)->toBe($day3.'<>'.($day3 + 7200))
+        ->and($row->syukkin_kubun_3)->toBe('3<>')
+        ->and($row->gaisyutu_time_4)->toBe('');
+
+    $this->get('/admin/operaciones/shifts/month?shop_cd=2&staff_cd=20&d=20260201')
+        ->assertSee('田中 2026年02月 シフト一覧')
+        ->assertSee('"cd":"2","start":"12:00","end":"13:00"', false);
+
+    // Un staff_cd que no es de la tienda no se guarda
+    $this->post('/admin/operaciones/shifts/month', ['shop_cd' => '2', 'staff_cd' => '22', 'd' => '20260201', 'sch' => ['0_1_2__']]);
+    expect(DB::table('tb_staff_shift')->where('staff_cd', 22)->exists())->toBeFalse();
+});

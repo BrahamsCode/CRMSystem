@@ -64,6 +64,9 @@ Route::prefix('operaciones')->name('operaciones.')->group(function () {
     // 日別シフト管理 (schedule/staff_shift.php)
     Route::get('shifts/day', [StaffShiftController::class, 'day'])->name('shifts.day');
     Route::post('shifts/day', [StaffShiftController::class, 'save'])->name('shifts.save');
+    // 月別シフト管理 (schedule/staff_shift_month.php)
+    Route::get('shifts/month', [StaffShiftController::class, 'month'])->name('shifts.month');
+    Route::post('shifts/month', [StaffShiftController::class, 'saveMonth'])->name('shifts.month.save');
 
     // 営業日設定 (config/shop_work_calendar.php)
     Route::get('shop-work', [ShopWorkController::class, 'edit'])->name('shop-work.edit');
