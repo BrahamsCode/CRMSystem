@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\Base\AreaController;
+use App\Http\Controllers\Admin\Base\AuthorityContentsController;
 use App\Http\Controllers\Admin\Base\AuthorityController;
 use App\Http\Controllers\Admin\Base\BookmarkController;
 use App\Http\Controllers\Admin\Base\FeaturesController;
@@ -45,6 +46,14 @@ Route::name('base.')->group(function () {
         Route::get('ajax_group_authority.php', 'group')->name('group');
         Route::match(['get', 'post'], 'ajax_group_authority_register.php', 'register')->name('register');
     });
+
+    // 権限項目管理 (mantenimiento: IP de desarrollo o soporte; el legacy solo ocultaba el enlace)
+    Route::prefix('system/category0/config')->name('authority-contents.')->middleware('can:nucleo.maintenance')
+        ->controller(AuthorityContentsController::class)->group(function () {
+            Route::match(['get', 'post'], 'authority_contents_list.php', 'index')->name('index');
+            Route::get('authority_contents.php', 'form')->name('form');
+            Route::post('ajax_authority_contents_register.php', 'register')->name('register');
+        });
 
     // エリア管理
     Route::prefix('system/category0/config')->name('areas.')->controller(AreaController::class)->group(function () {

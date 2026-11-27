@@ -27,7 +27,7 @@
 | `config/authority.php` + `ajax_group_authority*.php` | 権限管理 | `legacy.base.authority.*` | `Base\AuthorityController` | `tb_staff_group`, `tb_kengen`, `tb_kengen_contents`, `hatuban` | hecho |
 | `config/bookmark.php`, `bookmark_list.php`, `ajax_bookmark.php` | ショートカット管理 | `legacy.base.bookmarks.*` | `Base\BookmarkController` | `tb_bookmark`, `tb_base_system*`, `hatuban` | hecho |
 | `config/area*.php` | エリア管理 | `legacy.base.areas.*` | `Base\AreaController` | `tb_area`, `hatuban` | hecho |
-| `config/authority_contents*.php` | 権限項目管理 (mantenimiento) | `legacy.base.authority-contents.*` | `Base\AuthorityContentsController` | `tb_kengen_contents`, `tb_base_system` | pendiente |
+| `config/authority_contents*.php` | 権限項目管理 (mantenimiento) | `legacy.base.authority-contents.*` | `Base\AuthorityContentsController` | `tb_kengen_contents`, `tb_base_system` | hecho |
 | `config/system.php` | システム管理 (mantenimiento) | `legacy.base.system.*` | `Base\SystemController` | `admin_master`, `tb_base_system*`, `tb_hp_*`, `tb_manage_words`, `contents_master` | pendiente |
 | `config/slim_list.php` | CRM端末管理 (mantenimiento) | `legacy.base.access-terminals.*` | `Base\AccessTerminalController` | `tb_access_mapping`, `tb_shop`, `hatuban` | pendiente |
 | `shop/zip.php`, `config/zip.php` (+ category1/customer, category5/staff, inc) | 郵便番号 | `legacy.nucleo.zip.*` | `Nucleo\ZipController` (común) | `zip` | hecho |
@@ -55,3 +55,4 @@
 - ショートカット管理: el 初期化 ejecuta el SQL literal del legacy (`database/sql/nucleo/bookmark_reset.sql`, con `DB::unprepared` en una transacción); se conservan sus cd repetidos (7, 8, 58, 59 → 63 filas), porque `tb_bookmark` no tiene PK y la cabecera los muestra igual. Sin permiso propio, como el legacy (cualquier personal con sesión).
 - 機能設定: se guarda solo por POST y se vuelve a pintar (el legacy aceptaba también GET). `change_sended_log` exige `nucleo.developer` también al guardar (el legacy solo ocultaba el bloque). No se migran `change_login_point_settings` (sin formulario en la pantalla) ni el JS de vigencia de puntos y plantillas (`#point_yukoukigen_form`, `#pointShikkouMail`, `#pointAlertMail`: sus elementos ya no existen). Los textos se limpian con `LegacyText::db()` (= form2Db).
 - Descartados por no tener entrada desde ninguna pantalla: `ajax_point_yukoukigen_kakunin.php` y las 4 plantillas `config/{point,stamp}_{alert,shikkou}_mail_template_*` de category0. Las que se usan están en `category3/point` y `category3/stamp` (promociones).
+- Mantenimiento (権限項目管理, システム管理, CRM端末管理): las rutas exigen `nucleo.maintenance` en el servidor (el legacy solo ocultaba el enlace del menú). En el popup de 権限項目 no se recarga `jquery-1.3.2` (ya lo carga el `<head>`; recargarlo borraría el token CSRF de `$.ajaxSetup`).
