@@ -76,7 +76,12 @@ class AsistenciaDemoSeeder extends Seeder
             $months = [LegacyMonth::of($today->year, $today->month), LegacyMonth::of($today->year, $today->month)->next()];
 
             foreach ($shops as $shop) {
-                KintaiConfig::query()->firstOrCreate(['tb_shop_cd' => $shop->cd], self::CONFIG);
+                $config = KintaiConfig::query()->firstOrCreate(['tb_shop_cd' => $shop->cd], self::CONFIG);
+                // Con el horario que el legacy pone al crear la fila (08:00-10:00, nadie lo configuró) los turnos
+                // quedan fuera del tablero de シフト: se pone el de la demo
+                if ($config->start_time === KintaiConfig::DEFAULTS['start_time'] && $config->end_time === KintaiConfig::DEFAULTS['end_time']) {
+                    $config->update(['start_time' => self::CONFIG['start_time'], 'end_time' => self::CONFIG['end_time']]);
+                }
                 foreach ($months as $month) {
                     $this->shopWork((int) $shop->cd, $month);
                 }

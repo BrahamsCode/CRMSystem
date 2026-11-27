@@ -129,6 +129,9 @@ class ShiftBoard
         DB::transaction(function () use ($shopCd, $staffCd, $month, $byDay) {
             $row = $this->row($shopCd, $staffCd, $month);
             foreach (range(1, $month->daysInMonth()) as $day) {
+                if (! self::allComplete($byDay[$day] ?? [])) {
+                    continue; // turno fuera del horario del tablero: el día queda como estaba
+                }
                 $row->setShifts($day, $byDay[$day] ?? []);
             }
             $row->save();
@@ -141,6 +144,22 @@ class ShiftBoard
         [$staffCd, $start, $end, $kind, $comment] = array_pad(explode('_', $value, 5), 5, null);
 
         return ['staff_cd' => $staffCd, 'start' => (string) $start, 'end' => (string) $end, 'kind_cd' => (string) $kind, 'comment' => (string) $comment];
+    }
+
+    /**
+     * ¿Todos los turnos traen inicio y fin en epoch? El JS del tablero (add.shift.js) manda «undefined» cuando un
+     * turno guardado cae fuera del horario de la tienda (kintai_tb_config); el legacy lo guardaba tal cual y perdía
+     * el turno. Aquí ese día de ese empleado no se toca.
+     */
+    public static function allComplete(array $shifts): bool
+    {
+        foreach ($shifts as $shift) {
+            if (! ctype_digit($shift['start']) || ! ctype_digit($shift['end'])) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /** Fila de tb_staff_shift de tienda, empleado y mes (nueva: el cd lo da hatuban al guardar) */
@@ -167,7 +186,7 @@ class ShiftBoard
         $month = LegacyMonth::of($day->year, $day->month);
         DB::transaction(function () use ($byStaff, $shopCd, $month, $day) {
             foreach ($byStaff as $staffCd => $shifts) {
-                if (! is_numeric($staffCd)) {
+                if (! is_numeric($staffCd) || ! self::allComplete($shifts)) {
                     continue;
                 }
                 $row = $this->row($shopCd, (int) $staffCd, $month);

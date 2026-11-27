@@ -36,6 +36,11 @@ function seedOperacionesDemoBase(): void
     ]);
     DB::table('tb_shop')->where('cd', 1)->update(['start_work_time' => '9<>00', 'break_time' => '60', 'kyuyo_marume' => '15']);
     DB::table('tb_shop')->insert(['cd' => 2, 'kaishamei' => '支店', 'disp_flg' => '1']);
+    // Fila de 各種設定 con el horario por defecto del legacy (como las del backup) y otra configurada a mano
+    DB::table('kintai_tb_config')->insert([
+        ['cd' => 1, 'tb_shop_cd' => 1, 'kijun_time' => '05<>00', 'start_time' => '09<>00', 'end_time' => '20<>00', 'password' => '9999'],
+        ['cd' => 2, 'tb_shop_cd' => 2, 'kijun_time' => '05<>00', 'start_time' => '08<>00', 'end_time' => '10<>00', 'password' => '1234'],
+    ]);
     DB::table('tb_koumoku')->insert(['cd' => 46, 'tb_name' => 'tb_staff', 'tb_koumoku' => 'name_kana', 'tb_koumoku_name' => '名前(カナ)', 'mail_mag_select' => '']);
     DB::table('tb_staff')->insert([
         ['cd' => 10, 'shop_cd' => 1, 'login_id' => 'tencho_t', 'email1' => 'tencho_t@example.com', 'name' => '山田', 'id' => 'E10', 'felica_no' => '', 'employmentsystem' => '正社員', 'rank' => 1, 'disp_flg' => '1'],
@@ -80,7 +85,8 @@ it('siembra personal, 営業日, turnos y 勤怠 con casos límite, y una segund
     $nov = DB::table('tb_shop_work')->where('shop_cd', 1)->where('syukkinbi', '2026/11')->first();
     expect($first['tb_shop_work'])->toBe(4)
         ->and([$nov->syukkin_time_3, $nov->syukkin_time_4, $nov->syukkin_time_5, $nov->syukkin_time_23])->toBe(['0', '0', '1', '0'])
-        ->and(DB::table('kintai_tb_config')->where('tb_shop_cd', 2)->value('end_time'))->toBe('02<>00')
+        ->and(DB::table('kintai_tb_config')->where('tb_shop_cd', 2)->first(['start_time', 'end_time', 'password']))->toEqual((object) ['start_time' => '08<>00', 'end_time' => '02<>00', 'password' => '1234']) // horario por defecto → el de la demo
+        ->and(DB::table('kintai_tb_config')->where('tb_shop_cd', 1)->value('end_time'))->toBe('20<>00') // configurado: no se toca
         ->and(DB::table('tb_base_system_child')->where('cd', 52)->value('system_flg'))->toBe('1');
 
     // Turnos de los 4 activos (sin el master ni el de baja) en los dos meses; 締め (el 4.º) cruza la medianoche;
