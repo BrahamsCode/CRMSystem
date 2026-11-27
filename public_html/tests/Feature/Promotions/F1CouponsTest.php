@@ -19,7 +19,7 @@ beforeEach(function () {
         View::addLocation(dirname($dir));
     }
     if (! Illuminate\Support\Facades\Route::has('legacy.promocion.inc.ajax_search_coupon')) {
-        Illuminate\Support\Facades\Route::middleware('web')->group(base_path('routes/legacy/promocion.php'));
+        Illuminate\Support\Facades\Route::middleware('web')->name('legacy.')->group(base_path('routes/legacy/promocion.php'));
         app('router')->getRoutes()->refreshNameLookups();
     }
     $this->withoutMiddleware(Authenticate::class);

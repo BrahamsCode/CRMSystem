@@ -7,7 +7,7 @@
 
 @section('menu', 'promocion')
 
-@section('title', $pageTitle . '一覧')
+@section('title', $pageTitle . '一覧' . ' - ' . $siteName)
 
 @php
 	[$fy, $fm, $fd] = array_pad(explode('/', (string) $filters['from']), 3, '');

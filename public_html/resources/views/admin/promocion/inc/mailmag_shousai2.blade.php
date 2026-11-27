@@ -7,7 +7,7 @@
 
 @section('menu', 'promocion')
 
-@section('title', $pageTitle)
+@section('title', $pageTitle . '詳細' . ' - ' . $siteName)
 
 @php
 	$m = fn (string $c) => $mail->getAttribute($c);

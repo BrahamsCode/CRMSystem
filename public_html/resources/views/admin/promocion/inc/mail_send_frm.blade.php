@@ -20,7 +20,7 @@
 	$shopNames = $shopNames ?? [];
 @endphp
 
-@section('title', $toolName . '配信')
+@section('title', $toolName . '配信' . ' - ' . $siteName)
 
 @section('js')
 <script type="text/javascript">

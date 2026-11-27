@@ -7,7 +7,7 @@
 
 @section('menu', 'promocion')
 
-@section('title', $title . ' ' . $mode)
+@section('title', $title . ' ' . $mode . ' - ' . $siteName)
 
 @php
 	$d = fn (string $k) => (string) ($data[$k] ?? '');

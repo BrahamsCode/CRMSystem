@@ -28,7 +28,7 @@ beforeEach(function () {
         View::addLocation(dirname($dir));
     }
     if (! Route::has('legacy.promocion.inc.ajax_reigai_kaiin')) {
-        Route::middleware('web')->group(base_path('routes/legacy/promocion.php'));
+        Route::middleware('web')->name('legacy.')->group(base_path('routes/legacy/promocion.php'));
         app('router')->getRoutes()->refreshNameLookups();
     }
     $this->withoutMiddleware(Authenticate::class);

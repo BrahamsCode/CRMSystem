@@ -6,6 +6,7 @@ use App\Models\AdminMaster;
 use App\Models\ContentsMaster;
 use App\Models\Staff;
 use App\Services\Customers\VisitLoyalty;
+use App\Services\Nucleo\LegacyUi;
 use App\Services\Promotions\GApiPushTrigger;
 use App\Services\Promotions\NullPosGateway;
 use App\Services\Promotions\PosGateway;
@@ -14,6 +15,7 @@ use App\Services\Promotions\PushTrigger;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -55,6 +57,9 @@ class PromocionServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->defineMenuGates();
+
+        // `<title>… - <site_name></title>` del legacy (inc/head.php: tb_office)
+        View::composer('admin.promocion.*', fn ($view) => $view->with('siteName', $view->getData()['siteName'] ?? app(LegacyUi::class)->siteName()));
 
         $this->callAfterResolving(Schedule::class, function (Schedule $schedule) {
             foreach (self::TASKS as $command => $frequency) {

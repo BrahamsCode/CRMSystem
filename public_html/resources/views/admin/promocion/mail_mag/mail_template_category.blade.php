@@ -1,7 +1,7 @@
 {{-- テンプレートカテゴリ管理 (popup) — legacy: system/category3/mail_mag/mail_template_category.php --}}
 @extends('layouts.legacy-popup')
 
-@section('title', 'テンプレートカテゴリ管理')
+@section('title', 'テンプレートカテゴリ管理' . ' - ' . $siteName)
 
 @section('css')
 <link href="{{ asset('legacy/system/css/import.css') }}" rel="stylesheet" type="text/css" media="all" />

@@ -35,7 +35,7 @@
 	};
 @endphp
 
-@section('title', $toolName . '内容設定')
+@section('title', $toolName . '内容設定' . ' - ' . $siteName)
 
 @section('css')
 <style type="text/css"><!--

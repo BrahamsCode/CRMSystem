@@ -3,7 +3,7 @@
 
 @section('menu', 'promocion')
 
-@section('title', 'テンプレート管理')
+@section('title', 'テンプレート管理' . ' - ' . $siteName)
 
 @section('css')
 <link rel="stylesheet" type="text/css" href="{{ asset('legacy/system/css/popInline.css') }}">

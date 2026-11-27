@@ -6,7 +6,7 @@
 
 @section('menu', 'promocion')
 
-@section('title', '予約配信メール')
+@section('title', '予約配信メール' . ' - ' . $siteName)
 
 @section('js')
 <script type="text/javascript">

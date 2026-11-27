@@ -7,7 +7,7 @@
 
 @section('menu', 'promocion')
 
-@section('title', $pageTitle . '一覧')
+@section('title', $pageTitle . '一覧' . ' - ' . $siteName)
 
 @php
 	$recurring = in_array($mailType, ['follow', 'followdeco', 'auto', 'autodeco'], true);

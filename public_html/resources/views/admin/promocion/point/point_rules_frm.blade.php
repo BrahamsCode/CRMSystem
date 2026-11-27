@@ -7,7 +7,7 @@
 
 @section('menu', 'promocion')
 
-@section('title', 'ポイント発行ルール ' . $mode)
+@section('title', 'ポイント発行ルール ' . $mode . ' - ' . $siteName)
 
 @php
 	use App\Http\Controllers\Admin\Promotions\PointRuleController as Rules;
