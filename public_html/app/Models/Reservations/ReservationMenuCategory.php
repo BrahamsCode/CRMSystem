@@ -23,6 +23,11 @@ class ReservationMenuCategory extends LegacyModel
         'rank' => 'integer',
     ];
 
+    /** `hyouji_flg`: '1' 表示, '9' 非表示 */
+    public const VISIBLE = '1';
+
+    public const HIDDEN = '9';
+
     public function menus(): HasMany
     {
         return $this->hasMany(ReservationMenu::class, 'tb_yoyaku_koumoku_category_cd', 'cd');

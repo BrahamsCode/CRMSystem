@@ -18,7 +18,7 @@ beforeEach(function () {
     LegacyFixtures::staff(20, 2);
 });
 
-function slot(int $staffCd, string $date, int $start = 36000, int $end = 68400): ReservationSlot
+function reservasSlot(int $staffCd, string $date, int $start = 36000, int $end = 68400): ReservationSlot
 {
     return ReservationSlot::create([
         'tb_staff_cd' => $staffCd, 'moushikomi_date' => $date, 'start_time' => $start, 'end_time' => $end,
@@ -26,7 +26,7 @@ function slot(int $staffCd, string $date, int $start = 36000, int $end = 68400):
     ]);
 }
 
-function reserva(ReservationSlot $slot, array $attrs = []): Reservation
+function reservasReserva(ReservationSlot $slot, array $attrs = []): Reservation
 {
     return Reservation::create($attrs + [
         'tb_yoyaku_uketsuke_day_cd' => $slot->cd, 'start_time' => 39600, 'end_time' => 43200,
@@ -36,19 +36,19 @@ function reserva(ReservationSlot $slot, array $attrs = []): Reservation
 
 it('remindable() replica reminder_new_confirm.php: día, disp_flg 1, aviso no desactivado, socios y no socios', function () {
     $dia = Carbon::parse('2026-12-01', 'Asia/Tokyo');
-    $franja = slot(10, '2026/12/01');
-    $otraTienda = slot(20, '2026/12/01');
-    $otroDia = slot(10, '2026/12/02');
+    $franja = reservasSlot(10, '2026/12/01');
+    $otraTienda = reservasSlot(20, '2026/12/01');
+    $otroDia = reservasSlot(10, '2026/12/02');
 
     $socio = Customer::factory()->create(['stop_yoyaku_reminder_mail_flg' => '']);
     $sinAviso = Customer::factory()->create(['stop_yoyaku_reminder_mail_flg' => '1']);
 
-    $deSocio = reserva($franja, ['tb_customer_cd' => $socio->cd]);
-    $deInvitado = reserva($franja);
-    $tienda2 = reserva($otraTienda);
-    reserva($franja, ['tb_customer_cd' => $sinAviso->cd]);
-    reserva($franja, ['disp_flg' => '9']);
-    reserva($otroDia);
+    $deSocio = reservasReserva($franja, ['tb_customer_cd' => $socio->cd]);
+    $deInvitado = reservasReserva($franja);
+    $tienda2 = reservasReserva($otraTienda);
+    reservasReserva($franja, ['tb_customer_cd' => $sinAviso->cd]);
+    reservasReserva($franja, ['disp_flg' => '9']);
+    reservasReserva($otroDia);
 
     expect(Reservation::remindable($dia)->pluck('cd')->sort()->values()->all())
         ->toBe(collect([$deSocio->cd, $deInvitado->cd, $tienda2->cd])->sort()->values()->all())
@@ -57,19 +57,19 @@ it('remindable() replica reminder_new_confirm.php: día, disp_flg 1, aviso no de
 });
 
 it('calcula la hora de la reserva desde la franja, también pasada la medianoche', function () {
-    $franja = slot(10, '2026/12/01');
-    $r = reserva($franja, ['start_time' => 86400 + 3600, 'end_time' => 86400 + 7200]);
+    $franja = reservasSlot(10, '2026/12/01');
+    $r = reservasReserva($franja, ['start_time' => 86400 + 3600, 'end_time' => 86400 + 7200]);
 
     expect($r->reservedAt()->format('Y-m-d H:i'))->toBe('2026-12-02 01:00')
         ->and($r->endsAt()->format('Y-m-d H:i'))->toBe('2026-12-02 02:00');
 });
 
 it('nombre y correo de contacto: del socio si lo es, si no de la reserva', function () {
-    $franja = slot(10, '2026/12/01');
+    $franja = reservasSlot(10, '2026/12/01');
     $socio = Customer::factory()->create(['name' => '山田 花子', 'email1' => 'hanako@example.com']);
 
-    $deSocio = reserva($franja, ['tb_customer_cd' => $socio->cd, 'name' => '別名', 'mail' => 'otro@example.com']);
-    $invitado = reserva($franja);
+    $deSocio = reservasReserva($franja, ['tb_customer_cd' => $socio->cd, 'name' => '別名', 'mail' => 'otro@example.com']);
+    $invitado = reservasReserva($franja);
 
     expect($deSocio->displayName())->toBe('山田 花子')
         ->and($deSocio->contactMail())->toBe('hanako@example.com')
@@ -81,14 +81,14 @@ it('upcomingCustomerCds() da los socios con reserva desde hoy (follow)', functio
     $hoy = Carbon::parse('2026-12-01', 'Asia/Tokyo');
     $socio = Customer::factory()->create();
     $pasado = Customer::factory()->create();
-    reserva(slot(10, '2026/12/03'), ['tb_customer_cd' => $socio->cd]);
-    reserva(slot(10, '2026/11/20'), ['tb_customer_cd' => $pasado->cd]);
+    reservasReserva(reservasSlot(10, '2026/12/03'), ['tb_customer_cd' => $socio->cd]);
+    reservasReserva(reservasSlot(10, '2026/11/20'), ['tb_customer_cd' => $pasado->cd]);
 
     expect(Reservation::upcomingCustomerCds($hoy)->pluck('tb_customer_cd')->map(fn ($v) => (int) $v)->all())->toBe([$socio->cd]);
 });
 
 it('numera tb_yoyaku con hatuban y cancela con disp_flg 9', function () {
-    $r = reserva(slot(10, '2026/12/01'));
+    $r = reservasReserva(reservasSlot(10, '2026/12/01'));
     expect(DB::table('hatuban')->where('koumoku', 'tb_yoyaku')->value('kazu'))->toBe($r->cd + 1);
 
     $r->delete();
