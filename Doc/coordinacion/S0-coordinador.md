@@ -121,6 +121,13 @@
   - Reparto: a S4 le paso, dentro de `promocion`, F6 (アンケート), F7 (来店履歴) y M8 (DM発行), con los modelos `Anketo*`. S3 sigue con el resto.
   - La QA visual de S1 (7d54d3a + 0f029ca) espera a que S2 quite sus rutas `system/category9` y `index.php`: las portadas son del núcleo (NUCLEO.md §3) y con las dos falla `CategoryTopTest`.
   - Felica `terminal_list` con la UI clásica, como la muestra (paridad).
+- 2026-11-27 (02:50): integrados:
+  - S1: QA visual (portadas del núcleo, diferencias en `Doc/qa/`) y permisos (category0 exige `nucleo.master`; diferencias en `Doc/qa/permisos-*.md`).
+  - S2: quitadas sus rutas de category9, más C5, C6 y R5.
+  - S3: QA de promoción (las rutas `legacy.legacy.*` daban 500 en `mail_past`).
+  - S4: revert de su `ventas`.
+  - S5: lote C1 de appview y el contrato de `setRaitenDetail`.
+  `laravel13` con 781 pruebas: 780 en verde y 1 que falla solo en la suite completa (`SetRaitenDetailTest`: espera `cd` 900 y recibe 802, porque depende del estado del contador `hatuban` que dejan otras pruebas). Se integra igual, porque las ramas pasan por separado; lo arregla S5 fijando el contador en la prueba. `AppviewContractTest` también es inestable (S5).
 - 2026-11-27: siguiente tarea de S1 (Antony: el login primero): modelo base y traits comunes, luego el login contra el personal del legacy, el layout idéntico y los estáticos comunes.
 
 ## Hecho
