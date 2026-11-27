@@ -62,6 +62,10 @@ it('reproduce byte a byte las pantallas de appview grabadas del legacy', functio
             // cd del socio nuevo (createHatsuban: hora + azar); el alta se comprueba en AppviewRegistrationTest
             [$body, $expectedBody] = preg_replace('/"customer_cd":"\d+"/', '"customer_cd":"CD"', [$body, $expectedBody]);
         }
+        if ($name === 'av_qr_demo') {
+            // «El primer socio» sin ORDER BY (como el legacy): depende del orden físico de la tabla en cada suite
+            [$body, $expectedBody] = preg_replace(['/qr_img\.php\?d=[^&]+&/', '/ID: \d+/'], ['qr_img.php?d=QR&', 'ID: N'], [$body, $expectedBody]);
+        }
 
         expect($response->getStatusCode())->toBe($expected['status'], "estado de {$name}: ".$response->exception?->getMessage())
             ->and(strtolower((string) $response->headers->get('Content-Type')))->toBe(strtolower((string) $expected['content_type']), "Content-Type de {$name}")

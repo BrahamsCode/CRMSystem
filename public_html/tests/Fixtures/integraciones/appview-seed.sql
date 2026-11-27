@@ -14,13 +14,13 @@ INSERT INTO tb_mobile_template (cd, pattern, use_case, color, background, pic_fl
     (2, 1, 'hr', 'CC0000', '', '0'),
     (3, -1, '帯', '', '', '0');
 
--- Cupones: uno de la tienda 1, uno de todas las tiendas (-1) y uno caducado (coupon.php lo borra)
+-- Cupones (time_limit distintos: coupon.php ordena por él): uno de la tienda 1, uno de todas las tiendas (-1) y uno caducado (coupon.php lo borra)
 INSERT INTO tb_mycoupon_master (cd, tb_shop_cd, title, comment, attention, disp_flg, hyouji_flg) VALUES
     (10, 1, 'カット10%OFF', 'ご来店時にこの画面をご提示ください。' || chr(10) || '他の割引と併用できません。', '1回のみ有効<><>要予約', '1', '1'),
     (11, -1, '全店舗ドリンク券', 'ドリンク1杯無料', '', '1', '1');
 INSERT INTO tb_mycoupon (cd, tb_mycoupon_master_cd, tb_shop_cd, tb_customer_cd, time_limit, used_flg, touroku_date) VALUES
     (100, 10, 1, 1609897927001809158, '1893423600', '', '1700000000'),
-    (101, 11, -1, 1609897927001809158, '1893423600', NULL, '1700000000'),
+    (101, 11, -1, 1609897927001809158, '1893427200', NULL, '1700000000'),
     (102, 10, 1, 1609897927001809158, '1000000000', '', '1700000000');
 INSERT INTO tb_mycoupon_used (cd, tb_mycoupon_master_cd, tb_shop_cd, tb_customer_cd, time_limit, used_flg, touroku_date, used_date) VALUES
     (90, 10, 1, 1609897927001809158, '1893423600', '', '1700000000', '1700003600');

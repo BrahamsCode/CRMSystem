@@ -18,7 +18,7 @@
 	<h2 class="tit01">登録確認</h2>
 	<form action="./member_complete.php" method="post">
 		<input type="hidden" name="regist" value="1">
-		<input type="hidden" name="_token" value="9956b8793ab65307de4d360135ffa45a">
+		<input type="hidden" name="_token" value="b7780b5a3e5ce6fc119a6cd89ccbe2a7">
 		<input type="hidden" name="name" value="山田 &lt;太郎&gt;">
 		<input type="hidden" name="mail" value="t@example.test">
 		<input type="hidden" name="tel" value="0901234">

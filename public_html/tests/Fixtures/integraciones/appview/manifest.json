@@ -608,7 +608,7 @@
         "response": {
             "status": 302,
             "content_type": "text/html; charset=UTF-8",
-            "location": "coupon_print.php?PHPSESSID=a65blm9q1gk9gs7ehtqsglnio6",
+            "location": "coupon_print.php?PHPSESSID=87j82t1b95gohtn86o77hb3d8k",
             "body_file": "av_coupon_control_print.body"
         }
     },

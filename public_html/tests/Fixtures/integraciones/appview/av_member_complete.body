@@ -40,7 +40,7 @@
 <script>
 $(function(){
 	$(".backLink").click(function(){
-		var message = {"action":"appCloseDialog", "customer_cd":"1795764575001914795"};
+		var message = {"action":"appCloseDialog", "customer_cd":"1795766876001557084"};
 		try {
 			if (typeof androidCallback.postMessage == 'function') { 
 				androidCallback.postMessage( JSON.stringify(message) );
