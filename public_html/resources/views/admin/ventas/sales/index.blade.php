@@ -63,7 +63,8 @@ $(document).ready(function() {
 });
 
 // =======================================================================================
-// 削除ボタン (el legacy iba por GET a karute_delete_register.php; aquí POST con el mismo contenido)
+// 削除ボタン (el legacy iba por GET a karute_delete_register.php; aquí POST con el mismo contenido).
+// El cd va como cadena: un número de 19 cifras pierde precisión en JS y no borraba nada (bug heredado)
 // =======================================================================================
 
 function deleteHandler( customerCD, innerGroup ) {
@@ -176,7 +177,7 @@ function deleteHandler( customerCD, innerGroup ) {
 <td>{{ number_format((float) $row->float_data) }}円</td>
 <td>{{ $row->staff_name }}</td>
 <td align="center">
-<input class="btn btnStyle" type="button" value="削除" onclick="deleteHandler({{ (int) $row->tb_customer_cd }},{{ (int) $row->category_inner_group }})" /></td>
+<input class="btn btnStyle" type="button" value="削除" onclick="deleteHandler({{ \Illuminate\Support\Js::from((string) (int) $row->tb_customer_cd) }},{{ \Illuminate\Support\Js::from((string) (int) $row->category_inner_group) }})" /></td>
 </tr>
 @endforeach
 
