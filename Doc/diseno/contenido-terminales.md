@@ -21,11 +21,11 @@
 | Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas (legacy) | Estado |
 |---|---|---|---|---|---|
 | `category6/index.php`, `inc/page_control.php`, `inc/left_navi6.php` | マイページ管理 | `admin.mypage.index` | `Mypage\MenuController@index` | — | pendiente (menú en `config/menu/mypage.php`) |
-| `user_hp/mobile_mycolle_edit.php` + `ajax_apliFileUpload.php` | マイコレ管理 | `admin.mypage.app-images.edit` (`?section=`) | `Mypage\AppImageController@edit/update/upload/destroy` | `contents_master` (`tb_c6_user_hp`: `aplicover`, `aplibanner`, `mainimage`, `apli_home_thumbnail`, `mypage_config`) + archivos `hp/uploads/c6/<carpeta>/` | pendiente |
-| `user_hp/mobile_mycolle_edit_coverflow.php` | カバーフロー画像設定管理 | `admin.mypage.app-images.edit` `section=cover` | ídem | ídem | pendiente |
-| `user_hp/mobile_mycolle_edit_banner.php` | バナー画像設定管理 | ídem `section=banner` | ídem | ídem | pendiente |
-| `user_hp/mobile_mycolle_edit_main.php` | HOMEメインイメージ管理 | ídem `section=main` | ídem | ídem | pendiente |
-| `user_hp/mobile_mycolle_edit_thumbnail.php` | サムネイル画像管理 | ídem `section=thumbnail` | ídem | ídem | pendiente |
+| `user_hp/mobile_mycolle_edit.php` + `ajax_apliFileUpload.php` | マイコレ管理 | `admin.mypage.app-images.edit` (`?section=`) | `Mypage\AppImageController@edit/update/upload/destroy` | `contents_master` (`tb_c6_user_hp`: `aplicover`, `aplibanner`, `mainimage`, `apli_home_thumbnail`, `mypage_config`) + archivos `hp/uploads/c6/<carpeta>/` | hecho (falta verlo con el layout y el login de S1) |
+| `user_hp/mobile_mycolle_edit_coverflow.php` | カバーフロー画像設定管理 | `admin.mypage.app-images.edit` `section=cover` | ídem | ídem | hecho (falta verlo con el layout y el login de S1) |
+| `user_hp/mobile_mycolle_edit_banner.php` | バナー画像設定管理 | ídem `section=banner` | ídem | ídem | hecho (falta verlo con el layout y el login de S1) |
+| `user_hp/mobile_mycolle_edit_main.php` | HOMEメインイメージ管理 | ídem `section=main` | ídem | ídem | hecho (falta verlo con el layout y el login de S1) |
+| `user_hp/mobile_mycolle_edit_thumbnail.php` | サムネイル画像管理 | ídem `section=thumbnail` | ídem | ídem | hecho (falta verlo con el layout y el login de S1) |
 | `user_hp/mobile_hp_edit.php` (+ `ajax_change_pattern/pic`, `ajax_picupload`, `pic_config_function`, `base_color_function`) | マイページデザイン管理 | `admin.mypage.app-settings.edit` | `Mypage\AppSettingController@edit/update` | `contents_master` (`apli_customer_group_disp`, `apli_home_comment`), `admin_master` (L) | pendiente **parcial**: solo la opción 「アプリで顧客グループを表示」 (`apli_customer_group_disp`, la lee `appview`) y el comentario HOME (`apli_home_comment`, `mpa_corresponding`). Plantillas/colores/imágenes de diseño: descartado: sin consumidor (`hp/user`) |
 | `user_hp/config.php`, `config_register.php` | ユーザーマイページ設定 | — | — | — | descartado: sin consumidor (`tb_hp_color` solo `hp/`) |
 | `user_hp/topics.php`, `topics_register.php`, `topics_delete_register.php`, `inc/upload_topics.php` | トピックス管理 | — | — | — | descartado: sin consumidor |
@@ -92,22 +92,22 @@ Todo category4 solo alimentaba `hp/` (sitio PC) → el módulo `web` queda **vac
 | `card_signage/edit.php` + `control.php` (`update`, `hyoujiOff`, `delete`) | ペーパーサイネージ 編集 | `admin.terminales.paper-cards.edit/update/stop/destroy` | `…@edit/update/stop/destroy` | ídem | pendiente |
 | `card_signage/aggregate.php` | 集計 | `admin.terminales.paper-cards.stats` | `Terminales\PaperCardStatsController@index` | `tb_url_list`, `url_transfer_data` (S5), `tb_customer` (L) | pendiente |
 | `card_signage/csv_output.php` | 集計CSV | `admin.terminales.paper-cards.stats.csv` | `…@csv` (StreamedResponse) | — | pendiente |
-| `digital_signage/screen_saver_list.php` | 放映素材管理 | `admin.terminales.signage-materials.index` | `Terminales\SignageMaterialController@index` | `tb_screensaver`, `tb_display` (L), `hatuban` | pendiente |
-| `digital_signage/screen_saver_new.php` + `_frm`, `_register`, `pic_up.php` | 放映素材 新規登録 | `…signage-materials.create/store` (+ `upload`) | `…@create/store/upload` | ídem | pendiente |
-| `digital_signage/screen_saver_detail.php` | 放映素材 詳細 | `…signage-materials.show` | `…@show` | ídem | pendiente (sin vista previa `.swf`) |
-| `digital_signage/screen_saver_update.php` | 放映素材 修正 | `…signage-materials.edit/update` | `…@edit/update` | ídem | pendiente |
-| `digital_signage/screen_saver_delete.php`, `_delete_complete.php` | 放映素材 削除 / 完了 | `…signage-materials.destroy` | `…@destroy` | ídem | pendiente |
-| `digital_signage/movie_program_list.php` | 放映プログラム管理 | `admin.terminales.signage-programs.index` | `Terminales\SignageProgramController@index` | `tb_c7_movie_program`, `tb_screensaver` (L), `tb_dispaly_systems` (L), `tb_mycoupon_master` (L), `hatuban` + XML `hp/uploads/c7/display/<cd>.xml` | pendiente |
-| `digital_signage/movie_program_new.php` + `_frm`, `_register`, `xml_up.php` | 放映プログラム 新規登録 | `…signage-programs.create/store` | `…@create/store` | ídem | pendiente (corrige 最後に追加, ver Decisiones) |
-| `digital_signage/movie_program_detail.php` | 放映プログラム 詳細 | `…signage-programs.show` | `…@show` | ídem | pendiente |
-| `digital_signage/movie_program_update.php` | 放映プログラム 修正 | `…signage-programs.edit/update` (botón 「…選択中のディスプレイに反映する」) | `…@edit/update` | ídem | pendiente |
-| `digital_signage/movie_program_delete.php` | 放映プログラム 削除 | `…signage-programs.destroy` | `…@destroy` | ídem | pendiente |
-| `digital_signage/display_list.php` | ディスプレイ管理 | `admin.terminales.signage-displays.index` | `Terminales\SignageDisplayController@index` | `tb_display`, `tb_c7_movie_program` (L), `tb_dispaly_systems` (L), `tb_mycoupon_master` (L), `hatuban` | pendiente |
-| `digital_signage/display_new.php` + `_frm`, `_register` | ディスプレイ 新規登録 | `…signage-displays.create/store` | `…@create/store` | ídem | pendiente |
-| `digital_signage/display_detail.php` | ディスプレイ 詳細 | `…signage-displays.show` | `…@show` | ídem | pendiente |
-| `digital_signage/display_update.php` | ディスプレイ 修正 | `…signage-displays.edit/update` | `…@edit/update` | ídem | pendiente |
-| `digital_signage/display_delete.php` | ディスプレイ 削除 | `…signage-displays.destroy` | `…@destroy` | ídem | pendiente |
-| `digital_signage/xml_info_up.php` | (floormap.xml) | — (servicio) | `Services\Terminales\SignageFeedBuilder::floormap()` | `tb_shop`, `tb_recruit`, `tb_recruit_category` (L) → `floormap.xml` | pendiente |
+| `digital_signage/screen_saver_list.php` | 放映素材管理 | `admin.terminales.signage-materials.index` | `Terminales\SignageMaterialController@index` | `tb_screensaver`, `tb_display` (L), `hatuban` | hecho (falta verlo con el layout y el login de S1) |
+| `digital_signage/screen_saver_new.php` + `_frm`, `_register`, `pic_up.php` | 放映素材 新規登録 | `…signage-materials.create/store` (+ `upload`) | `…@create/store/upload` | ídem | hecho (falta verlo con el layout y el login de S1) |
+| `digital_signage/screen_saver_detail.php` | 放映素材 詳細 | `…signage-materials.show` | `…@show` | ídem | hecho (falta verlo con el layout y el login de S1) (sin vista previa `.swf`) |
+| `digital_signage/screen_saver_update.php` | 放映素材 修正 | `…signage-materials.edit/update` | `…@edit/update` | ídem | hecho (falta verlo con el layout y el login de S1) |
+| `digital_signage/screen_saver_delete.php`, `_delete_complete.php` | 放映素材 削除 / 完了 | `…signage-materials.destroy` | `…@destroy` | ídem | hecho (falta verlo con el layout y el login de S1) |
+| `digital_signage/movie_program_list.php` | 放映プログラム管理 | `admin.terminales.signage-programs.index` | `Terminales\SignageProgramController@index` | `tb_c7_movie_program`, `tb_screensaver` (L), `tb_dispaly_systems` (L), `tb_mycoupon_master` (L), `hatuban` + XML `hp/uploads/c7/display/<cd>.xml` | hecho (falta verlo con el layout y el login de S1) |
+| `digital_signage/movie_program_new.php` + `_frm`, `_register`, `xml_up.php` | 放映プログラム 新規登録 | `…signage-programs.create/store` | `…@create/store` | ídem | hecho (falta verlo con el layout y el login de S1) (corrige 最後に追加, ver Decisiones) |
+| `digital_signage/movie_program_detail.php` | 放映プログラム 詳細 | `…signage-programs.show` | `…@show` | ídem | hecho (falta verlo con el layout y el login de S1) |
+| `digital_signage/movie_program_update.php` | 放映プログラム 修正 | `…signage-programs.edit/update` (botón 「…選択中のディスプレイに反映する」) | `…@edit/update` | ídem | hecho (falta verlo con el layout y el login de S1) |
+| `digital_signage/movie_program_delete.php` | 放映プログラム 削除 | `…signage-programs.destroy` | `…@destroy` | ídem | hecho (falta verlo con el layout y el login de S1) |
+| `digital_signage/display_list.php` | ディスプレイ管理 | `admin.terminales.signage-displays.index` | `Terminales\SignageDisplayController@index` | `tb_display`, `tb_c7_movie_program` (L), `tb_dispaly_systems` (L), `tb_mycoupon_master` (L), `hatuban` | hecho (falta verlo con el layout y el login de S1) |
+| `digital_signage/display_new.php` + `_frm`, `_register` | ディスプレイ 新規登録 | `…signage-displays.create/store` | `…@create/store` | ídem | hecho (falta verlo con el layout y el login de S1) |
+| `digital_signage/display_detail.php` | ディスプレイ 詳細 | `…signage-displays.show` | `…@show` | ídem | hecho (falta verlo con el layout y el login de S1) |
+| `digital_signage/display_update.php` | ディスプレイ 修正 | `…signage-displays.edit/update` | `…@edit/update` | ídem | hecho (falta verlo con el layout y el login de S1) |
+| `digital_signage/display_delete.php` | ディスプレイ 削除 | `…signage-displays.destroy` | `…@destroy` | ídem | hecho (falta verlo con el layout y el login de S1) |
+| `digital_signage/xml_info_up.php` | (floormap.xml) | — (servicio) | `Services\Terminales\SignageFeedBuilder::floormap()` | `tb_shop`, `tb_recruit`, `tb_recruit_category` (L) → `floormap.xml` | hecho (falta verlo con el layout y el login de S1) |
 | `kiosk/movie_program_*` (7) | 映像管理 | — | — | — | descartado: touchcation fuera de alcance |
 | `kiosk/movie_program.php`, `ajax_movie_program.php`, `movie_program_frm_rAJAX.php` | 映像 editor | — | — | — | descartado: touchcation fuera de alcance |
 | `kiosk/movie_program_popPre.php` | プレビュー | — | — | — | descartado: touchcation fuera de alcance |

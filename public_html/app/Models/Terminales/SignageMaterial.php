@@ -63,6 +63,18 @@ class SignageMaterial extends LegacyModel
         return $slots;
     }
 
+    /** `pic_flg` por posición (contrato de las vistas: `$material->picFlags`) */
+    public function getPicFlagsAttribute(): array
+    {
+        return $this->legacySlots('pic_flg');
+    }
+
+    /** `pic_extension` por posición (contrato de las vistas: `$material->picExtensions`) */
+    public function getPicExtensionsAttribute(): array
+    {
+        return $this->legacySlots('pic_extension');
+    }
+
     /** `rank` para un alta: 0 al principio (先頭に追加) o max + 1 del display (最後に追加) */
     public static function rankForNew(?int $displayCd, bool $first): int
     {

@@ -78,6 +78,18 @@ class SignageProgram extends LegacyModel
         return $this->legacySlots($prefix.'tb_mycoupon_master_cds');
     }
 
+    /** `tb_mycoupon_master_cds` posicional (contrato de las vistas: `$program->couponCds`) */
+    public function getCouponCdsAttribute(): array
+    {
+        return $this->couponCds();
+    }
+
+    /** `system_tb_mycoupon_master_cds` posicional (contrato de las vistas: `$program->systemCouponCds`) */
+    public function getSystemCouponCdsAttribute(): array
+    {
+        return $this->couponCds('system_');
+    }
+
     public function terminalTypes(): array
     {
         return $this->legacyList('terminal_type');

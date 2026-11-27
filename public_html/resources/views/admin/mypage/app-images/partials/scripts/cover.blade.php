@@ -2,7 +2,7 @@
     JS de la カバーフロー (mobile_mycolle_edit_coverflow.php). Llama a legacy.mypage.apli-file-upload:
       - subida de archivo: FormData { file, type: 'picUpload' } → { status, imageName | errMsg }
       - borrado:           type=del&pic=<n>                    → { status, res }
-      - guardado:          serialize() de form[name=uploadPicForm] (type=sendData, pic[], target_url[],
+      - guardado:          serialize() de form[name=uploadPicForm] (type=sendData, pic[n], target_url[n],
                            mypage_config[cover][n][shop_cd]) → { status, result | errMsg }
 --}}
 <script type="text/javascript">
@@ -70,8 +70,8 @@ $(function(){
 				tg.parent().parent().find(".url_param").remove();
 				tg.parent().parent().find(".del_pic_wrap").remove();
 
-				tg.parent().prev().html('<img src="{{ $tempImageUrl }}'+json.imageName+'" style="width:100%;"><input type="hidden" name="pic[]" value="'+json.imageName+'">');
-				tg.parent().parent().append('<div class="url_param"><input type="text" name="target_url[]" value="'+pre_url+'" placeholder="http, mailto, telから入力" style="width:96%;"></div>');
+				tg.parent().prev().html('<img src="{{ $tempImageUrl }}'+json.imageName+'" style="width:100%;"><input type="hidden" name="pic[' + tg[0].name.split("image").join("") + ']" value="'+json.imageName+'">');
+				tg.parent().parent().append('<div class="url_param"><input type="text" name="target_url[' + tg[0].name.split("image").join("") + ']" value="'+pre_url+'" placeholder="http, mailto, telから入力" style="width:96%;"></div>');
 			}
 
 			window.onbeforeunload = null;
