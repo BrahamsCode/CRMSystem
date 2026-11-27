@@ -28,11 +28,13 @@ use Illuminate\Support\Facades\DB;
  * - 受付日 (`tb_yoyaku_uketsuke_day`) de los últimos 60 días y las próximas 2 semanas (火曜定休),
  *   sin tocar las franjas que ya existan.
  *
- * Reservas (`tb_yoyaku`): ~64 en las próximas 2 semanas y ~40 pasadas, de los socios demo
- * (`demo%@example.com`) y algunos no socios; altas de administración (entry_type ''), Web (100),
- * Web フリー予約 (101) y クイック予約 (201); ~10 % canceladas (`disp_flg = '9'`). No se envía ningún correo.
+ * Reservas (`tb_yoyaku`) en TODAS las tiendas activas con personal: ~64 aleatorias en las próximas 2 semanas y
+ * ~40 pasadas, de los socios demo (`demo%@example.com`) y algunos no socios; altas de administración (entry_type ''),
+ * Web (100), Web フリー予約 (101) y クイック予約 (201); ~10 % canceladas (`disp_flg = '9'`). Además, casos límite fijos
+ * por tienda (createEdgeCases): de hoy ya terminada / en curso / por venir, cancelada, ダブルブッキング, nombre de
+ * 50 caracteres con kana de ancho medio, comentario largo, Web y クイック. No se envía ningún correo.
  *
- * Idempotente: el marcador es la primera reserva (no socio, `mail = demo-yoyaku@example.com`).
+ * Idempotente: el marcador es una reserva no socio con `mail = demo-yoyaku@example.com`.
  */
 class ReservasDemoSeeder extends Seeder
 {
@@ -72,9 +74,19 @@ class ReservasDemoSeeder extends Seeder
     private const COMMENTS = ['前回と同じ色でお願いします', '駐車場を利用します', '初めての来店です', 'お子様連れです',
         '短めにしたいとのこと', '担当指名あり', '17時までに終わりたい', '頭皮が敏感なので注意'];
 
+    /** Comentario de las dos reservas que se pisan (ダブルブッキング) */
+    public const DOUBLE_BOOKING = 'ダブルブッキング（管理画面から手動登録）';
+
+    /** Nombre largo (se corta a 50 caracteres, el maxlength del formulario r/) y su kana (se guarda en ancho medio) */
+    private const LONG_NAME = 'ヴァンデルヴェルデ・アレクサンドラ・エリザベス・ゴンザレス＝フィッツジェラルド・ミッチェル・ジュニア三世';
+
+    private const LONG_NAME_KANA = 'ヴァンデルヴェルデ アレクサンドラ エリザベス ゴンザレス フィッツジェラルド ミッチェル';
+
     private Generator $faker;
 
     private int $nonMemberSeq = 0;
+
+    private bool $markerDone = false;
 
     public function run(): void
     {
@@ -112,7 +124,7 @@ class ReservasDemoSeeder extends Seeder
                 return;
             }
 
-            $this->createReservations($slotPool, $menus);
+            $this->createReservations($slotPool);
         });
     }
 
@@ -260,8 +272,8 @@ class ReservasDemoSeeder extends Seeder
 
                 continue;
             }
-            if ($day->dayOfWeek === Carbon::TUESDAY) {
-                continue; // 火曜定休
+            if ($day->dayOfWeek === Carbon::TUESDAY && ! $day->isSameDay($today)) {
+                continue; // 火曜定休 (hoy siempre tiene franja, para los casos límite)
             }
             $breakStart = $open + 3 * 3600;
             $hasBreak = $breakStart + 3600 < $close;
@@ -284,34 +296,102 @@ class ReservasDemoSeeder extends Seeder
 
     // ---------------------------------------------------------------- reservas
 
-    private function createReservations(array $slotPool, Collection $menus): void
+    private function createReservations(array $slotPool): void
     {
         $today = now('Asia/Tokyo')->startOfDay();
-        $future = array_values(array_filter($slotPool, fn ($p) => $p['slot']->dayStart()?->gte($today)));
-        $past = array_values(array_filter($slotPool, fn ($p) => $p['slot']->dayStart()?->lt($today)));
-
         $members = DB::table('tb_customer')->where('email1', 'like', 'demo%@example.com')->where('disp_flg', '1')
             ->orderBy('cd')->get(['cd', 'tb_shop_cd', 'name', 'tel', 'kojin_mobile', 'touroku_kubun']);
         $occupied = []; // [slot cd => [[inicio, fin], …]]
-        $first = true;
 
-        foreach ([[$future, self::FUTURE_COUNT, false], [$past, self::PAST_COUNT, true]] as [$pool, $count, $isPast]) {
+        // Primero los casos límite fijos por tienda (incluye el marcador); el resto se reparte sin pisarlos
+        $this->createEdgeCases($slotPool, $members, $occupied);
+
+        $future = array_values(array_filter($slotPool, fn ($p) => $p['slot']->dayStart()?->gte($today)));
+        $past = array_values(array_filter($slotPool, fn ($p) => $p['slot']->dayStart()?->lt($today)));
+        foreach ([[$future, self::FUTURE_COUNT], [$past, self::PAST_COUNT]] as [$pool, $count]) {
             $made = 0;
             for ($try = 0; $pool !== [] && $made < $count && $try < $count * 10; $try++) {
                 $item = $pool[$this->faker->numberBetween(0, count($pool) - 1)];
-                if ($this->createOne($item, $members, $occupied, $isPast, $first)) {
+                if ($this->createRandom($item, $members, $occupied)) {
                     $made++;
-                    $first = false;
                 }
             }
         }
     }
 
-    /** Una reserva en un hueco libre de la franja (rejilla de 30 min, fuera del descanso y sin solapes) */
-    private function createOne(array $item, Collection $members, array &$occupied, bool $isPast, bool $isMarker): bool
+    /**
+     * Casos límite en CADA tienda con franjas hoy:
+     * - hoy: una ya terminada, una en curso, varias por venir (Web 100, Web フリー 101 con nombre de 50 caracteres
+     *   y kana de ancho medio, クイック 201, comentario largo con saltos y caracteres especiales) y una cancelada;
+     * - una ダブルブッキング: dos reservas que se pisan en la misma franja (alta manual desde administración);
+     * - otro día: una Web 100 y una クイック 201 por venir, y una pasada cancelada.
+     * La primera reserva de la primera tienda es el marcador.
+     */
+    private function createEdgeCases(array $slotPool, Collection $members, array &$occupied): void
     {
-        /** @var ReservationSlot $slot */
-        $slot = $item['slot'];
+        $now = now('Asia/Tokyo');
+        $todayKey = $now->format('Y/m/d');
+        $cur = intdiv($now->secondsSinceMidnight(), 1800) * 1800;
+
+        $byShop = [];
+        foreach ($slotPool as $item) {
+            $byShop[$item['shop']][] = $item;
+        }
+
+        foreach ($byShop as $shopCd => $items) {
+            $todayItems = array_values(array_filter($items, fn ($p) => $p['slot']->moushikomi_date === $todayKey));
+            $futureItems = array_values(array_filter($items, fn ($p) => $p['slot']->moushikomi_date > $todayKey));
+            $pastItems = array_values(array_filter($items, fn ($p) => $p['slot']->moushikomi_date < $todayKey));
+            $ofShop = $members->where('tb_shop_cd', $shopCd)->values();
+            $shopMembers = $ofShop->isNotEmpty() ? $ofShop : $members;
+            $member = fn (int $i) => $shopMembers->isNotEmpty() ? $shopMembers[$i % $shopMembers->count()] : null;
+
+            if ($todayItems !== []) {
+                $a = $todayItems[0];
+                // Hora de referencia: la actual; fuera del horario (p. ej. sembrando de madrugada) se usa media jornada,
+                // para que al probar durante el día haya reservas terminadas, en curso y por venir
+                $ref = max((int) $a['slot']->start_time + 3 * 3600, min($cur, (int) $a['slot']->end_time - 4 * 3600));
+                $b = $todayItems[1] ?? $todayItems[0];
+                $plan = [
+                    // [franja, inicio deseado, minutos, socio, datos]
+                    [$a, $ref + 2 * 3600, 60, null, ['entry_type' => Reservation::ENTRY_PUBLIC_WEB_FREE, 'long' => true, 'marker' => ! $this->markerDone]],
+                    [$a, $ref - 3 * 3600, 60, $member(0), ['comment' => '']],                                    // ya terminada
+                    [$a, $ref - 1800, 60, $member(1), ['comment' => '施術中']],                                     // en curso
+                    [$a, $ref + 3600, 60, $member(2), ['entry_type' => Reservation::ENTRY_PUBLIC_WEB]],
+                    [$a, $ref + 3 * 3600, 30, $member(3), ['entry_type' => Reservation::ENTRY_QUICK]],
+                    [$a, $ref + 4 * 3600, 60, $member(4), ['comment' => self::longComment(), 'mark' => '★']],
+                    [$a, $ref + 3600, 60, $member(5), ['cancelled' => true, 'comment' => '電話でキャンセル']],
+                ];
+                foreach ($plan as [$item, $desired, $minutes, $who, $extra]) {
+                    if (($start = $this->freeStart($item['slot'], $desired, $minutes * 60, $occupied)) !== null) {
+                        $this->saveReservation($item, $start, $minutes * 60, $this->firstBaseMenu($item), $who, $extra, $occupied);
+                    }
+                }
+
+                // ダブルブッキング: la 2ª empieza 30 min después de la 1ª, sin comprobar el hueco
+                if (($start = $this->freeStart($b['slot'], $ref + 5400, 5400, $occupied)) !== null) {
+                    $this->saveReservation($b, $start, 5400, $this->firstBaseMenu($b), $member(6), ['comment' => self::DOUBLE_BOOKING], $occupied);
+                    $this->saveReservation($b, $start + 1800, 3600, $this->firstBaseMenu($b), $member(7), ['comment' => self::DOUBLE_BOOKING], $occupied);
+                }
+            }
+
+            foreach ([[$futureItems, ['entry_type' => Reservation::ENTRY_PUBLIC_WEB], $member(8)],
+                [$futureItems, ['entry_type' => Reservation::ENTRY_QUICK], $member(9)],
+                [$pastItems, ['cancelled' => true], $member(10)]] as [$pool, $extra, $who]) {
+                if ($pool === []) {
+                    continue;
+                }
+                $item = $pool[$this->faker->numberBetween(0, count($pool) - 1)];
+                if (($start = $this->freeStart($item['slot'], (int) $item['slot']->start_time + 3600, 3600, $occupied)) !== null) {
+                    $this->saveReservation($item, $start, 3600, $this->firstBaseMenu($item), $who, $extra, $occupied);
+                }
+            }
+        }
+    }
+
+    /** Reserva aleatoria en un hueco libre de la franja (rejilla de 30 min, fuera del descanso y sin solapes) */
+    private function createRandom(array $item, Collection $members, array &$occupied): bool
+    {
         $base = array_keys(array_filter($item['menus'], fn ($m) => $m['type'] !== '2'));
         $options = array_keys(array_filter($item['menus'], fn ($m) => $m['type'] === '2'));
         if ($base === []) {
@@ -326,10 +406,113 @@ class ReservasDemoSeeder extends Seeder
         }
         $duration = max(15, $minutes) * 60;
 
+        $candidates = $this->freeStarts($item['slot'], $duration, $occupied);
+        if ($candidates === []) {
+            return false;
+        }
+        $start = $candidates[$this->faker->numberBetween(0, count($candidates) - 1)];
+
+        // Origen: administración, Web (r/), Web フリー予約, クイック予約
+        $entryType = $this->faker->randomElement([
+            Reservation::ENTRY_ADMIN, Reservation::ENTRY_ADMIN, Reservation::ENTRY_ADMIN, Reservation::ENTRY_ADMIN,
+            Reservation::ENTRY_ADMIN, Reservation::ENTRY_ADMIN, Reservation::ENTRY_PUBLIC_WEB, Reservation::ENTRY_PUBLIC_WEB,
+            Reservation::ENTRY_PUBLIC_WEB, Reservation::ENTRY_PUBLIC_WEB_FREE, Reservation::ENTRY_QUICK,
+        ]);
+
+        $member = null;
+        if ($this->markerDone && $members->isNotEmpty() && $this->faker->boolean(85)) {
+            $ofShop = $members->where('tb_shop_cd', $item['shop'])->values();
+            $list = $ofShop->isNotEmpty() ? $ofShop : $members;
+            $member = $list[$this->faker->numberBetween(0, $list->count() - 1)];
+        }
+        $isAdmin = in_array($entryType, [Reservation::ENTRY_ADMIN, Reservation::ENTRY_QUICK], true);
+
+        $this->saveReservation($item, $start, $duration, [$menuCd, $optionCds], $member, [
+            'entry_type' => $entryType,
+            'cancelled' => $this->faker->boolean(10),
+            'comment' => $isAdmin && $this->faker->boolean(30) ? $this->faker->randomElement(self::COMMENTS) : '',
+            'mark' => $isAdmin && $this->faker->boolean(15) ? $this->faker->randomElement(['★', '◎', '新']) : '',
+            'marker' => ! $this->markerDone, // sin franjas hoy, el marcador es la primera aleatoria
+        ], $occupied);
+
+        return true;
+    }
+
+    /**
+     * Guarda una reserva con los campos que pone cada origen. $extra: entry_type, cancelled, comment, mark,
+     * long (nombre de 50 caracteres = maxlength del formulario r/, kana de ancho medio), marker.
+     *
+     * @param  array{0: int, 1: list<int>}  $menu  [menú base, opciones]
+     */
+    private function saveReservation(array $item, int $start, int $duration, array $menu, ?object $member, array $extra, array &$occupied): void
+    {
+        /** @var ReservationSlot $slot */
+        $slot = $item['slot'];
+        $entryType = (string) ($extra['entry_type'] ?? Reservation::ENTRY_ADMIN);
+        $isWeb = in_array($entryType, [Reservation::ENTRY_PUBLIC_WEB, Reservation::ENTRY_PUBLIC_WEB_FREE], true);
+        $cancelled = (bool) ($extra['cancelled'] ?? false);
+
+        $startAt = $slot->dayStart()->addSeconds($start);
+        $now = now('Asia/Tokyo');
+        $bookedAt = $startAt->copy()->subMinutes($this->faker->numberBetween(60, 21 * 24 * 60));
+        if ($bookedAt->gt($now)) {
+            $bookedAt = $now->copy()->subMinutes($this->faker->numberBetween(5, 600));
+        }
+
+        $data = [
+            'tb_yoyaku_uketsuke_day_cd' => $slot->cd,
+            'start_time' => $start,
+            'end_time' => $start + $duration,
+            'people' => $this->faker->boolean(8) ? 2 : 1,
+            'base_tb_yoyaku_koumoku_master_cd' => (string) $menu[0],
+            'option_tb_yoyaku_koumoku_master_cd' => implode(',', $menu[1]),
+            'free_koumoku' => app(ReservationFlowService::class)->encodeFreeFields([]),
+            'entry_type' => $entryType,
+            'comment' => $isWeb ? '' : (string) ($extra['comment'] ?? ''),
+            'mark' => $isWeb ? '' : (string) ($extra['mark'] ?? ''),
+            'hyouji_flg' => '1',
+            'disp_flg' => $cancelled ? Reservation::DELETED_FLAG : '1',
+        ];
+
+        if ($member) {
+            $data['tb_customer_cd'] = (int) $member->cd;
+            // Web: el teléfono del formulario; administración: sin datos propios (los del socio)
+            $data['tel'] = $isWeb ? (string) ($member->kojin_mobile ?: $member->tel) : null;
+        } else {
+            $this->nonMemberSeq++;
+            if ($extra['long'] ?? false) {
+                $data['name'] = mb_substr(self::LONG_NAME, 0, 50);
+                $data['name_kana'] = mb_substr(mb_convert_kana(self::LONG_NAME_KANA, 'ks'), 0, 50);
+            } else {
+                $data['name'] = $this->faker->lastName() . ' ' . $this->faker->firstName();
+                $kana = $this->faker->lastKanaName() . ' ' . $this->faker->firstKanaName();
+                // Algunos escriben la kana en ancho medio (ｶﾀｶﾅ), como llega a veces del formulario
+                $data['name_kana'] = $this->faker->boolean(30) ? mb_convert_kana($kana, 'ks') : $kana;
+            }
+            $data['tel'] = sprintf('090-0000-%04d', 5000 + $this->nonMemberSeq);
+            $isMarker = ($extra['marker'] ?? false) && ! $this->markerDone;
+            $this->markerDone = $this->markerDone || $isMarker;
+            $data['mail'] = $isMarker ? self::MARKER_MAIL : sprintf('demo-yoyaku%d@example.com', $this->nonMemberSeq);
+        }
+
+        $reservation = new Reservation($data);
+        $reservation->timestamps = false;
+        $reservation->touroku_date = (string) $bookedAt->getTimestamp();
+        $reservation->update_date = (string) $bookedAt->getTimestamp();
+        $reservation->save();
+
+        if (! $cancelled) {
+            $occupied[$slot->cd][] = [$start, $start + $duration];
+        }
+    }
+
+    /** Inicios libres de la franja (rejilla de 30 min) para esa duración: sin descanso ni reservas vigentes */
+    private function freeStarts(ReservationSlot $slot, int $duration, array &$occupied): array
+    {
         $occupied[$slot->cd] ??= DB::table('tb_yoyaku')->where('tb_yoyaku_uketsuke_day_cd', $slot->cd)->where('disp_flg', '1')
             ->get(['start_time', 'end_time'])->map(fn ($r) => [(int) $r->start_time, (int) $r->end_time])->all();
         $busy = $occupied[$slot->cd];
-        if ($slot->start_break_time !== null && $slot->start_break_time !== '') {
+        if ((string) $slot->start_break_time !== '') {
             $busy[] = [$this->clockSeconds((string) $slot->start_break_time, 0), $this->clockSeconds((string) $slot->end_break_time, 0)];
         }
 
@@ -346,73 +529,39 @@ class ReservasDemoSeeder extends Seeder
                 $candidates[] = $s;
             }
         }
-        if ($candidates === []) {
-            return false;
-        }
-        $start = $candidates[$this->faker->numberBetween(0, count($candidates) - 1)];
 
-        // Origen: administración, Web (r/), Web フリー予約, クイック予約
-        $entryType = $isMarker ? Reservation::ENTRY_PUBLIC_WEB : $this->faker->randomElement([
-            Reservation::ENTRY_ADMIN, Reservation::ENTRY_ADMIN, Reservation::ENTRY_ADMIN, Reservation::ENTRY_ADMIN,
-            Reservation::ENTRY_ADMIN, Reservation::ENTRY_ADMIN, Reservation::ENTRY_PUBLIC_WEB, Reservation::ENTRY_PUBLIC_WEB,
-            Reservation::ENTRY_PUBLIC_WEB, Reservation::ENTRY_PUBLIC_WEB_FREE, Reservation::ENTRY_QUICK,
-        ]);
-        $isWeb = in_array($entryType, [Reservation::ENTRY_PUBLIC_WEB, Reservation::ENTRY_PUBLIC_WEB_FREE], true);
-
-        $member = null;
-        if (! $isMarker && $members->isNotEmpty() && $this->faker->boolean(85)) {
-            $ofShop = $members->where('tb_shop_cd', $item['shop'])->values();
-            $list = $ofShop->isNotEmpty() ? $ofShop : $members;
-            $member = $list[$this->faker->numberBetween(0, $list->count() - 1)];
-        }
-
-        $cancelled = ! $isMarker && $this->faker->boolean(10);
-        $startAt = $slot->dayStart()->addSeconds($start);
-        $now = now('Asia/Tokyo');
-        $bookedAt = $startAt->copy()->subMinutes($this->faker->numberBetween(60, 21 * 24 * 60));
-        if ($bookedAt->gt($now)) {
-            $bookedAt = $now->copy()->subMinutes($this->faker->numberBetween(5, 600));
-        }
-
-        $data = [
-            'tb_yoyaku_uketsuke_day_cd' => $slot->cd,
-            'start_time' => $start,
-            'end_time' => $start + $duration,
-            'people' => $this->faker->boolean(8) ? 2 : 1,
-            'base_tb_yoyaku_koumoku_master_cd' => (string) $menuCd,
-            'option_tb_yoyaku_koumoku_master_cd' => implode(',', $optionCds),
-            'free_koumoku' => app(ReservationFlowService::class)->encodeFreeFields([]),
-            'entry_type' => $entryType,
-            'comment' => ! $isWeb && $this->faker->boolean(30) ? $this->faker->randomElement(self::COMMENTS) : '',
-            'mark' => ! $isWeb && $this->faker->boolean(15) ? $this->faker->randomElement(['★', '◎', '新']) : '',
-            'hyouji_flg' => '1',
-            'disp_flg' => $cancelled ? Reservation::DELETED_FLAG : '1',
-        ];
-
-        if ($member) {
-            $data['tb_customer_cd'] = (int) $member->cd;
-            // Web: el teléfono del formulario; administración: sin datos propios (los del socio)
-            $data['tel'] = $isWeb ? (string) ($member->kojin_mobile ?: $member->tel) : null;
-        } else {
-            $this->nonMemberSeq++;
-            $data['name'] = $this->faker->lastName() . ' ' . $this->faker->firstName();
-            $data['name_kana'] = $this->faker->lastKanaName() . ' ' . $this->faker->firstKanaName();
-            $data['tel'] = sprintf('090-0000-%04d', 5000 + $this->nonMemberSeq);
-            $data['mail'] = $isMarker ? self::MARKER_MAIL : sprintf('demo-yoyaku%d@example.com', $this->nonMemberSeq);
-        }
-
-        $reservation = new Reservation($data);
-        $reservation->timestamps = false;
-        $reservation->touroku_date = (string) $bookedAt->getTimestamp();
-        $reservation->update_date = (string) $bookedAt->getTimestamp();
-        $reservation->save();
-
-        if (! $cancelled) {
-            $occupied[$slot->cd][] = [$start, $start + $duration];
-        }
-
-        return true;
+        return $candidates;
     }
+
+    /** El inicio libre más cercano a $desired, o null si la franja no tiene hueco */
+    private function freeStart(ReservationSlot $slot, int $desired, int $duration, array &$occupied): ?int
+    {
+        $best = null;
+        foreach ($this->freeStarts($slot, $duration, $occupied) as $s) {
+            if ($best === null || abs($s - $desired) < abs($best - $desired)) {
+                $best = $s;
+            }
+        }
+
+        return $best;
+    }
+
+    /** [primer menú base del empleado (カット si lo tiene), sin opciones] */
+    private function firstBaseMenu(array $item): array
+    {
+        $base = array_keys(array_filter($item['menus'], fn ($m) => $m['type'] !== '2'));
+
+        return [$base[0] ?? array_key_first($item['menus']), []];
+    }
+
+    /** Comentario largo (~1000 caracteres) con saltos de línea y caracteres que hay que escapar */
+    private static function longComment(): string
+    {
+        $line = '【要確認】前回のカラーで頭皮にかゆみ。<b>薬剤</b>は低刺激 & "ノンジアミン" を使用、\'次回\'も同様に。';
+
+        return mb_substr(implode("\n", array_fill(0, 20, $line)), 0, 1000);
+    }
+
 
     // ---------------------------------------------------------------- utilidades
 
