@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
             FieldSettingSeeder::class,    // configuración de campos y CSV
             CustomerSeeder::class,        // clientes de prueba
             PromotionSeeder::class,       // envíos, cupones, sellos y puntos de prueba
+            MypageSeeder::class,          // S4: マイコレ, オススメ, 求人, ガチャリン
+            TerminalesSeeder::class,      // S4: displays, programas y materiales de señalización
         ]);
     }
 }

@@ -13,6 +13,8 @@
 
 ## 1. Tabla de paridad
 
+> **Avance (2026-11-27):** capa de datos de los submódulos 1–5 hecha (migraciones `…_mypage_*` y `…_terminales_*`, modelos, enums, factories, `MypageSeeder`/`TerminalesSeeder` y `SignageFeedBuilder` con pruebas). Las pantallas siguen `pendiente` hasta que estén el layout y las rutas de admin de S1. Rutas de los reproductores: `routes/publico/senalizacion.php`, nombre `publico.senalizacion.*`.
+
 ### 1.1 マイページ管理 — `mypage` (category6)
 
 | Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas nuevas | Estado |
@@ -99,7 +101,7 @@ Todo category4 solo alimentaba `hp/` (sitio PC) → el módulo `web` queda **vac
 | `digital_signage/movie_program_detail.php` | 放映プログラム 詳細 | `…signage-programs.show` | `…@show` | ídem | pendiente |
 | `digital_signage/movie_program_update.php` | 放映プログラム 修正 | `…signage-programs.edit/update` (botón 「…選択中のディスプレイに反映する」) | `…@edit/update` | ídem | pendiente |
 | `digital_signage/movie_program_delete.php` | 放映プログラム 削除 | `…signage-programs.destroy` | `…@destroy` | ídem | pendiente |
-| `digital_signage/display_list.php` | ディスプレイ管理 | `admin.terminales.signage-displays.index` | `Terminales\SignageDisplayController@index` | `signage_displays`, `signage_display_signage_program`, `signage_display_signage_system` | pendiente |
+| `digital_signage/display_list.php` | ディスプレイ管理 | `admin.terminales.signage-displays.index` | `Terminales\SignageDisplayController@index` | `signage_displays`, `signage_display_signage_system`, `coupon_signage_display` | pendiente (tablas y modelos hechos) |
 | `digital_signage/display_new.php` + `_frm`, `_register` | ディスプレイ 新規登録 | `…signage-displays.create/store` | `…@create/store` | ídem | pendiente |
 | `digital_signage/display_detail.php` | ディスプレイ 詳細 | `…signage-displays.show` | `…@show` | ídem | pendiente |
 | `digital_signage/display_update.php` | ディスプレイ 修正 | `…signage-displays.edit/update` | `…@edit/update` | ídem | pendiente |
@@ -164,7 +166,7 @@ Todo category4 solo alimentaba `hp/` (sitio PC) → el módulo `web` queda **vac
 
 ## 2. Esquema (tablas nuevas)
 
-Todas: `id()` (bigserial), `text` en vez de `varchar`, `smallint` con comentario + enum en vez de booleanos, `status` default 1, `timestamps()`, `softDeletes()` (reemplaza `disp_flg='9'`). `legacy_cd` (`bigint`, índice único) en las tablas que importa S1, para poder resolver las referencias cruzadas (`<>`, `cd` en URL de reproductores). `tb_shop_cd` nulo/0 = 全店舗 → `shop_id` nulo. Fechas texto/epoch → `timestamp`/`date` con Carbon al importar. `hyouji_flg` → `display_flg` (`0` oculto, `1` visible).
+Todas: `id()` (bigserial), `text` en vez de `varchar`, `smallint` con comentario + enum en vez de booleanos, `status` default 1, `timestamps()`, `softDeletes()` (reemplaza `disp_flg='9'`). Códigos legacy (CONVENCIONES §4): `id = cd` en las tablas cuyo `cd` sale en un contrato (`signage_displays`, `signage_programs`, `signage_materials`, `web_signage_terminals`); `legacy_cd` + discriminador solo en `web_signage_contents` (fusiona dos tablas); el resto se resuelve con `legacy_id_map` del importador de S1. `tb_shop_cd` nulo/0 = 全店舗 → `shop_id` nulo. Fechas texto/epoch → `timestamp`/`date` con Carbon al importar. `hyouji_flg` (表示/非表示, 停止) → `status` (`0` inactivo, `1` activo); no hay `display_flg`.
 
 ### 2.1 `mypage`
 
@@ -182,13 +184,12 @@ Todas: `id()` (bigserial), `text` en vez de `varchar`, `smallint` con comentario
 
 **`app_image_shop`** (`app_image_id`, `shop_id`, `id`) — `mypage_config[sección][hueco][shop_cd] = 1`.
 
-**`app_settings`** (fila única, `id = 1`): `customer_group_display_flg` smallint (`apli_customer_group_disp`), `home_comment` text (`apli_home_comment`), `comment_flg` smallint (`mypage_config['comment_flg']`). *Si S1 crea una tabla genérica de configuración (`contents_master`), se mueve allí: ver Pedidos.*
+**`app_settings`** (fila única, `id = 1`): `customer_group_display_flg` smallint (`apli_customer_group_disp`), `home_comment` text (`apli_home_comment`), `home_comment_flg` smallint (`mypage_config['comment_flg']`). Tabla del módulo (CONVENCIONES §4: configuración por módulo).
 
 **`recommendations`** ← `tb_hp_recommend`
 
 | Columna | Tipo | Origen |
 |---|---|---|
-| `legacy_cd` | bigint unique | `cd` |
 | `shop_id` | bigint null FK | `tb_shop_cd` (0/null → null) |
 | `published_on` | date | `disp_date` (`Y/m/d` texto) |
 | `title` | text | `title` |
@@ -199,18 +200,18 @@ Todas: `id()` (bigserial), `text` en vez de `varchar`, `smallint` con comentario
 | `image_type` | smallint null | `img_type` |
 | `image_link_url` | text null | `pic_link` |
 | `push_flg` | smallint | (formulario `push`; no se guardaba) `0`/`1` |
-| `display_flg` | smallint | `hyouji_flg` (`9` → softDelete; la app lo excluye) |
+| `status` | smallint | `hyouji_flg` (`1` 表示, otro → `0`); `disp_flg='9'` → softDelete |
 | `updated_at` | | `update` |
 
-**`job_categories`** ← `tb_recruit_category`: `legacy_cd`, `shop_id` (`tb_shop_cd`), `name` (`shokushu`), `created_at` (`touroku_date`), `updated_at` (`update_date`), `deleted_at` (`disp_flg='9'`).
+**`job_categories`** ← `tb_recruit_category`: `shop_id` (`tb_shop_cd`), `name` (`shokushu`), `created_at` (`touroku_date`), `updated_at` (`update_date`), `deleted_at` (`disp_flg='9'`).
 
 **`job_postings`** ← `tb_recruit`
 
 | Columna | Origen | Columna | Origen |
 |---|---|---|---|
-| `legacy_cd` | `cd` | `holidays` | `kyuka` |
-| `shop_id` | `tb_shop_cd` | `benefits` | `taigu` |
-| `job_category_id` | `boshu_shokushu` → `job_categories.legacy_cd` | `image1_path`, `image2_path` | `pic_flg1`, `pic_flg2` + archivo |
+| `shop_id` | `tb_shop_cd` | `holidays` | `kyuka` |
+| `status` | `disp_flg` (`9` → softDelete) | `benefits` | `taigu` |
+| `job_category_id` | `boshu_shokushu` (vía `legacy_id_map`) | `image1_path`, `image2_path` | `pic_flg1`, `pic_flg2` + archivo |
 | `headline` | `boshu_headline` | `company_name` | `kaisha_name` |
 | `description` | `shigoto_naiyou` | `street_address` | `add` |
 | `employment_type` | `koyou_keitai` (texto libre) | `tel` | `tel` |
@@ -224,52 +225,51 @@ Todas: `id()` (bigserial), `text` en vez de `varchar`, `smallint` con comentario
 
 ### 2.2 `terminales`
 
-**`paper_cards`** ← `tb_url_list`: `legacy_cd` (`cd`), `code` text (`id`; único entre no borrados; vacío → `CRM` + `cd` 9 dígitos), `url`, `title`, `display_flg` (`hyouji_flg`; `hyoujiOff` = 停止), `deleted_at` (`disp_flg='9'`). Índice único parcial `code WHERE deleted_at IS NULL`.
+**`paper_cards`** ← `tb_url_list`: `code` text (`id`; único entre no borrados; vacío → `CRM` + `cd` 9 dígitos), `url`, `title`, `status` (`hyouji_flg`; `hyoujiOff` = 停止 = `0`; `ptag` de S5 solo redirige con `status = 1`), `deleted_at` (`disp_flg='9'`). Índice único parcial `code WHERE deleted_at IS NULL`. S5 crea `paper_card_accesses` (FK a `paper_cards`); el 集計 une `paper_card_accesses` con `customers` (modelo `PaperCardAccess` de S5) y su CSV sale en SJIS-win.
 
 **`felica_cards`** ← `tb_customer_card`
 
 | Columna | Origen |
 |---|---|
-| `legacy_cd` | `cd` |
 | `shop_id` / `terminal_id` | `tb_shop_cd` / `tb_terminal_cd` (FK a tablas de S1) |
 | `customer_id` | `tb_customer_cd` (unique parcial: un socio = una tarjeta) |
 | `staff_id` | `tb_staff_cd` (sin FK hasta que S1 tenga `staff`) |
-| `felica_no` | `tid` (IDm) |
+| `felica_no` | `cid` (IDm que escribe el lector; `tid` está comentado en el legacy) |
 | `card_id`, `card_type`, `card_type_expiry`, `card_status` | `cid`, `typ`, `typ_exp`, `sts` |
-| `name`, `comment` | `name`, `comment` |
+| `comment` | `comment` |
 | `point`, `lost_flg` | `point`, `lost` |
-| `type` | smallint `type` |
+| `source_path` | `type` (el legacy guarda ahí `PHP_SELF` del lector, texto) |
 | `expires_on` | `limit_date` |
 | `terminal_no` | `terminal_no` (androidId del lector) |
 | `created_at`/`updated_at` | `touroku_date`/`update_date` |
 
-El borrado legacy es físico: aquí softDelete + `customers.felica_no = null` (S2).
+`tb_customer_card.name` no se migra: ningún código lo escribe (el lector solo inserta `cd` y actualiza `cid`, `typ`, `typ_exp`, `terminal_no`, `type`); el filtro 会員名 de カード管理 busca por el nombre del socio (`customers.last_name`/`first_name`). El borrado legacy es físico: aquí softDelete y `CustomerFelicaService::detach()` de S2 (nunca se escribe `customers.felica_no` directo). `FelicaCardService::unassign()` lo publica S4 para el UID解除 de la ficha de S2.
 
-**`signage_systems`** ← `tb_dispaly_systems` (catálogo de 「システム」 que muestra la pantalla): `legacy_cd`, `shop_id`, `name`, `system_type` smallint, `system_flg` smallint, `non_coupon_flg`, `sort` (`rank`).
+**`signage_systems`** ← `tb_dispaly_systems` (catálogo de 「システム」 que muestra la pantalla): `shop_id`, `name`, `system_type` smallint, `system_flg` smallint, `non_coupon_flg`, `sort` (`rank`).
 
 **`signage_materials`** ← `tb_screensaver`
 
 | Columna | Origen |
 |---|---|
-| `legacy_cd` | `cd` |
+| `id` | `cd` (sale en el XML: `<p cd=…>`) |
 | `shop_id` | `tb_shop_cd` |
 | `title`, `comment` | `title`, `comment` |
-| `type` | smallint `type_flg` (`1` imagen, `2` vídeo, …) — enum `SignageMaterialType` |
-| `path` | `data`/`pic_flg` + `pic_extension` → Storage `signage/materials/` |
-| `file_type` | `filetype` |
+| `file_type` | smallint `filetype` (texto japonés: 1 画像ファイル, 2 FLVファイル, 3 SWFファイル) — enum `SignageFileType`, que devuelve el texto para el XML |
+| `images` | jsonb `[{flg, ext, path}]` desde `pic_flg`/`pic_extension` (`<>`) → Storage `signage/materials/` |
+| `material_type`, `data`, `select_flg` | `type_flg`, `data`, `select_flg` |
 | `duration_seconds` | integer `play_frame_sec` |
 | `select_flg` | `select_flg` |
 | `category_value` | `categorize_value_0` |
 | `sort` | `rank` |
 | `signage_display_id` | `tb_display_cd` (null si 0) |
 
-**`signage_programs`** ← `tb_c7_movie_program`: `legacy_cd`, `shop_id`, `name`, `comment`, `terminal_code` (`terminal_id`), `terminal_type` smallint, `sort` (`rank`), `action_flg` (`act_flg`), `member_flg` (`kaiin_flg`), `felica_action_flg` (`feli_act_flg`), `mypage_action_flg` (`mypage_act_flg`), `display_config` (`disp_conf`), `ticker_text` (`telop_comment`), `vertical_setting`, timestamps (`touroku_date`/`update_date`; `updated_at` es lo que sondea el reproductor).
+**`signage_programs`** ← `tb_c7_movie_program`: `id` = `cd` (nombre del XML), `shop_id`, `name`, `comment`, `terminal_code` (`terminal_id`), `terminal_types` jsonb (`terminal_type` `<>`), `sort` (`rank`), `action_flg` (`act_flg`), `member_flg` (`kaiin_flg`), `felica_action_flg` (`feli_act_flg`), `mypage_action_flg` (`mypage_act_flg`), `content_mode` (`disp_conf`: 1 放映ファイル選択 → XML con materiales, 2 システム内蔵 → XML vacío), `ticker_text` (`telop_comment`), `vertical_setting`, timestamps (`touroku_date`/`update_date`; `updated_at` es lo que sondea el reproductor).
 
-**`signage_material_signage_program`** (pivote) ← `tb_screensaver_cds` (`<>`): `signage_program_id`, `signage_material_id`, `position` (orden de la lista), `id`.
+**`signage_material_signage_program`** (pivote) ← `tb_screensaver_cds` (`<>`): `signage_program_id`, `signage_material_id`, `position` (orden de la lista), `id`. **`signage_program_signage_system`** ← `tb_dispaly_systems_cds` del programa.
 
 **`coupon_signage_program`** (pivote) ← `tb_mycoupon_master_cds`, `feli_…`, `mypage_…`, `system_…` (`<>`): `coupon_id`, `signage_program_id`, `usage` smallint (`1` general, `2` felica, `3` mypage, `4` system), `position`.
 
-**`signage_displays`** ← `tb_display`: `legacy_cd`, `shop_id`, `name`, `comment`, `terminal_code` (`terminal_id`), `terminal_types` json (`terminal_type` `<>`: horizontal/vertical), `sort` (`rank`), `display_config` (`disp_conf`), `action_flg`, `member_flg`, timestamps. Pivotes **`signage_display_signage_program`** (`tb_c7_movie_program_cds`, `position`), **`signage_display_signage_system`** (`tb_dispaly_systems_cds`) y cupones en `coupon_signage_display` (`tb_mycoupon_master_cds`).
+**`signage_displays`** ← `tb_display`: `id` = `cd` (`display_cd` del reproductor), `shop_id`, `signage_program_id` (`tb_c7_movie_program_cds`: el formulario elige un solo programa), `name`, `comment`, `terminal_code` (`terminal_id`), `terminal_types` jsonb (`terminal_type` `<>`), `sort` (`rank`), `content_mode` (`disp_conf`), `action_flg`, `member_flg`, timestamps. Pivotes **`signage_display_signage_system`** (`tb_dispaly_systems_cds`) y cupones en `coupon_signage_display` (`tb_mycoupon_master_cds`).
 `tb_master_cd` (todas): no se usa en ninguna pantalla vigente → no se migra.
 
 **FeliCa / terminales:** `tb_terminal` → `terminals` (S1). Columnas que necesito (pedido): `sort` (`rank`), `terminal_no`, `model`, `type`, `comment`. Beacons: sin tablas (BD externa).
@@ -280,11 +280,11 @@ Se importan desde la BD `admin` a tablas propias del CRM (no conexión adicional
 
 | Tabla nueva | Origen | Columnas |
 |---|---|---|
-| `web_signage_terminals` | `terminal` | `legacy_cd` (`cd`, lo usa `view/?cd=`), `name`, `web_signage_package_id` (`packages_cd`), `orientation` smallint (`display_direction`: 1 縦, 2 横), `screen_count` (`display_number`), `layout` text (`display_type` = nombre del diseño `h_*`/`v_*`), `status` (`flg`) |
-| `web_signage_packages` | `packages` | `legacy_cd`, `name`, `orientation`, `screen_count`, `layout` |
-| `web_signage_cycles` | `cycle` | `legacy_cd`, `web_signage_package_id`, `frame_no` (`flame_cd`), `items` jsonb (`img_path_ary` + `action_ary` **unserialize en el importador, con `allowed_classes=false`** → `[{content_id, action}]`), `repeat_type` smallint (`schedule_repeat_type`: 1 siempre, 2 franja diaria, 3 rango de fechas), `starts_at`/`ends_at` (`schedule_start_time`/`_end_time`; tipo 2 se guarda como `time`: columnas `daily_start`, `daily_end`), `status` |
-| `web_signage_content_categories` | `contents_category` | `legacy_cd`, `width`, `height`, `name` |
-| `web_signage_contents` | `contents` + `movie_contents` | `legacy_cd`, `kind` smallint (1 imagen, 2 vídeo), `web_signage_content_category_id`, `name`, `path` (Storage `signage/web/<w>x<h>/<cd>.<ext>`) |
+| `web_signage_terminals` | `terminal` | `id` = `cd` (lo usa `view/?cd=`), `name`, `web_signage_package_id` (`packages_cd`), `orientation` smallint (`display_direction`: 1 縦, 2 横), `screen_count` (`display_number`), `layout` text (`display_type` = nombre del diseño `h_*`/`v_*`), `status` (`flg`) |
+| `web_signage_packages` | `packages` | `name`, `orientation`, `screen_count`, `layout` |
+| `web_signage_cycles` | `cycle` | `web_signage_package_id`, `frame_no` (`flame_cd`), `items` jsonb (`img_path_ary` + `action_ary` **unserialize en el importador, con `allowed_classes=false`** → `[{content_id, action}]`), `repeat_type` smallint (`schedule_repeat_type`: 1 siempre, 2 franja diaria, 3 rango de fechas), `starts_at`/`ends_at` (`schedule_start_time`/`_end_time`; tipo 2 se guarda como `time`: columnas `daily_start`, `daily_end`), `status` |
+| `web_signage_content_categories` | `contents_category` | `width`, `height`, `name` |
+| `web_signage_contents` | `contents` + `movie_contents` | `legacy_cd` + `kind` (discriminador), `kind` smallint (1 imagen, 2 vídeo), `web_signage_content_category_id`, `name`, `path` (Storage `signage/web/<w>x<h>/<cd>.<ext>`) |
 | `web_signage_files` | `signage` | `name`, `path`, `mime` |
 | `web_signage_contacts` | `contact` | `customer_ref`, `body`, `sent_at` |
 
@@ -298,9 +298,10 @@ Se importan desde la BD `admin` a tablas propias del CRM (no conexión adicional
 
 | Legacy | Reemplazo |
 |---|---|
-| `hatuban` (`SELECT … FOR UPDATE` + `kazu+1`) | PK `bigserial`; `legacy_cd` conserva el código viejo |
+| `hatuban` (`SELECT … FOR UPDATE` + `kazu+1`) | PK `bigserial`; `id = cd` donde hay contrato, `legacy_id_map` (S1) en el resto |
 | `disp_flg='9'` | `SoftDeletes` |
-| `hyouji_flg`, `pic_flg`, banderas texto | `smallint` + enum |
+| `hyouji_flg` | `status` |
+| `pic_flg`, banderas texto | `smallint` + enum |
 | Listas `<>` / `||` en columnas, `serialize()` | Tablas pivote con `position`; `jsonb` (sin `unserialize` en runtime) |
 | Subida a `hp/uploads/c6|c7/…` + `temp/` + `system("find … -mtime +1 -exec rm")` | `Storage::disk('public')`; comando `mypage:prune-temp-uploads` registrado en `MypageServiceProvider` (Scheduler diario); URL viejas `/hp/uploads/...` redirigidas (Pedidos) |
 | Miniaturas generadas con GD a mano | Servicio `ImageResizer` (paquete de imágenes que defina S1; mientras, GD nativo) |
@@ -342,8 +343,9 @@ Se importan desde la BD `admin` a tablas propias del CRM (no conexión adicional
 ## 5. Pedidos
 
 **A S0 / S1 (núcleo)**
-1. Archivo de rutas públicas para dispositivos (sin `auth:admin`, sin CSRF, sin prefijo) — el mismo que pidió S6 (`routes/dispositivos.php`) o `routes/modulos/senalizacion-publico.php` cargado fuera del grupo `admin`. URL literales con `.php`: `/signage/view/*`, `/digitalsignage/*`, `/hp/uploads/c7/display/{cd}.xml`.
-2. Redirección genérica `GET /hp/uploads/{path}` → `Storage` (la usan la app y los reproductores; compartida con S5).
+1. ~~Rutas públicas~~ **Resuelto:** `routes/publico/senalizacion.php` (nombre `publico.senalizacion.*`), fuera del grupo `admin`, sin CSRF ni prefijo. URL literales: `/signage/view/*`, `/digitalsignage/*`, `/hp/uploads/c7/display/{cd}.xml` (`floormap.xml` incluido; tiene prioridad sobre la redirección genérica).
+2. **Resuelto:** redirección genérica `GET /hp/uploads/{path}` → Storage (S1). Las imágenes de マイコレ se guardan con su nombre legacy en `hp/uploads/c6/<carpeta>/<archivo>` del disco public.
+2b. **Nuevo:** columnas de `shops` para `floormap.xml`: `floor_name` (text), `service_category` (`service_kubun`), `company_details` (jsonb `[[etiqueta, valor]]` desde `kaisha_data` `etiqueta<>valor||…`). Mientras falten, `SignageFeedBuilder::floormap()` devuelve el XML vacío.
 3. `terminals`: columnas `sort` (`rank`), `terminal_no`, `model`, `type`, `comment` (mapeo de `tb_terminal`).
 4. Paquetes: imágenes (miniaturas), QR, PDF con fuente japonesa.
 5. `config/services.php` → `push.host` (`b.g-api.net` / `b-develop.g-api.net`) y `config/database.php` → conexión `beacon` (`DB_BEACON_*`).
@@ -351,9 +353,9 @@ Se importan desde la BD `admin` a tablas propias del CRM (no conexión adicional
 7. Importador: mapeo de la sección 2 (incluida la BD `admin` de `signage/` y los archivos de `hp/uploads/c6|c7` y `signage/upload/`). Si S1 crea una tabla genérica para `contents_master`, decidir si `app_settings`/`lottery_settings` se mueven allí.
 8. Confirmar con Antony si se usan `signage/mail` (GoTel) y `signage/pdf` (請求書/領収書); y si se conserva `beacon` (servidor externo caído).
 
-**A S2 (clientes):** `customers.felica_no` (text, null) y la referencia de la tarjeta de papel (`paper_card_id` o el código de `tb_url_list` con el que se registró el cliente) para el 集計.
-**A S3 (promoción):** lectura de `lottery_settings`/`lottery_prizes` desde el sorteo; servicio para marcar cupón impreso/usado (`ajax_kaiin_mycoupon_print_crawl`).
-**A S5 (integraciones):** `mpa_getCoverFlow`, `mpa_getTopBanner`, `mpa_corresponding` y la lista de オススメ de `appview` leen `app_images`, `app_settings` y `recommendations` (modelos de S4, solo lectura).
+**A S2 (clientes):** **resuelto**: `customers.felica_no` vía `CustomerFelicaService::attach/detach`; no hay `paper_card_id` en `customers` (el 集計 usa `paper_card_accesses` de S5); las visitas del lector, vía `VisitService`/`CustomerEntry`.
+**A S3 (promoción):** **resuelto**: el sorteo lee `LotterySetting`/`LotteryPrize` y cuenta en su `lottery_draws`; los cupones impresos/usados se marcan con `CouponIssuer::markPrinted/markUsed`.
+**A S5 (integraciones):** `mpa_getCoverFlow`, `mpa_getTopBanner`, `mpa_corresponding` y la lista de オススメ de `appview` leen `app_images` (`AppImage::url()` con `?r=<mtime>`, `mtime()`, `position`, `link_url`, scope `visibleForShop`), `app_settings` y `recommendations` (`forShop`). ビーコン (pendiente de Antony) incluirá `tb_beacon_history` para `mpa_setraiten`.
 
 ## 6. Decisiones (de este diseño)
 
@@ -363,3 +365,5 @@ Se importan desde la BD `admin` a tablas propias del CRM (no conexión adicional
 - Bugs que se corrigen: 最後に追加 en `movie_program_register` (columna inexistente) → pivote con `position`; `movie_contents_category` borraba de `contents_category`; franja `hh24:mm`; desplegable de 職種 vacío con una tienda; borrado de imagen que dejaba derivados.
 - `micro-sitios` de `digitalsignage` (inmuebles, recetas) descartados.
 - `.swf` ya no se acepta en las subidas.
+- XML de señalización: misma forma que `xml_up.php`/`xml_info_up.php` (espacios dobles incluidos), pero con los valores escapados para XML; un material borrado se omite (el legacy emitía un `<p>` vacío); 【応募資格】 sale de `requirements` (el legacy repetía 雇用形態); floormap toma el primer 求人 de cada tienda, como el legacy.
+- `tb_customer_card.name` no se migra (nunca se escribe).

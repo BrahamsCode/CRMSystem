@@ -7,19 +7,9 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — Esperar revisión de S0 del diseño (`Doc/diseno/contenido-terminales.md`)
+## Próximo paso — Esperar a S0 (capa de datos 1–5 entregada)
 
-Diseño entregado (2026-11-26). Mientras S0 revisa: factories y seeders del grupo (datos de prueba de señalización). Pedidos: sección 5 del diseño.
-
-## Tarea anterior — Diseño (sin código, hecho)
-
-Escribir `Doc/diseno/contenido-terminales.md`:
-1. **Tabla de paridad:** una fila por cada vista del análisis (`Doc/analisis-legacy/04-web-y-mypage.md`; en `05-operaciones-terminales-reservas.md` solo la sección de category7 (端末管理) **sin** 情報端末管理 (`kiosk/`); en `08-quiosco-y-senalizacion.md` solo signage y digitalsignage): archivo legacy, título (ja), ruta Laravel (`admin.<modulo>.*`), controlador@método, tablas nuevas, estado (`pendiente` / `descartado: motivo`).
-2. **Esquema:** tablas nuevas según `Doc/database/ESTANDARES_BD.md`, reutilizando lo que ya existe en `public_html/app/Models` y `database/migrations`. Mapeo columna a columna desde las `tb_*` legacy (lo usará el importador de S1).
-3. **Servicios viejos → Laravel 13:** cada uno con su reemplazo (Mail + cola, Scheduler, StreamedResponse, Storage, Policies…).
-4. **Orden de implementación** por submódulo, con dependencias de otros grupos y estimación en puntos (1 punto ≈ media jornada).
-5. **Pedidos** a S1 (núcleo) y a otros grupos.
-Criterio de terminado: todas las vistas del análisis tienen fila; avisar a S0 y esperar su revisión. Mientras esperas, puedes preparar factories y seeders de tu grupo (en tus carpetas).
+Capa de datos de los submódulos 1–5 hecha y en verde (2026-11-27). Siguiente, cuando S1 integre layout, rutas de admin y Policies: pantallas en el orden del diseño (§4), empezando por マイコレ. Sin núcleo se puede adelantar: rutas públicas `routes/publico/senalizacion.php` (XML `hp/uploads/c7/display/{cd}.xml` y `floormap.xml`) con su prueba.
 
 ## Después (cuando S0 apruebe el diseño y el núcleo esté integrado)
 
@@ -36,14 +26,18 @@ Implementar submódulo por submódulo en el orden del diseño: migraciones, mode
 
 ## Pedidos
 
-Ver `Doc/diseno/contenido-terminales.md` §5 (rutas públicas de dispositivos, redirección `hp/uploads`, columnas de `terminals`, paquetes imagen/QR/PDF, `push.host`, conexión `beacon`, Policies; a S2 `customers.felica_no`).
+Ver diseño §5. Abiertos: a S1 columnas de `terminals`, de `shops` para floormap (`floor_name`, `service_category`, `company_details`), paquetes imagen/QR/PDF, `push.host`, conexión `beacon`, Policies, importador. A Antony (vía S0): GoTel/PDF y ビーコン.
 
 ## Decisiones
 
 - S0 (2026-11-26): touchcation y `category7/kiosk` fuera de alcance (no se usan). La AppKey `md5(host<>rank)` era de `signageApp` (touchcation): ya no aplica a S4.
 - category4 entero y lo de category6 que solo leía `hp/`: descartado: sin consumidor. Vivo: マイコレ, 2 opciones de app, オススメ, 求人, ガチャリン.
-- Tablas pivote en vez de listas `<>`; `legacy_cd` para el importador; XML del reproductor servido por Laravel en la misma URL.
+- Tablas pivote en vez de listas `<>`; `id = cd` en displays, programas, materiales y `web_signage_terminals`; `legacy_cd` solo en `web_signage_contents`; resto por `legacy_id_map` (S1). `hyouji_flg` → `status`.
+- XML: misma forma que el legacy pero escapado; 【応募資格】 corregido; materiales borrados se omiten. `tb_customer_card.name` no se migra (nunca se escribía).
+- Imágenes de マイコレ con su nombre legacy en `hp/uploads/c6/<carpeta>/` del disco public. `DatabaseSeeder` llama a `MypageSeeder` y `TerminalesSeeder` (2 líneas).
 
 ## Hecho
+
+- 2026-11-27 Capa de datos 1–5: 5 migraciones, 11 modelos, 5 enums, 7 factories, 2 seeders, `SignageFeedBuilder` + 14 pruebas (suite 100 verde).
 
 - 2026-11-26 Diseño `Doc/diseno/contenido-terminales.md` (paridad, esquema con mapeo, servicios, orden 60 pts, pedidos).
