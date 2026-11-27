@@ -60,17 +60,17 @@ Integraciones: `routes/publico/integraciones.php`, que S1 carga fuera del grupo 
 
 | Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas legacy | Estado |
 |---|---|---|---|---|---|
-| `working_calendar.php` | 勤怠一覧 (calendario) | `admin.operaciones.working.calendar` | `WorkingController@calendar` | L `tb_shop`, L/E `tb_shop_work`, `hatuban` | pendiente ⏸ (Carbon, sin 1970) |
-| `work_list.php` | 勤怠一覧 (día) | `admin.operaciones.working.day` | `WorkingController@day` | L `tb_shop`, `tb_staff`, `tb_work_time` | pendiente ⏸ |
-| `work_list2.php` | 勤怠一覧 (variante) | `admin.operaciones.working.day2` | `WorkingController@day2` | L las mismas | pendiente ⏸ (comparte servicio con `day`) |
-| `ng_work_list.php` | 勤怠一覧 (NG: sin salida) | `admin.operaciones.working.ng` | `WorkingController@ng` | L las mismas | pendiente ⏸ |
-| `work_list_update.php` | 勤怠情報 | `admin.operaciones.working.update` | `WorkingController@update` | L/E `tb_work_time` | pendiente ⏸ (columna del día por lista blanca 1..31) |
-| `change_syukkin.php` | (ajax 出勤区分) | `admin.operaciones.working.change` (POST) | `WorkingController@change` | L/E `tb_work_time` | pendiente ⏸ (misma respuesta que el legacy) |
+| `working_calendar.php` | 勤怠一覧 (calendario) | `admin.operaciones.working.calendar` | `WorkingController@calendar` | L `tb_shop`, L/E `tb_shop_work`, `hatuban` | hecho (S2) (Carbon, sin 1970; 営業日 de la tienda de la sesión; flechas de mes y 表示 por GET) |
+| `work_list.php` | 勤怠一覧 (día) | `admin.operaciones.working.day` | `WorkingController@day` | L `tb_shop`, `tb_staff`, `tb_work_time` | hecho (S2) (cálculo en `Working/WorkTimeService`; sin la rama Flash del CSV) |
+| `work_list2.php` | 勤怠一覧 (variante) | `admin.operaciones.working.day2` | `WorkingController@day2` | L las mismas | hecho (S2) (comparte servicio con `day`; 早退 con 早出/遅刻 queda vacío: el legacy restaba una variable sin definir) |
+| `ng_work_list.php` | 勤怠一覧 (NG: sin salida) | `admin.operaciones.working.ng` | `WorkingController@ng` | L las mismas | hecho (S2) (el AJAX ya no borra las horas; la paginación funciona) |
+| `work_list_update.php` | 勤怠情報 | `admin.operaciones.working.update` | `WorkingController@update` | L/E `tb_work_time` | hecho (S2) (columna del día por lista blanca 1..31; POST con CSRF en lugar de GET) |
+| `change_syukkin.php` | (ajax 出勤区分) | `admin.operaciones.working.change` (POST) | `WorkingController@change` | L/E `tb_work_time` | hecho (S2) (misma respuesta JSON; solo POST, también en la URL del legacy; corte de las 5:00 en `WorkTimeService::resolveWorkDate()`) |
 | `change_syukkin2.php` | (ajax, sin enlaces) | — | — | — | descartado: sin enlaces y con inyección SQL; su regla «hora < 5 → día anterior» va a `WorkTimeService` |
-| `working_list.php` | スタッフ一覧 (mensual) | `admin.operaciones.working.monthly` | `WorkingController@monthly` | L `tb_shop`, `tb_staff`, `tb_work_time` | pendiente ⏸ |
-| `working_total_list.php` | スタッフ勤怠集計一覧 | `admin.operaciones.working.totals` | `WorkingController@totals` | L `tb_shop`, `tb_shop_work`, `tb_staff`, `tb_work_time` | pendiente ⏸ |
-| `working_chouhyou.php` | 日別シフト管理 (帳票管理) | `admin.operaciones.working.report` | `WorkingController@report` | L `tb_shop`, `tb_staff`, `tb_work_time` | pendiente ⏸ (Gate `viewWorkReport` en lugar de `SERVER_ADDR`) |
-| `csv_download.php`, `csv_download/csv_file_out.php` | (CSV 勤怠 mensual) | `admin.operaciones.working.csv` | `WorkingController@csv` | L `tb_shop`, `tb_staff`, `tb_work_time` | pendiente ⏸ |
+| `working_list.php` | スタッフ一覧 (mensual) | `admin.operaciones.working.monthly` (+ `.search` POST) | `WorkingSummaryController@monthly` | L `tb_shop`, `tb_staff`, `tb_work_time` | hecho (S2): búsqueda de `staff_search_set1/2` en sesión; la paginación funciona (el legacy siempre daba la página 1); 労働時間 con redondeo de 15 min (fatal en PHP 8 en el legacy); 休憩回数 0 sin 外出 (el legacy daba 1) |
+| `working_total_list.php` | スタッフ勤怠集計一覧 | `admin.operaciones.working.totals` (+ `.search` POST) | `WorkingSummaryController@totals` | L `tb_shop`, `tb_shop_work`, `tb_staff`, `tb_work_time` | hecho (S2): cálculo en `Working/WorkingTotals`; 今月の出勤時間 suma 労働時間 (el legacy repetía los días); 休日 del 営業日設定 de la tienda del empleado (el legacy leía la primera fila de tb_shop_work); las columnas de 残業/休日出勤 muestran lo mismo que el legacy (欠勤日数, 外出, 帰社), pendiente de Antony |
+| `working_chouhyou.php` | 日別シフト管理 (帳票管理) | `admin.operaciones.working.report` | `WorkingSummaryController@report` | L `tb_shop`, `tb_staff`, `tb_work_time` | hecho (S2): Gate `operaciones.working-report.enabled` (`CRM_WORKING_REPORT`) en lugar de `SERVER_ADDR`; el master puede elegir tienda (el legacy volvía siempre a la primera); sin arrastre de valores entre días; 就業時間合計 correcto al pasar la medianoche |
+| `csv_download.php`, `csv_download/csv_file_out.php` | (CSV 勤怠 mensual) | `admin.operaciones.working.csv` (+ URL del legacy) | `WorkingSummaryController@csv` | L `tb_shop`, `tb_staff`, `tb_work_time` | hecho (S2): `LegacyCsv` SJIS-win sin comillas ni archivo temporal; csv_file_out.php descarga lo mismo; sin dato de salida la celda queda vacía (el legacy ponía 09:00 o arrastraba el anterior) |
 | `csv_download/csv_file_del.php` | — | — | — | — | descartado: sin archivo temporal |
 
 ### 1.4 スケジュール管理 (`system/category5/schedule/`)

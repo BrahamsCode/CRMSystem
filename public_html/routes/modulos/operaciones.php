@@ -77,4 +77,28 @@ Route::prefix('operaciones')->name('operaciones.')->group(function () {
     Route::post('information', [InformationController::class, 'store'])->name('information.store');
     Route::put('information/{cd}', [InformationController::class, 'update'])->whereNumber('cd')->name('information.update');
     Route::delete('information/{cd}', [InformationController::class, 'destroy'])->whereNumber('cd')->name('information.destroy');
+    // --- W1 (S2) --- 勤怠一覧: calendario, día (+ variante y NG), corrección
+    // working_calendar.php (POST con shop_work_flg=up guarda 営業日/休日), work_list.php, work_list2.php, ng_work_list.php
+    Route::match(['get', 'post'], 'working/calendar', [\App\Http\Controllers\Admin\Operaciones\WorkingController::class, 'calendar'])->name('working.calendar');
+    Route::match(['get', 'post'], 'working/day', [\App\Http\Controllers\Admin\Operaciones\WorkingController::class, 'day'])->name('working.day');
+    Route::match(['get', 'post'], 'working/day2', [\App\Http\Controllers\Admin\Operaciones\WorkingController::class, 'day2'])->name('working.day2');
+    Route::match(['get', 'post'], 'working/ng', [\App\Http\Controllers\Admin\Operaciones\WorkingController::class, 'ng'])->name('working.ng');
+    // 勤怠情報 (work_list_update.php): POST (el legacy escribía con un GET)
+    Route::post('working/update', [\App\Http\Controllers\Admin\Operaciones\WorkingController::class, 'update'])->name('working.update');
+    // AJAX 出勤区分 (change_syukkin.php); los JS usan la URL del legacy (legacy.operaciones.working-change)
+    Route::post('working/change', [\App\Http\Controllers\Admin\Operaciones\WorkingController::class, 'change'])->name('working.change');
+    // --- fin W1 ---
+
+    // --- W2 (S2) --- 勤怠: mensual, 集計, 帳票, CSV
+    // スタッフ一覧 (working_list.php) y スタッフ勤怠集計一覧 (working_total_list.php), con su búsqueda en sesión
+    Route::get('working/monthly', [\App\Http\Controllers\Admin\Operaciones\WorkingSummaryController::class, 'monthly'])->name('working.monthly');
+    Route::get('working/totals', [\App\Http\Controllers\Admin\Operaciones\WorkingSummaryController::class, 'totals'])->name('working.totals');
+    Route::post('working/{screen}/search', [\App\Http\Controllers\Admin\Operaciones\WorkingSummaryController::class, 'search'])
+        ->whereIn('screen', ['monthly', 'totals'])->name('working.search');
+    // 帳票管理 (working_chouhyou.php): en lugar de SERVER_ADDR, la bandera de config/working.php
+    Route::get('working/report', [\App\Http\Controllers\Admin\Operaciones\WorkingSummaryController::class, 'report'])
+        ->middleware('can:operaciones.working-report.enabled')->name('working.report');
+    // CSV 勤怠 del día (csv_download.php): dd = 'Y/n/j', shop_cd
+    Route::match(['get', 'post'], 'working/csv', [\App\Http\Controllers\Admin\Operaciones\WorkingSummaryController::class, 'csv'])->name('working.csv');
+    // --- fin W2 ---
 });

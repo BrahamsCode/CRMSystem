@@ -7,7 +7,7 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — Libre (S0, 2026-11-27): sin filas pendientes según `Doc/qa/paridad.md`. Esperar errores de la regresión de punta a punta de S1 que pase S0.
+## Próximo paso — Libre (S0, 2026-11-27): 勤怠一覧/集計 (`category5/working`) hecho y subido (6cd6464). Pendiente de Antony: qué muestran 普通残業/休日残業/休日出勤 en 集計 (el legacy nunca los calculó) y si 休出勤合計 del 帳票 sigue siendo 外出 × 休憩.
 
 ## Tarea anterior — Diseño (sin código, HECHO)
 
