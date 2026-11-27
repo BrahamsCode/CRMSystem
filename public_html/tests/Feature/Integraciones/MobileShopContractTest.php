@@ -16,15 +16,23 @@ const MS_FIXTURES = __DIR__.'/../../Fixtures/integraciones';
 const MS_PENDING = [];
 
 beforeEach(function () {
+    // firebase/php-jwt es dependencia del proyecto (composer.json de S1): sin él, el vendor del
+    // worktree está desactualizado. Se avisa con claridad en vez de fallar en /api/auth.
+    if (! class_exists(\Firebase\JWT\JWT::class)) {
+        $this->markTestSkipped('falta firebase/php-jwt en vendor: ejecutar composer install en este worktree');
+    }
+
     DB::unprepared(file_get_contents(MS_FIXTURES.'/legacy-base.sql'));
     DB::unprepared(file_get_contents(MS_FIXTURES.'/legacy-seed.sql'));
 
-    // Los mismos valores con los que se grabaron las fixtures (claves solo de prueba)
+    // Los mismos valores con los que se grabaron las fixtures (claves solo de prueba). Se fijan aquí
+    // para que la prueba no dependa del .env ni de la config cacheada del worktree.
+    $keys = realpath(MS_FIXTURES.'/keys');
     config([
+        'services.mobileshop.private_key_path' => $keys.'/test-only-private.pem',
+        'services.mobileshop.public_key_path' => $keys.'/test-only-public.pem',
         'services.mobileshop.api_user' => 'fixture-user',
         'services.mobileshop.api_pass' => 'fixture-pass',
-        'services.mobileshop.private_key_path' => MS_FIXTURES.'/keys/test-only-private.pem',
-        'services.mobileshop.public_key_path' => MS_FIXTURES.'/keys/test-only-public.pem',
         'services.mobileshop.domain_list' => 'test',
         'services.mobileshop.test_database' => null,
         'services.mobileshop.extlink_url' => 'http://127.0.0.1:9',
@@ -34,6 +42,18 @@ beforeEach(function () {
     // extlink caído, como al grabar
     Http::fake(['*' => Http::failedConnection()]);
 });
+
+/** JWT emitido por /api/auth con las credenciales de prueba; falla con la respuesta si no lo hay */
+function mobileShopToken(): string
+{
+    $response = test()->call('POST', '/api/auth', [], [], [], ['CONTENT_TYPE' => 'application/json'],
+        json_encode(['user_id' => 'fixture-user', 'password' => 'fixture-pass']));
+    $jwt = json_decode($response->getContent())->jwt ?? null;
+
+    expect($jwt)->toBeString("/api/auth no devolvió jwt: HTTP {$response->getStatusCode()} {$response->getContent()}");
+
+    return $jwt;
+}
 
 /** Repite un caso del manifiesto contra Laravel */
 function replayMobileShopCase(array $case, ?string $jwt)
@@ -94,14 +114,11 @@ it('reproduce byte a byte las respuestas del legacy de /api/* (salvo mpa_*)', fu
     }
 
     expect($compared)->toBeGreaterThan(30);
-})->skip(fn () => ! class_exists(\Firebase\JWT\JWT::class), 'falta firebase/php-jwt (pedido a S1)');
+});
 
 it('point_use resta puntos y deja el rastro del legacy en tb_point_log (terminal -3, staff -1)', function () {
-    $auth = json_decode($this->call('POST', '/api/auth', [], [], [], ['CONTENT_TYPE' => 'application/json'],
-        json_encode(['user_id' => 'fixture-user', 'password' => 'fixture-pass']))->getContent());
-
     $this->call('POST', '/api/mobile_shop/point_use', [], [], [],
-        ['HTTP_AUTHORIZATION' => 'Bearer '.$auth->jwt, 'CONTENT_TYPE' => 'application/json'],
+        ['HTTP_AUTHORIZATION' => 'Bearer '.mobileShopToken(), 'CONTENT_TYPE' => 'application/json'],
         json_encode(['customer_id' => 1000001, 'shop_cd' => 1, 'use_points' => 10]))
         ->assertOk();
 
