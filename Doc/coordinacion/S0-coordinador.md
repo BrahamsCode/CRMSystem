@@ -73,6 +73,7 @@
   - `tb_mobile_navi` → S4.
   - `numbered_ticket` (クイック予約, solo touchcation, no está en el backup) → descartado.
 - 2026-11-27: CONVENCIONES: `routes/legacy/<modulo>.php`, URL literales `/system/category<N>/…` para los AJAX y formularios de los JS del legacy. S1 las carga sin prefijo, con el guard del personal; el layout pone `X-CSRF-TOKEN` en jQuery. Estáticos de S2 integrados (8e15561).
+- 2026-11-27: integrados la base legacy de S1 (3666439: `LegacyModel`, traits, `Hatuban`, `Shop`/`Staff`/`Terminal`/`AdminMaster`/`ContentsMaster`, autorregistro de providers; 29 pruebas en verde) y los estáticos de S3 y S4 y la ruta del XML de S4. S2–S5 empiezan sus modelos. El parcial y el servicio de búsqueda de clientes de `system/inc` son de S2 (pedido de S3).
 - 2026-11-27: siguiente tarea de S1 (Antony: el login primero): modelo base y traits comunes, luego el login contra el personal del legacy, el layout idéntico y los estáticos comunes.
 
 ## Hecho
