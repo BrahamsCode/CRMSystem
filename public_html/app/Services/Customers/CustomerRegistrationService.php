@@ -207,8 +207,8 @@ class CustomerRegistrationService
         }
     }
 
-    /** createform_sql(): columna(s) de valor según form_type */
-    private function customFieldValues(array $form, array $data): array
+    /** createform_sql(): columna(s) de valor según form_type. También lo usa VisitRecordService */
+    public function customFieldValues(array $form, array $data): array
     {
         $f = 'form' . $form['cd'];
         $v = fn (string $key) => is_array($data[$key] ?? null) ? '' : LegacyText::trim((string) ($data[$key] ?? ''));

@@ -192,56 +192,67 @@ class CustomerFormService
 
         foreach ($this->customCategories() as $category) {
             foreach ($category['forms'] as $form) {
-                $sub = $subs[$form['cd']][0] ?? null;
-                $text = (string) ($sub->text_data ?? '');
-                $f = 'form' . $form['cd'];
-
-                switch ($form['form_type']) {
-                    case 'テキスト': case '半角英数テキスト': case 'メールアドレス': case 'テキストエリア':
-                    case '画像とテキスト': case 'ラジオボタン': case 'セレクト':
-                        $values[$f] = $sub->text_data ?? null;
-                        break;
-                    case '数値テキスト':
-                        $values[$f] = $sub->float_data ?? null;
-                        break;
-                    case 'チェックボックス':
-                        foreach (explode('<>', (string) $form['data']) as $i => $value) {
-                            if ($value !== '' && preg_match('/>' . preg_quote($value, '/') . '</', '>' . $text)) {
-                                $values[$f . '_' . $i] = $value;
-                            }
-                        }
-                        break;
-                    case '年':
-                        $values[$f . 'yyy'] = $sub->text_data ?? null;
-                        break;
-                    case '年月':
-                        $parts = explode('/', $text);
-                        [$values[$f . 'yyy'], $values[$f . 'mmm']] = [$parts[0] ?? null, $parts[1] ?? null];
-                        break;
-                    case '年月日': case '起算日':
-                        $parts = explode('/', $text);
-                        [$values[$f . 'yyy'], $values[$f . 'mmm'], $values[$f . 'ddd']] = [$parts[0] ?? null, $parts[1] ?? null, $parts[2] ?? null];
-                        break;
-                    case '月日':
-                        $parts = explode('/', $text);
-                        [$values[$f . 'mmm'], $values[$f . 'ddd']] = [$parts[0] ?? null, $parts[1] ?? null];
-                        break;
-                    case 'メニュー項目':
-                        if ($text !== '') {
-                            foreach (explode('<>', $text) as $menuCd) {
-                                $values['yoyaku_menu_cd'][$menuCd] = '1';
-                            }
-                        }
-                        break;
-                    case 'テーブル':
-                        foreach (explode('||', $text) as $col => $row) {
-                            foreach (explode('<>', $row) as $i => $cell) {
-                                $values[$f . '_' . $col . '_' . $i] = $cell;
-                            }
-                        }
-                        break;
-                }
+                $values = array_replace_recursive($values, $this->fieldValues($form, $subs[$form['cd']][0] ?? null));
             }
+        }
+
+        return $values;
+    }
+
+    /**
+     * createform_insert_request(): valores de formulario (form{cd}, form{cd}_{n}, form{cd}yyy…) de UN campo a partir
+     * de su fila de tb_customer_sub (null = sin valor). Lo usan la edición del cliente y 来店履歴の追加・修正.
+     */
+    public function fieldValues(array $form, ?object $sub): array
+    {
+        $values = [];
+        $text = (string) ($sub->text_data ?? '');
+        $f = 'form' . $form['cd'];
+
+        switch ($form['form_type']) {
+            case 'テキスト': case '半角英数テキスト': case 'メールアドレス': case 'テキストエリア':
+            case '画像とテキスト': case 'ラジオボタン': case 'セレクト':
+                $values[$f] = $sub->text_data ?? null;
+                break;
+            case '数値テキスト':
+                $values[$f] = $sub->float_data ?? null;
+                break;
+            case 'チェックボックス':
+                foreach (explode('<>', (string) $form['data']) as $i => $value) {
+                    if ($value !== '' && preg_match('/>' . preg_quote($value, '/') . '</', '>' . $text)) {
+                        $values[$f . '_' . $i] = $value;
+                    }
+                }
+                break;
+            case '年':
+                $values[$f . 'yyy'] = $sub->text_data ?? null;
+                break;
+            case '年月':
+                $parts = explode('/', $text);
+                [$values[$f . 'yyy'], $values[$f . 'mmm']] = [$parts[0] ?? null, $parts[1] ?? null];
+                break;
+            case '年月日': case '起算日':
+                $parts = explode('/', $text);
+                [$values[$f . 'yyy'], $values[$f . 'mmm'], $values[$f . 'ddd']] = [$parts[0] ?? null, $parts[1] ?? null, $parts[2] ?? null];
+                break;
+            case '月日':
+                $parts = explode('/', $text);
+                [$values[$f . 'mmm'], $values[$f . 'ddd']] = [$parts[0] ?? null, $parts[1] ?? null];
+                break;
+            case 'メニュー項目':
+                if ($text !== '') {
+                    foreach (explode('<>', $text) as $menuCd) {
+                        $values['yoyaku_menu_cd'][$menuCd] = '1';
+                    }
+                }
+                break;
+            case 'テーブル':
+                foreach (explode('||', $text) as $col => $row) {
+                    foreach (explode('<>', $row) as $i => $cell) {
+                        $values[$f . '_' . $col . '_' . $i] = $cell;
+                    }
+                }
+                break;
         }
 
         return $values;
@@ -412,8 +423,8 @@ class CustomerFormService
         return $bag;
     }
 
-    /** createform_errorcheck() de system/inc/function.php (mensaje sin el <br> final; '' sin error) */
-    private function customFieldError(array $form, array $data): string
+    /** createform_errorcheck() de system/inc/function.php (mensaje sin el <br> final; '' sin error). También lo usa VisitRecordService */
+    public function customFieldError(array $form, array $data): string
     {
         $f = 'form' . $form['cd'];
         $v = fn (string $key) => (string) ($data[$key] ?? '');

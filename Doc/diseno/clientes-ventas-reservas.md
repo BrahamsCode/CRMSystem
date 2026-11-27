@@ -39,7 +39,7 @@ Abreviaturas: `Cu\` = `Admin\Customers\`, `Sa\` = `Admin\Sales\`, `Re\` = `Admin
 | Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas `tb_*` | Estado |
 |---|---|---|---|---|---|
 | `customer_list.php` | 顧客一覧・検索 | `admin.clientes.index`, `.search` | `Cu\CustomerController@index/search` + `CustomerSearch` | L `tb_customer`, `tb_customer_sub`, `tb_search_form`, `tb_search_cate`, `tb_raiten_rireki`, `tb_shop`, `tb_koumoku` | hecho (C1-a; también `legacy.clientes.list` en la URL del legacy; búsqueda en sesión `customer_search.<uniqid>` + espejo `promocion.audience.<uniqid>` para 配信 de S3; envío LINE配信 → S3; CSV template pendiente) |
-| `customer_search.php` | 来店処理 | `admin.clientes.visits`, `.visits.store` | `Cu\VisitController@index/store` + `VisitService::register` | L/E `tb_customer`, `tb_raiten_rireki`, `hatuban`; puntos y sellos vía S3 | pendiente |
+| `customer_search.php` | 来店処理 | `admin.clientes.visits`, `.visits.store` | `Cu\VisitController@index/store` + `VisitService::register` | L/E `tb_customer`, `tb_raiten_rireki`, `hatuban`; puntos y sellos vía S3 | hecho (C3; URL legacy `legacy.clientes.visits[.store]`; mensaje de éxito si se registró la visita) |
 | wrappers `customer_new*.php`, `customer_detail.php`, `customer_recover_confirm.php`, `customer_delete_register.php`, `del_record.php`, `kanren_*` (4), `add_record_*` (3), `photoalbum_*` (3) | (wrappers) | — | — | — | descartado: wrappers de 3 líneas de `inc/` (filas en `inc/`); `kanren_record_confirm.php` roto |
 | `customer_new_complete.php` | 顧客登録情報 | — | — | — | descartado: versión paralela del alta sin enlace; el alta de `inc/` la cubre |
 | `form_config.php`, `form_config_register.php` | 表示・検索・CSV項目設定 | `admin.clientes.field-settings`, `.field-settings.update` | `Cu\FieldSettingController@index/update` | L/E `tb_search_form` (`hissu`, `hyouji_flg`, `serach_flg`, `csv_flg`), `tb_koumoku`; L `tb_search_cate` | hecho (C2; URL legacy `form_config.php`) |
@@ -56,7 +56,7 @@ Abreviaturas: `Cu\` = `Admin\Customers\`, `Sa\` = `Admin\Sales\`, `Re\` = `Admin
 | `raiten_douki.php`, `_frm.php`, `_register.php` | 初回来店動機項目設定 | `admin.clientes.visit-motives` (+`.store/.update/.sort/.destroy`) | `Cu\VisitMotiveController` | L/E `tb_raiten_douki_master`, `hatuban` | hecho (C2) (`cd` con createHatsuban como el legacy) |
 | `point_setting.php`, `_frm.php`, `_register.php` | ポイント管理 | (S3) | — | `tb_point_setting`, `tb_c1_point_setting`, `contents_master` | descartado: lo cubre S3 (Point*); el menú de clientes enlaza a su ruta |
 | `ajax_apliFileUpload.php` | (imágenes マイページ) | (S3) | — | — | descartado: parte de ポイント管理 (S3) |
-| `point_history.php` | ポイント利用一覧 | `admin.clientes.point-history`, `.point-history.csv` | `Cu\PointHistoryController@index/csv` | L `tb_point_log` (S3), `tb_customer`, `tb_shop`, `tb_staff`, `tb_terminal` | pendiente (CSV SJIS-win) |
+| `point_history.php` | ポイント利用一覧 | `admin.clientes.point-history`, `.point-history.csv` | `Cu\PointHistoryController@index/csv` | L `tb_point_log` (S3), `tb_customer`, `tb_shop`, `tb_staff`, `tb_terminal` | hecho (C3; `PointHistoryService`; CSV SJIS-win en `.point-history.csv` y `csv_print=1` en la URL legacy `legacy.clientes.point-history`) |
 | `csv_import.php` | CSVインポート | `admin.clientes.import`, `.import.store` | `Cu\CustomerImportController@create/store` + `CustomerCsvImporter` | E `tb_customer`, `hatuban`; L `tb_staff` | pendiente (`createID`, `randomPass(4)` como el legacy: ver Decisiones) |
 | `csv_export.php`, `csv_from_js.php`, `user_csv.php` | CSV de clientes | `admin.clientes.export` | `Cu\CustomerController@export` + `CustomerCsvExporter` | L `tb_customer`, `tb_customer_group`, `tb_staff`, `tb_raiten_douki_master`, `tb_koumoku` | pendiente (`csv_from_js` y `user_csv` descartados: Flash / huérfano) |
 | `csv_download.php` (+carpeta), `csv_download_ex02.php` (+), `csv_download_template.php` (+) | CSV (Flash) | `admin.clientes.export?format=standard\|ex02\|template` | `Cu\CustomerController@export` | L `tb_customer`, `tb_search_form`, `tb_customer_sub`, `tb_customer_group`, `tb_staff` | standard y ex02 hechos (C1-a, también en sus URL legacy `csv_download*.php`); `template` pendiente |
@@ -83,10 +83,10 @@ Abreviaturas: `Cu\` = `Admin\Customers\`, `Sa\` = `Admin\Sales\`, `Re\` = `Admin
 | `customer_window_close.php` | 顧客登録情報 | `admin.clientes.window-close` | (vista Blade) | — | descartado: el legacy ya no lo usaba (el Refresh a esta pantalla está comentado en `customer_delete_register.php`) |
 | `add_record_new.php`, `add_record_confirm.php`, `add_record_register.php` | 顧客登録情報 (追加情報) | `admin.clientes.custom-records.create/.confirm/.store` | `Cu\CustomRecordController` | L/E `tb_customer_sub` (`category_inner_group`); L `tb_search_form`, `tb_search_cate` | pendiente |
 | `del_record.php` | 顧客登録情報 | `.custom-records.destroy` | `@destroy` | E `tb_customer_sub` | pendiente |
-| `kanren_record_new.php`, `kanren_record_register.php`, `kanren_del_record.php` | 来店履歴の追加・修正 | `admin.clientes.visit-records.create/.store/.destroy` | `Cu\VisitRecordController` + `VisitService` | E `tb_raiten_rireki`, `tb_point_log`, `tb_stamp_log`, `tb_customer_point`, `tb_customer_sub`, `tb_customer`; L `tb_staff`, `tb_shop` | pendiente (transacción con `FOR UPDATE`) |
-| `raiten_register.php`, `raiten_function.php` | (registrar visita) | `admin.clientes.visits.store` | `VisitService::register` | E `tb_raiten_rireki`, `tb_customer` (`shuki_heikin`, `last_raiten_date`), `tb_customer_sub`, `hatuban` | pendiente |
-| `point_register.php`, `ajax_point_register.php` | (ポイント) | `admin.clientes.points.store` | `Cu\CustomerPointController@store` → servicio de puntos de S3 | E `tb_customer_point`, `tb_point_log` | pendiente |
-| `stamp_register.php`, `stamp_use_register.php` | (スタンプ) | `admin.clientes.stamps.store/.use` | `Cu\CustomerStampController` → servicio de sellos de S3 | E `tb_customer.stamp_count`, `tb_stamp_log`; L `tb_mycoupon_master`, `tb_stamp_oshirase_coupon` | pendiente |
+| `kanren_record_new.php`, `kanren_record_register.php`, `kanren_del_record.php` | 来店履歴の追加・修正 | `admin.clientes.visit-records.create/.store/.destroy` | `Cu\VisitRecordController` + `VisitService` | E `tb_raiten_rireki`, `tb_point_log`, `tb_stamp_log`, `tb_customer_point`, `tb_customer_sub`, `tb_customer`; L `tb_staff`, `tb_shop` | hecho (C3; `VisitRecordService::save/delete`, transacción con `FOR UPDATE`; `create` es GET/POST, `destroy` es `POST visit-records/delete`) |
+| `raiten_register.php`, `raiten_function.php` | (registrar visita) | `admin.clientes.visits.store` | `VisitService::register` | E `tb_raiten_rireki`, `tb_customer` (`shuki_heikin`, `last_raiten_date`), `tb_customer_sub`, `hatuban` | hecho (C3; URL legacy `legacy.clientes.raiten-register` → `VisitService::registerManual/deleteManual` + `syncVisitStats`) |
+| `point_register.php`, `ajax_point_register.php` | (ポイント) | `admin.clientes.points.store` | `Cu\CustomerPointController@store` → servicio de puntos de S3 | E `tb_customer_point`, `tb_point_log` | hecho (C3; `Cu\CustomerLoyaltyController@points` + `ManualLoyaltyService` → `PointService::setPoint`; `ajax_point_register.php` descartado: «未使用ファイル» en el legacy) |
+| `stamp_register.php`, `stamp_use_register.php` | (スタンプ) | `admin.clientes.stamps.store/.use` | `Cu\CustomerStampController` → servicio de sellos de S3 | E `tb_customer.stamp_count`, `tb_stamp_log`; L `tb_mycoupon_master`, `tb_stamp_oshirase_coupon` | hecho (C3; `Cu\CustomerLoyaltyController@stamps/useStamps` + `ManualLoyaltyService` → `StampService`) |
 | `karute_frm.php`, `karute_new.php`, `karute_register.php`, `karute_update.php` | カルテ | `admin.clientes.kartes.create/.store/.edit/.update` | `Cu\KarteController` | E `tb_karute`, `hatuban`; L `tb_sejutsu_cate`, `tb_staff`, `tb_shop` | pendiente |
 | `photoalbum_new.php`, `_frm.php`, `_register.php`, `_update.php`, `_delete.php` | マイアルバム | `admin.clientes.photos.*` | `Cu\CustomerPhotoController` + `CustomerPhotoService` | E `tb_photo_album`, `hatuban` | pendiente (archivos en Storage, mismas URL `hp/uploads/...`) |
 | `ajax_picupload.php` | (subida de foto) | `admin.clientes.photos.upload` | `CustomerPhotoController@upload` | — | pendiente (Storage + Intervention en lugar de `system()`) |
@@ -170,41 +170,41 @@ Abreviaturas: `Cu\` = `Admin\Customers\`, `Sa\` = `Admin\Sales\`, `Re\` = `Admin
 
 | Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas `tb_*` | Estado |
 |---|---|---|---|---|---|
-| `karute_new.php` | 売上データ作成 | `admin.ventas.sales.create` | `Sa\SaleController@create` | L `tb_karute_menu` | pendiente |
-| `karute_new_frm.php` | 売上データ作成 (formulario) | `admin.ventas.sales.form` | `Sa\SaleController@form` | L `tb_customer`, `tb_karute_menu`, `tb_karute_waribiki`, `tb_staff` | pendiente |
-| `karute_new_register.php` | 売上データ作成 | `admin.ventas.sales.store` | `Sa\SaleController@store` + `SaleService` | E `tb_customer_sub` (`tb_search_cate_cd = -1`, `category_inner_group` = nº de cuenta), `hatuban` | pendiente (comisión `(int)(base × kingaku_buai / 100)`) |
-| `karute_delete_list.php` | 売上追加・修正・削除 | `admin.ventas.sales.index` | `Sa\SaleController@index` | L `tb_customer_sub`, `tb_customer`, `tb_staff`, `tb_karute_waribiki` | pendiente |
-| `karute_delete_register.php` | 売上追加・修正・削除 | `admin.ventas.sales.destroy` | `@destroy` | E `tb_customer_sub` (`disp_flg = 9`) | pendiente |
-| `karute_menu.php`, `karute_menu_register.php` | メニュー管理 | `admin.ventas.menus.*` | `Sa\ServiceMenuController` | E `tb_karute_menu`, `hatuban` | pendiente |
-| `karute_waribiki.php`, `karute_waribiki_register.php` | 割引管理 | `admin.ventas.discounts.*` | `Sa\DiscountController` | E `tb_karute_waribiki`, `hatuban` | pendiente |
-| `keihi.php`, `keihi_register.php`, `keihi_delete.php` | 経費管理 | `admin.ventas.expenses.*` | `Sa\ExpenseController` | E `tb_customer_sub` (`tb_search_cate_cd = -2`) | pendiente |
-| `staff_total.php`, `ajax_staffTotal.php` | スタッフ別集計 | `admin.ventas.reports.staff` (+`.data`) | `Sa\SalesReportController@staff` | L `tb_customer_sub`, `tb_staff`, `tb_customer` | pendiente (sin límite de 60 días, como el legacy) |
-| `report.php`, `ajax_report.php` | 日報・週報・月報 | `admin.ventas.reports.period` (+`.data`) | `@period` | L `tb_customer_sub`, `tb_shop`, `tb_staff` | pendiente |
-| `ajax_karute_menu_list.php`, `ajax_karute_waribiki_list.php`, `ajax_search_kaiin.php`, `ajax_staff.php` | (utilidades) | `admin.ventas.options.*`, `admin.clientes.lookup` | `Sa\OptionController` | L `tb_karute_menu`, `tb_karute_waribiki`, `tb_customer`, `tb_staff` | pendiente |
+| `karute_new.php` | 売上データ作成 | `admin.ventas.sales.create` | `Sa\SaleController@create` | L `tb_karute_menu` | hecho (V1) |
+| `karute_new_frm.php` | 売上データ作成 (formulario) | `admin.ventas.sales.form` | `Sa\SaleController@form` | L `tb_customer`, `tb_karute_menu`, `tb_karute_waribiki`, `tb_staff` | hecho (V1) |
+| `karute_new_register.php` | 売上データ作成 | `admin.ventas.sales.store` | `Sa\SaleController@store` + `SaleService` | E `tb_customer_sub` (`tb_search_cate_cd = -1`, `category_inner_group` = nº de cuenta), `hatuban` | hecho (V1) (comisión `(int)(base × kingaku_buai / 100)`, precios y `kingaku_buai` leídos de la BD) |
+| `karute_delete_list.php` | 売上追加・修正・削除 | `admin.ventas.sales.index` | `Sa\SaleController@index` | L `tb_customer_sub`, `tb_customer`, `tb_staff`, `tb_karute_waribiki` | hecho (V1) |
+| `karute_delete_register.php` | 売上追加・修正・削除 | `admin.ventas.sales.destroy` | `@destroy` | E `tb_customer_sub` (`disp_flg = 9`) | hecho (V1) |
+| `karute_menu.php`, `karute_menu_register.php` | メニュー管理 | `admin.ventas.menus.*` | `Sa\ServiceMenuController` | E `tb_karute_menu`, `hatuban` | hecho (V1) |
+| `karute_waribiki.php`, `karute_waribiki_register.php` | 割引管理 | `admin.ventas.discounts.*` | `Sa\DiscountController` | E `tb_karute_waribiki`, `hatuban` | hecho (V1) |
+| `keihi.php`, `keihi_register.php`, `keihi_delete.php` | 経費管理 | `admin.ventas.expenses.*` | `Sa\ExpenseController` | E `tb_customer_sub` (`tb_search_cate_cd = -2`) | hecho (V1) |
+| `staff_total.php`, `ajax_staffTotal.php` | スタッフ別集計 | `admin.ventas.reports.staff` (+`.data`) | `Sa\SalesReportController@staff` | L `tb_customer_sub`, `tb_staff`, `tb_customer` | hecho (V2) (sin límite de 60 días, como el legacy) |
+| `report.php`, `ajax_report.php` | 日報・週報・月報 | `admin.ventas.reports.period` (+`.data`) | `@period` | L `tb_customer_sub`, `tb_shop`, `tb_staff` | hecho (V2) |
+| `ajax_karute_menu_list.php`, `ajax_karute_waribiki_list.php`, `ajax_search_kaiin.php`, `ajax_staff.php` | (utilidades) | `admin.ventas.options.*`, `admin.clientes.lookup` | `Sa\OptionController` | L `tb_karute_menu`, `tb_karute_waribiki`, `tb_customer`, `tb_staff` | hecho (V1) (listas: `menus.list`/`discounts.list`; socios y スタッフ: `options.customers`/`options.staff`) |
 | `css/*` | | — | — | — | descartado como vista: `karute_frm.css`, `report.css`, `stafftotal.css` van a `public/legacy/` (pedido S1) |
 
 ### 1.2 販売管理 — `category2/` (módulo `ventas`)
 
 | Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas `tb_*` | Estado |
 |---|---|---|---|---|---|
-| `index.php` | 販売管理トップ | `admin.ventas.home` | `Sa\ModuleController@index` | L `tb_base_system` (S1) | pendiente |
-| `item/list.php` | 商品管理 (商品検索・一覧) | `admin.ventas.products.index` | `Sa\ProductController@index` | L `sales_items` (`disp_flg = 1`), `tb_shop` | pendiente |
-| `item/edit.php` | 商品新規登録 / 編集 | `.products.create/.store/.edit/.update` | `Sa\ProductController` + `StoreProductRequest` | E `sales_items` (`cd` serial propio); L `tb_shop` | pendiente (imágenes 800/320 px en `hp/uploads/c2/item/<cd>/`; editor: el del legacy o el que decida S1) |
-| `item/ajax_edit.php` | (validación) | `admin.ventas.products.validate` (JSON) | `StoreProductRequest` | — | pendiente (el JS del legacy espera esta validación AJAX) |
-| `item/ajax_list_delete.php` | (borrado) | `.products.destroy` | `@destroy` | E `sales_items.disp_flg = 0` | pendiente |
+| `index.php` | 販売管理トップ | `admin.ventas.home` | `Sa\ModuleController@index` | L `tb_base_system` (S1) | hecho (V3) |
+| `item/list.php` | 商品管理 (商品検索・一覧) | `admin.ventas.products.index` | `Sa\ProductController@index` | L `sales_items` (`disp_flg = 1`), `tb_shop` | hecho (V3) |
+| `item/edit.php` | 商品新規登録 / 編集 | `.products.create/.store/.edit/.update` | `Sa\ProductController` + `StoreProductRequest` | E `sales_items` (`cd` serial propio); L `tb_shop` | hecho (V3) (imágenes 800/320 px en `hp/uploads/c2/item/<cd>/`; CKEditor 4 del legacy; HTML sin purificar, como el legacy) |
+| `item/ajax_edit.php` | (validación) | `admin.ventas.products.validate` (JSON) | `StoreProductRequest` | — | hecho (V3) |
+| `item/ajax_list_delete.php` | (borrado) | `.products.destroy` | `@destroy` | E `sales_items.disp_flg = 0` | hecho (V3) |
 
 ### 1.3 予約管理 — `category9/yoyaku/` (módulo `reservas`)
 
 | Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas `tb_*` | Estado |
 |---|---|---|---|---|---|
-| `time_table.php` | 予約表 | `admin.reservas.timetable` (`?view=day\|week\|month`) | `Re\TimetableController@index` | L `tb_base_system_grandchild`, `tb_staff`, `tb_yoyaku`, `tb_yoyaku_config`, `tb_yoyaku_koumoku_master`, `tb_yoyaku_uketsuke_day` | pendiente |
-| `time_table_staff.php` | スタッフ別予約表 | `admin.reservas.timetable.staff` | `@staff` | + `tb_staff_works` | pendiente |
+| `time_table.php` | 予約表 | `admin.reservas.timetable` (parámetros del legacy: `d`, `ichiran=1\|2` + `date`, `isCti`…) | `Re\TimetableController@index` + `TimetableService` | L `tb_base_system_grandchild`, `tb_staff`, `tb_yoyaku`, `tb_yoyaku_config`, `tb_yoyaku_koumoku_master`, `tb_yoyaku_uketsuke_day` | hecho (R4; URL legacy `system/category9/yoyaku/time_table.php` y `system/category9/` → misma acción) |
+| `time_table_staff.php` | スタッフ別予約表 | `admin.reservas.timetable.staff` | `@staff` | + `tb_staff_works` | hecho (R4; URL legacy `time_table_staff.php`) |
 | `new_time_table.php` | 予約表 (nuevo) | — | — | — | descartado: sin enlace, solo carga |
-| `ajax_time_table.php` | — | `admin.reservas.timetable.data` | `@data` + `TimetableService` | L `tb_customer`, `tb_raiten_rireki`, `tb_staff`, `tb_staff_works`, `tb_yoyaku*` | pendiente (misma respuesta HTML/JSON que espera `timetable.js`) |
+| `ajax_time_table.php` | — | `admin.reservas.timetable.data` | `@data` + `TimetableService` | L `tb_customer`, `tb_raiten_rireki`, `tb_staff`, `tb_staff_works`, `tb_yoyaku*` | hecho (R4; URL legacy, mismo fragmento HTML) |
 | `ajax_move_objs.php` | — | `admin.reservas.move` | `Re\ReservationController@move` + `ReservationService::move` | E `tb_yoyaku`, `tb_yoyaku_uketsuke_day` | hecho (R3; URL legacy `system/category9/yoyaku/ajax_move_objs.php`) |
-| `ajax_uketsuke_status.php` | — | `admin.reservas.slots.status` | `Re\ReservationSlotController@status` | E `tb_yoyaku_uketsuke_day.status_flg` + log | pendiente |
-| `ajax_loadNewYoyakuList.php`, `ajax_loadNewRaitenList.php` | — | `admin.reservas.timetable.recent` | `@recent` | L `tb_customer`, `tb_staff`, `tb_yoyaku`, `tb_raiten_rireki` | pendiente |
-| `ajax_getYoyakuDatetimeForm.php` | — | `admin.reservas.datetime-form` | `Re\ReservationController@datetimeForm` | L `tb_staff`, `tb_yoyaku`, `tb_yoyaku_config`, `tb_yoyaku_uketsuke_day` | pendiente |
+| `ajax_uketsuke_status.php` | — | `admin.reservas.slots.status` | `Re\ReservationSlotController@status` | E `tb_yoyaku_uketsuke_day.status_flg` + log | hecho (R2/R4; URL legacy `ajax_uketsuke_status.php`) |
+| `ajax_loadNewYoyakuList.php`, `ajax_loadNewRaitenList.php` | — | `admin.reservas.timetable.recent`, `admin.reservas.timetable.visits` | `@recent`, `@visits` | L `tb_customer`, `tb_staff`, `tb_yoyaku`, `tb_raiten_rireki` | hecho (R4; URL legacy, mismas cookies del panel) |
+| `ajax_getYoyakuDatetimeForm.php` | — | `admin.reservas.datetime-form` | `Re\TimetableController@datetimeForm` | L `tb_staff`, `tb_yoyaku`, `tb_yoyaku_config`, `tb_yoyaku_uketsuke_day` | hecho (R4; URL legacy) |
 | `time_table_function.php`, `sample_array.php` | — | — | — | — | descartado: funciones (`TimetableService`) y datos de ejemplo |
 | `yoyaku.php` | 予約 | `admin.reservas.create` | `Re\ReservationController@create` | L `tb_customer` | hecho (R3) |
 | `yoyaku_calendar.php` | 時間選択 | `admin.reservas.calendar-select` | `@calendar` + `AvailabilityService` | L `tb_setsubi`, `tb_shop`, `tb_staff`, `tb_staff_works`, `tb_yoyaku`, `tb_yoyaku_config`, `tb_yoyaku_koumoku_master`, `tb_yoyaku_uketsuke_day` | hecho (R3) |

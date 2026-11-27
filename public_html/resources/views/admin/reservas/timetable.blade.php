@@ -63,6 +63,8 @@
 
 @section('title', 'トップ -総合業務管理システム-')
 
+@section('wrapClass', 'yoyakuWrap')
+
 @section('css')
 @if ($versionFlg == '1')
 <link href="{{ asset('legacy/system/category9/yoyaku/css/time_table.css') }}" rel="stylesheet" type="text/css" media="all" />
@@ -603,7 +605,7 @@ $(document).ready(function() {
 @endif
 </div>
 
-@if ($realtimePrintEnabled)
+@if ($realtimePrintEnabled && \Illuminate\Support\Facades\Route::has('admin.reservas.printer'))
 <div style="display: none;">
 <iframe src="{{ route('admin.reservas.printer') }}" frameborder="0" width="100" height="100"></iframe>
 </div>
