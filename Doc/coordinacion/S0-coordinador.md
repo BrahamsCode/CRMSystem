@@ -186,6 +186,11 @@
   - `DemoSeeder` (S0, en 63302f5) llama en orden a `database/seeders/Demo/<Modulo>DemoSeeder.php`: S1 Nucleo → S2 Clientes → S3 Promocion → S4 Contenido → S5 Operaciones.
   - Reglas en CONVENCIONES §4: ja_JP con semilla fija, idempotente y que no dependa del orden de desarrollo.
   - Integración: hago merge de cada rama cuando esté en verde y luego `db:seed --class=DemoSeeder` sobre `crmsystem2` (:8081). La comprobación final es revisar a ojo con master que las listas tengan datos.
+- 2026-11-27: datos de demo integrados (S1 93e45f9, S2 8e5bba9, S3 da74db7, S4 55bad98, S5 b1fb055) y cargados en `crmsystem2` (:8081):
+  - Volumen: 4 tiendas, 13 staff (clave demo1234), 300 clientes, 1537 visitas, 104 reservas, 8 cupones, 21 envíos y 勤怠.
+  - Arreglo de S3: los cd en formato legacy (point_shikkou_alert, por ejemplo) usan `legacyCd` y no pasan por hatuban.
+  - Pendiente de Antony: si activa el modo ext-shop para la demo (una fila de contents_master; lo detalla NUCLEO.md §13).
+  - `artisan test --parallel` da 8 fallos de signage: las BD paralelas no tienen ese esquema. La referencia es la suite en serie.
 
 ## Hecho
 
