@@ -185,3 +185,16 @@ it('M6: registra una リマインダ con la SELECT de reservas y la envía a qui
     $counts = app(\App\Services\Promotions\MailSender::class)->send(500);
     expect($counts['total'] ?? null)->toBe(1);
 });
+
+it('los 通知 de フォロー y 自動 siguen en プッシュ通知新規作成 y 過去配信 enlaza la クリック詳細 del push', function () {
+    $this->post(route('admin.promocion.follow.rule-confirm'), ['kind' => 'followPush', 'shop_cd' => '1', 'step1' => '2', 'step2_1' => '3', 'step2_jikan' => '08', 'step2_fun' => '00'])
+        ->assertOk()->assertSee('action="'.route('admin.promocion.push.create').'"', false)->assertSee('name="type_flg" value="follow"', false);
+
+    $this->post(route('admin.promocion.auto.select'), ['act' => 'up', 'kind' => 'autoPush', 'step1' => '2', 'step2_3' => '1', 'step2_jikan' => '09', 'step2_fun' => '00'])
+        ->assertOk()->assertSee('action="'.route('admin.promocion.push.create').'"', false)->assertSee('name="type_flg" value="auto"', false);
+
+    DB::table('admin_master')->update(['application_use_flg' => 1]);
+    DB::table('mailmag_master')->insert(['cd' => 900, '店id' => '1', 'タイトル' => 'T', '配信状況' => '2', '配信日' => '2026/11/20', '配信日時' => '2026/11/20 10:00:00', '配信総数' => 1, 'type_flg' => '']);
+    $this->get(route('admin.promocion.mail.past'))->assertOk()
+        ->assertSee(e(route('admin.promocion.push.show', ['pushcd' => 900, 'page' => 1, 'data_type' => 'mailmaga'])), false);
+});

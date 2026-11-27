@@ -67,14 +67,17 @@ class MailController extends Controller
             'mode' => in_array($mailType, MailRegistrar::AUTO_TYPES, true) ? '配信条件選択' : '発行条件選択',
             'activeAc' => self::activeAc($this->prefix($mailType)),
             'selectAction' => route($this->route($mailType, 'select')),
-            'issueAction' => route($this->route($mailType, 'create')),
+            // 自動通知 (kind=autoPush): el 発行条件選択 de 自動 sigue en プッシュ通知新規作成 de S4 (M5)
+            'issueAction' => $request->input('kind') === 'autoPush' ? route('admin.promocion.push.create') : route($this->route($mailType, 'create')),
             'searchFormPartial' => 'admin.promocion.inc.customer_search_form',
             'searchUniqid' => $uniqid,
             'result' => $result,
             // 自動: las condiciones de auto_new_confirm ($auto_mail_send_data) viajan ocultas hasta el registro
             'carry' => array_filter($request->only(array_merge(['mailmagcd', 'coupon_cd', 'hakkou_cd', 'get_coupon_cd', 'get_coupon_text'],
                 in_array($mailType, MailRegistrar::AUTO_TYPES, true) ? ['step1', 'step2_1', 'step2_2', 'step2_3', 'step2_jikan', 'step2_fun', 'mail_type', 'kind'] : [])),
-                fn ($v) => is_scalar($v) && (string) $v !== ''),
+                fn ($v) => is_scalar($v) && (string) $v !== '')
+                // mail_customer_select_frm.php: el 自動通知 manda además type_flg = auto a push_new
+                + ($request->input('kind') === 'autoPush' ? ['type_flg' => 'auto'] : []),
         ]);
     }
 

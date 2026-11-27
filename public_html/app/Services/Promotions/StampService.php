@@ -29,7 +29,10 @@ class StampService
     public function config(?CarbonInterface $at = null): array
     {
         $at ??= now();
-        $general = StampConfig::query()->find(1);
+        // stamp_config_register.php guarda 上限 y 登録ボーナス en la fila tb_shop_cd = 1 (y limit_flg por tienda);
+        // cStamp::getStampConfig leía cd = 1, que solo coincide si esa fila tiene cd 1: se lee como guarda la pantalla
+        // y, si no existe, la de cd = 1. El intervalo sale de la misma fila, como en el legacy.
+        $general = StampConfig::query()->where('tb_shop_cd', 1)->orderBy('cd')->first() ?? StampConfig::query()->find(1);
         $master = AdminMaster::current();
         $days = trim((string) $master->stamp_shikkou_kikan);
         $days = $days === '' ? 365 : (int) $days;
