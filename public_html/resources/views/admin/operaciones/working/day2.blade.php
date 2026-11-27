@@ -63,7 +63,7 @@ $(document).ready(function() {
 <script type="text/javascript">
 
 var tobisaki = @json($selfUrl);
-@include('admin.operaciones.working.partials.edit-js', ['selectClass' => ' class="selectBox"', 'onDecide' => $onDecide])
+@include('admin.operaciones.working.partials.edit-js', ['selectClass' => ' class=\"selectBox\"', 'onDecide' => $onDecide])
 
 
 </script>
