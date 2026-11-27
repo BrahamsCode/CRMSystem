@@ -7,7 +7,7 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — F4 (ポイント集計, 一括付与 CSV, comandos `promocion:register-point`/`paid-member-point`) y F5 (スタンプ: デザイン, 仕様, ルール, クーポンお知らせ, plantillas, comandos) dentro de `promocion` (encargo de S0, 2026-11-27; modelos y servicios de S3 sin tocar, bloques `F4 (S2)`/`F5 (S2)`, proveedor `PromocionFidelizacionServiceProvider`).
+## Próximo paso — Libre (S0, 2026-11-27): sin filas pendientes según `Doc/qa/paridad.md`. Esperar errores de la regresión de punta a punta de S1 que pase S0.
 
 ## Tarea anterior — Diseño (sin código, HECHO)
 
@@ -75,6 +75,8 @@ Ver `Doc/diseno/clientes-ventas-reservas.md` §5 (S1: `staff`, Gates, rutas púb
 - 2026-11-27 (C5/C6/R5/ventas): 売上データ作成 lista el personal de la tienda elegida (el legacy fijaba `shop_cd = 1`). El 会員検索 del formulario de venta sigue con `SaleCustomerSearch` (port de `karute_menu/ajax_search_kaiin.php`, búsqueda en línea por palabras), no con el popup `admin.clientes.lookup` (otra pantalla del legacy, `karute_customer_search.php`): misma UI que el legacy. model1 → メール: el servidor arma el filtro (`MailAudience::storeRaw` de S3), no SQL del navegador. stamp1 sin `sashihiki_kaikei` (columna inexistente).
 
 ## Hecho
+
+- 2026-11-27 F4/F5 de `promocion` (encargo de S0): ポイント集計, 一括付与 CSV, comandos `promocion:register-point`/`paid-member-point`; スタンプ (デザイン, 仕様, ルール, クーポンお知らせ, plantillas, comandos `promocion:stamp-shikkou`/`-alert`) en `PromocionFidelizacionServiceProvider`. QA S1: mini calendarios del 予約表 en fila; `$tool_name` en 予約機種一覧. Integrado en laravel13 49889b5 (940 en verde).
 
 - 2026-11-27 C7: カードリーダーモード設定, カード管理 (con `CustomerFelicaService`), コメント設定, 学年/クラス設定, 入退室一覧 (calendario y lista); `card_staff_select.php` descartado (copia de category5 sin enlace). R6: reserva simple de `category3/reservation/` (alta en pasos, calendario, lista, detalle, estados con correo, categorías, 予約項目設定, AJAX) y 予約機種一覧 con CSV. R7: reserva web pública `r/` (y `reserve/` con la lógica de `r/`), JSON idéntico al legacy, servicios propios `WebReservationService`/`WebReservationBookingService`; anular y reservar solo para el socio de la sesión (`session('mobile')`, mismas claves que el legacy; S4 debe usarlas en Mi página). Suite 805/806 (el fallo es `SetRaitenDetailTest` de S5, que S0 asignó a S5).
 
