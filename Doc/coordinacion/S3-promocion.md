@@ -73,6 +73,8 @@ Ver `Doc/diseno/promocion.md` §6. Las principales: controladores en `Admin/Prom
 
 ## Hecho
 
+- 2026-11-27 — Ajustes S0: `StampService::config()` lee la fila de `tb_shop_cd = 1` (como guarda スタンプ仕様管理; respaldo cd = 1); フォロー/自動 de push (kind followPush/autoPush) siguen en `push.create` (S4) con type_flg; 過去配信 enlaza la クリック詳細 del push (`push.show?data_type=mailmaga`).
+
 - 2026-11-27 — M6: リマインダ (condiciones, envío, programados con 起動/停止, edición) sin POS.
 
 - 2026-11-27 — F1b: `LotteryService` completo para Mi página (S4): además de `draw()` (0.1), `customerCount()`, `countData()` y `couponCount()` (getCustomerCount, getKujibikiCountData, getKujibikiCouponCount de cKujibiki).

@@ -185,6 +185,8 @@ function deleteMulti() {
     </td>
     @if ($appEnabled)
     <td align="right" style="vertical-align:top;">
+		{{-- push espejo de la お知らせ: push_past_shousai.php?data_type=mailmaga (S4) --}}
+		<a class="btnStyle" href="{{ route('admin.promocion.push.show', array_merge($query, ['pushcd' => $mail->cd, 'page' => $mails->currentPage(), 'data_type' => 'mailmaga'])) }}" style="line-height: 1.2em;">クリック詳細</a>
 		<div style="font-size: 80%;text-align:right">
 		<span style="font-size: 140%">{{ $pushReal }}%</span><br>
 		総配信数:{{ $push->total ?? 0 }}<br>

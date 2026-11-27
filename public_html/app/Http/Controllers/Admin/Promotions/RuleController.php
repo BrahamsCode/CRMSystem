@@ -173,7 +173,8 @@ class RuleController extends Controller
             'lb2' => $lb2,
             'searchUniqid' => $uniqid,
             'reservationsEnabled' => $this->reservationsEnabled(),
-            'nextAction' => ($request->input('kind') ?? '') === 'followPush' ? '/system/category3/push/push_new.php' : route('admin.promocion.follow.create'),
+            // フォロー通知 (kind=followPush): sigue en プッシュ通知新規作成 de S4 (M5)
+            'nextAction' => route(($request->input('kind') ?? '') === 'followPush' ? 'admin.promocion.push.create' : 'admin.promocion.follow.create'),
         ]);
     }
 
