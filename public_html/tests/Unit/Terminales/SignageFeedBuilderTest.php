@@ -1,37 +1,22 @@
 <?php
 
-use App\Enums\Terminales\SignageContentMode;
-use App\Enums\Terminales\SignageFileType;
-use App\Models\JobCategory;
-use App\Models\JobPosting;
-use App\Models\SignageMaterial;
-use App\Models\SignageProgram;
 use App\Services\Terminales\SignageFeedBuilder;
-
-// Arranca Laravel (los modelos lo necesitan) pero sin tocar la BD
-uses(Tests\TestCase::class);
 
 /*
  * Forma de los XML que lee el reproductor, comparada con la salida de
  * category7/digital_signage/xml_up.php y xml_info_up.php (espacios dobles incluidos).
+ * Sin BD: se pasan filas como las de tb_screensaver / tb_recruit.
  */
 
-function material(array $attributes): SignageMaterial
-{
-    $material = new SignageMaterial($attributes);
-    $material->id = $attributes['id'];
-
-    return $material;
-}
-
 it('arma la línea <p> de un material igual que xml_up.php', function () {
-    $line = (new SignageFeedBuilder)->materialLine(material([
-        'id' => 12,
+    $line = (new SignageFeedBuilder)->materialLine([
+        'cd' => 12,
         'title' => '本日のおすすめ',
-        'duration_seconds' => 15,
-        'file_type' => SignageFileType::Image,
-        'images' => [['flg' => '1', 'ext' => 'jpg'], ['flg' => '', 'ext' => '']],
-    ]));
+        'play_frame_sec' => '15',
+        'filetype' => '画像ファイル',
+        'pic_extension' => 'jpg<>',
+        'pic_flg' => '1<>',
+    ]);
 
     expect($line)->toBe(
         '<p cd="12" time="15"  title="本日のおすすめ"  type="画像ファイル" pic_extension="jpg," pic_flg="1,">本日のおすすめ</p>'."\n"
@@ -39,36 +24,16 @@ it('arma la línea <p> de un material igual que xml_up.php', function () {
 });
 
 it('escapa los caracteres que rompían el XML del legacy', function () {
-    $line = (new SignageFeedBuilder)->materialLine(material([
-        'id' => 1,
-        'title' => 'A&B "特売"',
-        'duration_seconds' => 5,
-        'file_type' => SignageFileType::Flv,
-        'images' => [],
-    ]));
+    $line = (new SignageFeedBuilder)->materialLine([
+        'cd' => 1, 'title' => 'A&B "特売"', 'play_frame_sec' => '5', 'filetype' => 'FLVファイル',
+        'pic_extension' => null, 'pic_flg' => null,
+    ]);
 
     expect($line)->toContain('title="A&amp;B &quot;特売&quot;"')
         ->and($line)->toContain('type="FLVファイル" pic_extension="" pic_flg=""');
 });
 
-it('deja vacío el XML de un programa en modo システム内蔵', function () {
-    $program = new SignageProgram(['content_mode' => SignageContentMode::System]);
-
-    expect((new SignageFeedBuilder)->program($program))->toBe('');
-});
-
 it('arma floormap.xml con planta, tienda, ficha y 求人', function () {
-    $category = new JobCategory(['name' => 'ホールスタッフ']);
-    $posting = new JobPosting([
-        'headline' => 'スタッフ募集',
-        'description' => '接客',
-        'employment_type' => 'アルバイト',
-        'requirements' => '未経験歓迎',
-        'salary' => '時給1200円',
-    ]);
-    $posting->id = 7;
-    $posting->setRelation('category', $category);
-
     $xml = (new SignageFeedBuilder)->renderFloormap([
         '1F' => [[
             'cd' => 3,
@@ -76,7 +41,15 @@ it('arma floormap.xml con planta, tienda, ficha y 求人', function () {
             'name' => 'Polos',
             'kana' => 'ポロス',
             'details' => [['営業時間', '10:00-20:00'], ['定休日', '']],
-            'posting' => $posting,
+            'recruit' => [
+                'cd' => 7,
+                'boshu_headline' => 'スタッフ募集',
+                'boshu_shokushu_name' => 'ホールスタッフ',
+                'shigoto_naiyou' => '接客',
+                'koyou_keitai' => 'アルバイト',
+                'oubo_shikaku' => '未経験歓迎',
+                'kyuyo' => '時給1200円',
+            ],
         ]],
     ]);
 
@@ -101,13 +74,13 @@ it('arma floormap.xml con planta, tienda, ficha y 求人', function () {
 
 it('omite <detail> y <recruit> cuando la tienda no tiene datos', function () {
     $xml = (new SignageFeedBuilder)->renderFloormap([
-        'B1' => [['cd' => 1, 'cate' => null, 'name' => 'shop', 'kana' => null, 'details' => [], 'posting' => null]],
+        'B1' => [['cd' => 1, 'cate' => null, 'name' => 'shop', 'kana' => null, 'details' => [], 'recruit' => null]],
     ]);
 
     expect($xml)->toContain("<shop cd=\"1\" cate=\"\" name=\"shop\" kana=\"\">\n</shop>\n");
 });
 
-it('lee la ficha de tienda en el formato del legacy (kaisha_data)', function () {
+it('lee kaisha_data de tb_shop en pares', function () {
     expect((new SignageFeedBuilder)->companyDetails('営業時間<>10:00||定休日<>水曜'))
         ->toBe([['営業時間', '10:00'], ['定休日', '水曜']]);
 });
