@@ -1,0 +1,30 @@
+FROM debian:trixie-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        apache2 openssl ca-certificates tzdata \
+    && rm -rf /var/lib/apt/lists/*
+
+# proxy + proxy_fcgi = hablar con php-fpm
+RUN a2enmod rewrite ssl headers proxy proxy_fcgi
+
+ENV TZ=Asia/Tokyo
+RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone
+
+# Mismo uid/gid que en el contenedor PHP
+ENV APACHE_RUN_USER=apache
+ENV APACHE_RUN_GROUP=apache
+RUN groupadd -g 1000 apache && useradd -u 1000 -M -s /usr/sbin/nologin -g apache apache
+
+# Logs a stdout/stderr (docker compose logs web)
+RUN ln -sfT /dev/stderr /var/log/apache2/error.log \
+    && ln -sfT /dev/stdout /var/log/apache2/access.log
+
+# Certificado autofirmado SOLO para desarrollo, generado al construir (la clave nunca va a git)
+RUN openssl req -x509 -nodes -newkey rsa:2048 -days 3650 \
+        -subj "/CN=localhost" -addext "subjectAltName=DNS:localhost,IP:127.0.0.1" \
+        -keyout /etc/ssl/private/my.key -out /etc/ssl/certs/my.crt
+
+WORKDIR /var/www
+EXPOSE 80 443
+
+CMD ["/bin/bash", "-c", ". /etc/apache2/envvars && mkdir -p \"$APACHE_RUN_DIR\" \"$APACHE_LOCK_DIR\" && exec apache2 -DFOREGROUND"]

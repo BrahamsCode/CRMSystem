@@ -1,1 +1,10 @@
 /.claude
+# Referencia del legacy con claves REALES de producción: solo local, nunca a git
+Doc/legacy-crm2/env-legacy.example
+
+# Trabajadores sin interfaz y logs de la orquestación
+.crm-trabajadores/
+
+# Certificados y claves locales
+docker/*.key
+docker/*.crt

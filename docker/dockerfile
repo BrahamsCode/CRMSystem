@@ -1,42 +1,62 @@
-# syntax=docker/dockerfile:1
-# Apache + mod_php, igual que en producción (PHP 8.2)
-FROM php:8.2-apache
+# PHP 8.5 FPM: misma base que crm2-php8 (C:\Users\User\VivaTech\crm2-php8\docker\dockerfile),
+# adaptada a Laravel. Apache va en su propio contenedor (dockerfile.web).
+FROM php:8.5-fpm-trixie
 
-COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
+# Dependencias del sistema
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    openssl libssl-dev \
+    libicu-dev \
+    libpq-dev \
+    libonig-dev \
+    libzip-dev \
+    libpng-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
+    locales \
+    zip \
+    jpegoptim optipng pngquant gifsicle \
+    vim \
+    unzip \
+    git \
+    curl \
+    postgresql-client \
+    imagemagick libmagickwand-dev \
+    msmtp \
+    && rm -rf /var/lib/apt/lists/*
 
-# Node 20 y npm copiados de la imagen oficial (sin repositorios externos)
-COPY --from=node:20-bookworm-slim /usr/local/bin/node /usr/local/bin/node
-COPY --from=node:20-bookworm-slim /usr/local/lib/node_modules /usr/local/lib/node_modules
-RUN ln -s ../lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
-    && ln -s ../lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx
+# Extensiones de PHP
+# - pdo y mbstring ya vienen incluidas en la imagen oficial
+# - opcache en PHP 8.5 ya viene compilado en el núcleo (docker-php-ext-install opcache falla)
+# - bcmath: la usa Laravel para cálculos de precisión (puntos, importes)
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j"$(nproc)" \
+        gd intl pdo_pgsql pgsql pdo_mysql zip exif pcntl bcmath
 
-# El instalador se monta solo durante el build (no queda en la imagen)
-# y borra automáticamente las dependencias de compilación.
-RUN --mount=type=bind,from=mlocati/php-extension-installer:2,source=/usr/bin/install-php-extensions,target=/usr/local/bin/install-php-extensions \
-    install-php-extensions pdo_pgsql pgsql pdo_mysql intl zip gd opcache pcntl exif bcmath imagick \
-    # Herramientas: utilidades, cliente de PostgreSQL, ImageMagick,
-    # optimizadores de imagen, msmtp para el correo y zona horaria
-    && apt-get update \
-    && apt-get install -y --no-install-recommends \
-        vim git curl zip unzip \
-        postgresql-client \
-        imagemagick \
-        jpegoptim optipng pngquant gifsicle \
-        msmtp \
-        tzdata \
-    && ln -snf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime \
-    && echo "Asia/Tokyo" > /etc/timezone \
-    # Correo: PHP envía con msmtp al contenedor mailpit (SMTP en el puerto 1025)
-    && printf 'account default\nhost mailpit\nport 1025\nfrom noreply@localhost\nauth off\ntls off\n' > /etc/msmtprc \
-    && printf 'sendmail_path = "/usr/bin/msmtp -t"\n' > /usr/local/etc/php/conf.d/mail.ini \
-    # Usuario 1000 para evitar problemas de permisos con los archivos montados
-    && groupadd -g 1000 apache \
-    && useradd -u 1000 -g apache -ms /bin/bash apache \
-    && a2enmod rewrite headers \
-    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/*
+# imagick (versión estable de PECL, compatible con PHP 8.5)
+RUN pecl install imagick && docker-php-ext-enable imagick
 
-ENV TZ=Asia/Tokyo \
-    APACHE_RUN_USER=apache \
-    APACHE_RUN_GROUP=apache
+# composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# node & npm (para Vite dentro del contenedor si hace falta)
+RUN curl -sL https://deb.nodesource.com/setup_24.x | bash
+RUN apt-get install -y nodejs && rm -rf /var/lib/apt/lists/*
+
+# Zona horaria
+ENV TZ=Asia/Tokyo
+RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone
+
+# Correo de PHP (mail()/sendmail) hacia mailpit; Laravel usa SMTP directo (MAIL_HOST=mailpit)
+RUN printf 'account default\nhost mailpit\nport 1025\nfrom noreply@localhost\nauth off\ntls off\n' > /etc/msmtprc \
+    && printf 'sendmail_path = "/usr/bin/msmtp -t"\n' > /usr/local/etc/php/conf.d/mail.ini
+
+# Usuario uid/gid 1000 con el que corren los workers de PHP-FPM
+RUN groupadd -g 1000 apache \
+    && useradd -u 1000 -ms /bin/bash -g apache apache \
+    && sed -i 's/^user = .*/user = apache/; s/^group = .*/group = apache/' /usr/local/etc/php-fpm.d/www.conf
 
 WORKDIR /var/www
+
+# php-fpm escucha en 9000 (heredado de la imagen base)
+EXPOSE 9000

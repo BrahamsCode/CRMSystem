@@ -1,3 +1,15 @@
+## 構成
+
+crm2-php8 と同じ構成（Laravel 用に調整）:
+
+| サービス | イメージ | 役割 |
+|---|---|---|
+| app | php:8.5-fpm-trixie | PHP 8.5 FPM（ポート非公開） |
+| web | debian:trixie-slim + Apache | DocumentRoot `/var/www/public`、`.php` は `app:9000` へ |
+| db | postgres:18 | ボリューム `dbdata18`（PostgreSQL 15 の旧 `dbdata` とは互換性なし） |
+| mailpit | axllent/mailpit | メール確認 |
+| node | node:24-alpine | `--profile node` の時のみ |
+
 ## 環境構築
 
 1. public_html 配下の .env.example を複製し .env を作成
@@ -29,10 +41,10 @@
 4. 起動したらコンテナに入る
 
     ~~~ sh
-    docker compose exec app sh
+    docker compose exec app bash
     ~~~
 
-5. コンテナ内 `/var/www #` の状態で下記を実行
+5. コンテナ内 `root@xxxxxxxxxxxx:/var/www#` の状態で下記を実行
 
     ~~~ sh
     chown -R apache:apache /var/www/storage
@@ -56,7 +68,7 @@
 
 6. ブラウザで確認
 
-    http://localhost:8081
+    http://localhost:8081 （HTTPS: https://localhost:8444 、自己署名証明書）
 
 
 7. フロントエンド（必要な時のみ）

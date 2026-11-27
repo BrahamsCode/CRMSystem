@@ -1,0 +1,3 @@
+# Scripts de shell siempre con LF (bash falla con CRLF); .bat con CRLF
+*.sh text eol=lf
+*.bat text eol=crlf

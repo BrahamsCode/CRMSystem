@@ -1,28 +1,47 @@
+# Misma arquitectura que crm2-php8 (PHP 8.5 FPM + Apache + PostgreSQL 18), adaptada a Laravel.
+# Puertos del host configurables en docker/.env para levantarlo junto a crm2-php8 (que usa 80/443/5432/8025).
 services:
+  # PHP 8.5 FPM (solo ejecuta PHP, no expone puertos al host)
   app:
     build: .
-    ports:
-      # Puertos del host configurables en docker/.env, para poder levantar
-      # este proyecto junto a otro con la misma configuración
-      - ${APP_PORT:-8081}:80
     volumes:
       - ../public_html:/var/www
       - vendor:/var/www/vendor
+      - ./policy.xml:/etc/ImageMagick-7/policy.xml
       - ./php.ini:/usr/local/etc/php/conf.d/zz-app.ini
-      - ./apache.conf:/etc/apache2/sites-available/000-default.conf:ro
+    working_dir: /var/www
     environment:
       TZ: Asia/Tokyo
     depends_on:
       - db
     restart: unless-stopped
 
+  # Apache como servidor web, enviando los .php a app:9000
+  web:
+    build:
+      context: .
+      dockerfile: dockerfile.web
+    ports:
+      - ${APP_PORT:-8081}:80
+      - ${APP_SSL_PORT:-8444}:443
+    volumes:
+      # Mismo path que en "app": FPM recibe la ruta del script desde Apache
+      - ../public_html:/var/www
+      - ./000-default.conf:/etc/apache2/sites-available/000-default.conf:ro
+      - ./default-ssl.conf:/etc/apache2/sites-enabled/default-ssl.conf:ro
+    depends_on:
+      - app
+    restart: unless-stopped
+
   db:
-    image: postgres:15-alpine
+    image: postgres:18
     command: postgres -c timezone=Asia/Tokyo -c log_timezone=Asia/Tokyo
     ports:
       - ${DB_FORWARD_PORT:-15434}:5432
     volumes:
-      - dbdata:/var/lib/postgresql/data
+      # PostgreSQL 18 guarda los datos en /var/lib/postgresql (no en .../data).
+      # Volumen nuevo: el antiguo "dbdata" era de PostgreSQL 15 y no es compatible.
+      - dbdata18:/var/lib/postgresql
       # Crea también la base de los tests al inicializar un volumen nuevo
       - ./initdb:/docker-entrypoint-initdb.d:ro
     environment:
@@ -33,27 +52,28 @@ services:
       PGTZ: Asia/Tokyo
     restart: unless-stopped
 
+  # crm2-php8 usa mailhog (sin mantenimiento); aquí se mantiene mailpit, compatible y vigente
   mailpit:
     image: axllent/mailpit
     ports:
       - ${MAILPIT_PORT:-8026}:8025
     environment:
-      TZ: JST-9
+      TZ: Asia/Tokyo
 
   # Solo cuando se necesite: docker compose run --rm node npm install / npm run build
   node:
-    image: node:20-alpine
+    image: node:24-alpine
     working_dir: /app
     volumes:
       - ../public_html:/app
     ports:
       - ${VITE_PORT:-5174}:5173
     environment:
-      TZ: JST-9
+      TZ: Asia/Tokyo
       # El navegador se conecta a Vite por el puerto del host, no por el del contenedor
       VITE_PORT: ${VITE_PORT:-5174}
     profiles: ["node"]
 
 volumes:
-  dbdata:
+  dbdata18:
   vendor:
