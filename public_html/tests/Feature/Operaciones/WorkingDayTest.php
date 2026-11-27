@@ -116,6 +116,8 @@ it('work_list2 y ng_work_list: su propio cálculo y formato', function () {
         ->assertSee('10.08')
         ->assertSee('8.25')
         ->assertSee('1件～20件目/3件中')
+        // el class del <select> va dentro de una cadena JS con comillas dobles: escapadas (regresión: SyntaxError)
+        ->assertSee('syukkinForm = "<select name=\"user_syukkin_hour\" id=\"user_syukkin_hour\" class=\"selectBox\">";', false)
         ->assertSee(json_encode(route('legacy.operaciones.working-change')), false);
 
     // ng_work_list: 労働時間 en HH:MM y la entrada con su redondeo

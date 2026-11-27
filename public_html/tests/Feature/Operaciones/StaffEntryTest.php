@@ -37,6 +37,7 @@ it('スタッフ新規登録: formulario con スタッフID provisional (createI
         ->assertSee('■スタッフ新規登録')
         ->assertSee('<input type="hidden" name="id" id="id" class="inputS" value="1100002"', false) // tienda 1 + '1' + 00002
         ->assertSee('<option value="ホール" >ホール</option>', false)
+        ->assertSee("<th>ログインID</th>\n\t<td>1100002</td>", false) // ログインID = スタッフID
         ->assertSee('<option value="5" >早番</option>', false)
         ->assertSee('<option value="">▼都道府県選択</option>', false)
         ->assertSee('スタッフ新規登録'); // menú
@@ -71,6 +72,8 @@ it('alta completa: confirmación, registro con createHatsuban/createID, 所属�
         ->assertOk()
         ->assertSee('■スタッフ新規登録 確認')
         ->assertSee('<td>0612345678</td>', false) // replace_tel
+        // ログインID = スタッフID (regresión: «管理者用ID@else» no compilaba la directiva y la celda salía vacía)
+        ->assertSee("<th>ログインID</th>\n\t<td>0110002</td>", false)
         ->assertSee('&lt;b&gt;注意&lt;/b&gt;', false)
         ->assertSee('value="書き直す"', false)
         ->assertSee('value="この内容で登録する"', false);
