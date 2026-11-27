@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\Base\IndexController;
 use App\Http\Controllers\Admin\Base\OfficeController;
 use App\Http\Controllers\Admin\Base\ShopCategoryController;
 use App\Http\Controllers\Admin\Base\ShopController;
+use App\Http\Controllers\Admin\Nucleo\GraphController;
 use App\Http\Controllers\Admin\Nucleo\ZipController;
 use Illuminate\Support\Facades\Route;
 
@@ -52,4 +53,12 @@ Route::name('nucleo.zip.')->group(function () {
     foreach (['category0/config', 'category0/shop', 'category1/customer', 'category5/staff', 'inc'] as $i => $dir) {
         Route::match(['get', 'post'], "system/{$dir}/zip.php", ZipController::class)->name((string) $i);
     }
+});
+
+/*
+ * Gráficos en <iframe> (system/inc/graph_pie.php y graph_bar.php), comunes a todos los módulos
+ */
+Route::name('nucleo.graph.')->controller(GraphController::class)->group(function () {
+    Route::get('system/inc/graph_pie.php', 'pie')->name('pie');
+    Route::get('system/inc/graph_bar.php', 'bar')->name('bar');
 });
