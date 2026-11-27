@@ -59,4 +59,16 @@ Route::prefix('reservas')->name('reservas.')->group(function () {
     Route::post('free', [\App\Http\Controllers\Admin\Reservations\FreeReservationController::class, 'update'])->name('free.update');
     Route::match(['get', 'post'], 'free/ranks', [\App\Http\Controllers\Admin\Reservations\FreeReservationController::class, 'ranks'])->name('free.ranks');
     // --- fin R1-C ---
+
+    // --- R2: 受付日設定 (franjas) ---
+    // yoyaku_uketsuke_day.php (?cd= | ?staff=&yoyaku_date=), _register.php y _delete.php
+    Route::get('slots/edit', [\App\Http\Controllers\Admin\Reservations\ReservationSlotController::class, 'edit'])->name('slots.edit');
+    Route::post('slots', [\App\Http\Controllers\Admin\Reservations\ReservationSlotController::class, 'store'])->name('slots.store');
+    Route::delete('slots/{slot}', [\App\Http\Controllers\Admin\Reservations\ReservationSlotController::class, 'destroy'])->whereNumber('slot')->name('slots.destroy');
+    // yoyaku_multi_uketsuke_day.php y yoyaku_multi_uketsuke_register.php
+    Route::get('slots/bulk', [\App\Http\Controllers\Admin\Reservations\ReservationSlotController::class, 'bulkCreate'])->name('slots.bulk');
+    Route::post('slots/bulk', [\App\Http\Controllers\Admin\Reservations\ReservationSlotController::class, 'bulkStore'])->name('slots.bulk.store');
+    // ajax_uketsuke_status.php: el JS del 予約表 llama a la URL legacy /system/category9/yoyaku/ajax_uketsuke_status.php (la publica otra sesión → esta acción)
+    Route::get('slots/status', [\App\Http\Controllers\Admin\Reservations\ReservationSlotController::class, 'status'])->name('slots.status');
+    // --- fin R2 ---
 });
