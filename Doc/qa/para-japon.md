@@ -34,6 +34,7 @@ Base común (Antony, 2026-11-26): misma BD (`crm2019`) y misma UI que el legacy;
 
 ### Operaciones e integraciones (S5)
 - Calendarios que saltaban a **enero de 1970** (営業日設定, 勤怠): no se reproduce — S5, `qa/diferencias-operaciones.md`.
+- 勤怠管理: editar/borrar marcas y los ajustes del terminal ya exigen master (el legacy solo ocultaba los botones); la edición actualizaba cualquier marca por `cd`; la ステータス mostraba marcas borradas; en la UI clásica 削除 fallaba (sin jquery.alerts); el CSV sumaba 24 h a 外出/戻り según otra marca — S5, `coordinacion/S5-operaciones.md`.
 - `appview/coupon_control.php act=use` daba **500** (constante `N` sin definir) y no usaba el cupón; aquí lo usa — S5, `tests/Fixtures/integraciones/README.md`.
 - `appview/member_complete.php`: el INSERT nombra 8 columnas que no existen en la BD y **no guardaba nada**, pero mostraba 登録完了; aquí guarda — S5, `coordinacion/S5-operaciones.md`.
 - `appview/member_regist.php` con sellos de bienvenida (`touroku_bonus` > 0) daba un **fatal** (`new Hatuban`) y no daba de alta; aquí sí — S5, `coordinacion/S5-operaciones.md`.

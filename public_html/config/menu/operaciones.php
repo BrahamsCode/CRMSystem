@@ -23,6 +23,18 @@ return [
             ],
         ],
         [
+            // 勤怠一覧 (working/working_calendar.php) es de S2: su enlace va primero cuando tenga ruta
+            'title' => '勤怠管理',
+            'image' => 'ln_t5_1.gif',
+            'ac' => 'ac2',
+            'child' => '勤怠管理',
+            'links' => [
+                ['label' => '勤怠データ一覧', 'url' => '/admin/operaciones/kintai'],
+                ['label' => '端末パスワード変更', 'url' => '/admin/operaciones/kintai/password', 'can' => 'nucleo.master'],
+                ['label' => '各種設定', 'url' => '/admin/operaciones/kintai/config', 'can' => 'nucleo.master'],
+            ],
+        ],
+        [
             // En el legacy este bloque está vacío y los turnos cuelgan de 勤怠管理 solo en un servidor concreto
             // (SERVER_ADDR); aquí se agrupan en スケジュール管理, que es su tb_base_system_child.
             'title' => 'スケジュール管理',

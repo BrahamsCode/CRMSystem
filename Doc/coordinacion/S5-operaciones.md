@@ -9,7 +9,7 @@ Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archiv
 
 ## Próximo paso — Diseño (sin código)
 
-> **Ahora (2026-11-27, S0):** diseño aprobado; pasos 1-4 y 8-12 hechos (`appview` terminado), QA de category5 e informe `Doc/qa/para-japon.md` hechos. Pendiente solo lo ⏸ a la espera de Antony (勤怠, shukei, air) y lo que pase S0 de la regresión de S1.
+> **Ahora (2026-11-27, S0):** pasos 1-4, 6 (勤怠管理 `kintai`) y 8-12 hechos; QA de category5 e informe `Doc/qa/para-japon.md` (§3 y §5 al día con las respuestas de Antony). `working` (勤怠一覧/集計) lo hace S2 con mis modelos: atender lo que pida. Pendiente ⏸: shukei y air.
 
 > **2026-11-26, cambio de base (Antony):** misma BD y misma UI que el legacy (`CONVENCIONES.md`, sección 0). Si ya escribiste tu diseño con tablas nuevas, rehaz la parte de esquema y UI. — **rehecho sobre la BD legacy el 2026-11-27, esperando revisión de S0**
 
@@ -45,7 +45,7 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 - **S3:** servicio de puntos con los campos de `setPoint`; modelos de cupones, sellos y encuestas para `appview`.
 - **S4:** modelos de `tb_url_list` y `tb_beacon_history`; imágenes y `mypage_config` de mypage en solo lectura.
 - **Antony/S0:** ⏸ ¿siguen en uso `exp_cmd/cron/get_shukei_data*.php` (escriben `tb_crm_check_operation` en la BD de VIZAN 203.183.91.218) y el cliente Adobe AIR (`air/`)?
-- **Antony/S0:** ⏸ confirmar si 勤怠 (kintai/working/lector FeliCa) se usa sin touchcation (22 de 63 puntos).
+- **Antony (2026-11-27):** 勤怠 se migra (la gestión, sin quiosco): `kintai` S5 (hecho), `working` S2 sobre `WorkTime`/`ShopWork`/`KintaiHiduke`/`KintaiRecord`.
 
 ## Decisiones
 
@@ -80,6 +80,8 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 
 - **Turnos (2026-11-27):** el master elige cualquier tienda (el legacy volvía siempre a la primera por un bug) y el horario es el de la tienda elegida; sin `kintai_tb_config` se usan sus valores por defecto (el legacy redirigía a 勤怠一覧, ⏸). 月別 pinta solo los días del mes (el legacy, 31 filas siempre) y solo guarda empleados activos de la tienda. Los datos del JS se emiten con `@json`.
 
+- **勤怠管理 kintai (2026-11-27):** mismas pantallas, mensajes y JS del legacy. Cambios: 編集/削除, 端末パスワード変更, 各種設定 y CSV mensual exigen master (el legacy solo ocultaba botones y enlaces); la edición y el borrado solo tocan marcas de esa jornada (el legacy actualizaba cualquier `cd`); la ステータス ignora marcas borradas; textos escapados; borrados por POST/DELETE con CSRF; al volver con errores se pintan las horas enviadas; 備考 se guarda una vez (el legacy escapaba dos veces las comillas); el 勤務状況 debe ser uno del selector; en el CSV cada 外出/戻り suma 24 h según su propio día (el legacy usaba la última marca de 出勤/退勤); jquery.alerts cargado siempre (en UI clásica 削除 fallaba). Sin el botón Flash de AIR ni `ajax_session_update`. La sección シフト区分 de 各種設定 enlaza a su pantalla. El enlace 勤怠一覧 del menú lo añade S2 con su ruta.
+
 - **appview (2026-11-27):** vistas PHP planas con la plantilla del legacy (CRLF) para comparar byte a byte; sin autenticación por `customer_cd` (contrato, anotado para Japón). `introduction.php` y `detail_view.php` descartados: leen la BD `admin` (`shop`, `news`, `blog`, `good_count`), fuera de alcance. Con `domain`, solo el paquete «crm» (*.crm-s.net, *.crm-tis.jp) usa esta BD; los dominios del POS responden «接続できませんでした». Las pantallas de cupones/sellos usan `MobileTheme` (colores y bandas de `hp/inc_m`; `emoji()` vacío, como en smartphone).
 
 - **member_regist / customerUpdate (2026-11-27):** solo el paquete crm (swa/rwa son BD del POS → «接続できませんでした»). Los valores que vuelven al formulario y el `domain` salen con h() (el legacy los imprimía tal cual: XSS). Cambios de comportamiento anotados para Japón: con sellos de bienvenida (`touroku_bonus` > 0) el legacy daba un fatal (`new Hatuban`; la clase es `cHatuban`) y no daba de alta: aquí sí; el push «ご登録ありがとうございます» se filtraba por `cd = <login_id>` y no llegaba a nadie: aquí va al socio nuevo; `appview/pushMessage.php` no existe y ningún push salía: con `CustomerPushService` de S3 sí salen (hasta que S0 lo integre, `AppviewPush` no envía nada). `mobile_kishu` nunca se guardaba (el legacy perdía `$ua`): igual aquí. `synchronizePRO` → `PosGateway::syncCustomers('unsynchronized')` (nulo).
@@ -113,3 +115,4 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 - 2026-11-27 — Pedido de S0 (sesión `mobile` de la reserva web): en el legacy la rellenan `r/index.php` y `reserve/index.php` con el `token = md5(cd:touroku_date)` con el que la app (マイコレ) los abre (ya en R7 de S2), o el login de `hp/user` (fuera de alcance). El login de appview no deja sesión: devuelve el cd a la app por postMessage. Prueba de punta a punta `AppviewReservationTest` (login de appview → token → `r/` y `reserve/`).
 - 2026-11-27 — QA de category5 contra la muestra (`Doc/qa/diferencias-operaciones.md`): sin diferencias propias salvo dos de 日別シフト管理, corregidas (calendarios: el mes actual y los dos siguientes; la fecha como enlace) (b26e761).
 - 2026-11-27 — Informe consolidado para Antony y Japón: `Doc/qa/para-japon.md` (94372dc; integrado en 49889b5). Libre a la espera de lo que encuentre S1 en la regresión.
+- 2026-11-27 — Respuestas de Antony en `Doc/qa/para-japon.md` (§3 firmes/provisionales/pendientes de Japón y §5 deuda del enlace de `mpa_getTopBanner`; 28ff9b7). 勤怠管理 (`category5/kintai`) completo: lista del día, alta, edición, borrados, 端末パスワード変更, 各種設定 (horas e imagen de fondo) y CSV diario/mensual (`KintaiService`, `KintaiEntryValidator`, `KintaiCsv`, `KintaiBackground`; `KintaiTest` 11 pruebas).
