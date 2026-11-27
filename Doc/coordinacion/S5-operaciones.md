@@ -9,7 +9,7 @@ Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archiv
 
 ## Próximo paso — Diseño (sin código)
 
-> **Ahora (2026-11-27, S0):** diseño aprobado; pasos 1-4 y 8-12 hechos (`appview` terminado). Pendiente solo lo ⏸ a la espera de Antony (勤怠, shukei, air).
+> **Ahora (2026-11-27, S0):** diseño aprobado; pasos 1-4 y 8-12 hechos (`appview` terminado), QA de category5 e informe `Doc/qa/para-japon.md` hechos. Pendiente solo lo ⏸ a la espera de Antony (勤怠, shukei, air) y lo que pase S0 de la regresión de S1.
 
 > **2026-11-26, cambio de base (Antony):** misma BD y misma UI que el legacy (`CONVENCIONES.md`, sección 0). Si ya escribiste tu diseño con tablas nuevas, rehaz la parte de esquema y UI. — **rehecho sobre la BD legacy el 2026-11-27, esperando revisión de S0**
 
@@ -111,3 +111,5 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 - 2026-11-27 — `appview` lote C1: member_complete (alta con las columnas que existen; el legacy no guardaba), anketo2 (solo la redirección sin sesión de hp/user); reservation y anketo2_register descartados (`AppviewContractTest` 50 casos, `AppviewRegistrationTest`). `setRaitenDetail`: contrato con el legacy grabado (8 casos) y orden de errores corregido (validación antes de `add_record_verify`).
 - 2026-11-27 — Pruebas intermitentes arregladas (empates de ORDER BY en las fixtures; 9633cfe). `appview` lote C2: member_regist y customerUpdate (`AppCustomer`; 60 casos en `AppviewContractTest`, efectos en `AppviewRegistrationTest`). **`appview` terminado** (24 pantallas: 20 hechas, 4 descartadas).
 - 2026-11-27 — Pedido de S0 (sesión `mobile` de la reserva web): en el legacy la rellenan `r/index.php` y `reserve/index.php` con el `token = md5(cd:touroku_date)` con el que la app (マイコレ) los abre (ya en R7 de S2), o el login de `hp/user` (fuera de alcance). El login de appview no deja sesión: devuelve el cd a la app por postMessage. Prueba de punta a punta `AppviewReservationTest` (login de appview → token → `r/` y `reserve/`).
+- 2026-11-27 — QA de category5 contra la muestra (`Doc/qa/diferencias-operaciones.md`): sin diferencias propias salvo dos de 日別シフト管理, corregidas (calendarios: el mes actual y los dos siguientes; la fecha como enlace) (b26e761).
+- 2026-11-27 — Informe consolidado para Antony y Japón: `Doc/qa/para-japon.md` (94372dc; integrado en 49889b5). Libre a la espera de lo que encuentre S1 en la regresión.
