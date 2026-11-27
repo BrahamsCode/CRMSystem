@@ -80,6 +80,7 @@ Un modelo que necesitan varios módulos (por ejemplo `Customer`) lo **lee** cual
 - Correo: Mailables (`QUEUE_CONNECTION=sync`: las tablas de Laravel no se usan; los envíos masivos van en comandos del Scheduler). Envíos programados: Scheduler (`routes/console.php`, dueño S1; cada módulo registra sus tareas en un `ServiceProvider` propio en `app/Providers/<Modulo>ServiceProvider.php`).
 - CSV: `StreamedResponse` (reemplaza Flash). PDF: el paquete que defina S1.
 - Autorización: Policies/Gates según el nivel de permiso que defina S1 (equivalente a `cKengen` / `ACCESS_LEVEL_*`).
+- **Contrato del layout** (S1 lo implementa; los módulos lo usan desde ya): `@extends('layouts.legacy')` con las secciones `title` (el `<title>` del legacy), `css` (los `<link>` propios de la pantalla), `js` (los `<script>` propios) y `content` (lo que el legacy pone dentro del área principal, después de `left_navi`). El menú lateral se elige con `@section('menu', '<modulo>')`. Las pantallas sin menú (popups, `yoyaku_navi`) usan `@extends('layouts.legacy-popup')` con las mismas secciones, sin `menu`. Los estáticos se referencian con `asset('legacy/...')` o con la ruta que fije S1 en NUCLEO.md.
 - Cada pantalla nueva lleva al menos una prueba Pest de "carga con sesión" y una del flujo principal (alta/edición).
 
 ## 5. Paridad
