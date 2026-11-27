@@ -140,7 +140,7 @@ it('インフォメーション管理: alta y edición con get_form2, lista y ba
 
     $this->delete("/admin/operaciones/information/{$info->cd}");
     expect(Information::count())->toBe(0);
-})->skip(fn () => ! class_exists(\App\Support\LegacyText::class), 'falta App\Support\LegacyText (S1)');
+});
 
 it('インフォメーション管理: quien no es master solo ve los de su tienda y los de 全店舗', function () {
     seedOperaciones();
