@@ -171,7 +171,7 @@ class VisitCsvService
                 }
             }
             echo LegacyCsv::encode($buffer);
-        }, $this->filename($start, (int) $end), ['Content-Type' => 'text/x-csv']);
+        }, $this->filename($start, (int) $end), ['Content-Type' => 'text/x-csv; charset=Shift_JIS']);
     }
 
     /** Fila de datos (clave => valor) con los 追加情報 del cliente y de la visita */

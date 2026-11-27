@@ -7,7 +7,7 @@
 @extends(($popup ?? false) ? 'layouts.legacy-popup' : 'layouts.legacy')
 
 @section('menu', 'clientes')
-@section('title', ($mode === 'felica' ? '顧客登録情報 UID関連付け解除' : '顧客登録情報 - ') . config('app.name'))
+@section('title', ($mode === 'felica' ? '顧客登録情報 UID関連付け解除' : '顧客登録情報 - ') . app(\App\Services\Nucleo\LegacyUi::class)->siteName())
 
 @section('css')
 <meta http-equiv="Refresh" content="{{ $mode === 'felica' ? 2 : 1 }}; URL={{ $detailUrl }}">

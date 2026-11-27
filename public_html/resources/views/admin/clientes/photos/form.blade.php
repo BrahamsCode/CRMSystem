@@ -13,7 +13,7 @@
 @extends('layouts.legacy')
 
 @section('menu', 'clientes')
-@section('title', 'フォトアルバム ' . $mode . ' - ' . config('app.name'))
+@section('title', 'フォトアルバム ' . $mode . ' - ' . app(\App\Services\Nucleo\LegacyUi::class)->siteName())
 
 @php
     $cacheBuster = time();

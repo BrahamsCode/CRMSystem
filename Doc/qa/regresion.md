@@ -16,6 +16,14 @@ Recorrido con Playwright en `:8081` como master. Lo creado lleva el prefijo «QA
 
 ### Clientes / ventas / reservas (S2)
 
+| pantalla (URL) | fallo | corrección + prueba Pest | commit |
+|---|---|---|---|
+| ficha `/admin/clientes/{cd}`, 来店処理 `customer_search.php` y 7 vistas más de clientes (lookup, photos, point-history, custom-records, visit-records, processing) | `<title>` «顧客登録情報 - Laravel»: usaban `config('app.name')` en vez del nombre del sitio (`$site_name` del legacy) | `LegacyUi::siteName()` en las 9 vistas de `resources/views/admin/clientes`; `QaClientesTest` («titula la ficha y 来店処理…») | 4df0081 |
+| ficha, pestaña 有料会員状況 (`?tab=14`) de un 無料会員 | Error de JS `Cannot read properties of null (reading 'addEventListener')`: sin botón 変更する el script lo usaba igual (bug heredado del legacy) | `tabs/tab14.blade.php` sale si no existe `#paidMemberSendBtn`; `QaClientesTest` («no lanza error de JS…») | 4df0081 |
+| CSV `/admin/clientes/export?format=standard o ex02`, 来店履歴 CSV `/admin/clientes/reports/visit-csv/download` | Cuerpo en Shift_JIS pero cabecera `text/x-csv; charset=utf-8` (Laravel añade utf-8 si no hay charset) | `text/x-csv; charset=Shift_JIS` en `CustomerCsvExporter` y `Reports/VisitCsvService`; `QaClientesTest` («declara Shift_JIS…») | 4df0081 |
+
+Clientes (master y umeda01): lista y paginación (10/50 por página, primera/última), búsqueda con filtros combinados AND/OR/NOT (tienda + sexo + edad, 来店回数, 会計金額, 予測来店日, 削除済; recuentos cotejados con la BD), alta y edición (master y umeda01, con 住所検索), borrado y 削除済, ficha con todas sus pestañas, 来店処理 (ficha y `customer_search.php`, インターバル), puntos (añadir/restar), sellos, 集計 (`customer_sumup_list` 業種別/県別, point1/point2/stamp1, 来店履歴 CSV), CSV estándar y DM, configuración (form_config, グループ, 来店動機, ランク, 振り分け, 追加情報, 入退室, カード). umeda01: solo 梅田店 (76), sin 削除 ni CSV (403). Sin 500 ni SQLSTATE. 3 fallos corregidos. Para S0/S1: en `crmsystem2` la contraseña de master no es `master` como dice el brief (ver `tb_staff.login_pass`); お問合せ de la cabecera abre `/system/contact/?wintype=no_headers` (404); `favicon.png`/`favicon.ico` 404 en el login. Datos demo: ningún `tb_stamp_log` tiene `kaikei`, así que el 集計 stamp1 sale a 0 (correcto según el SQL legacy). CSVインポート y table-export dan 403 a master (`nucleo.maintenance`, ya anotado). Ventas y reservas: pendientes (otra ronda).
+
 ### Promoción (S3)
 
 ### マイページ / 端末 / señalización (S4)
