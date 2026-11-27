@@ -67,6 +67,12 @@ Route::prefix('promocion')->name('promocion.')->group(function () {
         });
     }
 
+    // クリックカウンタ (inc/mailmag_graph2.php) por familia: mailmag_type '', deco, coupon, anketo
+    foreach (['mail' => ['mail_mag/mailmag_analyze', ''], 'deco' => ['decomail/mailmag_analyze', 'deco'],
+        'coupon' => ['mycoupon/mycoupon_analyze', 'coupon'], 'anketo' => ['anketo/anketo_analyze', 'anketo']] as $key => [$uri, $type]) {
+        Route::get($uri, [\App\Http\Controllers\Admin\Promotions\ClickCounterController::class, 'show'])->name('clicks.'.$key)->defaults('requestType', $type);
+    }
+
     Route::get('mail_mag/customer_list', [MailController::class, 'customers'])->name('mail.customers');
     Route::post('mail_mag/csv_shousai_download', [MailPastController::class, 'clicksCsv'])->name('mail.clicks-csv');
 

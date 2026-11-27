@@ -21,7 +21,26 @@ class ClickStats
      */
     public function forMail(int $mailmagCd): array
     {
-        $base = fn () => DB::table('tb_mailmag_analyze')->where('mailmag_master_cd', $mailmagCd);
+        return $this->compute(fn () => DB::table('tb_mailmag_analyze')->where('mailmag_master_cd', $mailmagCd));
+    }
+
+    /**
+     * クリックカウンタ de una familia (inc/mailmag_graph2.php): todos los clics con ese mailmag_type
+     * ('' メルマガ, 'deco', 'coupon', 'anketo').
+     */
+    public function forType(string $type): array
+    {
+        return $this->compute(fn () => self::typeQuery($type));
+    }
+
+    /** tb_mailmag_analyze de una familia: '' cuenta también los NULL (COALESCE(mailmag_type,'') = '') */
+    public static function typeQuery(string $type)
+    {
+        return DB::table('tb_mailmag_analyze')->whereRaw("COALESCE(mailmag_type, '') = ?", [$type]);
+    }
+
+    private function compute(\Closure $base): array
+    {
 
         $sex = $base()->selectRaw("count(*) AS count,
             sum(case when customer_sex = '男性' then 1 else 0 end) AS otoko_total,
