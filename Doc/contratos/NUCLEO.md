@@ -178,3 +178,20 @@ Común del núcleo (decisión S0, antes en S4): `Nucleo\PicUploadController` + `
 - `GET /system/uploads/<archivo>`: sirve el temporal (`[A-Za-z0-9_-]+.(jpg|gif)`).
 - Para pasar un temporal a la carpeta definitiva del módulo: `app(TempUploads::class)->path($file)` / `absolutePath($file)` y los ayudantes GD `TempUploads::load()`, `shrink($img, $ancho, $siempre)`, `save($img, $ruta, $ext)`.
 - Limpieza: tarea `nucleo:limpiar-subidas` (cada hora) borra los de más de un día, como hacía `login.php`.
+
+## 13. Datos de demostración: `Database\Seeders\Demo\NucleoDemoSeeder`
+
+Lo llama el `DemoSeeder` de S0 (CONVENCIONES §4), siempre primero. Es idempotente: busca cada fila por su clave natural y nunca duplica.
+
+- **Tiendas:** 梅田店 y 難波店, en el área 大阪 y el grupo 直営店, y 京都店, en el área 京都 y el grupo フランチャイズ. Las tres llevan dirección, teléfono `090000010xx`, correo `@example.com` y coordenadas. El árbol de áreas es 関西 › 大阪 / 京都.
+- **Grupos de staff y permisos:** 店長 tiene todos los permisos. スタッフ puede ver, crear y editar, pero no borrar; no puede usar csv出力 (1002) ni SNS (1034), y en スタッフ管理 (1024) solo ve. Hay una fila de `tb_kengen` por cada contenido visible, como la que crea 権限管理.
+- **Staff:** 10 usuarios, todos con la contraseña `demo1234`. La cuenta `master` no cambia.
+
+  | Tienda | 店長 | スタッフ |
+  |---|---|---|
+  | La tienda 1 del backup | `tencho_honten` | — |
+  | 梅田店 | `tencho_umeda` | `umeda01`, `umeda02` |
+  | 難波店 | `tencho_namba` | `namba01`, `namba02` |
+  | 京都店 | `tencho_kyoto` | `kyoto01`, `kyoto02` |
+
+- **Menús:** activa los módulos 1, 3, 5, 6, 7, 9 y 0 de `tb_base_system`. También activa las opciones de `tb_base_system_child` que piden los `config/menu/*.php` y crea las que faltan, con el siguiente `cd` libre (por ejemplo, 入退室管理, カルテ管理 e ICカード管理). Fuera quedan ビーコン管理, que está en pausa, y スマトピ連携, que depende de F8. En `admin_master` deja `base_system_version_flg = 2`, `application_use_flg = 1` (マイコレ, QR, プッシュ通知) y `beacon_use_flg = 1` (ポイントルール一覧, ポイント集計); son solo banderas y no conectan con la BD de beacons. El modo ext-shop (`contents_master` mycolle/app_layout_mode) se deja como esté, porque cambia campos de muchas pantallas: con él apagado no salen ポイント管理/履歴, 予約機種一覧, ポイント一括付与 ni プッシュ通知集計. 帳票管理 depende de `config('working.report_enabled')`.
