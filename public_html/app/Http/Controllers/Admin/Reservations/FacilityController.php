@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\Reservations\Concerns\SelectsLegacyShop;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Reservations\FacilityRequest;
 use App\Models\Reservations\Facility;
+use App\Services\Reservations\ReservationInput;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -60,7 +61,8 @@ class FacilityController extends Controller
     {
         $facility->fill([
             'tb_shop_cd' => (int) $request->validated('shop_cd'),
-            'name' => $request->validated('name'),
+            // form2Db() de setsubi_register.php (半角カナ → 全角 y recorte); texto plano
+            'name' => ReservationInput::form2Db($request->validated('name')),
             'quantity' => (int) $request->validated('quantity'),
         ])->save();
 

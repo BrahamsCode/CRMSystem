@@ -149,7 +149,8 @@ class ReservationSettingService
                     ->where('cd', $cd)
                     ->where('tb_koumoku', 'like', 'free_koumoku_%')
                     ->update([
-                        'tb_koumoku_name' => (string) ($input['free_koumoku_name_' . $cd] ?? ''),
+                        // form2Db() del legacy (半角カナ → 全角 y recorte); texto plano
+                        'tb_koumoku_name' => ReservationInput::form2Db($input['free_koumoku_name_' . $cd] ?? ''),
                         'koumoku_disp' => (string) ($input['free_koumoku_disp_' . $cd] ?? ''),
                         'koumoku_check' => (string) ($input['free_koumoku_check_' . $cd] ?? ''),
                         'koumoku_select' => (string) ($input['free_koumoku_select_' . $cd] ?? ''),
@@ -224,7 +225,8 @@ class ReservationSettingService
                     ]);
                 }
 
-                $words->update(['naiyou' => (string) ($input['comment_' . $cd] ?? ''), 'update_date' => $now]);
+                // form2Db() del legacy (半角カナ → 全角 y recorte); texto plano
+                $words->update(['naiyou' => ReservationInput::form2Db($input['comment_' . $cd] ?? ''), 'update_date' => $now]);
             }
         });
     }
