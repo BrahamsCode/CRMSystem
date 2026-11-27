@@ -96,6 +96,9 @@ it('confirma con vista previa de un cliente del filtro y rechaza horas pasadas',
         ->assertSee('以下の内容で配信してもよろしいですか？')
         ->assertSee('本社からのお知らせ！')
         ->assertSee('山田 太郎様 ＜b＞')
+        // Tercera pasada: el aviso de 簡単ログイン es HTML (azul), no texto escapado
+        ->assertSee('<span style="color:#0000FF;">＊＊＊＊ここに簡単ログインが入ります＊＊＊＊</span>', false)
+        ->assertDontSee('&lt;span style=', false)
         ->assertSee('【A002】　佐藤 花子', false)
         ->assertSee('mail_magu@shop.crm-s.net' === '' ? '' : 'mail_mag@shop.crm-s.net')
         ->assertSee('即時配信')

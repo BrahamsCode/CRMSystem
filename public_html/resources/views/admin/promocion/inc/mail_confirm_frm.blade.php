@@ -92,7 +92,7 @@ function sendTestMail() {
     <td>
       <div class="{{ $cssClass }}" style="float: left; width: 15em; padding: 5px; border: 1px solid #CCCCCC; overflow-y: scroll; height: 500px; margin: 15px 15px 0 0;">@if (! $deco){!! nl2br(e($v('naiyou'))) !!}@else{!! $dispBody !!}@endif</div>
       <div class="merumagaKakuninField"><div class="{{ $cssClass }}">
-      @if (! $deco){!! nl2br(e($preview)) !!}@else{!! $preview !!}@endif
+      @if (! $deco){!! nl2br($preview) !!}@else{!! $preview !!}@endif
       </div></div>
       <input type="button" id="testMail_btn" class="btnStyleM" value="テスト{{ $toolName }}配信" />
     </td>

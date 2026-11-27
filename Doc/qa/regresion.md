@@ -35,8 +35,9 @@ Datos (fase A, `PromocionDemoSeeder`, marca `[demo-promocion-limites]`): 25 cupo
 | DM発行 (`/admin/promocion/dm/customer_list`) | Error de JS `myFlexSelect is not a function` (el buscador de S2 sin su plugin ni el datepicker) | La vista carga `myFlexSelect.js` y `ui.datepicker` · `QaTerceraPasadaTest` | ver abajo |
 | クーポン一覧, 過去配信, 予定配信, クーポン利用数確認 (vuelta de 削除/修正 con `kensu=`) | 1 fila por página (`input('kensu', 20)` con '' → null → 1) | `(int) ($request->input('kensu') ?: 20)` · `QaTerceraPasadaTest` | ver abajo |
 | Envíos de メルマガ en :8081 | Cada envío de texto avisaba a **b.g-api.net** real (BD con `push_api_host = 1`, `domain = localhost`) | `config/promocion.php` `push_trigger`: en `APP_ENV=local` → `LogPushTrigger` (solo log); `CRM_PUSH_TRIGGER=gapi` lo fuerza · `QaTerceraPasadaTest` | ver abajo |
+| 確認 de 新規メール/予約メール (`mail_mag/mail_new_confirm`) | El aviso azul 「＊＊＊＊ここに簡単ログインが入ります＊＊＊＊」 salía como texto escapado (`<span style=…>`); el legacy imprime `nl2br($message)` | Se escapa solo el cuerpo y el aviso va como HTML · `M2MailFlowTest` (confirma) | ver abajo |
 
-Probado en :8081 hasta ahora: recorrido de 145 pantallas como master y 131 como umeda01 (sin 500 ni 403 inesperados); cupón QA-S3 alta → lista (梅田店) → 修正 → 削除; CSV de クリックカウンタ (SJIS, `"	"` como el legacy); PDF de DM (300 socios). Sin fallo de código: imágenes de スタンプ `hp/uploads/c4/stamp/*.gif` (archivos subidos de producción, tampoco están en el repo legacy). スマトピ (404) espera F8.
+Probado en :8081 hasta ahora: メルマガ y デコメール inmediatos a demo7@example.com (correo en el log, push solo log); 予約配信 31/12 23:55 alta → 修正 → 予定解除; テンプレート alta → 修正 → 表示 → 削除; ポイントルール 京都店 alta → 削除; push QA-S3 guardado (9490) pero la respuesta dio 500 por el permiso del laravel.log de :8081 (entorno, avisado a S0); recorrido de 145 pantallas como master y 131 como umeda01 (sin 500 ni 403 inesperados); cupón QA-S3 alta → lista (梅田店) → 修正 → 削除; CSV de クリックカウンタ (SJIS, `"	"` como el legacy); PDF de DM (300 socios). Sin fallo de código: imágenes de スタンプ `hp/uploads/c4/stamp/*.gif` (archivos subidos de producción, tampoco están en el repo legacy). スマトピ (404) espera F8.
 
 ### マイページ / 端末 / señalización (S4)
 
