@@ -18,7 +18,7 @@
 
 @section('menu', 'promocion')
 
-@section('title', $title . ' ' . $mode)
+@section('title', $title . ' ' . $mode . ' - ' . $siteName)
 
 @section('css')
 <link href="{{ asset('legacy/system/css/popupwindow.css') }}" rel="stylesheet" type="text/css" media="all" />

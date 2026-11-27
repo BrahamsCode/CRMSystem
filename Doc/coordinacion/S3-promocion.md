@@ -9,7 +9,7 @@ Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archiv
 
 ## Próximo paso — M3
 
-Siguiente en el orden del diseño: M3 → M4 (クリックカウンタ, incluye `mycoupon_analyze`) → F5 → F6 → F4 → F7 → F1b → M6 → M7 → M10 → M5 → M8 → M9 → F8.
+Siguiente (reparto S0 2026-11-27: F6, F7 y M8 son de S4): M3 → M4 (クリックカウンタ, incluye `mycoupon_analyze`) → F5 → F4 → F1b → M6 → M7 → M10 → M5 → M9 → F8.
 
 F3 terminado (2026-11-27): ポイント発行ルール (`PointRuleController`: lista por tienda con 適用, alta/modificación con errchk del legacy, rangos de 顧客ランク, «登録中です» y borrado físico); `PointService`/`PointRuleResolver` ya existían (0.1). Pruebas `F3PointRulesTest` (4); suite 662 en verde.
 
@@ -70,6 +70,8 @@ Detalle en `Doc/diseno/promocion.md` §5. Resumen:
 Ver `Doc/diseno/promocion.md` §6. Las principales: controladores en `Admin/Promotions` (existente) con rutas/vistas/lang/menú `promocion`; ninguna pantalla en `hecho` porque la base existente no cumple aún la paridad (textos fuera de `lang/ja`, sin Form Requests ni Policies, faltan campos); `anketo`+`anketo2` → `surveys.type`; `hyouji_flg` → `status`; históricos de envío como solo lectura (la SQL `振分配信` no se migra); saldos de puntos/sellos como movimiento inicial.
 
 ## Hecho
+
+- 2026-11-27 — QA de S1 (promoción): rutas legacy con nombre doble `legacy.legacy.promocion.*` (mail_past daba 500 tras 35 s) corregidas; `<title>` con ` - <site_name>` como el legacy; selector de tienda de クーポン一覧 oculto (`displayNone`) y no desactivado; menú ya en formato NUCLEO (F2). Prueba de humo `PromocionScreensTest` (12 pantallas con login real). Reparto S0: F6, F7 y M8 pasan a S4.
 
 - 2026-11-27 — F3: ポイント発行ルール (lista, alta/modificación, borrado).
 

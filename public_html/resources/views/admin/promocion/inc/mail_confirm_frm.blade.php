@@ -39,7 +39,7 @@
 	};
 @endphp
 
-@section('title', $toolName . '配信')
+@section('title', $toolName . '配信' . ' - ' . $siteName)
 
 @section('css')
 <link href="{{ asset('legacy/system/category3/css/colorbox.css') }}" rel="stylesheet" type="text/css" media="all" />

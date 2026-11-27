@@ -6,7 +6,7 @@
 
 @section('menu', 'promocion')
 
-@section('title', $pageTitle . '詳細')
+@section('title', $pageTitle . '詳細' . ' - ' . $siteName)
 
 @php
 	$from = ($rows->currentPage() - 1) * 50;

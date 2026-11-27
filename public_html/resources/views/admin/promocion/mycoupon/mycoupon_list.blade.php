@@ -7,7 +7,7 @@
 
 @section('menu', 'promocion')
 
-@section('title', 'クーポン 一覧')
+@section('title', 'クーポン 一覧' . ' - ' . $siteName)
 
 @php
 	$query = ['shop_cd' => $shopCd, 'coupon_kubun' => $kubun];
@@ -47,7 +47,7 @@ function kensuSet(parts){
 @csrf
 <input type="hidden" name="kensu" value="{{ $perPage }}" />
 @if ($isMaster)
-<select name="shop_cd" @if ($shops->count() < 2) disabled="disabled" @endif>
+<select name="shop_cd" @if ($shops->count() < 2) class="displayNone" @endif>
 <option value="-1">全店舗</option>
 @foreach ($shops as $shop)
 <option value="{{ $shop->cd }}" @selected((string) $shopCd === (string) $shop->cd)>{{ $shop->kaishamei }}</option>

@@ -4,7 +4,7 @@
 --}}
 @extends('layouts.legacy-popup')
 
-@section('title', '顧客一覧')
+@section('title', '顧客一覧' . ' - ' . $siteName)
 
 @php
 	$perPage = 20;

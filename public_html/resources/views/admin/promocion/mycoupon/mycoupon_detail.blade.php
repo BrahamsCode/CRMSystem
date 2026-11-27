@@ -18,7 +18,7 @@
 	$pie = fn (string $v) => '/system/inc/graph_pie.php?w=300&h=180&v=' . $v;
 @endphp
 
-@section('title', 'クーポン' . (request('register_type') === 'new' ? ' 新規登録' : ' 修正'))
+@section('title', 'クーポン' . (request('register_type') === 'new' ? ' 新規登録' : ' 修正') . ' - ' . $siteName)
 
 @section('js')
 <script type="text/javascript">

@@ -5,7 +5,7 @@
 --}}
 @extends('layouts.legacy-popup')
 
-@section('title', 'メールテンプレート')
+@section('title', 'メールテンプレート' . ' - ' . $siteName)
 
 @section('css')
 <style type="text/css">

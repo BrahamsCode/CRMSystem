@@ -3,7 +3,7 @@
 
 @section('menu', 'promocion')
 
-@section('title', 'テストメールアドレス管理')
+@section('title', 'テストメールアドレス管理' . ' - ' . $siteName)
 
 @section('js')
 <script type="text/javascript">

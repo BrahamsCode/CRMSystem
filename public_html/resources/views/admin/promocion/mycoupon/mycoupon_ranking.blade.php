@@ -7,7 +7,7 @@
 
 @section('menu', 'promocion')
 
-@section('title', 'マイクーポン 使用数ランキング')
+@section('title', 'マイクーポン 使用数ランキング' . ' - ' . $siteName)
 
 @section('css')
 <style type="text/css"><!--
