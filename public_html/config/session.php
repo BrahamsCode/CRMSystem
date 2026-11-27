@@ -214,4 +214,17 @@ return [
 
     'partitioned' => env('SESSION_PARTITIONED_COOKIE', false),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Serialización de la sesión (Laravel 13)
+    |--------------------------------------------------------------------------
+    |
+    | JSON por defecto, como el skeleton de Laravel 13: evita ataques de
+    | "gadget chain" si se filtra APP_KEY. Cambiarlo invalida las sesiones
+    | abiertas (se vuelve a iniciar sesión una vez).
+    |
+    */
+
+    'serialization' => 'json',
+
 ];
