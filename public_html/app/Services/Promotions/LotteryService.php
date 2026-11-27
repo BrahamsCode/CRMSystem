@@ -88,6 +88,72 @@ class LotteryService
         return $reset->greaterThan($at) ? $reset->subDay() : $reset;
     }
 
+    /**
+     * getKujibikiCouponCount(): cupones vivos (tb_mycoupon_master.disp_flg = 1) asociados a un premio en
+     * contents_master (field 'coupon', int_data = cupón) o a todos si $prize es null. Mi página solo ofrece
+     * canjear el premio si hay alguno.
+     */
+    public function couponCount(?string $prize = null): int
+    {
+        return DB::table('contents_master as tb1')->join('tb_mycoupon_master as tb2', 'tb1.int_data', '=', 'tb2.cd')
+            ->where('tb1.category', 'tb_c6_kujibiki')->where('tb1.field', 'coupon')
+            ->when($prize !== null && $prize !== '', fn ($q) => $q->where('tb1.text_data', $prize))
+            ->where('tb2.disp_flg', '1')->count();
+    }
+
+    /**
+     * getKujibikiCountData(): por premio, sorteados hoy (0 si el último es de otro día), tope diario y peso.
+     *
+     * @return array<string, array{name: string, count: int, max: ?int, rate: ?float}>
+     */
+    public function countData(?CarbonInterface $at = null): array
+    {
+        $config = $this->config();
+        if ($config === null) {
+            return [];
+        }
+        $reset = $this->resetTime($at ?? now())->getTimestamp();
+        $out = [];
+        foreach (self::PRIZES as $name) {
+            $stats = $config['count'][$name] ?? [];
+            $out[$name] = [
+                'name' => $name,
+                'count' => ($stats['date'] ?? 0) < $reset ? 0 : (int) ($stats['count'] ?? 0),
+                'max' => isset($stats['max']) ? (int) $stats['max'] : null,
+                'rate' => $config['rate'][$name] ?? null,
+            ];
+        }
+
+        return $out;
+    }
+
+    /**
+     * getCustomerCount(): intentos de hoy y máximo diario del cliente; crea su contador a 0 si es socio.
+     * null si no es socio activo (el legacy devolvía false).
+     *
+     * @return array{count: int, max: int}|null
+     */
+    public function customerCount(int $customerCd, ?CarbonInterface $at = null): ?array
+    {
+        $at ??= now();
+
+        return DB::transaction(function () use ($customerCd, $at) {
+            $max = (int) ($this->config()['max'] ?? 0);
+            $counter = KujibikiCount::query()->where('tb_customer_cd', $customerCd)->where('disp_flg', '1')->lockForUpdate()->first();
+            if (! $counter) {
+                if (! DB::table('tb_customer')->where('cd', $customerCd)->where('touroku_kubun', '2')->where('disp_flg', '1')->exists()) {
+                    return null;
+                }
+                KujibikiCount::create(['tb_customer_cd' => $customerCd, 'int_data' => 0, 'disp_flg' => '1', 'hyouji_flg' => '1']);
+
+                return ['count' => 0, 'max' => $max];
+            }
+            $count = (int) $counter->update_date < $this->resetTime($at)->getTimestamp() ? 0 : (int) $counter->int_data;
+
+            return ['count' => $count, 'max' => $max];
+        });
+    }
+
     /** getDbRecord(): null si no hay configuración o el sorteo está desactivado */
     private function config(): ?array
     {

@@ -256,6 +256,28 @@ describe('LotteryService', function () {
 
         expect(($this->lottery)(15)->draw(11)['status'])->toBe('ERROR');
     });
+
+    it('F1b: intentos del cliente, existencias del día y cupones de cada premio para Mi página', function () {
+        $lottery = ($this->lottery)(15);
+        expect($lottery->customerCount(10))->toBe(['count' => 0, 'max' => 2])
+            ->and(DB::table('tb_kujibiki_count')->where('tb_customer_cd', 10)->exists())->toBeTrue()
+            ->and($lottery->customerCount(99))->toBeNull();
+
+        $lottery->draw(10);
+        expect($lottery->customerCount(10))->toBe(['count' => 1, 'max' => 2])
+            ->and($lottery->countData()['ゴールド'])->toBe(['name' => 'ゴールド', 'count' => 1, 'max' => 5, 'rate' => 20.0])
+            ->and($lottery->countData()['ハズレ'])->toBe(['name' => 'ハズレ', 'count' => 0, 'max' => null, 'rate' => 70.0]);
+
+        Carbon::setTestNow(jst('2026-03-11 06:00'));
+        expect($lottery->customerCount(10)['count'])->toBe(0)->and($lottery->countData()['ゴールド']['count'])->toBe(0);
+
+        DB::table('tb_mycoupon_master')->insert([['cd' => 1, 'title' => 'A', 'disp_flg' => '1'], ['cd' => 2, 'title' => 'B', 'disp_flg' => '9']]);
+        DB::table('contents_master')->insert([
+            ['cd' => 500, 'category' => 'tb_c6_kujibiki', 'field' => 'coupon', 'text_data' => 'ゴールド', 'int_data' => 1, 'disp_flg' => '1'],
+            ['cd' => 501, 'category' => 'tb_c6_kujibiki', 'field' => 'coupon', 'text_data' => 'ダイヤ', 'int_data' => 2, 'disp_flg' => '1'],
+        ]);
+        expect($lottery->couponCount('ゴールド'))->toBe(1)->and($lottery->couponCount('ダイヤ'))->toBe(0)->and($lottery->couponCount())->toBe(1);
+    });
 });
 
 // ---------------------------------------------------------------------------

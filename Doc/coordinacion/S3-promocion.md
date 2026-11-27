@@ -7,9 +7,9 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — F1b
+## Próximo paso — M6
 
-Siguiente (reparto S0 2026-11-27): F1b → M6. F4/F5 son de S2; M5/M7 de S4; M10 descartado; M9 y F8 esperan a Antony.
+Siguiente (reparto S0 2026-11-27): M6. F4/F5 son de S2; M5/M7 de S4; M10 descartado; M9 y F8 esperan a Antony.
 
 M3 terminado (2026-11-27): 自動 y フォロー (`RuleController`: auto_new/confirm con meses+días o días de la semana; follow_new/confirm con 来店後, 会員登録後, 誕生日前, 来店周期 y campos 年月日/月日, armando el `振分配信` relativo a hoy como búsqueda guardada), flujo común de envío con `mail_type` follow|followdeco / auto|autodeco (rutas `follow.*`, `auto.*`), lista de programados con tienda destino, condiciones y 起動/停止 (`ajax_change_status`), edición (cupón en `get_coupon_cd`, «<tienda> 宛») y 例外顧客 por buscador (`ajax_search_kaiin`, `ajax_get_shop_data`). Pruebas `M3RulesTest` (4).
 
@@ -72,6 +72,8 @@ Detalle en `Doc/diseno/promocion.md` §5. Resumen:
 Ver `Doc/diseno/promocion.md` §6. Las principales: controladores en `Admin/Promotions` (existente) con rutas/vistas/lang/menú `promocion`; ninguna pantalla en `hecho` porque la base existente no cumple aún la paridad (textos fuera de `lang/ja`, sin Form Requests ni Policies, faltan campos); `anketo`+`anketo2` → `surveys.type`; `hyouji_flg` → `status`; históricos de envío como solo lectura (la SQL `振分配信` no se migra); saldos de puntos/sellos como movimiento inicial.
 
 ## Hecho
+
+- 2026-11-27 — F1b: `LotteryService` completo para Mi página (S4): además de `draw()` (0.1), `customerCount()`, `countData()` y `couponCount()` (getCustomerCount, getKujibikiCountData, getKujibikiCouponCount de cKujibiki).
 
 - 2026-11-27 — M4: クリックカウンタ de メルマガ, デコメール, マイクーポン y アンケート + CSV (master). Estado de promocion.md al día. Reparto S0: F4/F5 → S2, M5/M7 → S4, M10 descartado, M9/F8 esperan a Antony; quedan F1b y M6.
 
