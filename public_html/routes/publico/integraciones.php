@@ -54,6 +54,7 @@ Route::name('publico.integraciones.')
             Route::any('category1/getRaitenList.php', [ToolApi\RaitenController::class, 'index'])->name('raiten-list');
             Route::any('category1/getRaitenDetail.php', [ToolApi\RaitenController::class, 'show'])->name('raiten-detail');
             Route::any('category1/addRaitenRecord.php', [ToolApi\RaitenController::class, 'store'])->name('raiten-add');
+            Route::any('category1/setRaitenDetail.php', [ToolApi\RaitenController::class, 'update'])->name('raiten-set');
             Route::any('category5/getStaffList.php', [ToolApi\StaffController::class, 'index'])->name('staff-list');
         });
 

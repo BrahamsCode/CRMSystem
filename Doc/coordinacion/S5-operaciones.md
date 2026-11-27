@@ -99,3 +99,4 @@ Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD le
 - 2026-11-27 — 営業日設定 (`ShopWorkController`, `LegacyHolidays` con las reglas de `check_holiday` tal cual) y bloque 初期設定管理 del menú (`ShopWorkTest`).
 - 2026-11-27 — シフト区分管理 (`StaffShiftKindController`, `LegacyRanking` compartido con スタッフグループ) (`ShiftKindTest`).
 - 2026-11-27 — 日別シフト管理 y 月別シフト管理 (`StaffShiftController`, `ShiftBoard`, vistas con el JS/CSS del legacy) (`StaffShiftTest`). Pasos 1-4 y 8-10 hechos; suite 573 en verde.
+- 2026-11-27 — `setRaitenDetail` sobre `VisitRecordService::save` de S2 (mismas claves; errores con el formato del legacy; `add_record_verify` en sesión) (`SetRaitenDetailTest`; contrato contra el legacy `todo` hasta C3).

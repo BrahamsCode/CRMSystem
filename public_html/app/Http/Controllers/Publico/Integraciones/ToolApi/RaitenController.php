@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Publico\Integraciones\ToolApi;
 
 use App\Http\Controllers\Controller;
 use App\Models\Customers\Customer;
+use App\Services\Customers\VisitRecordService;
+use App\Services\Customers\VisitRecordValidationException;
 use App\Services\Customers\VisitService;
 use App\Services\Integraciones\ToolApi\RelatedFeatures;
 use App\Services\Integraciones\ToolApi\ToolApiOutput as Out;
@@ -11,13 +13,60 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 /**
- * system/tool/api/category1: getRaitenList.php, getRaitenDetail.php y addRaitenRecord.php (visitas).
- * setRaitenDetail.php (alta/edición manual con puntos, sellos y 関連情報) espera el servicio de S2 de
- * kanren_record_register.
+ * system/tool/api/category1: getRaitenList.php, getRaitenDetail.php, addRaitenRecord.php y setRaitenDetail.php
+ * (visitas). setRaitenDetail delega en VisitRecordService de S2 (kanren_record_register).
  */
 class RaitenController extends Controller
 {
     use PagesToolApi;
+
+    /**
+     * setRaitenDetail.php: alta o corrección de una visita con puntos/sellos y 関連情報 (VisitRecordService de S2,
+     * mismas claves que el legacy). Errores: { "status": "error", "result": { "<campo>" : "<mensaje>" } } (sin ※ ni <br>;
+     * la variante JSONP, rota en el legacy por precedencia de operadores, sale con el formato correcto). Un mismo
+     * add_record_verify repetido en la sesión no vuelve a guardar y responde SUCCESS sin cd, como el legacy.
+     */
+    public function update(Request $request, RelatedFeatures $related, VisitRecordService $records): Response
+    {
+        $errors = [];
+        $customer = null;
+        $customerCd = Out::form2Db($request->input('kaiin_cd'));
+        if ($customerCd === '') {
+            $errors['customer'] = '顧客CD番号が空です。';
+        } elseif (($related->config()[2] ?? '') === '') {
+            $errors['relatedFeaturesConfig'] = 'カルテ使用設定がされていません。';
+        } elseif (! $customer = Customer::withDeleted()->where('cd', (int) $customerCd)->first()) {
+            // El legacy seguía con el socio vacío; aquí se responde el mismo error que sin kaiin_cd
+            $errors['customer'] = '顧客CD番号が空です。';
+        }
+
+        $verify = Out::form2Db($request->input('add_record_verify'));
+        $cd = '';
+        if (! $errors) {
+            if ($verify === '') {
+                return Out::text('{ "status": "error", "result": { "add_record_verify": "多重登録エラーです。" } }');
+            }
+            if ($request->session()->get('tool_api.add_record_verify') !== $verify) {
+                try {
+                    $cd = (string) $records->save($customer, $request->except(['key', 'data_type', 'callback']));
+                    $request->session()->put('tool_api.add_record_verify', $verify);
+                } catch (VisitRecordValidationException $e) {
+                    $errors = $e->errors();
+                }
+            }
+        }
+
+        if ($errors) {
+            $pairs = [];
+            foreach ($errors as $field => $message) {
+                $pairs[] = '"'.$field.'" : "'.str_replace(['※', '<br>'], '', (string) $message).'"';
+            }
+
+            return Out::jsonp($request, '{ "status": "error", "result": { '.implode(',', $pairs).' } }');
+        }
+
+        return Out::jsonp($request, '{ "status": "SUCCESS", "result": "'.$cd.'" }');
+    }
 
     /** Terminal con la que el legacy marcaba las visitas de tool/api (raitenFunc(..., -2, ...)) */
     public const TERMINAL_CD = -2;
