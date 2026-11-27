@@ -9,7 +9,7 @@ Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archiv
 
 ## Próximo paso
 
-A, B, category0, QA y comunes (CSV, PDF, subidas) completos (ver "Hecho"). Esperando la siguiente tarea de S0.
+Tercera pasada hecha (ver "Hecho"). Pendiente: repasar `:8081` cuando S0 recargue `crmsystem2` con la fase A. Esperando la siguiente tarea de S0.
 
 **A) Base legacy** (corto; subir apenas esté): traits `app/Models/Concerns/` `HasHatuban` (numeración por `koumoku`), `LegacySoftDeletes` (scope `disp_flg <> '9'`, `delete()` pone `'9'`), `LegacyTimestamps` (`touroku_date`/`update_date` epoch en texto); modelo base `LegacyModel` (`cd`, no incremental, sin timestamps, `$guarded=[]`); servicio `Hatuban`; modelos `Shop` (`tb_shop`), `Staff` (`tb_staff`), `Terminal` (`tb_terminal`), `AdminMaster`, `ContentsMaster`, con pruebas sobre el esquema legacy; registrar `<Modulo>ServiceProvider` existentes en `bootstrap/providers.php`. Terminado: pruebas en verde, commit, push, aviso.
 
@@ -73,6 +73,7 @@ Recibidos de S0 el 2026-11-26 (para la Cola, después de la Fase 1; S0 los asign
 
 ## Hecho
 
+- **Tercera pasada (2026-11-27):** fase A: NucleoDemoSeeder con casos límite (心斎橋店 de baja, nombre de 255 caracteres, 天王寺店 sin opcionales), `qa_partial`/`qa12345` (QA部分権限), `taishoku01` 退職 y 歩合 (8a248cb). Fase B: recorrido del núcleo en `:8081` y `:18081` (resumen en `Doc/qa/regresion.md`, subsección S1); fallos corregidos: ショートカット a URL legacy (4cd2fa7), お問い合わせ `system/contact/` migrada y favicon (4edb8f8), interruptor común `App\Support\GApi` (`CRM_GAPI_ENABLED`) y seeder con `push_api_host = 0` y `system_mail` @example.com (dc7f712). `:18081` = contenedor `s1-serve` con `php -S` (no `artisan serve`, que no pasa `STAGE`).
 - **Datos de demostración (2026-11-27):** `database/seeders/Demo/NucleoDemoSeeder.php` siembra 3 tiendas (梅田店, 難波店, 京都店), el árbol de áreas 関西 › 大阪 / 京都, los grupos de tienda 直営店 y フランチャイズ, y los grupos de staff 店長 y スタッフ con su `tb_kengen`. Añade 10 staff con la clave `demo1234` y activa los módulos y las opciones de menú. Es idempotente (comprobado con migrate:fresh + bd-legacy.sh y dos ejecuciones) y está documentado en NUCLEO.md §13, con su `DemoSeederTest`.
 - **Paridad y regresión sobre laravel13 1c56ac2 (2026-11-27):** `Doc/qa/paridad.md` regenerada: 97 %, 472 hechos y 12 pendientes (スマトピ 2, ビーコン 4, S5 6). Segunda pasada de `regresion.js` con 128 URL de menú. master abrió 134 pantallas y qa_partial 131: 0 errores 500, 0 páginas en blanco, 0 errores de JS y 3 404 (スマトピ ×2 y ビーコン, pendientes de decisión). Todos los 403 se deben a condiciones o permisos.
 - **Conexión `beacon` (2026-11-27):** `config/database.php` `pgsql` con `DB_BEACON_*` (vacías en `.env.example`, sin heredar la principal), perezosa y con `DB_BEACON_TIMEOUT`; prueba de que la app responde con la BD caída (`BeaconConnectionTest`) y NUCLEO.md. Los modelos son de S4. Suite: 950 en verde.

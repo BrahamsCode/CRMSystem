@@ -8,14 +8,37 @@ Cada sesión escribe solo en su subsección. Formato de cada fallo: `| pantalla 
 
 ### Núcleo / 基本情報 (S1)
 
-Recorrido con Playwright en `:8081` como master. Lo creado lleva el prefijo «QA-S1» y se borró al terminar; lo cambiado en 機能設定 y 権限管理 se dejó como estaba, comprobado en la BD (admin_master con el mismo md5 que antes). La muestra solo se abrió para comparar.
+Recorrido con Playwright en `:8081` (BD `crmsystem2`, datos de la ronda anterior) como master y como `qa_partial`. Las pantallas que exigen IP de desarrollo (店舗新規登録 y 削除, システム管理, 権限項目管理, CRM端末管理) dan 403 en `:8081`, como el legacy sin esa IP: se probaron en `:18081`, mi worktree con `STAGE=docker` sobre mi BD `crmsystem2_nucleo`, que ya tiene los datos nuevos de la fase A (tienda de baja, nombre de 255 caracteres, tienda sin opcionales). En `:8081` lo creado lleva el prefijo «QA-S1» y se borró al terminar. Lo cambiado en 機能設定, 権限管理, 基本情報確認・変更 y ショートカット se dejó como estaba, comprobado en la BD: admin_master y tb_office con el mismo md5 que antes y tb_bookmark sin marcas ni orden. La muestra solo se abrió para comparar. Cada prueba usa un contexto de navegador limpio.
+
+| Pantalla | Probado | Resultado |
+|---|---|---|
+| Login / logout (`login.php`, `logout.php`) | Clave errónea, usuario inexistente, campos vacíos, 退職, 店長, `qa_partial`, master; entrar sin sesión | Mismos mensajes que el legacy; sin sesión manda al login |
+| システム選択 y cabecera | Módulos de master (1,3,5,6,7,9,0) y de un no master (sin 基本情報管理); お問合せ | OK (お問合せ: fallo corregido abajo) |
+| 店舗検索・一覧 (`shop_list.php`) | Búsqueda por nombre, 責任者, correo, sin resultados y por エリア (árbol: doble clic despliega, un clic marca las tiendas); 表示件数; paginación (`kensu=2`, página 2); 表示 activas, de baja y todas | OK, igual que la muestra; el nombre de 255 caracteres no rompe la tabla |
+| 店舗詳細, 修正 y validación (`shop_detail.php`, `shop_new.php?shop_cd=`) | Edición de 京都店 guardada y revertida; nombre vacío, correo y código postal erróneos | OK (ver el fallo de g-api abajo) |
+| 店舗新規登録 y 削除 / 削除を取り消す (`:18081`) | Alta «QA-S1 テスト店», baja (aviso de traspaso de staff y clientes), recuperación y baja otra vez | OK, sin llamadas externas |
+| 店舗グループ (`shop_category.php`) | Alta (vacía: aviso), edición, ▲▼, borrado y renumeración | OK |
+| エリア管理 (`area.php`, `area_edit.php`, `area_confirm.php`) | Alta bajo 関西 con confirmación, edición, ▲, 表示 (更新する), borrado | OK |
+| 権限管理 (`authority.php`) | Matriz de スタッフ por AJAX; 新規 de スタッフ管理 guardado y revertido | OK |
+| 機能設定 (`features_config.php`) | En `:8081`: 端末ログアウト時間, 店舗グループ, メールフッター y 配信フィルター cambiados y revertidos. En `:18081`: プライバシーポリシー, 予約メール, プッシュタイトル, 集計範囲 y 不達配信数リセット | OK; mismo formulario que la muestra |
+| 基本情報確認・変更 (`config.php`) | ホームページ表示名称 guardado y revertido; validación (会社名 vacío, correo) | OK; la パスワード solo va a tb_office, no a la clave de master |
+| ショートカット管理 (`bookmark.php`, `bookmark_list.php`) | Registrar 4, reordenar arrastrando, enlaces de la cabecera, desmarcar; 設定を初期化する en `:18081` | Fallo corregido abajo |
+| システム管理, 権限項目管理, CRM端末管理 (`:18081`) | ビーコン使用 cambiado y revertido; alta y edición de un 権限項目 en su ventana; lista de CRM端末 | OK. CRM端末登録 no se pulsó: abre el servidor externo ac.crm-s.jp |
+| Usuario limitado (`qa_partial`) | Todas las URL de category0 | 403, como debe ser (基本情報管理 es solo de master) |
+
+El núcleo no tiene pantallas con CSV ni PDF (los helpers `LegacyCsv` y `LegacyPdf` los usan los módulos).
 
 | Pantalla (URL) | Fallo | Corrección + prueba Pest | Commit |
 |---|---|---|---|
 | Cabecera y ショートカット管理 (`bookmark*.php`) | Los accesos directos enlazaban la URL legacy de `tb_bookmark`. Las pantallas movidas a `/admin/…` daban 404: スタッフ一覧, クーポン一覧, メルマガ y otras; 40 de los 63 accesos de fábrica no tenían ruta (12 de ellos son pantallas descartadas o de kiosk) | `Bookmark::targetUrl()`: usa la URL legacy si conserva su ruta, si no la de Laravel (`/admin/promocion/<dir>/<archivo>` en category3 y un mapa para スタッフ, マイページ y 求人). Los accesos a pantallas descartadas (携帯HP, トピックス, フォトギャラリー) y a kiosk no se ofrecen. `BookmarkTest`: la cabecera enlaza la ruta nueva y cada URL de `bookmark_reset.sql` resuelve a una ruta existente | 4cd2fa7 (verificado en `:8081` tras fusionar: los 5 accesos probados dan 200) |
 | お問合せ de la cabecera (`/system/contact/?wintype=no_headers`), hallado por S2 | 404: 要望・お問い合わせ (`system/contact/index.php`, `contact_confirm.php`, `contact_complete.php`) no estaba migrada | Migrada en la ventana emergente: formulario, confirmación y envío con `ContactMail` en cola a `crm.notify.contact` (`crm@extlink.co.jp`, como el legacy). master elige tienda; los demás envían la suya. `verify` evita el doble envío. `ContactTest` | 4edb8f8 |
 | `<head>` común (login y todas las pantallas), hallado por S2 | `/system/img/favicon.ico` y `favicon.png` daban 404. El legacy tampoco los tiene (la muestra también da 404) | Favicon nuevo con la marca «CRM» del logo de la cabecera, en `public/legacy/system/img/`. `ContactTest` comprueba que se sirven | 4edb8f8 |
-| Guardar tienda (`shop_new_register.php`) y login de soporte | Con `application_use_flg = 1` y `push_api_host = 1` (así viene el backup) las llamadas a g-api iban a b.g-api.net de **producción** desde desarrollo: mis dos ediciones de 京都店 en `:8081` mandaron `setStoreTel` con `domain=localhost` | Interruptor común `App\Support\GApi` (`CRM_GAPI_ENABLED`, apagado fuera de producción: solo registra en el log) en ShopService y StaffLogin; el seeder pone `push_api_host = 0` y `system_mail` @example.com. `GApiTest`, `LoginTest`, `DemoSeederTest` | (este) |
+| Guardar tienda (`shop_new_register.php`) y login de soporte | Con `application_use_flg = 1` y `push_api_host = 1` (así viene el backup) las llamadas a g-api iban a b.g-api.net de **producción** desde desarrollo: mis dos ediciones de 京都店 en `:8081` mandaron `setStoreTel` con `domain=localhost` | Interruptor común `App\Support\GApi` (`CRM_GAPI_ENABLED`, apagado fuera de producción: solo registra en el log) en ShopService y StaffLogin; el seeder pone `push_api_host = 0` y `system_mail` @example.com. `GApiTest`, `LoginTest`, `DemoSeederTest` | dc7f712 |
+
+**Resumen S1:** 13 grupos de pantallas del núcleo probados en el navegador como master y como usuario limitado, con alta, edición, borrado, búsqueda y paginación donde existen. 4 fallos encontrados y corregidos, cada uno con su prueba: ショートカット a URL legacy (4cd2fa7), お問合せ sin migrar (4edb8f8), favicon (4edb8f8) y llamadas a g-api de producción (dc7f712). Pendientes:
+- Que S3, S4 y S5 apliquen `GApi` a sus llamadas: GApiPushTrigger, QrBaseInfo, RecommendationPush, `Appview\GApi` y PhotoAlbumUploader.
+- Volver a pasar el recorrido en `:8081` cuando S0 recargue `crmsystem2` con los datos de la fase A. Hasta entonces, la tienda de baja, el nombre largo y `taishoku01` solo se vieron en `:18081`.
+- Observación sin corregir, porque el legacy hace lo mismo: el `<select>` de tiendas de お問い合わせ se ensancha con el nombre de 255 caracteres. Queda para el rediseño final.
 
 ### Clientes / ventas / reservas (S2)
 
