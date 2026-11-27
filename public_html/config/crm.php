@@ -52,6 +52,15 @@ return [
         'timeout' => 15,
     ],
 
+    /*
+     * Llamadas a la API externa de la app y del soporte (g-api.net): App\Support\GApi. Apagado fuera de producción
+     * (se mira APP_ENV: app()->isProduction() aún no está disponible al cargar la configuración); apagado solo se registra
+     * en el log lo que se habría enviado.
+     */
+    'gapi' => [
+        'enabled' => (bool) env('CRM_GAPI_ENABLED', env('APP_ENV', 'production') === 'production'),
+    ],
+
     /* Avisos por correo al soporte del proveedor (vacío = no se envía) */
     'notify' => [
         // shop_new_register.php: alta de tienda

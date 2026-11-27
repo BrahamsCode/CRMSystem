@@ -5,10 +5,10 @@ namespace App\Services\Base;
 use App\Mail\Base\ShopCreatedMail;
 use App\Models\AdminMaster;
 use App\Models\Shop;
+use App\Support\GApi;
 use App\Support\LegacyCheck;
 use App\Support\LegacyText;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 
 /**
@@ -144,7 +144,7 @@ class ShopService
         if ((string) $admin->application_use_flg === '1') {
             $apiDomain = (int) $admin->push_api_host === 0 ? 'b-develop.g-api.net' : 'b.g-api.net';
             try {
-                Http::timeout(3)->get("http://{$apiDomain}/api/mpa/setStoreTel", [
+                GApi::get("http://{$apiDomain}/api/mpa/setStoreTel", [
                     'domain' => $host, 'shop_cd' => $shop->cd, 'tel' => $shop->mycolle_tel,
                 ]);
             } catch (\Throwable) {

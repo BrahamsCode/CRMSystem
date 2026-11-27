@@ -33,6 +33,9 @@ class NucleoDemoSeeder extends Seeder
 {
     public const DEMO_PASSWORD = 'demo1234';
 
+    /** admin_master.system_mail de demo (copia de cada envío de MailSender) */
+    public const SYSTEM_MAIL = 'crm-mail@example.com';
+
     /** Módulos visibles (tb_base_system): cd => [nombre, narabi] del legacy */
     private const MODULES = [
         1 => ['顧客管理', 1], 3 => ['販売促進管理', 3], 6 => ['マイページ管理', 4], 5 => ['業務支援管理', 6],
@@ -186,8 +189,12 @@ class NucleoDemoSeeder extends Seeder
         // UI 2 (ペーパーサイネージ), app (マイコレ, QR, プッシュ通知) y ビーコン使用 (ポイントルール一覧, ポイント集計; solo
         // banderas, no conecta a la BD de beacons). El modo ext-shop (contents_master mycolle/app_layout_mode) se deja
         // como esté: cambia campos de muchas pantallas, no es una bandera de menú.
+        // Nada hacia fuera: push_api_host 0 (servidor de desarrollo de g-api, nunca b.g-api.net de producción; además
+        // GApi está apagado fuera de producción) y system_mail @example.com (MailSender le manda copia de cada envío;
+        // en el backup es una dirección real del proveedor).
         DB::table('admin_master')->where('cd', 1)->update([
             'base_system_version_flg' => '2', 'application_use_flg' => '1', 'beacon_use_flg' => '1',
+            'push_api_host' => 0, 'system_mail' => self::SYSTEM_MAIL,
         ]);
     }
 

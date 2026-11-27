@@ -61,7 +61,7 @@ it('no acepta las claves internas de soporte escritas en el formulario', functio
 });
 
 it('entra como master con extsupport si el servidor de soporte valida la clave', function () {
-    config(['crm.support.support_master_pass' => 'clave-soporte', 'crm.support.api_host' => 'soporte.test']);
+    config(['crm.support.support_master_pass' => 'clave-soporte', 'crm.support.api_host' => 'soporte.test', 'crm.gapi.enabled' => true]);
     Http::fake(['soporte.test/*' => Http::response(['status' => 'ok', 'data' => ['access_level' => 'master']])]);
     seedNucleo();
 
@@ -71,6 +71,17 @@ it('entra como master con extsupport si el servidor de soporte valida la clave',
     expect(session('nucleo.support_login'))->toBeTrue()
         ->and(session('nucleo.support_master'))->toBeTrue()
         ->and(DB::table('tb_login_rireki')->value('komento'))->toBe('ログイン ワンタイムパスワード: 123456');
+});
+
+it('con g-api apagado (fuera de producción) no consulta al soporte y extsupport no entra', function () {
+    config(['crm.support.support_master_pass' => 'clave-soporte', 'crm.support.api_host' => 'soporte.test', 'crm.gapi.enabled' => false]);
+    Http::fake();
+    seedNucleo();
+
+    loginAs('extsupport', '123456')->assertRedirect('/system/login.php');
+
+    $this->assertGuest('admin');
+    Http::assertNothingSent();
 });
 
 it('recuerda solo el usuario si se marca la casilla', function () {

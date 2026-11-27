@@ -76,6 +76,10 @@ it('deja la clave de master y da permisos coherentes a 店長 y スタッフ', f
 
     expect(Staff::where('login_id', 'master')->value('login_pass'))->toBe('secreto1');
 
+    // Nada hacia fuera: g-api de desarrollo y copia de MailSender a @example.com
+    $admin = DB::table('admin_master')->where('cd', 1)->first();
+    expect((int) $admin->push_api_host)->toBe(0)->and($admin->system_mail)->toBe(NucleoDemoSeeder::SYSTEM_MAIL);
+
     $tencho = Staff::where('login_id', 'tencho_umeda')->first();
     $staff = Staff::where('login_id', 'umeda01')->first();
     expect(Gate::forUser($tencho)->allows('kengen.1024.2'))->toBeTrue()

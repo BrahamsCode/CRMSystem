@@ -4,9 +4,9 @@ namespace App\Services\Nucleo;
 
 use App\Models\LoginHistory;
 use App\Models\Staff;
+use App\Support\GApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 
 /**
  * Login y logout del personal, con las mismas reglas y mensajes que system/login.php y logout.php:
@@ -99,7 +99,8 @@ class StaffLogin
     }
 
     /**
-     * Verificación contra el servidor de soporte (b.g-api.net), como login.php.
+     * Verificación contra el servidor de soporte (b.g-api.net), como login.php. Con g-api apagado (GApi, fuera de
+     * producción) no se consulta y el login de soporte no entra.
      *
      * @return array{0: string, 1: string, 2: string, 3: bool} [login_id, clave interna, sufijo del historial, relation]
      */
@@ -115,9 +116,9 @@ class StaffLogin
                 if (mb_strlen($password) !== 6) {
                     return $none;
                 }
-                $response = Http::timeout($timeout)->get("http://{$host}/api/support/verifyOnetimePassword.php", [
+                $response = GApi::get("http://{$host}/api/support/verifyOnetimePassword.php", [
                     'act' => 'verify', 'pass' => $password, 'domain' => $domain,
-                ])->json();
+                ], $timeout)?->json();
                 if (($response['status'] ?? null) !== 'ok') {
                     return $none;
                 }
@@ -129,13 +130,13 @@ class StaffLogin
             }
 
             // Relation: clave de la cuenta de soporte o, si falla y mide 8, clave de un solo uso
-            $response = Http::asForm()->timeout($timeout)->post("http://{$host}/api/support/verifyAccountLogin.php", [
+            $response = GApi::postForm("http://{$host}/api/support/verifyAccountLogin.php", [
                 'act' => 'verify', 'password' => $password, 'domain' => $domain,
-            ])->json();
+            ], $timeout)?->json();
             if (($response['status'] ?? null) !== 'ok' && mb_strlen($password) === 8) {
-                $response = Http::asForm()->timeout($timeout)->post("http://{$host}/api/support/verifyOnetimePassword.php", [
+                $response = GApi::postForm("http://{$host}/api/support/verifyOnetimePassword.php", [
                     'act' => 'verify', 'pass' => $password, 'domain' => $domain,
-                ])->json();
+                ], $timeout)?->json();
             }
             if (($response['status'] ?? null) !== 'ok') {
                 return $none;
