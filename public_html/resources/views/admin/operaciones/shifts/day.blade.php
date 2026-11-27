@@ -1,6 +1,7 @@
 {{-- Legacy: system/category5/schedule/staff_shift.php (日別シフト管理). Mismo HTML, CSS (bootstrap del módulo) y JS
      (add.shift.js, modales de bootstrap, html2canvas para 印刷). Cambios: el jQuery del módulo ya es el 3.7.1 del layout,
-     así que `$1113` apunta al mismo; los datos del JS se emiten con @json; se quitó el enlace roto a time_table.php.
+     así que `$1113` apunta al mismo; los datos del JS se emiten con @json; la fecha enlaza al propio día (el legacy
+     enlazaba a time_table.php?shop=1&d=20150825, que no existe; el <a> se mantiene por el color de #dateDisp a:link).
      Variables: $day (CarbonImmutable), $d (Ymd), $shops, $shopCd, $staff, $slots, $hours, $shifts, $kinds, $calendars, $print --}}
 @extends('layouts.legacy')
 
@@ -128,7 +129,7 @@ function printShift(){
 <div id="calendarControl" class="clearfix" style="display: block; text-align: center;">
 <div id="dateDispArea">
 <div id="nenDisp"><span>{{ $day->year }}</span>年</div>
-<div id="dateDisp">{{ $day->format('m') }}/{{ $day->format('d') }}<span>({{ $w[$day->dayOfWeek] }})</span></div>
+<div id="dateDisp"><a href="{{ route('admin.operaciones.shifts.day', ['d' => $d, 'shop_cd' => $shopCd]) }}">{{ $day->format('m') }}/{{ $day->format('d') }}<span>({{ $w[$day->dayOfWeek] }})</span></a></div>
 <div class="shop_select">
 <form action="{{ route('admin.operaciones.shifts.day') }}" method="get" name="form1">
 	<input type="hidden" name="d" value="{{ $d }}">
