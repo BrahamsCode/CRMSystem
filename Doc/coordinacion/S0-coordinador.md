@@ -148,6 +148,13 @@
   - S1: comprobación del PDF japonés (`髙` necesita IPAex) y segunda pasada de QA.
   Los conflictos aditivos de rutas en `routes/*/promocion.php` (S2, S3 y S4) se resolvieron conservando los dos lados. En `promocion.md` se queda la versión de S3; S2 y S4 vuelven a marcar sus filas. `laravel13` con 931 pruebas en verde.
 - Entorno de :8081: el contenedor `app` usa su propio volumen `vendor` (seguía en Laravel 12). Se actualizó con `docker exec crmsystem2-app-1 composer install` y se cargó el esquema `signage` en `crmsystem2`. `bd-legacy.sh` crea ahora también el esquema `signage`, aunque la BD ya tenga datos.
+- 2026-11-27 (06:45): integrados:
+  - S1: `paridad.md`, con 624 filas: 403 hechas, 79 pendientes y 137 descartadas (83 %). S1 y S2 sin pendientes. Más IPAex documentado y `ajax_picupload`/`system/uploads` en el núcleo.
+  - S2: filas F4/F5 y la QA de reservas.
+  - S3: `StampService` por `tb_shop_cd` y los enlaces de push.
+  - S4: filas y `AnketoMailController` simplificado.
+  - S5: `Doc/qa/para-japon.md`.
+  `laravel13` con 940 pruebas en verde. Lo pendiente es casi todo lo bloqueado por Antony: 勤怠 (26), reproductores de signage (17, sin volcado), M9/F8 y GoTel/ビーコン.
 - 2026-11-27: siguiente tarea de S1 (Antony: el login primero): modelo base y traits comunes, luego el login contra el personal del legacy, el layout idéntico y los estáticos comunes.
 
 ## Hecho
