@@ -9,3 +9,12 @@ Revisión visual S1, 2026-11-27 (método en [README.md](README.md)). Pantallas: 
 | `digital_signage/` | La muestra responde 403 (índice de carpeta) | Sin comparar. |
 
 Menú lateral, cabecera y pie de la portada: sin diferencias (en las dos BD el menú está vacío para master).
+
+## Segunda pasada (S1, 2026-11-27): signage y digitalsignage de S4
+
+| Pantalla | Resultado |
+|---|---|
+| CMS `signage/index.php` ~ `/admin/senalizacion` | La muestra pide su propio login (「ログインください」, `?s=`): sin comparar. En `localhost:8081` da **500** `relation "terminal" does not exist`: a la BD principal le falta el esquema `signage` (`database/schema/signage-admin.sql`); es del entorno, no del código. |
+| Reproductor `signage/view/index.php` | Mismo 500 en local (mismo motivo). |
+| `digitalsignage/index.php` | Mismo esqueleto (title, recursos e id) sin ejecutar el JS de la muestra (sus sondeos podrían marcar cupones como impresos). |
+| `digitalsignage/roulette.php` | La muestra devuelve `#cover`; local `#roulette` y `#gameMessage`. Depende de la configuración de ルーレット de cada BD: revisar con la misma configuración. |

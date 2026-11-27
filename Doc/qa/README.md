@@ -35,3 +35,8 @@ S1, 2026-11-27. Comparación con Playwright entre la muestra (`https://developme
 ## PDF con japonés (`LegacyPdf`)
 
 Comprobado a ojo (2026-11-27): HTML con kanji, kana de ancho completo y medio (ｶﾀｶﾅ), ①②③, ￥, 〒 y una tabla, convertido a PNG con `pdftoppm` (poppler) en un contenedor efímero: [capturas/pdf-japones.png](capturas/pdf-japones.png), detalle a 300 dpi en [capturas/pdf-japones-detalle.png](capturas/pdf-japones-detalle.png). Fuente incrustada: `MPDFAA+Sun-ExtA` (CID TrueType, subconjunto, con ToUnicode). Todo se lee bien; solo el kanji de nombres 髙 (U+9AD9) no se distingue de 高 a esa resolución: si las etiquetas DM o los 請求書 necesitan esos caracteres exactos, configurar IPAex (`CRM_PDF_DEFAULT_FONT=ipaexm`, NUCLEO.md §11).
+
+## Entorno de la web principal (`localhost:8081`), visto en la segunda pasada
+
+- La página de error de Laravel en `:8081` dice **Laravel 12.69.3**: el `vendor/` del checkout principal no parece actualizado a `composer.lock` (Laravel 13, mpdf…). Hace falta `composer install` allí.
+- A su BD `crmsystem2` le falta el esquema `signage` (`database/schema/signage-admin.sql`): `/admin/senalizacion` y `signage/view` dan 500.
