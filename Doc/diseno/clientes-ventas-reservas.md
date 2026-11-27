@@ -328,11 +328,11 @@ Leídos de otros dueños: `CustomerGroup` (`tb_customer_group`), `AmountRank` (`
 
 Configuración de reservas en tablas del legacy: `admin_master` (`yoyaku_time_interval`, `meyasu_jikan_flg`, `yoyaku_setsubi_flg`, `free_yoyaku_flg`), `contents_master` (`category = 'tb_c9_yoyaku'`, `field = free_yoyaku_*`, `int_data` = tienda), `tb_manage_words` (注釈) y `tb_koumoku` (formularios), con los modelos de S1.
 
-**Contrato para S3 (recordatorio `trigger` 8 y `follow`):**
-- `App\Models\Reservation` sobre `tb_yoyaku`, `$primaryKey = 'cd'`; columnas tal cual (tabla de arriba).
-- Accesores: `reserved_at` (Carbon `Asia/Tokyo` = `slot.moushikomi_date` + `start_time` segundos), `ends_at`, `staff_cd` y `shop_cd` (de la franja / `tb_staff.shop_cd`), `display_name` (`name` o el del socio), `contact_mail` (`mail` o `tb_customer.email1`).
-- Scope `Reservation::remindable(CarbonInterface $from, CarbonInterface $to)`: `disp_flg` distinto de `'9'`, `tb_customer_cd > 0`, socio con `coalesce(stop_yoyaku_reminder_mail_flg, '') <> '1'` y `disp_flg <> '9'`, unido a `tb_yoyaku_uketsuke_day` con `moushikomi_date::date` entre las fechas y `start_time` dentro del rango horario. Es la misma consulta que `category3/reminder/reminder_new_confirm.php` (`tb_yoyaku s1 JOIN tb_yoyaku_uketsuke_day s3`).
-- Scope `Reservation::upcomingForCustomer()` (lo usa `follow_new_confirm.php`: socios con reserva desde hoy).
+**Contrato para S3 (recordatorio `trigger` 8 y `follow`)** — publicado en D1 (`app/Models/Reservations/Reservation.php`):
+- `App\Models\Reservations\Reservation` sobre `tb_yoyaku`, `$primaryKey = 'cd'`; columnas tal cual (tabla de arriba).
+- `Reservation::remindable(CarbonInterface $day, ?int $shopCd = null)`: la misma consulta que `category3/reminder/reminder_new_confirm.php`: `disp_flg = '1'`, franja con `moushikomi_date = 'YYYY/MM/DD'` del día dado (opcionalmente de empleados de la tienda `tb_staff.shop_cd`) y sin `stop_yoyaku_reminder_mail_flg` en el socio. **Incluye no socios**: se avisa al `mail` de la reserva.
+- `Reservation::upcomingCustomerCds(?CarbonInterface $today)`: subconsulta con los `tb_customer_cd` con reserva desde hoy (`follow_new_confirm.php`).
+- Métodos: `reservedAt()`, `endsAt()` (Carbon Asia/Tokyo = `moushikomi_date` + segundos), `displayName()` (`tb_customer.name` si es socio, si no `name`), `contactMail()` (`tb_customer.email1` si es socio, si no `mail`), `isMember()`, `optionMenuCds()`, `freeFields()`.
 - `SimpleReservation` (`tb_reserve`) **no** entra en el recordatorio: el legacy no lo hace.
 
 ### 2.4 Tablas nuevas

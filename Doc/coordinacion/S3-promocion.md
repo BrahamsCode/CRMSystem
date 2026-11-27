@@ -7,7 +7,13 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — Esperar la revisión de S0 del diseño v2 (`Doc/diseno/promocion.md`, sobre la BD legacy)
+## Próximo paso — M1 (plantillas y direcciones de prueba): controladores, rutas y menú sobre las vistas ya hechas
+
+Bloque 0.1 terminado (2026-11-26): 36 modelos en `app/Models/Promotions/` con relaciones y pruebas de lectura; `PromocionServiceProvider` (Scheduler con `promocion:clean-temp`, `PosGateway` → `NullPosGateway`); servicios sobre `tb_*`: `PointRuleResolver`, `LotteryService`, `CouponService`, `SendSchedulePlanner`, `PointLogClassifier`, `LegacyTime`. Pruebas: 76 de promoción, suite completa 105 en verde. Vistas M1 y 発行条件選択 subidas en el mismo push.
+
+Después, en el orden del diseño: M2 (envíos メルマガ/デコメール, con `MailSender` y `promocion:send-mail`), F1, F2…
+
+## Diseño v2 (aprobado)
 
 2026-11-26: diseño rehecho sobre la BD y la UI del legacy: paridad con tablas `tb_*` por vista, un modelo por tabla en `App\Models\Promotions\`, §2b UI (CSS/JS por submódulo), §3 servicios reaprovechando el stash, orden (≈ 83 pts) y pedidos. Al implementar, recuperar la lógica con `git stash show -p` del stash `obsoleto: tablas nuevas`.
 
