@@ -4,21 +4,9 @@ use App\Models\Operaciones\Information;
 use App\Models\Operaciones\StaffGroup;
 use Illuminate\Support\Facades\DB;
 
-require_once __DIR__.'/../Nucleo/helpers.php';
+require_once __DIR__.'/helpers.php';
 
 // Pantallas de スタッフ管理: スタッフグループ設定, スタッフ検索項目設定, インフォメーション管理
-
-function seedOperaciones(): void
-{
-    seedNucleo();
-    DB::table('tb_base_system')->insert(['cd' => 5, 'system_name' => '業務支援管理', 'system_flg' => '1', 'narabi' => 5]);
-    DB::table('tb_base_system_child')->insert(['cd' => 50, 'tb_base_system_cd' => 5, 'system_name' => 'スタッフ管理', 'system_flg' => '1', 'rank' => 1]);
-}
-
-function staffUser(int $cd = 2): void
-{
-    DB::table('tb_staff')->insert(['cd' => $cd, 'shop_cd' => 1, 'login_id' => "u{$cd}", 'login_pass' => 'p', 'name' => '一般', 'disp_flg' => '1']);
-}
 
 // --- スタッフグループ設定 ---
 
