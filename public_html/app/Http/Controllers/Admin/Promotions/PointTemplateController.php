@@ -40,6 +40,7 @@ class PointTemplateController extends Controller
             'body' => (string) ($row[$bodyCol] ?? ''),
             'cd' => $type === 'shikkou_alert' ? (string) $request->input('cd', '') : null,
             'close' => $close,
+            'isTablet' => PointConfigController::isTablet($request),
             'completed' => (string) $request->input('comp') === '1',
             'surnameEnabled' => DB::table('contents_master')->where('category', 'tb_c1_customer')->where('field', 'name_input_mode_flg')->where('disp_flg', '1')->value('text_data') === '1',
             'pointEnabled' => DB::table('tb_base_system_grandchild')->where('system_name', 'ポイント管理')->where('tb_base_system_cd', 1)->where('system_flg', '1')->exists(),
