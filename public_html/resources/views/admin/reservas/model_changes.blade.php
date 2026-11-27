@@ -5,7 +5,7 @@
        $total     filas en total
        $kensu, $page, $maxPage  paginación (category1/inc/page_control.php: 20 por defecto)
        $siteName  nombre del sitio
-     El texto sin datos usaba $tool_name['mail_tool_name'] (no definido en esta página): aquí sale vacío, como en producción. --}}
+     El texto sin datos usa $tool_name['mail_tool_name'] (kihon.php → getMailmagazineName): お知らせ con la app activa, si no メール (PromocionMenu::tool de S3). --}}
 @extends('layouts.legacy')
 
 @section('menu', 'promocion')
@@ -42,7 +42,7 @@ function kensuSet(parts){
 
 @if ($total == 0)
 
-	<p>現在過去配信はありません</p>
+	<p>現在過去{{ \App\Services\Promotions\PromocionMenu::tool() }}配信はありません</p>
 
 @else
 

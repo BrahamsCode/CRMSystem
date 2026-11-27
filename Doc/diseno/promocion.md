@@ -261,29 +261,29 @@ Decisiones F6 (S4, 2026-11-27):
 | `point_rules_list.php` | ポイントルール一覧 | `point-rules.index` | `PointRuleController@index` | L tb_point_rules, tb_shop | hecho |
 | `point_rules_new.php`, `point_rules_update.php`, `_frm`, `_errchk`, `_register` | ポイントルール新規 / 修正 | `point-rules.create/store/edit/update` | `PointRuleController@*` | E tb_point_rules, hatuban; L tb_kingaku_rank_master, tb_raiten_rank_master | hecho (F3) |
 | `point_rules_delete.php` | (削除) | `point-rules.destroy` | `PointRuleController@destroy` | E tb_point_rules (DELETE físico, como el legacy) | hecho |
-| `point_aggregate.php`, `ajax_point_aggregate.php` | ポイント集計 | `points.aggregate`, `points.aggregate.ajax` | `PointAggregateController@index/data` | L tb_point_log, tb_shop | pendiente (F4, S2) |
-| `csv_grant_points.php` | ポイント一括付与 | `points.grant-csv` (GET/POST), `points.grant-csv.base` | `PointGrantController@*` | L tb_customer; E tb_customer_point, tb_point_log | pendiente (F4, S2) |
+| `point_aggregate.php`, `ajax_point_aggregate.php` | ポイント集計 | `points.aggregate`, `points.aggregate.ajax` | `PointAggregateController@index/data` | L tb_point_log, tb_shop | hecho (F4, S2): el no master ve su tienda (el SQL del legacy fallaba sin espacio antes de `ORDER BY`) |
+| `csv_grant_points.php` | ポイント一括付与 | `points.grant-csv` (GET; `?mode=base_csv` = ひな形), `points.grant-csv.store` | `PointGrantController@index/store` | L tb_customer; E tb_customer_point, tb_point_log | hecho (F4, S2): con `PointService` en una transacción; una fila inválida no deja ningún punto (el legacy dejaba los de las filas anteriores) |
 | `point_alert_mail_template_entry.php`, `_register.php` | ポイント有効期限切れ前通知 テンプレート | `points.alert-template` | `PointTemplateController@alert` | L/E admin_master, contents_master | hecho (F2: point/mail_template/alert) |
 | `point_shikkou_mail_template_entry.php`, `_register.php` | ポイント失効通知 テンプレート | `points.shikkou-template` | `PointTemplateController@shikkou` | L/E admin_master | hecho (F2: point/mail_template/shikkou) |
 | `point_shikkou_alert_mail_template_entry.php`, `_register.php` | 失効前通知 テンプレート (múltiple) | `points.shikkou-alert-template` | `PointTemplateController@shikkouAlert` | L/E point_shikkou_alert | hecho (F2: point/mail_template/shikkou_alert) |
 | `sendPointShikkouMail.php`, `sendPointShikkouAlertMail.php`, `sendPointShikkouAlertMailMultiple.php` | (cron) | — | comandos `promocion:point-*` | E tb_customer_point, tb_point_log, push_master | descartado: no son vistas; Scheduler |
-| `setRegisterPoint.php`, `setPaidMemberPoint.php` | (cron) | — | comandos `promocion:register-point`, `promocion:paid-member-point` | E tb_customer_point, tb_point_log, push_master | descartado: no son vistas; Scheduler |
+| `setRegisterPoint.php`, `setPaidMemberPoint.php` | (cron) | — | comandos `promocion:register-point`, `promocion:paid-member-point` | E tb_customer_point, tb_point_log, push_master | hecho (F4, S2): comandos `promocion:register-point` (cada 5 min, con ポイント管理 y `application_use_flg = 1`) y `promocion:paid-member-point` (10:00 Asia/Tokyo, con ポイント管理 y `app_layout_mode = 1`) en `PromocionFidelizacionServiceProvider`; clases `GrantRegisterPointsCommand`/`GrantPaidMemberPointsCommand` |
 | `mailCommon.php`, `inc/page.php` | fragmento | — | `LoyaltyMail` (Mailable) | — | descartado: no son vistas |
 
 #### スタンプ管理 — `stamp/`
 
 | Legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas | Estado |
 |---|---|---|---|---|---|
-| `stamp_pattern.php`, `stamp_pattern_register.php` | スタンプデザイン管理 | `stamps.pattern`, `stamps.pattern.update` | `StampPatternController@*` | L/E tb_stamp_pattern | pendiente (F5, S2) |
-| `stamp_config.php`, `stamp_config_register.php` | スタンプ仕様管理 | `stamps.config`, `stamps.config.update` | `StampConfigController@*` | L/E tb_stamp_config, admin_master, tb_shop, tb_customer (`stamp_yukoukigen`), hatuban | pendiente (F5, S2) |
-| `ajax_stamp_shikkou_kakunin.php` | (AJAX afectados) | `stamps.ajax-expiry` | `StampConfigController@expiryPreview` | L tb_customer | pendiente (F5, S2) |
-| `stamp_rules_list.php` | スタンプルール一覧 | `stamp-rules.index` | `StampRuleController@index` | L tb_stamp_rules, tb_shop | pendiente (F5, S2) |
-| `stamp_rules_new.php`, `stamp_rules_update.php`, `_frm`, `_errchk`, `_register` | スタンプルール新規 / 修正 | `stamp-rules.create/store/edit/update` | `StampRuleController@*` | E tb_stamp_rules, hatuban | pendiente (F5, S2) |
-| `stamp_rules_delete.php` | (削除) | `stamp-rules.destroy` | `StampRuleController@destroy` | E tb_stamp_rules | pendiente (F5, S2) |
-| `oshirase_coupon.php`, `ajax_oshirase_coupon.php`, `oshirase_coupon_register.php` | クーポンお知らせ機能管理 | `stamps.oshirase`, `stamps.oshirase.ajax`, `stamps.oshirase.store` | `StampOshiraseController@*` | L/E tb_stamp_oshirase_coupon; L tb_mycoupon_master, contents_master | pendiente (F5, S2) |
-| `stamp_alert_mail_template_entry/_register.php` | スタンプ失効前通知 テンプレート | `stamps.alert-template` | `StampTemplateController@alert` | L/E admin_master, contents_master | pendiente (F5, S2) |
-| `stamp_shikkou_mail_template_entry/_register.php` | スタンプ失効通知 テンプレート | `stamps.shikkou-template` | `StampTemplateController@shikkou` | L/E admin_master | pendiente (F5, S2) |
-| `sendStampShikkouMail.php`, `sendStampShikkouAlertMail.php` | (cron) | — | comandos `promocion:stamp-*` | E tb_stamp_log, tb_customer | descartado: no son vistas; Scheduler |
+| `stamp_pattern.php`, `stamp_pattern_register.php` | スタンプデザイン管理 | `stamps.pattern`, `stamps.pattern.update` | `StampPatternController@*` | L/E tb_stamp_pattern | hecho (F5, S2): imágenes en `/hp/uploads/c4/stamp/<cd>.gif` (no hay subida en el legacy) |
+| `stamp_config.php`, `stamp_config_register.php` | スタンプ仕様管理 | `stamps.config`, `stamps.config.update` | `StampConfigController@*` | L/E tb_stamp_config, admin_master, tb_shop, tb_customer (`stamp_yukoukigen`), hatuban | hecho (F5, S2): POST a `stamp_config_register` y vuelta con `end=1#ancla`; el crontab lo sustituye el Scheduler |
+| `ajax_stamp_shikkou_kakunin.php` | (AJAX afectados) | `stamps.ajax-expiry` | `StampConfigController@expiryPreview` | L tb_customer | hecho (F5, S2) |
+| `stamp_rules_list.php` | スタンプルール一覧 | `stamp-rules.index` | `StampRuleController@index` | L tb_stamp_rules, tb_shop | hecho (F5, S2) |
+| `stamp_rules_new.php`, `stamp_rules_update.php`, `_frm`, `_errchk`, `_register` | スタンプルール新規 / 修正 | `stamp-rules.create/store/edit/update` | `StampRuleController@*` | E tb_stamp_rules, hatuban | hecho (F5, S2) |
+| `stamp_rules_delete.php` | (削除) | `stamp-rules.destroy` | `StampRuleController@destroy` | E tb_stamp_rules | hecho (F5, S2): el enlace GET envía un POST con CSRF (borrado físico) |
+| `oshirase_coupon.php`, `ajax_oshirase_coupon.php`, `oshirase_coupon_register.php` | クーポンお知らせ機能管理 | `stamps.oshirase`, `stamps.oshirase.ajax`, `stamps.oshirase.store` | `StampOshiraseController@*` | L/E tb_stamp_oshirase_coupon; L tb_mycoupon_master, contents_master | hecho (F5, S2): datos del registro codificados por jQuery (el legacy los mandaba sin codificar); texto y títulos escapados al mostrar |
+| `stamp_alert_mail_template_entry/_register.php` | スタンプ失効前通知 テンプレート | `stamps.alert-template` | `StampTemplateController@alert` | L/E admin_master, contents_master | hecho (F5, S2): `stamps.template` `{type=alert}` |
+| `stamp_shikkou_mail_template_entry/_register.php` | スタンプ失効通知 テンプレート | `stamps.shikkou-template` | `StampTemplateController@shikkou` | L/E admin_master | hecho (F5, S2): `stamps.template` `{type=shikkou}` |
+| `sendStampShikkouMail.php`, `sendStampShikkouAlertMail.php` | (cron) | — | comandos `promocion:stamp-*` | E tb_stamp_log, tb_customer | hecho (F5, S2): comandos `promocion:stamp-shikkou` y `promocion:stamp-shikkou-alert` (`StampExpiryMailer`), cada minuto a la hora de admin_master con スタンプ管理 activo y `stamp_shikkou_sousa = '1'`; el aviso previo corrige el SQL del legacy (`> 0GROUP BY`, error en PG 18) |
 | `inc/page.php` | fragmento | — | — | — | descartado: no es vista |
 
 #### スマトピ連携 — `smatopi/`

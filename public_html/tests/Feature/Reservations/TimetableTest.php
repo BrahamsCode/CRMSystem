@@ -281,3 +281,10 @@ it('escapa los datos de la reserva en el 予約表', function () {
         ->assertDontSee('<script>x</script>', false)
         ->assertSee('&lt;b&gt;悪&lt;/b&gt;', false);
 });
+
+it('pinta los tres calendarios pequeños seguidos, sin espacios entre las tablas (inline-block, como dispCalendar)', function () {
+    $html = $this->get('/system/category9/yoyaku/time_table.php?d=20261201')->assertOk()->getContent();
+
+    expect(substr_count($html, '<table class="smallCal">'))->toBe(3)
+        ->and(substr_count($html, '</table><table class="smallCal">'))->toBe(2);
+});

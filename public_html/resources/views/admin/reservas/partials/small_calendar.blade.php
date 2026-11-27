@@ -1,4 +1,4 @@
-{{--
+{{-- Sin salto de línea al final del archivo: las tablas .smallCal son inline-block y el legacy las pinta sin espacios entre ellas (si no, la 3.ª baja de línea).
     Legacy: dispCalendar() de system/category9/yoyaku/time_table.php (calendario mensual pequeño, .smallCal).
     Variables:
       $month     Carbon  día 1 del mes a pintar.

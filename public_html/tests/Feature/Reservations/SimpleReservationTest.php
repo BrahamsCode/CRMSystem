@@ -304,3 +304,11 @@ it('model_reservation: 予約機種一覧 y su CSV', function () {
         ->toStartWith('ID,名前,電話番号,登録店舗,予約申込日,ご希望予約時期,該当する予約時期,希望機種,保有ポイント数')
         ->toContain('L700,機種 太郎,0300000000,本店,2026年11月01日,３カ月後に予約したい,2027年01月30日,iPhone 18,1200');
 });
+
+it('model_reservation sin datos: 現在過去お知らせ配信はありません con la app activa ($tool_name del legacy)', function () {
+    DB::table('admin_master')->update(['application_use_flg' => '1']);
+    $this->get('/system/category3/reservation/model_reservation.php')->assertOk()->assertSee('現在過去お知らせ配信はありません');
+
+    DB::table('admin_master')->update(['application_use_flg' => '0']);
+    $this->get('/system/category3/reservation/model_reservation.php')->assertOk()->assertSee('現在過去メール配信はありません');
+});
