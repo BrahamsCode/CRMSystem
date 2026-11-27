@@ -132,7 +132,7 @@ Diferencias con crm2-php8, a propósito: `DocumentRoot /var/www/public` (Laravel
 | 0 | Docker igual que crm2-php8 + documentación de referencia | **Hecho (2026-11-26)** |
 | 0b | Análisis vista por vista (`Doc/analisis-legacy/`, ≈ 1.020 vistas, ≈ 615 puntos) y orquestación (`Doc/planificacion/`, `INICIAR-CRM.bat`) | **Hecho (2026-11-26)** |
 | 1 | Subir Laravel 12 → 13 y PHP 8.5 (`composer.json`, Pest 4, Fortify, Dockerfile de Render) | Pendiente — S1 |
-| 1' | Diseño por grupo (`Doc/diseno/`) | **Hecho (2026-11-26)**: S2 (76 pts), S3 (≈71,5), S4 (60) y S5 (75), aprobados con cambios menores. S1 sin diseño propio (núcleo) |
+| 1' | Diseño por grupo (`Doc/diseno/`) | Paridad, rutas y servicios aprobados (S2–S5, 2026-11-26). **En curso:** rehacer el esquema (modelos sobre `tb_*`) y la UI (HTML/CSS del legacy) tras el cambio de base |
 | 2 | **Misma BD y misma UI que el legacy** (Antony, 2026-11-26): esquema `database/schema/pgsql-schema.sql` desde `crm2019.backup`, modelos sobre `tb_*`, mismos CSS; responsive al final. Lo construido sobre tablas nuevas se borró | **Hecho (esquema y limpieza)** |
 | 3+ | Módulos en paralelo según `Doc/planificacion/ORCHESTRATION.md` | Pendiente |
 
@@ -146,7 +146,7 @@ Diferencias con crm2-php8, a propósito: `DocumentRoot /var/www/public` (Laravel
 - ¿Se reescriben `hp/`, `touchcation/`, `signage/` y `api/` en Laravel, o conviven con el legacy al principio?
 - Cuándo entra el POS (`category11`); SNS (`category12`) probablemente nunca. Flash CSV, CKEditor, `password_hash`.
 - Señalización (S4): ¿se usan `signage/mail` (GoTel, お問い合わせ) y `signage/pdf` (請求書/領収書)? ¿Se mantiene ビーコン管理? Su BD externa `b-develop.g-api.net` no responde. Mientras tanto, S4 deja esas partes al final.
-- Push (S3): el servidor externo `b.g-api.net` lee `push_master`/`mailmag_master` directamente de la BD del CRM; con el esquema nuevo ese contrato se rompe. ¿FCM directo desde Laravel (hace falta la cuenta de servicio FCM de la app マイコレ) o vistas SQL de compatibilidad para g-api?
+- Push (S3): con la misma BD, `b.g-api.net` puede seguir leyendo `push_master`/`mailmag_master` como hoy, y el contrato no se rompe. Solo falta confirmar que g-api se mantiene (o si algún día se pasa a FCM directo).
 - Promoción (S3): ¿se usan 新着情報 (`category3/digital_signage`), DM発行 y スマトピ? Si no, se descartan (≈5,5 puntos).
 - Asistencia (S5): los dos registradores de 勤怠 (`touchcation/kintai_crm_n` y `touchcation/timecard`) son touchcation, que no se usa. ¿Se sigue usando 勤怠管理/勤怠一覧 (y el lector FeliCa con sus tarjetas)? Si no, ≈27 puntos pasan a «solo datos históricos».
 - Las de [legacy-crm2/PENDING.md](legacy-crm2/PENDING.md), sección 7 (servidor POS de prueba, staging con datos reales, IPs de desarrollo, `activation=1`).
