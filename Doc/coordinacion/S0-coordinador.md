@@ -140,6 +140,14 @@
 - 2026-11-27 (05:30): integrados `LegacyPdf` de S1 (mPDF 8.3.1, el mismo del legacy, con fuente japonesa), `AppviewReservationTest` de S5 y la QA parcial de category5 (sin diferencias propias), y las filas de paridad cuadradas de S2. `laravel13` con 868 pruebas en verde.
 - La sesión del socio de `r/`/`reserve/` sale del token md5(cd:touroku_date) con el que la app los abre (ya en R7). La otra vía, el login de `hp/user`, está fuera de alcance: se lo pregunto a Antony.
 - Las 5 sesiones se detuvieron hacia las 04:05 por límite de uso; se les pide que retomen.
+- 2026-11-27 (06:30): integrados:
+  - S2: F4 y F5.
+  - S3: arreglo de M3, M3, la columna Estado de `promocion.md` (107/35/41), M4, F1b y M6. S3 termina su orden; solo quedan M9 y F8, que esperan a Antony.
+  - S4: M5 y M7 (`QrImage` común y DM con `LegacyPdf`).
+  - S5: QA de category5 terminada.
+  - S1: comprobación del PDF japonés (`髙` necesita IPAex) y segunda pasada de QA.
+  Los conflictos aditivos de rutas en `routes/*/promocion.php` (S2, S3 y S4) se resolvieron conservando los dos lados. En `promocion.md` se queda la versión de S3; S2 y S4 vuelven a marcar sus filas. `laravel13` con 931 pruebas en verde.
+- Entorno de :8081: el contenedor `app` usa su propio volumen `vendor` (seguía en Laravel 12). Se actualizó con `docker exec crmsystem2-app-1 composer install` y se cargó el esquema `signage` en `crmsystem2`. `bd-legacy.sh` crea ahora también el esquema `signage`, aunque la BD ya tenga datos.
 - 2026-11-27: siguiente tarea de S1 (Antony: el login primero): modelo base y traits comunes, luego el login contra el personal del legacy, el layout idéntico y los estáticos comunes.
 
 ## Hecho

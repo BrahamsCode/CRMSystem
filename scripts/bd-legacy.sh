@@ -31,8 +31,9 @@ if ! psql_q "SELECT to_regclass('public.tb_customer') IS NOT NULL" | grep -q t; 
 fi
 if [ "$(psql_q 'SELECT count(*) FROM tb_shop')" != "0" ] && [ "$FORZAR" != "--forzar" ]; then
   echo "La BD $DB ya tiene datos del legacy (usa --forzar para recargar)."
-  exit 0
+  YA_CARGADA=1
 fi
+if [ -z "${YA_CARGADA:-}" ]; then
 if [ ! -f "$BACKUP" ]; then
   echo "No encuentro el backup del legacy: $BACKUP (define CRM_LEGACY_BACKUP)" >&2
   exit 1
@@ -51,3 +52,14 @@ fi
 echo "Cargando los datos del legacy en $DB…"
 docker exec "$DB_CONT" pg_restore -U "$DB_USER" -d "$DB" --data-only --no-owner --no-acl --disable-triggers /tmp/crm2019.backup
 echo "Listo: tb_shop=$(psql_q 'SELECT count(*) FROM tb_shop'), zip=$(psql_q 'SELECT count(*) FROM zip')"
+fi
+
+# Esquema mínimo de la BD `admin` de signage/ (conexión `signage`, search_path = signage) para desarrollo.
+# Se sustituye por el volcado real cuando Antony lo entregue.
+SIGNAGE_SQL="$RAIZ/public_html/database/schema/signage-admin.sql"
+if [ -f "$SIGNAGE_SQL" ] && ! psql_q "SELECT to_regclass('signage.terminal') IS NOT NULL" | grep -q t; then
+  docker cp "$SIGNAGE_SQL" "$DB_CONT:/tmp/signage-admin.sql"
+  psql_q "CREATE SCHEMA IF NOT EXISTS signage" >/dev/null
+  docker exec -e PGOPTIONS='-c search_path=signage' "$DB_CONT" psql -U "$DB_USER" -d "$DB" -q -v ON_ERROR_STOP=1 -f /tmp/signage-admin.sql
+  echo "Esquema signage creado en $DB"
+fi
