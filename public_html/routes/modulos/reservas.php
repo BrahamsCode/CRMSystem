@@ -94,4 +94,19 @@ Route::prefix('reservas')->name('reservas.')->group(function () {
             Route::match(['get', 'post'], 'members', 'members')->name('members');
         });
     // --- fin R3 ---
+
+    // --- R4 ---
+    // 予約表: time_table.php (día, 週間, 月間) y time_table_staff.php (スタッフ別予約表), con sus AJAX
+    Route::controller(\App\Http\Controllers\Admin\Reservations\TimetableController::class)->group(function () {
+        Route::get('timetable', 'index')->name('timetable');
+        Route::get('timetable/staff', 'staff')->name('timetable.staff');
+        // ajax_time_table.php (popup de edición de una reserva)
+        Route::match(['get', 'post'], 'timetable/data', 'data')->name('timetable.data');
+        // ajax_loadNewYoyakuList.php y ajax_loadNewRaitenList.php (listas laterales)
+        Route::match(['get', 'post'], 'timetable/recent', 'recent')->name('timetable.recent');
+        Route::match(['get', 'post'], 'timetable/visits', 'visits')->name('timetable.visits');
+        // ajax_getYoyakuDatetimeForm.php (cambio de fecha y hora)
+        Route::match(['get', 'post'], 'datetime-form', 'datetimeForm')->name('datetime-form');
+    });
+    // --- fin R4 ---
 });

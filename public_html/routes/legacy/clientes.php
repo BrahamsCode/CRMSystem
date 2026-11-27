@@ -55,3 +55,22 @@ Route::get('system/category1/rank/customer_rank_schedule.php', [\App\Http\Contro
 // JS de customer_rank_list.php: orden (type=rank) y casilla 表示 (type=hyouji)
 Route::post('system/category1/rank/ajax_customer_rank_list.php', [\App\Http\Controllers\Admin\Customers\RankController::class, 'legacyAjax'])->name('clientes.ranks-ajax');
 // --- fin C2-b ---
+
+// --- C3 ---
+// 来店処理 (menú lateral)
+Route::get('system/category1/customer/customer_search.php', [\App\Http\Controllers\Admin\Customers\VisitController::class, 'index'])->name('clientes.visits');
+Route::post('system/category1/customer/customer_search.php', [\App\Http\Controllers\Admin\Customers\VisitController::class, 'store'])->name('clientes.visits.store');
+// Pestaña 来店履歴: alta manual / borrado ($.get de raiten_submitChk/raiten_delete)
+Route::match(['get', 'post'], 'system/category1/inc/raiten_register.php', [\App\Http\Controllers\Admin\Customers\VisitController::class, 'legacyRegister'])->name('clientes.raiten-register');
+// 来店履歴の追加・修正: lista de visitas (inc/js/raiten_list.js) y selectores de fecha
+Route::match(['get', 'post'], 'system/category1/inc/ajax_raiten_list.php', [\App\Http\Controllers\Admin\Customers\VisitController::class, 'raitenList'])->name('clientes.raiten-list');
+Route::match(['get', 'post'], 'system/category1/inc/ajax_raiten_time_select.php', [\App\Http\Controllers\Admin\Customers\VisitController::class, 'timeSelect'])->name('clientes.raiten-time-select');
+Route::match(['get', 'post'], 'system/category1/inc/ajax_shop_point_config.php', [\App\Http\Controllers\Admin\Customers\VisitRecordController::class, 'shopPointConfig'])->name('clientes.shop-point-config');
+Route::match(['get', 'post'], 'system/category1/inc/ajax_shop_stamp_config.php', [\App\Http\Controllers\Admin\Customers\VisitRecordController::class, 'shopStampConfig'])->name('clientes.shop-stamp-config');
+// Pestañas ポイント y スタンプ: $.get de point_submitChk, stamp_submitChk2 y stamp_submitChk
+Route::match(['get', 'post'], 'system/category1/inc/point_register.php', [\App\Http\Controllers\Admin\Customers\CustomerLoyaltyController::class, 'points'])->name('clientes.point-register');
+Route::match(['get', 'post'], 'system/category1/inc/stamp_register.php', [\App\Http\Controllers\Admin\Customers\CustomerLoyaltyController::class, 'stamps'])->name('clientes.stamp-register');
+Route::match(['get', 'post'], 'system/category1/inc/stamp_use_register.php', [\App\Http\Controllers\Admin\Customers\CustomerLoyaltyController::class, 'useStamps'])->name('clientes.stamp-use-register');
+// ポイント利用一覧 (menú lateral; el CSV era un POST csv_print=1 a la misma URL)
+Route::match(['get', 'post'], 'system/category1/customer/point_history.php', [\App\Http\Controllers\Admin\Customers\PointHistoryController::class, 'index'])->name('clientes.point-history');
+// --- fin C3 ---
