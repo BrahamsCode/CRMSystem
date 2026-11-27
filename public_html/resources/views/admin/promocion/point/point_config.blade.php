@@ -70,12 +70,21 @@ $(document).ready(function() {
 	$(".ac13").accordion('option', 'active', 0);
 	popIni();
 
+	// Tablet (CRMRW107 / CRMH580VT_A): la app abre la plantilla con roid.popUp y URL absoluta
 	$("#pointAlertMail").click(function(){
+		@if ($isTablet)
+		roid.popUp("{{ route('admin.promocion.points.template', ['type' => 'alert']) }}");
+		@else
 		openPopWindow("{{ route('admin.promocion.points.template', ['type' => 'alert']) }}", '650', '');
+		@endif
 	});
 
 	$(".point_shikkou_alert_dialog").click(function(){
+		@if ($isTablet)
+		roid.popUp("{{ route('admin.promocion.points.template', ['type' => 'shikkou_alert']) }}?cd=" + $(this).attr("data_cd"));
+		@else
 		openPopWindow("{{ route('admin.promocion.points.template', ['type' => 'shikkou_alert']) }}?cd=" + $(this).attr("data_cd"), '650', '');
+		@endif
 	});
 
 	$("#point_yukoukigen_form").submit(function(e){

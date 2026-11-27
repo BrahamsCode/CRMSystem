@@ -71,6 +71,8 @@ Ver `Doc/diseno/promocion.md` §6. Las principales: controladores en `Admin/Prom
 
 ## Hecho
 
+- 2026-11-27 — Pedidos S0: rama de tablet de ポイント仕様管理 (`roid.popUp` a las plantillas de category3 y `roid.windowClose`); `CustomerPushService::send()` (push a un cliente: push_master + push_notifications opcional + aviso g-api) para S5.
+
 - 2026-11-27 — QA de S1 (promoción): rutas legacy con nombre doble `legacy.legacy.promocion.*` (mail_past daba 500 tras 35 s) corregidas; `<title>` con ` - <site_name>` como el legacy; selector de tienda de クーポン一覧 oculto (`displayNone`) y no desactivado; menú ya en formato NUCLEO (F2). Prueba de humo `PromocionScreensTest` (12 pantallas con login real). Reparto S0: F6, F7 y M8 pasan a S4.
 
 - 2026-11-27 — F3: ポイント発行ルール (lista, alta/modificación, borrado).

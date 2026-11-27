@@ -62,6 +62,7 @@ class PointConfigController extends Controller
             'paidMember' => self::unserialize($admin['paid_member_settings'] ?? null),
             'stampEnabled' => DB::table('tb_base_system_child')->where('system_name', 'スタンプ管理')->where('tb_base_system_cd', 3)->where('system_flg', '1')->exists(),
             'pointEnabled' => DB::table('tb_base_system_grandchild')->where('system_name', 'ポイント管理')->where('tb_base_system_cd', 1)->where('system_flg', '1')->exists(),
+            'isTablet' => self::isTablet($request),
             'paidMemberEnabled' => DB::table('contents_master')->where('category', 'mycolle')->where('field', 'app_layout_mode')->where('disp_flg', '1')->where('text_data', '1')->exists(),
         ]);
     }
@@ -233,6 +234,14 @@ class PointConfigController extends Controller
     private function hatsuban(): string
     {
         return time().sprintf('%03s', (int) $this->staff->shopCd()).sprintf('%06d', random_int(0, 999999));
+    }
+
+    /** $isTablet de kihon.php: 端末 CRMRW107 / CRMH580VT_A (cUserAgent DEVICE_NAME) */
+    public static function isTablet(Request $request): bool
+    {
+        $agent = (string) $request->userAgent();
+
+        return str_contains($agent, 'CRMRW107') || str_contains($agent, 'CRMH580VT_A');
     }
 
     /** Array PHP serializado de la BD (sin objetos) o [] */

@@ -39,11 +39,11 @@ function submitChk(){
 
 $(document).ready(function(){
 	$("#popCloseBtn").click(function(){
-		window.parent.{{ $close }}("");
+		@if ($isTablet) roid.windowClose(); @else window.parent.{{ $close }}(""); @endif
 	});
 });
 @if ($completed)
-window.parent.{{ $close }}("");
+@if ($isTablet) roid.windowClose(); @else window.parent.{{ $close }}(""); @endif
 @endif
 </script>
 @endsection

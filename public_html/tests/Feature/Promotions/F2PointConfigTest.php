@@ -139,3 +139,12 @@ it('arma el menú lateral de left_navi3 con los textos de la app y sus condicion
         ->and(array_column($blocks['ac1']['links'], 'label'))->toContain('新規お知らせ配信', 'マイコレ登録用QR')
         ->and(array_column($blocks['ac13']['links'], 'url'))->toBe(['/admin/promocion/point/point_config']);
 });
+
+it('en la tablet abre las plantillas de category3 con roid.popUp y cierra con roid.windowClose', function () {
+    $tablet = ['User-Agent' => 'Mozilla/5.0 (Linux; Android 4.0; CRMRW107)'];
+    $this->get(route('admin.promocion.points.config'), $tablet)->assertOk()
+        ->assertSee('roid.popUp("'.route('admin.promocion.points.template', ['type' => 'alert']).'")', false)
+        ->assertDontSee('category0/config/point_', false);
+    $this->get(route('admin.promocion.points.template', ['type' => 'alert', 'comp' => 1]), $tablet)->assertSee('roid.windowClose();', false);
+    $this->get(route('admin.promocion.points.config'))->assertDontSee('roid.popUp("', false);
+});
