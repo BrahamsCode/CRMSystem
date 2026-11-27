@@ -49,6 +49,15 @@ if [ ! -f "$ROOT/public_html/.env" ] && [ -f "$PRINCIPAL/public_html/.env" ]; th
   echo ".env copiado desde $PRINCIPAL/public_html"
 fi
 
+# Assets compilados de Vite (public/build, fuera de git): sin el manifiesto, cada prueba de pantalla
+# falla con ViteManifestNotFound y tarda 30-70 s. Se copian del principal si faltan; quien cambie
+# assets los recompila en su worktree (npm run build).
+if [ ! -f "$ROOT/public_html/public/build/manifest.json" ] && [ -f "$PRINCIPAL/public_html/public/build/manifest.json" ]; then
+  mkdir -p "$ROOT/public_html/public/build"
+  cp -r "$PRINCIPAL/public_html/public/build/." "$ROOT/public_html/public/build/"
+  echo "public/build copiado desde $PRINCIPAL/public_html"
+fi
+
 # Las pruebas usan la BD de pruebas de la sesión (phpunit.xml no la fuerza); el resto, la de desarrollo
 DB_USO="$DB_DEV"
 case "$*" in
