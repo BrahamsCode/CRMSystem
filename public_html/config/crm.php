@@ -25,6 +25,9 @@ return [
      */
     'stage' => env('STAGE', ''),
 
+    // Versión que muestra システム管理 (system/version.ini del legacy); vacía = tb_package_master
+    'version' => env('CRM_VERSION', '2.2.2'),
+
     /* IP de desarrollo (Constant::DEVELOPMENT_IPS del legacy), separadas por comas */
     'developer_ips' => array_filter(array_map('trim', explode(',', (string) env('CRM_DEVELOPER_IPS', '')))),
 

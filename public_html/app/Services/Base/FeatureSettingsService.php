@@ -31,8 +31,8 @@ class FeatureSettingsService
         $in = fn (string $key): string => LegacyText::db($request->input($key));
 
         match ($act) {
-            'change_name_input_mode_flg' => $this->putContents('tb_c1_customer', 'name_input_mode_flg', $in('name_input_mode_flg'), false),
-            'change_reserve_button_position' => $this->putContents('tb_c1_customer', 'reserve_button_position', $in('reserve_button_position'), false),
+            'change_name_input_mode_flg' => ContentsMaster::putLegacy('tb_c1_customer', 'name_input_mode_flg', $in('name_input_mode_flg'), false),
+            'change_reserve_button_position' => ContentsMaster::putLegacy('tb_c1_customer', 'reserve_button_position', $in('reserve_button_position'), false),
             'change_shop_category_flg' => $this->admin(['shop_category_flg' => (int) $in('shop_category_flg')]),
             'change_terminal_sound' => $this->terminalSound($request),
             'change_mail_footer' => $this->admin(['mail_footer' => implode('<>', array_map(
@@ -45,9 +45,9 @@ class FeatureSettingsService
                 'smtp_domain' => $in('smtp_domain'), 'smtp_port' => $in('smtp_port'),
                 'smtp_login_id' => $in('smtp_login_id'), 'smtp_login_pass' => $in('smtp_login_pass'),
             ]),
-            'privacy_policy_flg' => $this->putContents('mypage', 'privacy_policy_text', $in('privacy_policy_text'), true),
-            'mail_send_status' => $this->putContents('tb_c9_yoyaku', 'mail_send_status', $in('mail_send_status'), true),
-            'disabled_push_title_flg' => $this->putContents('mycolle', 'disabled_push_title_flg', $in('disabled_push_title_flg'), true),
+            'privacy_policy_flg' => ContentsMaster::putLegacy('mypage', 'privacy_policy_text', $in('privacy_policy_text'), true),
+            'mail_send_status' => ContentsMaster::putLegacy('tb_c9_yoyaku', 'mail_send_status', $in('mail_send_status'), true),
+            'disabled_push_title_flg' => ContentsMaster::putLegacy('mycolle', 'disabled_push_title_flg', $in('disabled_push_title_flg'), true),
             'mobileshop_auth_passcode' => $this->passcodes((array) $request->input('shop_cd', []), (array) $request->input('mobileshop_auth_passcode', [])),
             'reset_error_send_cnt' => $this->resetErrorSendCount(),
             'change_sended_log' => $this->admin(['mailmag_sended_log' => (int) $in('sendedLogFlg') . '<>' . min((int) $in('maxSendedLog'), 1500)]),
@@ -133,27 +133,6 @@ class FeatureSettingsService
                 DB::table('mailmag_master')->where('cd', $row->cd)->update(['振分配信' => $value]);
             }
         });
-    }
-
-    /**
-     * Crea o actualiza un valor de contents_master como el legacy. `strict`: la existencia se mira sin disp_flg y el
-     * UPDATE solo toca filas disp_flg = hyouji_flg = '1'; si no, ambos miran disp_flg = '1'.
-     */
-    private function putContents(string $category, string $field, string $text, bool $strict): void
-    {
-        $base = fn () => DB::table('contents_master')->where('category', $category)->where('field', $field);
-        $exists = $strict ? $base()->exists() : $base()->where('disp_flg', '1')->exists();
-
-        if (! $exists) {
-            ContentsMaster::create(['category' => $category, 'field' => $field, 'text_data' => $text, 'disp_flg' => '1', 'hyouji_flg' => '1']);
-
-            return;
-        }
-        $update = $base()->where('disp_flg', '1');
-        if ($strict) {
-            $update->where('hyouji_flg', '1');
-        }
-        $update->update(['text_data' => $text, 'update_date' => time()]);
     }
 
     private function latest(string $category, string $field): ?string
