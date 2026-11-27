@@ -29,7 +29,7 @@ class MailPastController extends Controller
         $from = $this->date($request, 'from');
         $to = $this->date($request, 'to');
         $texto = (string) $request->input('texto', '');
-        $perPage = max(1, (int) $request->input('kensu', 20));
+        $perPage = max(1, (int) ($request->input('kensu') ?: 20));
 
         $query = MailmagMaster::query()
             ->whereRaw("COALESCE(disp_flg,'') <> '9'")

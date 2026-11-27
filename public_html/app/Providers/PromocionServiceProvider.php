@@ -48,7 +48,10 @@ class PromocionServiceProvider extends ServiceProvider
         $this->app->bind(PosGateway::class, NullPosGateway::class);
 
         // Aviso al servidor de push de la app (g-api), mismo contrato que Push.php::exec
-        $this->app->bind(PushTrigger::class, GApiPushTrigger::class);
+        // (en local solo al log: config promocion.push_trigger)
+        $this->app->bind(PushTrigger::class, fn ($app) => config('promocion.push_trigger') === 'gapi'
+            ? $app->make(GApiPushTrigger::class)
+            : $app->make(\App\Services\Promotions\LogPushTrigger::class));
 
         // Sellos y puntos de la visita para VisitService de S2 (S2 enlaza la nula con bindIf)
         $this->app->bind(VisitLoyalty::class, PromocionVisitLoyalty::class);

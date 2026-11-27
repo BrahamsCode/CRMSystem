@@ -186,7 +186,7 @@ class MailController extends Controller
 
     public function future(Request $request, string $mailType = 'mail'): View
     {
-        $perPage = max(1, (int) $request->input('kensu', 20));
+        $perPage = max(1, (int) ($request->input('kensu') ?: 20));
         $query = MailmagMaster::query()
             ->where('受付メールアドレス', 'なし')
             ->where('配信状況', MailmagMaster::STATUS_PENDING)

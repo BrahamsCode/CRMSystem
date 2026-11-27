@@ -26,6 +26,18 @@ Clientes (master y umeda01): lista y paginación (10/50 por página, primera/úl
 
 ### Promoción (S3)
 
+Datos (fase A, `PromocionDemoSeeder`, marca `[demo-promocion-limites]`): 25 cupones más (caducado, 31/12, 29/02/2028, fin de mes, título de 100, oculto, 2 de baja, 0 y 999999 puntos) repartidos por tienda; 38 envíos más (fin de mes de 12 meses, 1/1 0:00, 29/02/2024, asunto de 100 y cuerpo largo, sin destinatarios, con 不達 —6 socios con `error_send_cnt`, 4 en `mailmaga_flg` 9—, 2 de baja, 16 デコメール, 3 de cupón) y 3 programados (fin de mes, 31/12, 29/02/2028), con 登録者 por tienda y 本部; 23 push (fin de mes, largo, 0 y 99999 puntos, sin destinatarios, de baja); 6 encuestas sin respuestas; rango oculto y rango de baja asignados a socios demo (los 4 niveles por tipo los crea S2); 新着情報 largo y de baja.
+
+| pantalla (URL) | fallo | corrección + prueba Pest | commit |
+|---|---|---|---|
+| Datos demo: 過去配信 de メルマガ/デコメール como usuario de tienda (umeda01) | No ve ningún envío: los demo tenían `登録者` = cd del staff, y la lista de tienda filtra por 登録者 = tienda (フッター表記店舗) | `登録者` = cd de tienda (o -1) en `PromocionDemoSeeder` · `DemoSeederTest` (`登録者`, reparto por tienda) | ver abajo |
+| テンプレート管理, テストメールアドレス, アンケートテスト, 過去配信詳細… (`/admin/promocion/*`) | 404 de los 絵文字: las plantillas del backup guardan `<img src="../decomail/js/tiny_mce/plugins/emoji…">`, relativo a `system/category3/<carpeta>/` | Ruta `admin/promocion/decomail/js/tiny_mce/…` → 301 a `legacy/system/category3/decomail/js/…` · `QaTerceraPasadaTest` | ver abajo |
+| DM発行 (`/admin/promocion/dm/customer_list`) | Error de JS `myFlexSelect is not a function` (el buscador de S2 sin su plugin ni el datepicker) | La vista carga `myFlexSelect.js` y `ui.datepicker` · `QaTerceraPasadaTest` | ver abajo |
+| クーポン一覧, 過去配信, 予定配信, クーポン利用数確認 (vuelta de 削除/修正 con `kensu=`) | 1 fila por página (`input('kensu', 20)` con '' → null → 1) | `(int) ($request->input('kensu') ?: 20)` · `QaTerceraPasadaTest` | ver abajo |
+| Envíos de メルマガ en :8081 | Cada envío de texto avisaba a **b.g-api.net** real (BD con `push_api_host = 1`, `domain = localhost`) | `config/promocion.php` `push_trigger`: en `APP_ENV=local` → `LogPushTrigger` (solo log); `CRM_PUSH_TRIGGER=gapi` lo fuerza · `QaTerceraPasadaTest` | ver abajo |
+
+Probado en :8081 hasta ahora: recorrido de 145 pantallas como master y 131 como umeda01 (sin 500 ni 403 inesperados); cupón QA-S3 alta → lista (梅田店) → 修正 → 削除; CSV de クリックカウンタ (SJIS, `"	"` como el legacy); PDF de DM (300 socios). Sin fallo de código: imágenes de スタンプ `hp/uploads/c4/stamp/*.gif` (archivos subidos de producción, tampoco están en el repo legacy). スマトピ (404) espera F8.
+
 ### マイページ / 端末 / señalización (S4)
 
 ### Operaciones / 勤怠 / integraciones (S5)
