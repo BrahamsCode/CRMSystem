@@ -5,23 +5,16 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 
 /**
- * Sin WithoutModelEvents a propósito: los hooks `creating` de los modelos son los
- * que generan `uid` y el Nº de socio, y ese trait los silenciaría.
+ * La BD es la del legacy (database/schema/pgsql-schema.sql, generado desde crm2019.backup).
+ * Los datos base del legacy (códigos postales, admin_master, hatuban…) se cargan con
+ * `bash scripts/bd-legacy.sh <bd>`. Cada módulo añade aquí su <Modulo>Seeder de datos de prueba.
  */
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
         $this->call([
-            AdminSeeder::class,           // acceso a /admin/login
-            ShopSeeder::class,            // tiendas
-            CatalogSeeder::class,         // grupos, motivos y rangos
-            CustomCategorySeeder::class,  // información adicional
-            FieldSettingSeeder::class,    // configuración de campos y CSV
-            CustomerSeeder::class,        // clientes de prueba
-            PromotionSeeder::class,       // envíos, cupones, sellos y puntos de prueba
-            MypageSeeder::class,          // S4: マイコレ, オススメ, 求人, ガチャリン
-            TerminalesSeeder::class,      // S4: displays, programas y materiales de señalización
+            // Seeders de cada módulo
         ]);
     }
 }

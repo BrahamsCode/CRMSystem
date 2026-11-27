@@ -1,3 +1,5 @@
+> ⛔ **2026-11-26: ya no aplica.** Antony decidió usar **la misma BD del legacy** (`public_html/database/schema/pgsql-schema.sql`, generado desde `crm2-php8/db/crm2019.backup`). Estos documentos describen un esquema nuevo que se descartó; quedan solo como análisis de referencia. Ver `Doc/contratos/CONVENCIONES.md`, sección 0.
+
 # Base de Datos - Módulo de Gestión de Clientes
 
 > ⚠️ **Empezar por [ESTANDARES_BD.md](./ESTANDARES_BD.md).**

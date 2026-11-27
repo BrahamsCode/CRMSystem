@@ -8,7 +8,4 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-// --- Módulo de promociones (necesita `php artisan schedule:work` o el cron de schedule:run) ---
-Schedule::command('promotions:send-scheduled')->everyMinute()->withoutOverlapping();
-Schedule::command('promotions:run-rules')->everyMinute()->withoutOverlapping();
-Schedule::command('promotions:loyalty')->everyFifteenMinutes()->withoutOverlapping();
+// Las tareas programadas las registra cada módulo en App\Providers\<Modulo>ServiceProvider (Doc/contratos/CONVENCIONES.md).

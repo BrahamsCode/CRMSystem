@@ -133,7 +133,7 @@ Diferencias con crm2-php8, a propósito: `DocumentRoot /var/www/public` (Laravel
 | 0b | Análisis vista por vista (`Doc/analisis-legacy/`, ≈ 1.020 vistas, ≈ 615 puntos) y orquestación (`Doc/planificacion/`, `INICIAR-CRM.bat`) | **Hecho (2026-11-26)** |
 | 1 | Subir Laravel 12 → 13 y PHP 8.5 (`composer.json`, Pest 4, Fortify, Dockerfile de Render) | Pendiente — S1 |
 | 1' | Diseño por grupo (`Doc/diseno/`) | **Hecho (2026-11-26)**: S2 (76 pts), S3 (≈71,5), S4 (60) y S5 (75), aprobados con cambios menores. S1 sin diseño propio (núcleo) |
-| 2 | Esquema: nuevo según `Doc/database/ESTANDARES_BD.md` + importador desde `tb_*` (lo que ya sigue CRMSystem) | Propuesto; S0 lo confirma al revisar los diseños |
+| 2 | **Misma BD y misma UI que el legacy** (Antony, 2026-11-26): esquema `database/schema/pgsql-schema.sql` desde `crm2019.backup`, modelos sobre `tb_*`, mismos CSS; responsive al final. Lo construido sobre tablas nuevas se borró | **Hecho (esquema y limpieza)** |
 | 3+ | Módulos en paralelo según `Doc/planificacion/ORCHESTRATION.md` | Pendiente |
 
 ## 8. Siguiente paso
