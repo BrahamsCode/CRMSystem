@@ -61,7 +61,7 @@ return [
             'ac' => 'ac4',
             'child' => '初期設定管理',
             'links' => [
-                // カードリーダーモード設定 y 新規カード管理: ⏸ hasta que Antony confirme 勤怠
+                // カードリーダーモード設定 y 新規カード管理: descartados (solo sirven para fichar con FeliCa en touchcation, fuera de alcance)
                 ['label' => '営業日設定', 'url' => '/admin/operaciones/shop-work'],
             ],
         ],

@@ -88,12 +88,12 @@ Integraciones: `routes/publico/integraciones.php`, que S1 carga fuera del grupo 
 
 | Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas legacy | Estado |
 |---|---|---|---|---|---|
-| `felica_mode.php` | カードリーダーモード設定 | `admin.operaciones.felica-mode.edit` / `.update` | `FelicaModeController@edit` / `@update` | L/E `tb_felica_mode` (fila `cd=1`) | pendiente ⏸ |
-| `card_new.php` | カード管理 (新規カード管理) | `admin.operaciones.cards.index` / `.assign` | `StaffCardController@index` / `@assign` | L/E `tb_card`, `tb_felica_mode`, `tb_staff`, `tb_work_time` | pendiente ⏸ |
-| `card_staff_select.php` | (fragmento) | parcial Blade | — | L `tb_staff` | pendiente ⏸ |
+| `felica_mode.php` | カードリーダーモード設定 | `admin.operaciones.felica-mode.edit` / `.update` | `FelicaModeController@edit` / `@update` | L/E `tb_felica_mode` (fila `cd=1`) | descartado: solo sirven para fichar con FeliCa en touchcation, que está fuera de alcance (Antony, 2026-11-27: el fichaje desde el quiosco queda fuera) |
+| `card_new.php` | カード管理 (新規カード管理) | `admin.operaciones.cards.index` / `.assign` | `StaffCardController@index` / `@assign` | L/E `tb_card`, `tb_felica_mode`, `tb_staff`, `tb_work_time` | descartado: solo sirven para fichar con FeliCa en touchcation, que está fuera de alcance (Antony, 2026-11-27: el fichaje desde el quiosco queda fuera) |
+| `card_staff_select.php` | (fragmento) | parcial Blade | — | L `tb_staff` | descartado: solo sirven para fichar con FeliCa en touchcation, que está fuera de alcance (Antony, 2026-11-27: el fichaje desde el quiosco queda fuera) |
 | `shop_work_calendar.php` | 営業日設定 | `admin.operaciones.shop-work.edit` / `.update` | `ShopWorkController@edit` / `@update` | L/E `tb_shop_work`, `hatuban` | hecho (fila por tienda y mes; festivos con `LegacyHolidays` = check_holiday) |
-| `index.php` (category5) | 業務支援管理 (menú) | `config/menu/operaciones.php` | — | L `tb_base_system_child` | pendiente |
-| `inc/page_control.php` | (paginador) | paginador de Laravel con el HTML del legacy | — | — | pendiente |
+| `index.php` (category5) | 業務支援管理 (menú) | `legacy.nucleo.category-top.5` + `config/menu/operaciones.php` | `Nucleo\CategoryTopController@show` | L `tb_base_system_child` | hecho (portada del núcleo, S1; el menú lateral es el de S5) |
+| `inc/page_control.php` | (paginador) | paginador con el HTML del legacy | — | — | hecho (solo lo incluía `working/work_list.php`: lo cubre S2 en `WorkingController`; スタッフ一覧 tiene el suyo propio, S5) |
 
 ### 1.6 API JWT de la tienda móvil (`api/`)
 
@@ -124,7 +124,7 @@ Todas con HTTP 200 también en error y leyendo el **cuerpo JSON incluso en GET**
 | `mpa_getCoverFlow.php` | `/api/mpa_getCoverFlow.php` | `publico.integraciones.mpa.cover-flow` | `MpaController@coverFlow` | L `tb_customer`, `contents_master` (`aplicover`) + `hp/uploads/c6/aplicover/` | hecho (contrato + pruebas con imágenes) |
 | `mpa_albumUpdate.php` | `POST /api/mpa_albumUpdate.php` | `publico.integraciones.mpa.album-update` | `MpaController@albumUpdate` | E `tb_photo_album`, `hatuban` + `hp/uploads/c1/photoalbum/<cd>/` | hecho (Imagick en lugar de `convert`; pruebas propias) |
 | `mpa_setraiten.php` | `/api/mpa_setraiten.php` | `publico.integraciones.mpa.set-raiten` | `MpaController@setRaiten` | E `tb_raiten_rireki` y lo que haga `raitenFunc` (sellos, puntos) o `tb_beacon_history` | hecho (contrato; con éxito responde ok en vez del fatal 500 del legacy) |
-| `mpa_customerSync.php` | `/api/mpa_customerSync.php` | — | — | — | diferido: POS fuera de alcance (`PosGateway::syncCustomers()`); al retomarlo, comando Artisan, no ruta pública |
+| `mpa_customerSync.php` | `/api/mpa_customerSync.php` | — | — | — | descartado: POS fuera de alcance (`PosGateway::syncCustomers()`); al retomarlo, comando Artisan, no ruta pública |
 | `mpa_registCustomer.php` | — | — | — | — | descartado: archivo vacío |
 
 ### 1.8 `appview/` (WebView de la app del cliente)
@@ -169,7 +169,7 @@ Rutas `appview/<archivo>.php` idénticas, con sesión (como el legacy). Controla
 | Archivo legacy | URL | Ruta Laravel | Controlador@método | Tablas legacy | Estado |
 |---|---|---|---|---|---|
 | `tool/api/checkKey.php` | (fragmento) | middleware `Integraciones\CheckCrmApiKey` | — | — | hecho |
-| `tool/api/category0/setPosdomain.php` | `/system/tool/api/category0/setPosdomain.php` | — | — | — | diferido: POS fuera de alcance (escribe `tb_shop.pos_domain`; `PosGateway::setShopDomain()`) |
+| `tool/api/category0/setPosdomain.php` | `/system/tool/api/category0/setPosdomain.php` | — | — | — | descartado: POS fuera de alcance (escribe `tb_shop.pos_domain`; `PosGateway::setShopDomain()`) |
 | `tool/api/category1/searchCustomerList.php` | `/system/tool/api/category1/searchCustomerList.php` | `publico.integraciones.tool.search-customer-list` | `ToolApi\CustomerController@search` | L `tb_customer(_sub)` | hecho (contrato byte a byte) |
 | `tool/api/category1/getCustomerDetail.php` | `…/getCustomerDetail.php` | `publico.integraciones.tool.customer-detail` | `ToolApi\CustomerController@show` | L `tb_customer(_sub)` | hecho (contrato byte a byte) |
 | `tool/api/category1/getSearchCateFormData.php` | `…/getSearchCateFormData.php` | `publico.integraciones.tool.search-form` | `ToolApi\CustomerController@searchForm` | L `tb_search_cate`, `tb_search_form` | hecho (contrato byte a byte) |
@@ -201,9 +201,9 @@ Rutas `appview/<archivo>.php` idénticas, con sesión (como el legacy). Controla
 
 | Origen | Estado |
 |---|---|
-| A.1 `system/pos_session.php`, `system/terminal_login.php`, `category11/terminal.php` | diferido: POS fuera de alcance |
-| A.5 `r/`, `reserve/`, `getReservationWaitTime.php` | de S2 (reservas) |
-| `category11/*`, `category12/*` | diferido: POS / SNS fuera de alcance |
+| A.1 `system/pos_session.php`, `system/terminal_login.php`, `category11/terminal.php` | descartado: POS fuera de alcance |
+| A.5 `r/`, `reserve/`, `getReservationWaitTime.php` | hecho (S2, reservas: `diseno/clientes-ventas-reservas.md`) |
+| `category11/*`, `category12/*` | descartado: POS / SNS fuera de alcance |
 
 ---
 
