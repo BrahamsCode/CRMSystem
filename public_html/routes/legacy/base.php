@@ -19,7 +19,8 @@ use Illuminate\Support\Facades\Route;
  * 基本情報管理 (category0, S1): URL literales del legacy. Se carga con el guard del personal
  * y el prefijo de nombre `legacy.` (routes/web.php). Diseño: Doc/diseno/nucleo-base.md.
  */
-Route::name('base.')->group(function () {
+// Solo master: el legacy oculta 基本情報管理 a los demás (header.php, select.php) pero no cerraba las URL
+Route::name('base.')->middleware('can:nucleo.master')->group(function () {
     Route::get('system/category0', IndexController::class)->name('index');
     Route::get('system/category0/index.php', IndexController::class);
 
@@ -35,7 +36,8 @@ Route::name('base.')->group(function () {
     });
     // 基本情報確認・変更 y 基本情報登録 de primer acceso (mismo controlador, setup = true)
     foreach (['system/category0/config' => 'config.', 'system' => 'setup.'] as $dir => $name) {
-        Route::name($name)->controller(OfficeController::class)->group(function () use ($dir, $name) {
+        // el asistente de primer acceso (system/config.php) lo ve quien entre primero, como el legacy
+        Route::name($name)->controller(OfficeController::class)->withoutMiddleware($name === 'setup.' ? ['can:nucleo.master'] : [])->group(function () use ($dir, $name) {
             $setup = $name === 'setup.';
             Route::match(['get', 'post'], "{$dir}/config.php", 'form')->name('form')->defaults('setup', $setup);
             Route::post("{$dir}/config_confirm.php", 'confirm')->name('confirm')->defaults('setup', $setup);

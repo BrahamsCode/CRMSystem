@@ -1,6 +1,6 @@
 # Revisión visual de punta a punta (paso 7 del plan)
 
-S1, 2026-11-27. Comparación con Playwright entre la muestra (`https://development.crm-s.net`, master, **solo GET**) y la web local (`l13/nucleo` con `laravel13` fusionada, BD `crmsystem2_nucleo` cargada con `scripts/bd-legacy.sh`).
+S1, 2026-11-27. Comparación con Playwright entre la muestra (`https://development.crm-s.net`, master, **solo GET**) y la web local (`l13/nucleo` con `laravel13` fusionada, BD `crmsystem2_nucleo` cargada con `scripts/bd-legacy.sh`). Ojo: en la primera pasada el servidor de prueba (`artisan serve`) leía la BD principal `crmsystem2`, porque no pasa `DB_DATABASE` del contenedor a las peticiones web; desde la revisión de permisos usa `crmsystem2_nucleo` (`.env` local).
 
 ## Método
 
@@ -13,11 +13,12 @@ S1, 2026-11-27. Comparación con Playwright entre la muestra (`https://developme
 | Módulo | Archivo | Resumen |
 |---|---|---|
 | 顧客管理 (category1) | [diferencias-clientes.md](diferencias-clientes.md) | 2 pantallas sin migrar del menú; ポイント管理/履歴 visibles para master |
-| 販売促進管理 (category3) | [diferencias-promocion.md](diferencias-promocion.md) | menú lateral vacío (`config/menu/promocion.php` fuera del contrato); títulos sin nombre del sitio |
+| 販売促進管理 (category3) | [diferencias-promocion.md](diferencias-promocion.md) | títulos sin nombre del sitio; `mail_past` lento (el menú vacío de la primera pasada era por datos, ver el archivo) |
 | 業務支援管理 (category5) | [diferencias-operaciones.md](diferencias-operaciones.md) | bloque 勤怠管理 ausente (decisión pendiente de Antony) |
 | マイページ管理 (category6) | [diferencias-mypage.md](diferencias-mypage.md) | sin diferencias propias |
 | 端末管理 (category7) | [diferencias-terminales.md](diferencias-terminales.md) | la muestra pinta `felica/terminal_list.php` con la UI clásica |
 | 予約管理 (category9) | [diferencias-reservas.md](diferencias-reservas.md) | falta la agenda `yoyaku/time_table.php` (entrada del módulo) |
+| Permisos | [permisos.md](permisos.md) | revisión con un usuario no master |
 | 基本情報管理 (category0) | — | revisado pantalla a pantalla al migrarlo (S1): sin diferencias |
 
 ## Núcleo: corregido en esta revisión (`7d54d3a`)

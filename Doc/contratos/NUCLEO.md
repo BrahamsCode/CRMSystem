@@ -56,6 +56,8 @@ Una ruta legacy que en el legacy terminaba en `/` (p. ej. `/system/category1/`) 
 - **Permisos vs condiciones.** `master` pasa todo Gate de PERMISO, pero no las CONDICIONES (módulo o función activa: app encendida, UI CRM2, beacon…), igual que el legacy. Convención: un Gate de condición se llama `<modulo>.<algo>.enabled` (o `nucleo.*`) y `Gate::before` no lo resuelve para master: se evalúa su función. Si la condición además pide permiso, lo consulta dentro: `Gate::define('mypage.mycolle.enabled', fn ($s) => AdminMaster::current()->application_use_flg == 1 && Gate::forUser($s)->allows('kengen.1035.1'))` (master pasa el `kengen`, no la app apagada). `NucleoServiceProvider::isCondition($nombre)` dice cuál es cuál.
 - Banderas (no las pasa master por sí solo, como el legacy): `nucleo.master`, `nucleo.developer` (`STAGE=docker` o IP en `CRM_DEVELOPER_IPS`), `nucleo.support`, `nucleo.support-master`, `nucleo.maintenance` ((IP de desarrollo o soporte) y no Relation: menús de mantenimiento), `nucleo.shop-create` (IP de desarrollo o `support_master`).
 
+- 基本情報管理 (`system/category0/*`) exige `nucleo.master` en el servidor (el legacy solo lo ocultaba); queda abierto el asistente de primer acceso `system/config.php`.
+
 ## 5. Layout (CONVENCIONES §4)
 
 ```blade
