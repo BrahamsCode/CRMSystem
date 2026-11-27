@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\Base\AreaController;
 use App\Http\Controllers\Admin\Base\AuthorityController;
+use App\Http\Controllers\Admin\Base\BookmarkController;
 use App\Http\Controllers\Admin\Base\IndexController;
 use App\Http\Controllers\Admin\Base\OfficeController;
 use App\Http\Controllers\Admin\Base\ShopCategoryController;
@@ -52,7 +53,14 @@ Route::name('base.')->group(function () {
         Route::post('area_register.php', 'register')->name('register');
     });
 
-    Route::match(['get', 'post'], 'system/category0/shop/shop_category.php', ShopCategoryController::class)->name('shop-categories');
+    // ショートカット管理
+    Route::prefix('system/category0/config')->name('bookmarks.')->controller(BookmarkController::class)->group(function () {
+        Route::get('bookmark.php', 'index')->name('index');
+        Route::post('ajax_bookmark.php', 'rank')->name('rank');
+        Route::match(['get', 'post'], 'bookmark_list.php', 'list')->name('list');
+    });
+
+    Route::match(['get', 'post'], 'system/category0/shop/shop_category.php',ShopCategoryController::class)->name('shop-categories');
 });
 
 /*
