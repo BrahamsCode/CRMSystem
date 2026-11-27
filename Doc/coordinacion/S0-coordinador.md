@@ -169,6 +169,14 @@
   6. 勤怠: se migra la gestión, local y sin dependencias externas. Por reparto: `category5/kintai` → S5 y `category5/working` → S2, sobre los modelos de S5 (`KintaiHiduke`, `KintaiRecord`, `WorkTime`). El fichaje desde el quiosco queda fuera, con touchcation.
   7. Login de `hp/user`: fuera (`hp/` completo). La reserva web entra con el token desde la app. El enlace de `mpa_getTopBanner` a `hp/user/control.php` queda como deuda (S5 lo anota en `para-japon.md`).
   Antony pide a Japón: el volcado de la BD `admin`, si `b.g-api.net` sigue activo en producción y qué módulos usan los clientes reales.
+- 2026-11-27 (09:30): integradas las tareas que salieron de las respuestas de Antony:
+  - S3: 新着情報 (M9). No lo lee ningún reproductor.
+  - S1: conexión `beacon` perezosa, con timeout de 5 s.
+  - S4: GoTel y `signage/pdf` PROVISIONALES en sus URL legacy (el correo solo se envía si `SIGNAGE_CONTACT_NOTIFY` tiene destinatario: el legacy no enviaba), y modelos de ビーコン sin pantallas.
+  - S2: 勤怠一覧/集計.
+  - S5: 勤怠管理 y `para-japon.md` §3/§5.
+  Conflicto aditivo en `config/menu/operaciones.php` resuelto (勤怠一覧 de S2 primero y después lo de S5). `laravel13` con 989 pruebas en verde.
+- Nuevo para Antony y Japón (de S2): qué deben mostrar 普通残業/休日残業/休日出勤 en 集計 (el legacy nunca los calculó; hoy salen los mismos valores) y si 休出勤合計 del 帳票 sigue siendo 外出×休憩. 帳票 queda apagado por defecto (`CRM_WORKING_REPORT`).
 - 2026-11-27: siguiente tarea de S1 (Antony: el login primero): modelo base y traits comunes, luego el login contra el personal del legacy, el layout idéntico y los estáticos comunes.
 
 ## Hecho
