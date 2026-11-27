@@ -160,6 +160,30 @@ Route::prefix('clientes')->name('clientes.')->group(function () {
     // --- fin C6-c ---
     // --- fin C6 ---
 
+    // --- C7 ---
+    // 初期設定管理: カードリーダーモード設定 (config/felica_mode.php) y カード管理 (config/card_new.php)
+    Route::get('reader-mode', [\App\Http\Controllers\Admin\Customers\ReaderModeController::class, 'edit'])->name('reader-mode');
+    Route::post('reader-mode', [\App\Http\Controllers\Admin\Customers\ReaderModeController::class, 'update'])->name('reader-mode.update');
+    Route::get('cards', [\App\Http\Controllers\Admin\Customers\CardController::class, 'index'])->name('cards');
+    Route::match(['get', 'post'], 'cards/select', [\App\Http\Controllers\Admin\Customers\CardController::class, 'select'])->name('cards.select');
+    Route::post('cards', [\App\Http\Controllers\Admin\Customers\CardController::class, 'store'])->name('cards.store');
+    Route::post('cards/mode', [\App\Http\Controllers\Admin\Customers\CardController::class, 'mode'])->name('cards.mode');
+    // メールコメント (config/mail_comment.php, mail_comment_register.php)
+    Route::get('mail-comment', [\App\Http\Controllers\Admin\Customers\MailCommentController::class, 'edit'])->name('mail-comment');
+    Route::post('mail-comment', [\App\Http\Controllers\Admin\Customers\MailCommentController::class, 'update'])->name('mail-comment.update');
+    // 学年設定 / クラス設定 (config/schoolyear_*.php, schoolclass_*.php): mismo controlador, 'kind' por defecto
+    foreach (['school-years' => 'years', 'school-classes' => 'classes'] as $prefix => $kind) {
+        Route::get($prefix, [\App\Http\Controllers\Admin\Customers\SchoolConfigController::class, 'index'])->defaults('kind', $kind)->name("{$prefix}.index");
+        Route::post($prefix, [\App\Http\Controllers\Admin\Customers\SchoolConfigController::class, 'store'])->defaults('kind', $kind)->name("{$prefix}.store");
+        Route::put("{$prefix}/{cd}", [\App\Http\Controllers\Admin\Customers\SchoolConfigController::class, 'update'])->whereNumber('cd')->defaults('kind', $kind)->name("{$prefix}.update");
+        Route::delete("{$prefix}/{cd}", [\App\Http\Controllers\Admin\Customers\SchoolConfigController::class, 'destroy'])->whereNumber('cd')->defaults('kind', $kind)->name("{$prefix}.destroy");
+    }
+    // 入退室一覧 (entrance/working_calendar.php y work_list.php)
+    Route::get('entries/calendar', [\App\Http\Controllers\Admin\Customers\EntryController::class, 'calendar'])->name('entries.calendar');
+    Route::get('entries', [\App\Http\Controllers\Admin\Customers\EntryController::class, 'index'])->name('entries.index');
+    Route::post('entries', [\App\Http\Controllers\Admin\Customers\EntryController::class, 'update'])->name('entries.update');
+    // --- fin C7 ---
+
     // --- C1-b: ficha y pestañas, borrar, recuperar (al final: captura /{customer}) ---
     Route::get('{customer}', [\App\Http\Controllers\Admin\Customers\CustomerController::class, 'show'])->whereNumber('customer')->name('show');
     Route::delete('{customer}', [\App\Http\Controllers\Admin\Customers\CustomerController::class, 'destroy'])->whereNumber('customer')->name('destroy');

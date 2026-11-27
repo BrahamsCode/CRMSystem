@@ -45,3 +45,30 @@ Route::match(['get', 'post'], 'system/category9/yoyaku/print/csv_download.php', 
 Route::get('system/category9/yoyaku/yoyakuPrint.php', [\App\Http\Controllers\Admin\Reservations\PrinterController::class, 'index'])->name('reservas.printer');
 Route::match(['get', 'post'], 'system/category9/yoyaku/ajaxYoyakuPrint.php', [\App\Http\Controllers\Admin\Reservations\PrinterController::class, 'poll'])->name('reservas.printer.poll');
 // --- fin R5 ---
+
+// --- R6 ---
+// 予約管理 simple (system/category3/reservation/): enlaces del menú de S3 (config/menu/promocion.php) y del propio módulo
+Route::controller(\App\Http\Controllers\Admin\Reservations\SimpleReservationController::class)->group(function () {
+    Route::match(['get', 'post'], 'system/category3/reservation/reserve_customer_search.php', 'customerSearch')->name('reservas.simple.customer-search');
+    Route::match(['get', 'post'], 'system/category3/reservation/reserve_new.php', 'create')->name('reservas.simple.create');
+    Route::post('system/category3/reservation/reserve_new_confirm.php', 'confirm')->name('reservas.simple.confirm');
+    Route::post('system/category3/reservation/reserve_new_register.php', 'store')->name('reservas.simple.store');
+    Route::get('system/category3/reservation/reserve_new_complete.php', 'complete')->name('reservas.simple.complete');
+    Route::match(['get', 'post'], 'system/category3/reservation/reserve_calendar.php', 'calendar')->name('reservas.simple.calendar');
+    Route::match(['get', 'post'], 'system/category3/reservation/reserve_list.php', 'index')->name('reservas.simple.index');
+    Route::match(['get', 'post'], 'system/category3/reservation/reserve_detail.php', 'show')->name('reservas.simple.show');
+    Route::post('system/category3/reservation/reserve_change_status.php', 'status')->name('reservas.simple.status');
+    Route::post('system/category3/reservation/reserve_delete.php', 'destroy')->name('reservas.simple.destroy');
+    Route::get('system/category3/reservation/config.php', 'config')->name('reservas.simple.config');
+    Route::post('system/category3/reservation/config_register.php', 'updateConfig')->name('reservas.simple.config.update');
+    // AJAX de reserve_new.php ($("#category_cd").load / $("#staff_cd").load, POST shop_cd)
+    Route::match(['get', 'post'], 'system/category3/reservation/ajax_category.php', 'categoryOptions')->name('reservas.simple.options.categories');
+    Route::match(['get', 'post'], 'system/category3/reservation/ajax_staff.php', 'staffOptions')->name('reservas.simple.options.staff');
+});
+Route::controller(\App\Http\Controllers\Admin\Reservations\SimpleCategoryController::class)->group(function () {
+    Route::get('system/category3/reservation/category_entry.php', 'index')->name('reservas.simple-categories.index');
+    Route::post('system/category3/reservation/category_register.php', 'store')->name('reservas.simple-categories.store');
+    Route::post('system/category3/reservation/category_delete.php', 'destroy')->name('reservas.simple-categories.destroy');
+});
+Route::match(['get', 'post'], 'system/category3/reservation/model_reservation.php', [\App\Http\Controllers\Admin\Reservations\ModelChangeController::class, 'index'])->name('reservas.model-changes');
+// --- fin R6 ---

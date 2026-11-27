@@ -124,4 +124,36 @@ Route::prefix('reservas')->name('reservas.')->group(function () {
     Route::get('printer', [\App\Http\Controllers\Admin\Reservations\PrinterController::class, 'index'])->name('printer');
     Route::match(['get', 'post'], 'printer/poll', [\App\Http\Controllers\Admin\Reservations\PrinterController::class, 'poll'])->name('printer.poll');
     // --- fin R5 ---
+
+    // --- R6 ---
+    // 予約管理 simple (category3/reservation, tb_reserve): alta en pasos, 予約・来店一覧, lista del día, detalle y estados
+    Route::controller(\App\Http\Controllers\Admin\Reservations\SimpleReservationController::class)
+        ->prefix('simple')->name('simple.')->group(function () {
+            Route::match(['get', 'post'], 'customer-search', 'customerSearch')->name('customer-search');
+            Route::match(['get', 'post'], 'create', 'create')->name('create');
+            Route::post('confirm', 'confirm')->name('confirm');
+            Route::post('/', 'store')->name('store');
+            Route::get('{reservation}/complete', 'complete')->whereNumber('reservation')->name('complete');
+            Route::match(['get', 'post'], 'calendar', 'calendar')->name('calendar');
+            Route::match(['get', 'post'], 'list', 'index')->name('index');
+            Route::get('{reservation}', 'show')->whereNumber('reservation')->name('show');
+            Route::post('{reservation}/status', 'status')->whereNumber('reservation')->name('status');
+            Route::post('{reservation}/delete', 'destroy')->whereNumber('reservation')->name('destroy');
+            // 予約項目設定 (tb_koumoku, tb_name = 'tb_reserve')
+            Route::get('config', 'config')->name('config');
+            Route::post('config', 'updateConfig')->name('config.update');
+            // ajax_category.php / ajax_staff.php
+            Route::match(['get', 'post'], 'options/categories', 'categoryOptions')->name('options.categories');
+            Route::match(['get', 'post'], 'options/staff', 'staffOptions')->name('options.staff');
+        });
+    // 予約カテゴリー登録・変更 (tb_reserve_name)
+    Route::controller(\App\Http\Controllers\Admin\Reservations\SimpleCategoryController::class)
+        ->prefix('simple-categories')->name('simple-categories.')->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::post('/', 'store')->name('store');
+            Route::post('{category}/delete', 'destroy')->whereNumber('category')->name('destroy');
+        });
+    // 予約機種一覧 (tb_change_model, solo lectura) y su CSV (csv_print=1)
+    Route::match(['get', 'post'], 'model-changes', [\App\Http\Controllers\Admin\Reservations\ModelChangeController::class, 'index'])->name('model-changes');
+    // --- fin R6 ---
 });
