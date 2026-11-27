@@ -202,7 +202,7 @@ class MailRegistrar
         if ($mailType !== 'anketo' || (string) ($in['hakkou_cd'] ?? '') === '') {
             return;
         }
-        $row = ['hyouji_flg' => '1', 'hakkou_date' => (string) time()];
+        $row = ['hyouji_flg' => '1', 'hakkou_date' => (string) now()->getTimestamp()];
         if ((string) ($in['get_coupon_cd'] ?? '') !== '') {
             $row['attached_cd'] = (int) $in['get_coupon_cd'];
         }

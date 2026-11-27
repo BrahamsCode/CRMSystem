@@ -143,8 +143,8 @@ Mismas pantallas con `mail_type = deco` (`$tb_base_system_child_cd = 32`); cuerp
 
 | Legacy | Título | Ruta Laravel | Controlador@método | Tablas | Estado |
 |---|---|---|---|---|---|
-| `digital_signage_entry.php` | 新着情報管理 | `news.index` | `NewsController@index` | L tb_digital_signage, tb_officialposition | pendiente (uso por confirmar) |
-| `digital_signage_register.php` | 新着情報登録 | `news.store` | `NewsController@store` | E tb_digital_signage, hatuban | pendiente (uso por confirmar) |
+| `digital_signage_entry.php` | 新着情報管理 | `news.index` | `NewsController@index` | L tb_digital_signage, tb_officialposition | pendiente (M9: espera a Antony, ¿se usa 新着情報?) |
+| `digital_signage_register.php` | 新着情報登録 | `news.store` | `NewsController@store` | E tb_digital_signage, hatuban | pendiente (M9: espera a Antony, ¿se usa 新着情報?) |
 
 #### Motor compartido — `inc/`, `class/`, raíz
 
@@ -240,7 +240,7 @@ Decisiones F6 (S4, 2026-11-27):
 | `mycoupon_delete.php` | (削除) | `coupons.destroy` | `CouponController@destroy` | E tb_mycoupon_master (`disp_flg = 9`) | hecho |
 | `mycoupon_issue.php` | クーポン発行 (発行条件選択) | `coupons.issue` | `CouponIssueController@select` | L tb_customer, tb_search_cate/_form, tb_koumoku | descartado (solo lo enlazaba la versión antigua de mycoupon_mail.php) |
 | `mycoupon_issue_detail.php` | 発行内容確認 | `coupons.issue.confirm` | `CouponIssueController@confirm` | L tb_mycoupon_master, tb_shop | descartado (ídem) |
-| `customer_list.php` | 顧客一覧 (popup) | `coupons.issue.customers` | `CouponIssueController@customers` | L tb_customer, tb_raiten_rireki | pendiente |
+| `customer_list.php` | 顧客一覧 (popup) | `coupons.issue.customers` | `CouponIssueController@customers` | L tb_customer, tb_raiten_rireki | descartado (solo lo abría mycoupon_issue.php, descartado) |
 | `mycoupon_hakkou.php` | クーポン発行 (実行) | `coupons.issue.store` | `CouponIssueController@store` | E tb_mycoupon, hatuban | descartado (ídem) |
 | `mycoupon_create.php`, `mycoupon_complete.php` | クーポン発行完了 | `coupons.issue.complete` | `CouponIssueController@complete` | L tb_mycoupon | descartado (ídem) |
 | `mycoupon_rireki.php` | クーポン履歴 | `coupons.history` | `CouponStatsController@history` | L tb_mycoupon, tb_mycoupon_master, tb_mycoupon_used, tb_shop | descartado (ídem) |
@@ -290,8 +290,8 @@ Decisiones F6 (S4, 2026-11-27):
 
 | Legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas | Estado |
 |---|---|---|---|---|---|
-| `smatopi_message.php`, `ajax_smatopiMessage.php`, `ajax_smatopiLine.php` | スマトピ / メッセージ作成 | `smatopi.message`, `smatopi.ajax-message`, `smatopi.ajax-line` | `SmatopiController@*` → `SmatopiClient` | E smatopi_message; L tb_shop, admin_master (`smatopi_flg`, `domain_smatopi_id`) | pendiente (uso por confirmar) |
-| `smatopi_sent_history.php`, `ajax_smatopiSentHistory.php` | スマトピ / メッセージ送信履歴 | `smatopi.history`, `smatopi.ajax-history` | `SmatopiController@history/historyData` | L smatopi_message | pendiente (uso por confirmar) |
+| `smatopi_message.php`, `ajax_smatopiMessage.php`, `ajax_smatopiLine.php` | スマトピ / メッセージ作成 | `smatopi.message`, `smatopi.ajax-message`, `smatopi.ajax-line` | `SmatopiController@*` → `SmatopiClient` | E smatopi_message; L tb_shop, admin_master (`smatopi_flg`, `domain_smatopi_id`) | pendiente (F8: espera a Antony, ¿se usa スマトピ?) |
+| `smatopi_sent_history.php`, `ajax_smatopiSentHistory.php` | スマトピ / メッセージ送信履歴 | `smatopi.history`, `smatopi.ajax-history` | `SmatopiController@history/historyData` | L smatopi_message | pendiente (F8: espera a Antony, ¿se usa スマトピ?) |
 
 #### 来店履歴管理 — `visit/`
 
