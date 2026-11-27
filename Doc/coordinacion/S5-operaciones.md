@@ -9,7 +9,7 @@ Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archiv
 
 ## Próximo paso — Diseño (sin código)
 
-> **2026-11-26, cambio de base (Antony):** misma BD y misma UI que el legacy (`CONVENCIONES.md`, sección 0). Si ya escribiste tu diseño con tablas nuevas, rehaz la parte de esquema y UI. — **entregado 2026-11-26, esperando revisión de S0**
+> **2026-11-26, cambio de base (Antony):** misma BD y misma UI que el legacy (`CONVENCIONES.md`, sección 0). Si ya escribiste tu diseño con tablas nuevas, rehaz la parte de esquema y UI. — **rehecho sobre la BD legacy el 2026-11-27, esperando revisión de S0**
 
 Escribir `Doc/diseno/operaciones-integraciones.md`:
 1. **Tabla de paridad:** una fila por cada vista del análisis (en `05-operaciones-terminales-reservas.md` solo la sección de category5 (業務支援管理); `07-pos-api-y-externos.md` (todo salvo `category11`, `category12`, `r/` y `reserve/`)): archivo legacy, título (ja), ruta Laravel (`admin.<modulo>.*`), controlador@método, tablas nuevas, estado (`pendiente` / `descartado: motivo`).
@@ -37,27 +37,30 @@ Implementar submódulo por submódulo en el orden del diseño: migraciones, mode
 
 ## Pedidos
 
-Detalle en `Doc/diseno/operaciones-integraciones.md` §5. Resumen:
-- **S1:** tabla `staff` con el mapeo de §2.3; importador con `id = cd` en tablas cuyo `cd` sale en contratos (`shops`, `customers`, `staff`, `visits`, productos) — decide S0; config de la tienda móvil (JWT, claves `.pem`, extlink, `DOMAIN_LIST` con conexiones), `CRM_API_KEY`; paquetes `firebase/php-jwt` e `intervention/image`; niveles de permiso; la pantalla 機能設定 escribe `mobile_shop_settings` (S5).
-- **S2:** `VisitService` (raitenFunc), búsqueda de clientes, productos canjeables por puntos, fotos de cliente, alta de socio y reserva rápida para `appview`, mapeo inverso `customers` → `tb_customer`.
-- **S3:** `PointService` con tipos de la API (uso, canje) y datos para reconstruir `tb_point_log` (`staff_id`, origen, saldo previo); cupones, sellos y encuestas para `appview`.
-- **S4:** `paper_cards` (`status` en lugar de `display_flg`), historial de beacon, ruta y `mtime` de `app_images`.
-- **Antony/S0:** confirmar si 勤怠 (kintai/working/lector FeliCa) se usa sin touchcation (27 puntos en juego).
+Detalle en `Doc/diseno/operaciones-integraciones.md` §5 (rehecho sobre la BD legacy). Resumen:
+- **S1:** modelos `Staff`/`Shop`/`Hatuban`/`AdminMaster`/`ContentsMaster`, trait de `disp_flg`, mutator de `form2Db`; rutas `operaciones` y `publico/integraciones`; registrar `OperacionesServiceProvider` e `IntegracionesServiceProvider`; estáticos de category5 y `appview` (+ `admin/css/font-awesome`); disco sobre `hp/uploads`; `firebase/php-jwt`, Intervention/Imagick, config de la tienda móvil y `CRM_API_KEY`, `DOMAIN_LIST`; niveles de permiso; `zip` y helper CSV.
+- **S2:** modelos de `tb_customer(_sub)`, `tb_raiten_rireki`, `tb_koumoku`, `tb_search_*`, `sales_items`, `tb_photo_album`, `tb_yoyaku`, `numbered_ticket`; servicio de visitas (`raitenFunc`), búsqueda por teléfono, alta de socio, reserva rápida; rutas destino de `ctiWindow`.
+- **S3:** servicio de puntos con los campos de `setPoint`; modelos de cupones, sellos y encuestas para `appview`.
+- **S4:** modelos de `tb_url_list` y `tb_beacon_history`; imágenes y `mypage_config` de mypage en solo lectura.
+- **Antony/S0:** ⏸ confirmar si 勤怠 (kintai/working/lector FeliCa) se usa sin touchcation (22 de 63 puntos).
 
 ## Decisiones
 
-- **Asistencia normalizada:** `kintai_tb_*` y `tb_work_time` → `attendance_days` + `attendance_punches` con `source` (1 terminal 勤怠, 2 タイムカード); cada pantalla filtra su origen.
-- **Turnos:** una fila por turno (`shifts`), porque el legacy admite varios por día (listas `<>`).
-- **Corte de jornada:** `attendance_terminal_settings.cutoff_time` por tienda (default 05:00) para todo; el 04:40 fijo de touchcation queda anotado.
-- **`legacy_cd`** en las tablas de S5 (como S4); `id = cd` propuesto solo para las tablas de otros cuyo `cd` sale en contratos externos.
-- **Cargos, departamentos y 雇用形態** pasan de texto en `tb_staff` a FK (`positions`, `departments`, `employment_types`); el importador crea los que falten por nombre.
+- **BD y UI del legacy (2026-11-27):** sin tablas nuevas; modelos sobre `tb_*` con `cd`, `hatuban` y `disp_flg='9'`; HTML y CSS de cada pantalla copiados. El diseño con tablas nuevas quedó en git (84f6590) y su código en el stash `b050e409` «obsoleto: tablas nuevas (S5 operaciones)».
+- **Columnas por día** (`tb_work_time`, `tb_staff_shift`, `tb_shop_work`): lista blanca de días 1..31, nunca el nombre de columna armado con la entrada (evita la inyección de `change_syukkin2`).
+- **Corte de jornada:** el mismo de cada pantalla del legacy («hora < 5» en working, `kijun_time` en kintai), en `WorkTimeService`.
+- **`url_transfer_data` es de S5** (lo escribe `ptag`); sin PK en el legacy: modelo sin clave primaria, solo inserta.
+- **`tb_felica_mode`:** modelo `FelicaMode` de S5; la fila `cd=2` la edita S2.
+- **Estáticos de category5 y `appview`:** S5 los copia (`public/legacy/system/category5/`, `public/appview/`), pendiente de confirmar por S0/S1.
 - **`/api/<desconocido>`:** 404 JSON en lugar del fatal del legacy.
 - **`setRaitenDetail` JSONP de error:** se emite el formato correcto (el legacy está roto por precedencia de operadores).
-- **`change_syukkin2.php`, `schedule.php`, `shift.php`, archivos temporales CSV, `ajax_session_update`:** descartados (duplicados, sin enlace o reemplazados).
+- **`change_syukkin2.php`, `schedule.php`, `shift.php`, archivos temporales CSV:** descartados (duplicados, sin enlace o reemplazados). `ajax_session_update` vuelve a `pendiente ⏸` (con la UI del legacy la tienda va en la sesión).
 - **`version/<canal>/v.php` y APK:** descartados (touchcation, S0); `crm_version.php` se mantiene.
 - **Rutas de integración** en `routes/publico/integraciones.php`, nombre `publico.integraciones.*` (convención S0).
-- **Passcode de la tienda móvil** en `mobile_shop_settings` (tabla propia, CONVENCIONES §4).
+- **`tool/api`:** su JSON se arma como texto en el legacy; se reproduce con plantillas, no con `LegacyJson`.
 
 ## Hecho
 
-- 2026-11-26 — Diseño `Doc/diseno/operaciones-integraciones.md`: paridad (category5 + 07 sin category11/12, `r/`, `reserve/`; más `tool/api` y CTI de 00 §10), esquema con mapeo desde `tb_*`, servicios viejos → Laravel, contratos externos, orden (75 puntos) y pedidos. **Esperando revisión de S0.**
+- 2026-11-26 — Diseño con tablas nuevas, aprobado por S0 (obsoleto desde el cambio de base).
+- 2026-11-27 — `LegacyJson` (json_encode sin flags y filas como texto) con 8 pruebas unitarias (557be46, 6425449).
+- 2026-11-27 — Diseño rehecho sobre la BD y la UI del legacy (`Doc/diseno/operaciones-integraciones.md`): paridad completa, modelos por `tb_*` con dueño, UI y estáticos por pantalla, servicios, orden (63 puntos, 22 ⏸), pedidos y contratos con los mismos `cd` y columnas. **Esperando revisión de S0.**
