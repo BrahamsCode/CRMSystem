@@ -122,17 +122,17 @@ it('registra el envío inmediato con 振分配信 enviable y no lo duplica al re
         ->and($mail->{'店id'})->toBe('-1')
         ->and($mail->{'配信日時'})->toBe('2026/11/26 10:00:00')
         ->and($mail->{'振分条件'})->toBe('2')
-        ->and($mail->{'振分配信'})->toStartWith('WHERE cd IN (');
+        ->and($mail->{'振分配信'})->toStartWith('WHERE cd IN (')->toEndWith(' AND cd NOT IN (2)');
     Bus::assertDispatched(SendMailmagJob::class, fn ($job) => $job->mailmagCd === 500);
 
     // Recarga con el mismo token: no registra otro
     $this->post(route('admin.promocion.mail.store'), $form)->assertOk();
     expect(DB::table('mailmag_master')->count())->toBe(1);
 
-    // El SQL guardado funciona con el motor (cd 1 activo; el 2 queda fuera solo como 例外 en la lista, no en el SQL)
+    // El SQL guardado funciona con el motor: el 2 es 例外 y el 3 está dado de baja
     app(MailSender::class)->send(500);
     Mail::assertSent(PromotionMail::class, fn ($m) => $m->hasTo('taro@example.com') && str_contains($m->body, '山田 太郎様'));
-    Mail::assertNotSent(PromotionMail::class, fn ($m) => $m->hasTo('x@example.com'));
+    Mail::assertNotSent(PromotionMail::class, fn ($m) => $m->hasTo('x@example.com') || $m->hasTo('hanako@example.com'));
 });
 
 it('programa un envío con hora en send_schedule', function () {

@@ -61,7 +61,7 @@ class MailRegistrar
             '受付メールアドレス' => 'なし',
             'type_flg' => self::typeFlg($mailType),
             'search_display' => $this->audience->display($uniqid),
-            '振分配信' => $this->audience->whereSql($uniqid),
+            '振分配信' => $this->audience->whereSql($uniqid, $excluded),
             '振分条件' => (string) ($in['reigai_kaiin_cds'] ?? ''),
         ];
 

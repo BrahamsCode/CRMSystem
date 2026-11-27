@@ -68,7 +68,11 @@ class MailAudience
     /** Clientes del filtro sin los 例外顧客 */
     public function query(string $uniqid, array $excludedCds = []): Builder
     {
-        $query = $this->search->queryFromDescription($this->description($uniqid));
+        $description = $this->description($uniqid);
+        $query = isset($description['raw'])
+            // {POS_RESULT}: búsqueda en el POS (fuera de alcance) = ningún cliente
+            ? DB::table('tb_customer')->whereRaw(str_replace('{POS_RESULT}', '-1', (string) preg_replace('/^\s*WHERE\s+/i', '', (string) $description['raw'])))
+            : $this->search->queryFromDescription($description);
         if ($excludedCds !== []) {
             $query->whereNotIn('cd', $excludedCds);
         }
@@ -76,10 +80,33 @@ class MailAudience
         return $query;
     }
 
-    /** `振分配信`: WHERE sobre tb_customer con los valores ya escapados por PDO */
+    /**
+     * `振分配信`: WHERE sobre tb_customer con los valores ya escapados por PDO y, como mail_send_frm.php,
+     * los 例外顧客 añadidos al final como ` AND cd NOT IN (…)` (la edición los vuelve a quitar con ese texto).
+     */
     public function whereSql(string $uniqid, array $excludedCds = []): string
     {
-        return 'WHERE cd IN ('.$this->query($uniqid, $excludedCds)->select('cd')->toRawSql().')';
+        $description = $this->description($uniqid);
+        $sql = isset($description['raw'])
+            ? (string) $description['raw']
+            : 'WHERE cd IN ('.$this->query($uniqid)->select('cd')->toRawSql().')';
+
+        return $excludedCds === [] ? $sql : $sql.' AND cd NOT IN ('.implode(',', array_map('intval', $excludedCds)).')';
+    }
+
+    /**
+     * Edición de un envío programado (mail_future_frm.php): la búsqueda es el `振分配信` guardado sin los
+     * 例外顧客. Es SQL que generó el propio sistema (nunca texto del usuario), como hacía el legacy.
+     */
+    public function storeRaw(string $whereSql, ?string $excludedCsv, string $display): string
+    {
+        if ((string) $excludedCsv !== '') {
+            $whereSql = str_ireplace(' AND cd NOT IN ('.$excludedCsv.')', '', $whereSql);
+        }
+        $uniqid = Str::random(16);
+        session([self::SESSION.$uniqid => ['raw' => $whereSql, 'display' => $display === '' ? [] : explode('<>', $display)]]);
+
+        return $uniqid;
     }
 
     /**
