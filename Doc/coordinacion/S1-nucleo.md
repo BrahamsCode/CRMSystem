@@ -9,7 +9,7 @@ Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archiv
 
 ## Próximo paso
 
-A y B hechos (ver "Hecho"). Siguiente, cuando S0 lo confirme: Cola 2 (基本情報管理, category0: configuración, tiendas, asistente de primer acceso `config.php`) y los "Pedidos" que siguen abiertos.
+A, B y category0 completos (ver "Hecho"). Siguiente (asignado por S0 al terminar category0): revisión visual de punta a punta del menú y del layout de todos los módulos contra la muestra, con Playwright. Pendientes de la cola de S0: paquetes PDF/imagen.
 
 **A) Base legacy** (corto; subir apenas esté): traits `app/Models/Concerns/` `HasHatuban` (numeración por `koumoku`), `LegacySoftDeletes` (scope `disp_flg <> '9'`, `delete()` pone `'9'`), `LegacyTimestamps` (`touroku_date`/`update_date` epoch en texto); modelo base `LegacyModel` (`cd`, no incremental, sin timestamps, `$guarded=[]`); servicio `Hatuban`; modelos `Shop` (`tb_shop`), `Staff` (`tb_staff`), `Terminal` (`tb_terminal`), `AdminMaster`, `ContentsMaster`, con pruebas sobre el esquema legacy; registrar `<Modulo>ServiceProvider` existentes en `bootstrap/providers.php`. Terminado: pruebas en verde, commit, push, aviso.
 
@@ -73,6 +73,7 @@ Recibidos de S0 el 2026-11-26 (para la Cola, después de la Fase 1; S0 los asign
 
 ## Hecho
 
+- **基本情報管理: システム管理 (2026-11-27), category0 completo:** bloques de ajustes de `system.php` con `nucleo.maintenance` (sin 初期化 ni エクスポート), igual a la muestra con Playwright; `ContentsMaster::putLegacy()`, `crm.version`. `tests/Feature/Base/SystemTest.php`. Suite: 581 en verde.
 - **基本情報管理: CRM端末管理 (2026-11-27):** `slim_list.php` (mapeo シリアル → tienda, 設定する que sí guarda) y la vuelta del popup de ac.crm-s.jp (`slim_href.php`, `slim_del_href.php`), con `nucleo.maintenance`. `tests/Feature/Base/AccessTerminalTest.php`. Suite: 572 en verde.
 - **基本情報管理: 権限項目管理 (2026-11-27):** lista con 表示, popup de alta/edición (cd por rango de タイプ) y su AJAX, con `nucleo.maintenance`. `tests/Feature/Base/AuthorityContentsTest.php`. Suite: 509 en verde.
 - **Pedidos S4 (2026-11-27):** conexión `signage` (DB_SIGNAGE_*, por defecto la principal con esquema `signage`) y `App\Support\LegacyCsv` (SJIS-win por bloques), firma en NUCLEO.md §10. Suite: 506 en verde.
