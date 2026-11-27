@@ -18,6 +18,10 @@ beforeEach(function () {
         File::put("$dir/legacy-popup.blade.php", $stub);
         View::addLocation(dirname($dir));
     }
+    if (! Illuminate\Support\Facades\Route::has('legacy.promocion.inc.ajax_search_coupon')) {
+        Illuminate\Support\Facades\Route::middleware('web')->group(base_path('routes/legacy/promocion.php'));
+        app('router')->getRoutes()->refreshNameLookups();
+    }
     $this->withoutMiddleware(Authenticate::class);
     $this->travelTo(Carbon::parse('2026-11-26 10:00:00', 'Asia/Tokyo'));
 
@@ -93,4 +97,30 @@ it('borra con disp_flg = 9 y vuelve a la lista', function () {
     $this->post(route('admin.promocion.coupons.destroy'), ['delete_flg' => 'del', 'cd' => '3', 'shop_cd' => '2', 'coupon_kubun' => '', 'page' => '1', 'kensu' => '20'])
         ->assertOk()->assertSee('削除中です。')->assertSee('mycoupon_list?shop_cd=2', false);
     expect(DB::table('tb_mycoupon_master')->where('cd', 3)->value('disp_flg'))->toBe('9');
+});
+
+it('envía la クーポン por correo con el flujo común y la lista en sus 過去配信', function () {
+    DB::table('tb_office')->insert(['cd' => 1, 'kaishamei' => '本社']);
+    DB::table('tb_base_system_child')->insert(['cd' => 32, 'system_name' => 'マイクーポン管理', 'system_flg' => '1']);
+    DB::table('hatuban')->insert(['koumoku' => 'mailmag', 'kazu' => 80]);
+    DB::table('tb_customer')->insert(['cd' => 9, 'id' => 'C9', 'name' => '客', 'email1' => 'c@example.com', 'mailmaga_email_type' => 'パソコン', 'touroku_kubun' => '2', 'disp_flg' => '1']);
+    Illuminate\Support\Facades\Bus::fake();
+
+    $this->get(route('admin.promocion.coupons.show', ['cd' => 1]))->assertSee('このクーポンを送る')->assertSee(route('admin.promocion.coupons.mail.select'), false);
+
+    $carry = ['cd' => '1', 'hakkou_cd' => '1', 'get_coupon_cd' => '1', 'get_coupon_text' => '【10%OFF】(1)', 'coupon_kubun' => ''];
+    $select = $this->post(route('admin.promocion.coupons.mail.select'), $carry)->assertOk()->assertSee('クーポン 発行条件選択')->assertSee('name="get_coupon_cd" value="1"', false);
+    $response = $this->post(route('admin.promocion.coupons.mail.select'), $carry + ['act' => 'up'])->assertOk()->assertSee('件見つかりました');
+    preg_match('/name="search_uniqid" value="(\w{16})"/', $response->getContent(), $m);
+
+    $this->post(route('admin.promocion.coupons.mail.create'), $carry + ['search_uniqid' => $m[1]])->assertOk()
+        ->assertSee('【10%OFF】(1)')->assertSee('id="get_coupon_cd" name="get_coupon_cd" value="1"', false)->assertSee(route('admin.promocion.coupons.mail.confirm'), false);
+
+    $this->post(route('admin.promocion.coupons.mail.store'), ['search_uniqid' => $m[1], 'hakkou_cd' => '1', 'get_coupon_cd' => '1', 'get_coupon_text' => '【10%OFF】(1)',
+        'title' => 'クーポン', 'naiyou' => '本文', 'tourokusya' => '1', 'send_flg' => '1', 'jikan' => '10', 'fun' => '00', 'mail_send_verify' => '5'])->assertOk()->assertSee('以下の内容で配信いたしました。');
+
+    $mail = DB::table('mailmag_master')->where('cd', 80)->first();
+    expect($mail->type_flg)->toBe('coupon')->and($mail->type_data_cd)->toBe(1);
+
+    $this->get(route('admin.promocion.coupons.mail.past'))->assertOk()->assertSee('■過去マイクーポンメール配信')->assertSee('<td>10%OFF</td>', false);
 });

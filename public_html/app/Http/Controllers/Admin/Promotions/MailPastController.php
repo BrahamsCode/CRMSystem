@@ -50,7 +50,7 @@ class MailPastController extends Controller
         return view('admin.promocion.inc.mailmag_list', [
             'mailType' => $mailType,
             'toolName' => $this->toolName(),
-            'pageTitle' => $mailType === 'deco' ? '過去デコメール配信' : '過去'.$this->toolName().'配信',
+            'pageTitle' => $this->pastTitle($mailType),
             'mails' => $mails,
             'perPage' => $perPage,
             'filters' => ['from' => $from, 'to' => $to, 'texto' => $texto],
@@ -86,7 +86,7 @@ class MailPastController extends Controller
         return view('admin.promocion.inc.mailmag_shousai2', [
             'mailType' => $mailType,
             'toolName' => $this->toolName(),
-            'pageTitle' => ($mailType === 'deco' ? '過去デコメール配信' : '過去'.$this->toolName().'配信').'詳細',
+            'pageTitle' => $this->pastTitle($mailType).'詳細',
             'mail' => $mail,
             'stats' => $stats->forMail($mail->cd),
             'imageUrl' => (string) $mail->getAttribute('画像有無') === '1' ? $images->url($folder, (string) $mail->getAttribute('店id'), $mail->getAttribute('画像名小')) : null,
@@ -170,7 +170,7 @@ class MailPastController extends Controller
         return view('admin.promocion.inc.mailmag_sended_list', [
             'mailType' => $mailType,
             'toolName' => $this->toolName(),
-            'pageTitle' => '過去'.$this->toolName().'配信',
+            'pageTitle' => $mailType === 'mycoupon' ? '過去クーポン配信メール' : '過去'.$this->toolName().'配信',
             'mail' => $mail,
             'rows' => $query->paginate(50, ['*'], 'page', max(1, (int) $request->input('page', 1))),
             'backQuery' => $request->except(['mailmagcd', 'page', 'csvFlg']),
@@ -198,7 +198,7 @@ class MailPastController extends Controller
 
     private function routes(string $mailType): array
     {
-        $prefix = 'admin.promocion.'.($mailType === 'deco' ? 'deco' : 'mail').'.';
+        $prefix = 'admin.promocion.'.MailController::family($mailType).'.';
 
         return [
             'past' => route($prefix.'past'),
@@ -208,6 +208,16 @@ class MailPastController extends Controller
             'select' => route($prefix.'select'),
             'delete' => route('legacy.promocion.inc.ajax_mail_delete'),
         ];
+    }
+
+    /** $page_title de mail_past.php de cada carpeta */
+    private function pastTitle(string $mailType): string
+    {
+        return match ($mailType) {
+            'deco' => '過去デコメール配信',
+            'mycoupon' => '過去マイクーポンメール配信',
+            default => '過去'.$this->toolName().'配信',
+        };
     }
 
     private function toolName(): string
