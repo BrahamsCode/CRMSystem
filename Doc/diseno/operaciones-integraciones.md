@@ -88,9 +88,9 @@ Integraciones: `routes/publico/integraciones.php`, que S1 carga fuera del grupo 
 
 | Archivo legacy | Título (ja) | Ruta Laravel | Controlador@método | Tablas legacy | Estado |
 |---|---|---|---|---|---|
-| `felica_mode.php` | カードリーダーモード設定 | `admin.operaciones.felica-mode.edit` / `.update` | `FelicaModeController@edit` / `@update` | L/E `tb_felica_mode` (fila `cd=1`) | pendiente ⏸ |
-| `card_new.php` | カード管理 (新規カード管理) | `admin.operaciones.cards.index` / `.assign` | `StaffCardController@index` / `@assign` | L/E `tb_card`, `tb_felica_mode`, `tb_staff`, `tb_work_time` | pendiente ⏸ |
-| `card_staff_select.php` | (fragmento) | parcial Blade | — | L `tb_staff` | pendiente ⏸ |
+| `felica_mode.php` | カードリーダーモード設定 | `admin.operaciones.felica-mode.edit` / `.update` | `FelicaModeController@edit` / `@update` | L/E `tb_felica_mode` (fila `cd=1`) | descartado: solo sirven para fichar con FeliCa en touchcation, que está fuera de alcance (Antony, 2026-11-27: el fichaje desde el quiosco queda fuera) |
+| `card_new.php` | カード管理 (新規カード管理) | `admin.operaciones.cards.index` / `.assign` | `StaffCardController@index` / `@assign` | L/E `tb_card`, `tb_felica_mode`, `tb_staff`, `tb_work_time` | descartado: solo sirven para fichar con FeliCa en touchcation, que está fuera de alcance (Antony, 2026-11-27: el fichaje desde el quiosco queda fuera) |
+| `card_staff_select.php` | (fragmento) | parcial Blade | — | L `tb_staff` | descartado: solo sirven para fichar con FeliCa en touchcation, que está fuera de alcance (Antony, 2026-11-27: el fichaje desde el quiosco queda fuera) |
 | `shop_work_calendar.php` | 営業日設定 | `admin.operaciones.shop-work.edit` / `.update` | `ShopWorkController@edit` / `@update` | L/E `tb_shop_work`, `hatuban` | hecho (fila por tienda y mes; festivos con `LegacyHolidays` = check_holiday) |
 | `index.php` (category5) | 業務支援管理 (menú) | `legacy.nucleo.category-top.5` + `config/menu/operaciones.php` | `Nucleo\CategoryTopController@show` | L `tb_base_system_child` | hecho (portada del núcleo, S1; el menú lateral es el de S5) |
 | `inc/page_control.php` | (paginador) | paginador con el HTML del legacy | — | — | hecho (solo lo incluía `working/work_list.php`: lo cubre S2 en `WorkingController`; スタッフ一覧 tiene el suyo propio, S5) |
