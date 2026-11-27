@@ -118,7 +118,12 @@ Ajenos a S4 (vistos en :8081): accesos directos de cabecera `tb_bookmark` a `/sy
 
 Tras la recarga (:8081 en 738907f): 40 URL de S4 como master en 200 con datos y página 2 (solo 404 esperados: `paper-cards/aggregate` sin `cd` y `pdf_icon.png`, que tampoco existe en el legacy), sin 405 del sondeo; `qa_partial` / qa12345: listas en solo lectura, 403 en マイコレ, 求人新規, 求人職種 y signage/, 求人 limitado a 梅田店.
 
-**Resumen S4:** 41 pantallas probadas (master y qa_partial); 5 fallos encontrados y corregidos (放映素材 sin display, 全店舗 = NULL, `GETT` → 405, g-api sin interruptor, `DemoSeederTest` inestable); pendiente: comparar el HTML con development.crm-s.net (solo lectura) y las 4 filas de ビーコン, que esperan a Japón.
+Comparación con development.crm-s.net (solo lectura: login y GET; nada guardado) de 20 pantallas: ■títulos, cabeceras `th`, campos y botones. **Sin diferencias propias.** Lo distinto se explica así:
+- Datos: la muestra tiene 1 tienda y listas vacías, así que no salen el select de tienda (オススメ, 求人新規, 職種: el legacy lo pinta solo con `$tb_shop_max > 1`), ni las tablas, ni 表示件数, ni 「画像を削除する」/enlace de huecos con imagen. En :8081 sí, con las mismas cabeceras del legacy.
+- マイコレ (全体, バナー, メイン, サムネイル): el legacy repite en cada archivo los formularios de las otras secciones dentro de `<div class="contents" style="display:none">` (no se ven); aquí cada pantalla pinta solo la suya. Lo visible coincide.
+- La muestra falla en 2 pantallas: `movie_program_new.php` corta el HTML tras 追加方法 (sin la lista de 放映ファイル ni los botones; error de PHP de la muestra) y `felica/card_list.php` da 500. Aquí salen completas según el código del legacy.
+
+**Resumen S4:** 41 pantallas probadas (master y qa_partial); 5 fallos encontrados y corregidos (放映素材 sin display, 全店舗 = NULL, `GETT` → 405, g-api sin interruptor, `DemoSeederTest` inestable); comparación con la muestra sin diferencias propias; pendiente solo las 4 filas de ビーコン, que esperan a Japón.
 
 ### Operaciones / 勤怠 / integraciones (S5)
 
