@@ -9,6 +9,8 @@ Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archiv
 
 ## Próximo paso — Fase 1: Laravel 12 → 13 en PHP 8.5
 
+> **2026-11-26, cambio de base (Antony):** misma BD y misma UI que el legacy (`CONVENCIONES.md`, sección 0). Ya están hechos en `laravel13`: el esquema `database/schema/pgsql-schema.sql`, el borrado de lo construido sobre tablas nuevas (incluidos `Admin`, la tabla `admins` y el layout Tailwind) y `scripts/bd-legacy.sh`. Si tu rama no lo tiene, pídele a S0 que haga el merge de `laravel13`. Fortify quedó apuntando a `App\Models\Admin`, que ya no existe: el login se rehace en el núcleo.
+
 1. Verificar el entorno: `bash scripts/en-docker.sh php -v` (debe decir 8.5) y `bash scripts/en-docker.sh php artisan test` con Laravel 12 (línea base: anotar cuántas pruebas pasan).
 2. `public_html/composer.json`: `php: ^8.3`, `laravel/framework: ^13.0` y las versiones compatibles de `laravel/fortify`, `laravel/tinker`, `pestphp/pest` (4.x), `pestphp/pest-plugin-laravel`, `nunomaduro/collision`, `laravel/pail`, `laravel/sail`, `laravel/pint`. `composer update` con `bash scripts/en-docker.sh composer update -W`.
 3. Aplicar la guía oficial de actualización 12 → 13 (cambios de configuración, `bootstrap/app.php`, deprecaciones). Edición quirúrgica.
@@ -18,10 +20,10 @@ Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archiv
 
 ## Cola (después de la Fase 1, en orden)
 
-1. **Núcleo** (`Doc/contratos/NUCLEO.md`, lo escribes tú): carga automática de `routes/modulos/*.php` dentro del grupo `admin` y de `config/menu/*.php` en el menú lateral; layout del sistema del personal (paridad visual con la muestra de desarrollo); login del personal y permisos (Policies/Gates equivalentes a `cKengen`/`ACCESS_LEVEL_*`); tiendas; módulos activables (`tb_base_system`, `tb_base_system_child` → システム選択 ya existe, commit `7cf0c1c`). Fuente: `Doc/analisis-legacy/00-nucleo-y-base.md`.
+1. **Núcleo** (`Doc/contratos/NUCLEO.md`, lo escribes tú): `.env`/`.env.example` con `SESSION_DRIVER=file`, `CACHE_STORE=file`, `QUEUE_CONNECTION=sync`; **estáticos del legacy** en `public/legacy/` y **layout Blade idéntico** al legacy (cabecera, menú lateral, `mainStyle.css`); menú desde `config/menu/*.php` (la carga de `routes/modulos/*.php` y `routes/publico/*.php` ya está en `routes/web.php`); **login del personal contra las tablas del legacy** (guard propio sobre `tb_staff`/`admin_master`, mismas claves que hoy; reemplaza Fortify+`Admin`), permisos (Policies/Gates equivalentes a `cKengen`), tiendas (`tb_shop`), módulos activables (`tb_base_system*`) y システム選択 (`select.php`) con la UI del legacy. Modelos base: `Shop`, `Staff`, `AdminMaster`, `Hatuban`. Fuente: `Doc/analisis-legacy/00-nucleo-y-base.md`.
 2. **基本情報管理** (category0): pantallas de configuración y tiendas.
 3. **Grupos de rutas para dispositivos y APIs** (los usan S4 y S5): grupo sin `auth:admin` ni CSRF, con su propia cookie de sesión, para los reproductores de señalización (`routes/modulos/senalizacion.php`) y las integraciones (`routes/modulos/integraciones.php`). Documentarlo en `NUCLEO.md`. Las integraciones las hace S5 y los reproductores S4.
-4. **Importador legacy:** comando `crm:importar-legacy` que lee una BD restaurada de `crm2019.backup` (o un volcado de producción) y llena las tablas nuevas, por módulo (cada módulo aporta su mapeo en su diseño).
+4. **Datos:** ya no hay importador (misma BD). Cuando Antony consiga un volcado de producción o staging, cargarlo con `CRM_LEGACY_BACKUP=<archivo> bash scripts/bd-legacy.sh <bd> --forzar` y comprobar que las pantallas migradas funcionan con datos reales.
 5. Paquetes comunes que pidan los módulos (PDF, Excel, FCM…), vía S0.
 
 ## Lee solo

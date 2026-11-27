@@ -158,7 +158,7 @@ Mismas pantallas que メルマガ con `channel=2` (email HTML). El editor TinyMC
 | `inc/ajax_sendTestMail.php`, `ajax_testMailList.php` | ajax | `messages.test` | `MC@sendTest` | pendiente |
 | `inc/ajax_mail_delete.php`, `ajax_change_status.php`, `ajax_get_shop_data.php` | ajax | `messages.destroy`, `messages.cancel`, `shops` vía `ModuleController::shops()` | `MC@destroy/cancel` | pendiente |
 | `inc/csv_download.php`, `csv_shousai_download.php`, `csv_download/csv_*.php` (+ SWF) | csv | `messages.export`, `messages.recipients.export`, `analytics.clicks.export` | `StreamedResponse` | pendiente |
-| `inc/customer_list.php`, `inc/customer_detail.php` | popup | enlace a `admin.customers.show` (S2) | — | descartado: se usa la ficha de cliente de S2 |
+| `inc/customer_list.php`, `inc/customer_detail.php` | popup | enlace a `admin.clientes.show` (S2) | — | descartado: se usa la ficha de cliente de S2 |
 | `inc/mailWordsReplace.php`, `decomailTagReplace.php`, `regextest.php` | fragmento | — | `MessageRenderer` (etiquetas `{ID}`…); sin conversión デコメール | pendiente (verificar todas las etiquetas) |
 | `inc/page_control.php`, `page_ctl.php`, `graph_sql.php`, `accordion_c3.php` | fragmento | — | paginador de Laravel, consultas agregadas, menú | descartado: no son vistas |
 | `inc/mail_customer_select_frm.php`, `mail_frm.php`, `mail_confirm_frm.php`, `mail_send_frm.php`, `mail_future_frm.php` (+ `_confirm_frm`, `_send_frm`), `mail_future_list_frm.php`, `mailmag_list.php`, `mailmag_shousai(2).php`, `mailmag_sended_list.php`, `mailmag_graph(2).php`, `push_list.php`, `push_shousai.php`; `/system/inc/ajax_picupload.php` (subida de imagen push); envoltorios `anketo_mail_*`, `anketo_reply_*`, `mycoupon_mail_*` | fragmentos compartidos | las vistas que los usan (filas de arriba) | partials Blade de `MC`/`RC`/`AnalyticsController`; subida con `Storage` en `MC@store` | pendiente (dentro de esas vistas) |
@@ -292,7 +292,7 @@ Las vistas idénticas en función a `anketo/` usan las mismas rutas con `?type=2
 | `day_visit_list.php` | 来店履歴一覧 (日別) | `visit-history.day` | `VisitHistoryController@day` | — | — | pendiente |
 | `store_visit_list.php` | 個別来店履歴 | `visit-history.shop` | `VisitHistoryController@shop` | — | — | pendiente |
 | `csv_download.php`, `storecsv_download.php`, `daycsv_download.php` | CSV de visitas | `visit-history.export?scope=period|day|shop` | `VisitHistoryController@export` (StreamedResponse) | — | — | pendiente (`daycsv_download.php` está vacío: se implementa el CSV diario igual que los otros) |
-| `customer_detail.php` | 顧客登録情報 | enlace a `admin.customers.show` | — | — | — | descartado: es la ficha de cliente de S2 |
+| `customer_detail.php` | 顧客登録情報 | enlace a `admin.clientes.show` | — | — | — | descartado: es la ficha de cliente de S2 |
 | `touch_config.php`, `touch_config_register.php` | カードリーダ設定 | `admin.customers.visit-interval` (S2) | `Customers\VisitIntervalController` | `shops.visit_interval_seconds` | hecho por S2 | descartado: cubierto por S2 |
 | `visit_stats.php`, `new_visit_stats.php`, `stats_test*.php`, `csv_test*.php` | (copias antiguas) | — | — | — | — | descartado: duplicados/pruebas |
 | `fix_visit_stats.php` | (corrección masiva) | — | — | — | — | descartado: script peligroso, bloqueado a 403 |
@@ -353,7 +353,7 @@ Todas las tablas nuevas siguen ESTANDARES_BD: `id()` (bigserial), `text`, `small
 
 ### 2.3 Mapeo legacy → nuevo (para el importador de S1)
 
-Reglas generales: `cd` → se guarda en una tabla de correspondencias del importador (`legacy_id_map`, de S1), no en la tabla destino; `disp_flg = '9'` → `deleted_at = ahora`; `hyouji_flg = '9'`/`'0'` → `status = 0` (CONVENCIONES §4); fechas UNIX (`touroku_date`, `update_date`) → `created_at`/`updated_at` con `Carbon::createFromTimestamp(..., 'Asia/Tokyo')`; `tb_shop_cd = -1` o vacío → `shop_id = null` (todas las tiendas); `hatuban` y `send_schedule` **no se migran**.
+Reglas generales: `cd` → `legacy_id_map` del importador de S1, salvo **`coupons.id = tb_mycoupon_master.cd` y `coupon_customer.id = tb_mycoupon.cd`** (CONVENCIONES §4: salen en `appview/coupon_control.php` como `coupon_cd` y `my_coupon_cd`; al usarse, la fila pasa de `tb_mycoupon` a `tb_mycoupon_used` con el mismo `cd`, así que es 1:1); el importador ajusta la secuencia después; `disp_flg = '9'` → `deleted_at = ahora`; `hyouji_flg = '9'`/`'0'` → `status = 0` (CONVENCIONES §4); fechas UNIX (`touroku_date`, `update_date`) → `created_at`/`updated_at` con `Carbon::createFromTimestamp(..., 'Asia/Tokyo')`; `tb_shop_cd = -1` o vacío → `shop_id = null` (todas las tiendas); `hatuban` y `send_schedule` **no se migran**.
 
 | Legacy | Nuevo | Columnas |
 |---|---|---|
@@ -370,7 +370,7 @@ Reglas generales: `cd` → se guarda en una tabla de correspondencias del import
 | `push_follow_master` | `message_rules` (`channel=3`) | `type_flg` follow/auto/scheduled → `trigger` según `send_parameter` (igual que mailmag); `send_time`→`run_hour/minute`; `post_point`→`point_amount`, `point_expiration_days`→`point_expiry_days`; `disp_flg 7`→`status=0`; `scheduled` → `messages` programado |
 | `push_notifications` | `customer_message` | `type_master_cd`→`message_id` (si `type='push'`; si `type='mailmaga'` → el `messages` de ese `mailmag_master`), `tb_customer_cd`→`customer_id`, `registration_id`→`recipient`, `touroku_date`→`sent_at`, `open_cnt`→`open_count`, `open_date`→`opened_at` |
 | `tb_digital_signage` | `signage_news` | `title`→`name`, `play_time`→`play_seconds`, `rank`→`sort`, imagen (`uploads/`) → `image_path` |
-| `tb_mycoupon_master` | `coupons` | `tb_shop_cd`→`shop_id`, `title`→`name`, `comment`→`description`, `attention`→`notes` (separado por líneas, máx. 5), `coupon_kubun` ''→1, 2→2, 3→3, 4→4, 5→5, 6→7, 9→8, 10→6 (resto → 1); `shouhi_point`→`cost`; `limit_flg` 1..5→`validity_type`; `time_limit` → `validity_days` (4) o `valid_until` (5, fecha del timestamp); `saitouroku_flg` '1'→`reissue_flg=0`, si no 1; `hyouji_flg`→`status`; `type`=2 y `value`=1 por defecto (el legacy no guarda descuento: **dato a completar por la tienda**) |
+| `tb_mycoupon_master` | `coupons` | `tb_shop_cd`→`shop_id`, `title`→`name`, `comment`→`description`, `attention`→`notes` (separado por líneas, máx. 5), `coupon_kubun` ''→1, 2→2, 3→3, 4→4, 5→5, 6→7, 9→8, 10→6 (resto → 1); `shouhi_point`→`cost`; `limit_flg` 1..5→`validity_type`; `time_limit` → `validity_days` (4) o `valid_until` (5, fecha del timestamp); `saitouroku_flg` '1'→`reissue_flg=0`, si no 1; `hyouji_flg`→`status`; `type` y `value` nulos = cupón solo de texto, como el legacy (decisión de S0) |
 | `tb_mycoupon` + `tb_mycoupon_used` | `coupon_customer` | `tb_mycoupon_master_cd`→`coupon_id`, `tb_customer_cd`→`customer_id`, `touroku_date`→`issued_at`, `time_limit`→`expires_at`, `used_flg='1'` y `used_date`→`used_at`, `tb_shop_cd` (used)→`used_shop_id`, `print_flg='1'`→`printed_at` (= `touroku_date` si no hay otra fecha), `kakunin_flg='1'`→`confirmed_at` |
 | `tb_kujibiki_log` | `lottery_draws` | `tb_customer_cd`→`customer_id`, `kujibiki_name` (ダイヤ/ゴールド/シルバー/ブロンズ/ハズレ) → `rank` 1..5, `time_limit`→`expires_at`, `touroku_date`→`drawn_at`; `tb_mycoupon_master_cd` + `mycoupon_flg` → `coupon_customer_id` si se encuentra el cupón emitido |
 | `tb_kujibiki_count` | — | No se migra: es el contador del día (`int_data`), se deriva de `lottery_draws` |
@@ -421,7 +421,7 @@ Reglas generales: `cd` → se guarda en una tabla de correspondencias del import
 | `cKujibiki` (sorteo: intentos por día con `FOR UPDATE` en `tb_kujibiki_count`, resultado por probabilidad, existencias en `contents_master`, cupón con vencimiento) | `LotteryService::draw(Customer)` en `DB::transaction` + `lockForUpdate` sobre el cliente; lee `LotterySetting`/`LotteryPrize` (S4, solo lectura), escribe `lottery_draws` y entrega el cupón con `CouponIssuer`. Lo llama Mi Página (S4) | nuevo |
 | Reproductor `digitalsignage` marca el cupón del socio impreso/usado (`ajax_kaiin_mycoupon_print_crawl.php` escribía `tb_mycoupon`) | `CouponIssuer::markPrinted(CouponCustomer)`, `CouponIssuer::markUsed(CouponCustomer, ?Shop)` (ya existe `use`); S4 los llama, no escribe `coupon_customer` | nuevo / existente |
 | Smatopi (`class/Smatopi.php`, `fsockopen`/curl) | `SmatopiClient` con `Http::` (timeouts, reintentos), detrás de `Gate::define('smatopi')` | nuevo |
-| POS (`pos_search`, `posyoyaku`, `POS_DB_PASSWORD`) | `PosGateway` (interfaz sin implementación) | fuera de alcance |
+| POS (`pos_search`, `posyoyaku`, `POS_DB_PASSWORD`) | `App\Services\Promotions\PosGateway` (interfaz sin implementación, CONVENCIONES §4) | fuera de alcance |
 | CSV con Flash (`sample.swf`) / `header('text/x-csv')` | `StreamedResponse` con `mb_convert_encoding(..., 'SJIS-win')` (como el legacy) | nuevo helper en `app/Services/Promotions/CsvWriter` (o el que publique S1) |
 | CSV de subida (`file()` + regex) | `PointImportRequest` (mimes, tamaño) + `ImportPointsJob` que lee de `Storage` | nuevo |
 | QR `qr_img` + `.dat` | `bacon/bacon-qr-code` (ya instalado) | existente |
@@ -483,7 +483,7 @@ Orden sugerido con una sola sesión: 0.1 → M1 → M2 → F1 → F2 → F3 → 
 
 ### A S1 (núcleo)
 1. Cargar `routes/modulos/promocion.php` en el grupo `admin` y `routes/publico/promocion.php` fuera de él (enlaces `/p/...` de correos y app; `/p/c/{uid}` con middleware `signed`).
-2. Registrar `App\Providers\PromocionServiceProvider` en `bootstrap/providers.php`; quitar las líneas de promociones de `routes/console.php` cuando el provider esté.
+2. Registrar `App\Providers\PromocionServiceProvider` en `bootstrap/providers.php` (ya existe, con el Scheduler y los bindings); al registrarlo, quitar las 3 líneas `promotions:*` de `routes/console.php` y el binding de `PushSender` de `AppServiceProvider` (el provider usa `bindIf`). Hasta S0/S1 decidan el renombrado, los comandos siguen como `promotions:*`.
 3. Niveles de permiso (equivalente a `cKengen` 1005/1009/1011 y `rank=master`) para las Policies.
 4. Módulos activables por función: プッシュ通知, ガチャリン管理, スマトピ連携, ポイント交換クーポン, 印刷 (coupon), アンケート, スタンプ管理.
 5. Configuración global equivalente a `admin_master`: `system_mail`, `mail_footer`, `mail_send_filter`, `application_use_flg`, `smatopi_flg`, `domain_smatopi_id`.
@@ -496,7 +496,7 @@ Orden sugerido con una sola sesión: 0.1 → M1 → M2 → F1 → F2 → F3 → 
 ### A S2 (clientes / reservas)
 1. Modelo `Reservation` (con `customer_id`, `shop_id`, `reserved_at`, estado) para el recordatorio `trigger` 8; S3 usa un stub hasta entonces.
 2. **Propuesta:** que las pantallas de `category3/reservation/` (予約新規登録, calendario, lista, detalle, estado, categorías, 予約項目設定, 予約機種一覧) pasen a S2, que es dueña de 予約管理. S0 decide.
-3. `CustomerSearch` estable (S3 la usa en mensajes, cupones, DM y emisión de encuestas) y ruta `admin.customers.show` para enlazar desde visitas y destinatarios.
+3. `CustomerSearch` estable (S3 la usa en mensajes, cupones, DM y emisión de encuestas) y ruta `admin.clientes.show` para enlazar desde visitas y destinatarios.
 4. Lectura de `customer_devices` (token FCM) — o confirmar que `CustomerDevice` pasa a S3.
 5. Edad/sexo/ocupación en `visits` en el momento de la visita (`tb_raiten_rireki.customer_age/sex/job`) para las estadísticas de 来店履歴; si no se añade, S3 calcula con el perfil actual (ver Decisiones).
 
@@ -512,7 +512,7 @@ Orden sugerido con una sola sesión: 0.1 → M1 → M2 → F1 → F2 → F3 → 
 ### A S0 / Antony (confirmaciones)
 1. Push: el servidor `b.g-api.net` lee directamente `push_master`/`mailmag_master` del CRM legacy. Con el esquema nuevo ese contrato se rompe. Propuesta: `FcmPushSender` directo (necesita la cuenta de servicio FCM de la app マイコレ). Alternativa: mantener vistas SQL de compatibilidad para g-api.
 2. ¿Se usan 新着情報 (`category3/digital_signage`), DM発行 y スマトピ? Si no, se descartan (≈ 5,5 pts).
-3. Cupones migrados sin importe de descuento: el legacy no guarda `type`/`value`; ¿valor por defecto o lo completa cada tienda?
+3. ~~Cupones migrados sin importe~~ — resuelto por S0: `type`/`value` nulos = cupón solo de texto.
 4. CSV en SJIS-win (como el legacy) o UTF-8 con BOM.
 
 ---

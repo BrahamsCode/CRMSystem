@@ -42,8 +42,9 @@ Un solo stack para todas. Cada worktree corre PHP con **su propio código** y **
 | `CRMSystem-clientes` (y las demás) | `crmsystem2_clientes` | `crmsystem2_testing_clientes` |
 
 ```sh
-bash scripts/en-docker.sh php artisan test
-bash scripts/en-docker.sh php artisan migrate --seed
+bash scripts/en-docker.sh php artisan test                 # RefreshDatabase carga el esquema del legacy
+bash scripts/en-docker.sh php artisan migrate:fresh        # BD de la sesión = esquema del legacy
+bash scripts/bd-legacy.sh crmsystem2_<grupo>               # datos base del legacy en esa BD
 ```
 
 La web (`http://localhost:8081`) sirve el código de `CRMSystem/` (rama de integración).
