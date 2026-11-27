@@ -27,7 +27,7 @@ class KujibikiLog extends LegacyModel
 
     public function customer(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Customer::class, 'tb_customer_cd', 'cd');
+        return $this->belongsTo(\App\Models\Customers\Customer::class, 'tb_customer_cd', 'cd');
     }
 
     public function coupon(): BelongsTo
