@@ -129,3 +129,21 @@ it('sirve /hp/uploads desde el disco public de Storage', function () {
     $this->get('/hp/uploads/c6/banner/a.png')->assertOk();
     $this->get('/hp/uploads/c6/banner/nada.png')->assertNotFound();
 });
+
+it('renderiza legacy-popup y legacy con y sin wrapClass y body_class', function () {
+    seedNucleo();
+    $this->actingAs(Staff::find(1), 'admin');
+
+    $sin = Illuminate\Support\Facades\Blade::render("@extends('layouts.legacy-popup')\n@section('title', 'T')\n@section('content')<p>hola</p>@endsection");
+    expect($sin)->toContain('<div class="wrap">')
+        ->and($sin)->toContain('<body id="pTop" class="pageCategory">')
+        ->and($sin)->toContain('<p>hola</p>');
+
+    $con = Illuminate\Support\Facades\Blade::render("@extends('layouts.legacy-popup')\n@section('wrapClass', 'customerDetail')\n@section('body_class', 'popup')\n@section('content')<p>hola</p>@endsection");
+    expect($con)->toContain('<div class="wrap customerDetail">')
+        ->and($con)->toContain('class="pageCategory popup"');
+
+    $layout = Illuminate\Support\Facades\Blade::render("@extends('layouts.legacy')\n@section('menu', 'base')\n@section('wrapClass', 'yoyakuWrap')\n@section('content')<p>hola</p>@endsection");
+    expect($layout)->toContain('<div class="wrap yoyakuWrap">')
+        ->and($layout)->toContain('<body id="pTop" class="pageCategory0">');
+});

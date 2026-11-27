@@ -19,11 +19,11 @@
 <title>@yield('title')</title>
 </head>
 
-<body id="pTop" class="pageCategory{{ $category }}@hasSection('body_class') @yield('body_class')@endif">
+<body id="pTop" class="pageCategory{{ $category }}{{ $__env->hasSection('body_class') ? ' ' . trim($__env->yieldContent('body_class')) : '' }}">
 
 <div id="container">
 
-<div class="wrap@hasSection('wrapClass') @yield('wrapClass')@endif">
+<div class="wrap{{ $__env->hasSection('wrapClass') ? ' ' . trim($__env->yieldContent('wrapClass')) : '' }}">
 
 <div class="main3">
 <div class="main4">

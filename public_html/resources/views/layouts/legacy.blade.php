@@ -49,14 +49,14 @@ $(document).ready(function() {
 <title>@yield('title')</title>
 </head>
 
-<body id="pTop" class="pageCategory{{ $category }}@hasSection('body_class') @yield('body_class')@endif">
+<body id="pTop" class="pageCategory{{ $category }}{{ $__env->hasSection('body_class') ? ' ' . trim($__env->yieldContent('body_class')) : '' }}">
 
 <div id="container">
 
 @include('layouts.legacy.header')
 
 
-<div class="wrap{{ $menu ? '' : ' oneColumn' }}@hasSection('wrapClass') @yield('wrapClass')@endif">
+<div class="wrap{{ $menu ? '' : ' oneColumn' }}{{ $__env->hasSection('wrapClass') ? ' ' . trim($__env->yieldContent('wrapClass')) : '' }}">
 
 <div class="main1">
 <div class="main2">
