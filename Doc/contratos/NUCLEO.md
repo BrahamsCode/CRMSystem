@@ -183,15 +183,21 @@ Común del núcleo (decisión S0, antes en S4): `Nucleo\PicUploadController` + `
 
 Lo llama el `DemoSeeder` de S0 (CONVENCIONES §4), siempre primero. Es idempotente: busca cada fila por su clave natural y nunca duplica.
 
-- **Tiendas:** 梅田店 y 難波店, en el área 大阪 y el grupo 直営店, y 京都店, en el área 京都 y el grupo フランチャイズ. Las tres llevan dirección, teléfono `090000010xx`, correo `@example.com` y coordenadas. El árbol de áreas es 関西 › 大阪 / 京都.
-- **Grupos de staff y permisos:** 店長 tiene todos los permisos. スタッフ puede ver, crear y editar, pero no borrar; no puede usar csv出力 (1002) ni SNS (1034), y en スタッフ管理 (1024) solo ve. Hay una fila de `tb_kengen` por cada contenido visible, como la que crea 権限管理.
-- **Staff:** 10 usuarios, todos con la contraseña `demo1234`. La cuenta `master` no cambia.
+- **Tiendas:** 梅田店 y 難波店, en el área 大阪 y el grupo 直営店, y 京都店, en el área 京都 y el grupo フランチャイズ. Las tres llevan dirección, teléfono `090000010xx`, correo `@example.com` y coordenadas. El árbol de áreas es 関西 › 大阪 / 京都. Casos límite:
+  - **心斎橋店**: de baja (`disp_flg = '9'`, como 削除 de 店舗一覧). Solo sale en 店舗一覧 con 表示 = 削除 o すべて.
+  - **Tienda de nombre largo**: `kaishamei` de 255 caracteres (el máximo de la columna; `NucleoDemoSeeder::longName()`, empieza por «デモ長名称店舗…»), en 大阪 / フランチャイズ, con un edificio largo.
+  - **天王寺店**: solo nombre y kana; sin dirección, teléfono, correo, coordenadas, área ni grupo (`area_cd` y `shop_category_cd` nulos).
+- **Grupos de staff y permisos:** 店長 tiene todos los permisos. スタッフ puede ver, crear y editar, pero no borrar; no puede usar csv出力 (1002) ni SNS (1034), y en スタッフ管理 (1024) solo ve. **QA部分権限** (usuario limitado) solo tiene 閲覧 en todo (ni alta, ni edición, ni borrado) y nada en un contenido de cada módulo con kengen: 1002 csv出力 (顧客管理), 1009 クーポン管理 (販売促進管理), 1035 マイコレ管理 (マイページ管理), 1027 予約項目管理 y 1029 予約設定 (予約管理); en 1024 スタッフ管理 (業務支援管理) solo ve, así que no tiene スタッフ新規登録. 端末管理 no usa kengen en el legacy, y 基本情報管理 es solo de master (403 para los demás). Hay una fila de `tb_kengen` por cada contenido visible, como la que crea 権限管理.
+- **Staff:** 13 usuarios. La cuenta `master` conserva su clave. 歩合 (`kingaku_buai`, %): 店長 15, スタッフ 10, QA部分権限 5; master recibe 15 solo si no tenía (pedido de S2 para los informes de 歩合).
 
   | Tienda | 店長 | スタッフ |
   |---|---|---|
   | La tienda 1 del backup | `tencho_honten` | — |
-  | 梅田店 | `tencho_umeda` | `umeda01`, `umeda02` |
-  | 難波店 | `tencho_namba` | `namba01`, `namba02` |
+  | 梅田店 | `tencho_umeda` | `umeda01`, `umeda02`, `qa_partial` (QA部分権限) |
+  | 難波店 | `tencho_namba` | `namba01`, `namba02`, `taishoku01` (退職) |
   | 京都店 | `tencho_kyoto` | `kyoto01`, `kyoto02` |
+  | Tienda de nombre largo | — | `long01` (kana de ancho medio ﾊｾｶﾞﾜ ﾁﾖｺ, nacida el 29/02) |
+
+  **Claves para probar:** todos `demo1234`, salvo el usuario limitado **`qa_partial` / `qa12345`** (el mismo login que la primera pasada de la regresión, pero ahora lo crea el seeder y sobrevive a `migrate:fresh`). `taishoku01` está de baja (`disp_flg = '9'`) y no puede entrar.
 
 - **Menús:** activa los módulos 1, 3, 5, 6, 7, 9 y 0 de `tb_base_system`. También activa las opciones de `tb_base_system_child` que piden los `config/menu/*.php` y crea las que faltan, con el siguiente `cd` libre (por ejemplo, 入退室管理, カルテ管理 e ICカード管理). Fuera quedan ビーコン管理, que está en pausa, y スマトピ連携, que depende de F8. En `admin_master` deja `base_system_version_flg = 2`, `application_use_flg = 1` (マイコレ, QR, プッシュ通知) y `beacon_use_flg = 1` (ポイントルール一覧, ポイント集計); son solo banderas y no conectan con la BD de beacons. El modo ext-shop (`contents_master` mycolle/app_layout_mode) se deja como esté, porque cambia campos de muchas pantallas: con él apagado no salen ポイント管理/履歴, 予約機種一覧, ポイント一括付与 ni プッシュ通知集計. 帳票管理 depende de `config('working.report_enabled')`.
