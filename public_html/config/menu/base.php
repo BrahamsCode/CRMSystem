@@ -19,7 +19,7 @@ return [
                 ['label' => '権限項目管理', 'url' => '/system/category0/config/authority_contents_list.php', 'can' => 'nucleo.maintenance'],
                 ['label' => 'システム管理', 'url' => '/system/category0/config/system.php', 'can' => 'nucleo.maintenance'],
                 ['label' => 'CRM端末管理', 'url' => '/system/category0/config/slim_list.php', 'can' => 'nucleo.maintenance'],
-                ['label' => 'データベース管理', 'url' => '/system/category0/config/db_config.php', 'can' => 'nucleo.maintenance'],
+                // データベース管理 (db_config.php): descartado, editor de BD crudo (Doc/diseno/nucleo-base.md)
                 ['label' => 'エリア管理', 'url' => '/system/category0/config/area.php'],
             ],
         ],

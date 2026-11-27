@@ -108,12 +108,13 @@ class LegacyUi
     /**
      * Módulos visibles para el staff (select.php y pestañas de header.php): activos por `narabi`,
      * 0 solo master, 8 nunca, SNS管理 solo con kengen[1034][1] o master.
+     * Diferencia con el legacy: 4 (ホームページ管理) tampoco, porque se descartó y su pestaña llevaría a un 404.
      */
     public function visibleModules(?Staff $staff): Collection
     {
         return BaseSystem::query()->active($this->versionFlg())->get()
             ->reject(fn (BaseSystem $m) => $m->cd === 0 && ! $staff?->isMaster())
-            ->reject(fn (BaseSystem $m) => $m->cd === BaseSystem::RETIRED_CD)
+            ->reject(fn (BaseSystem $m) => in_array($m->cd, [BaseSystem::RETIRED_CD, BaseSystem::DISCARDED_CD], true))
             ->reject(fn (BaseSystem $m) => $m->system_name === BaseSystem::SNS_NAME && ! ($staff && Gate::forUser($staff)->allows('sns.configure')))
             ->values();
     }

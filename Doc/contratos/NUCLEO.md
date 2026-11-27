@@ -25,7 +25,7 @@ Zona horaria de la app: `Asia/Tokyo`, como el legacy.
 
 ## 2. Login del personal
 
-- URL del legacy: `GET|POST /system/login.php` (ruta `login`), `GET /system/logout.php` (ruta `logout`, enlace de la cabecera), `GET /system/select.php` (ruta `nucleo.select`, システム選択). `/` y `/system` redirigen.
+- URL del legacy: `GET|POST /system/login.php` (ruta `login`), `GET /system/logout.php` (ruta `logout`, enlace de la cabecera), `GET /system/select.php` (ruta `nucleo.select`, システム選択). `/` y `/system` redirigen. Módulos visibles (システム選択 y pestañas): los de `tb_base_system` activos, sin 女の子管理 (8) ni ホームページ管理 (4, descartada; en el legacy aparecía y aquí daría 404).
 - Guard **`admin`** con provider `legacy_staff` (`App\Auth\LegacyStaffUserProvider`): `tb_staff.login_id` + `login_pass` en texto plano, `disp_flg = '1'`. Sin re-cifrado (la app y las integraciones dependen de la clave). Fortify y `users` ya no se usan.
 - Mismos mensajes de error que el legacy, mismo historial en `tb_login_rireki` (ログイン / ログアウト, con hatuban), casilla "記憶する" = cookie `admin_login_id` con el usuario (nunca la clave), 90 días.
 - Soporte del proveedor: `extsupport` (clave de un solo uso de 6) y `Relation` (clave de la cuenta o de un solo uso de 8) se verifican contra `CRM_SUPPORT_API_HOST` (por defecto `b.g-api.net`) y entran como `master`. Las claves internas `RELATION_LOGIN_PASS`/`SUPPORT_MASTER_PASS` van solo en `.env` y no se aceptan escritas en el formulario.
