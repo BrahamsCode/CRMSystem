@@ -75,6 +75,7 @@
 - 2026-11-27: CONVENCIONES: `routes/legacy/<modulo>.php`, URL literales `/system/category<N>/…` para los AJAX y formularios de los JS del legacy. S1 las carga sin prefijo, con el guard del personal; el layout pone `X-CSRF-TOKEN` en jQuery. Estáticos de S2 integrados (8e15561).
 - 2026-11-27: integrados la base legacy de S1 (3666439: `LegacyModel`, traits, `Hatuban`, `Shop`/`Staff`/`Terminal`/`AdminMaster`/`ContentsMaster`, autorregistro de providers; 29 pruebas en verde) y los estáticos de S3 y S4 y la ruta del XML de S4. S2–S5 empiezan sus modelos. El parcial y el servicio de búsqueda de clientes de `system/inc` son de S2 (pedido de S3).
 - 2026-11-27: integrados los modelos y las vistas de S4 (submódulos 1–5), el bloque 0.1 de S3 y D1 de S2. `laravel13` con 143 pruebas en verde. Los estáticos, fixtures y modelos de S5 vuelven a S5 por `public/admin/` (choca con el prefijo `/admin` de Laravel: el directorio da 403 en `/admin/`). Pedidos a S1: el scope de `disp_flg` debe incluir NULL (`COALESCE`), `app.timezone = Asia/Tokyo`, el Gate `kengen` con lista de códigos y paso libre a master, jQuery UI en el layout y `/hp/img/banner/`.
+- 2026-11-27: integrados los estáticos, las fixtures de contrato (53 casos del legacy) y los modelos de S5, con el font-awesome ya en `public/legacy/admin/`. `laravel13` con 173 pruebas en verde.
 - 2026-11-27: siguiente tarea de S1 (Antony: el login primero): modelo base y traits comunes, luego el login contra el personal del legacy, el layout idéntico y los estáticos comunes.
 
 ## Hecho
