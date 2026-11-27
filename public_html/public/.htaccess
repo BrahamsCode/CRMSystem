@@ -18,6 +18,12 @@
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
+    # Estáticos del legacy en sus URL absolutas (/system/css/…, /common/…): se sirven desde public/legacy/
+    # sin pasar por PHP (NUCLEO.md, "Estáticos"). LegacyAssetController es el respaldo sin Apache.
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{DOCUMENT_ROOT}/legacy%{REQUEST_URI} -f
+    RewriteRule ^(.*)$ legacy/$1 [L]
+
     # Send Requests To Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f

@@ -1,0 +1,749 @@
+/* ========================================================================
+
+CSS Information
+
+ File name:	touch_btn.css
+
+ Style Info:	touch系操作対応のボタンスタイル設定プラグイン表示設定
+
+======================================================================== */
+
+
+
+/*--- ボタン用スタイル (sample) ---*/
+
+.btnStyle
+{
+	display: inline-block;
+	position: relative;
+	height: 2.8em;
+	padding: 0 1.6em;
+	border: 0;
+
+	border-radius: 1.5em;
+	-moz-border-radius: 1.5em;
+	-webkit-border-radius: 1.5em;
+
+	background: none;
+
+	color: #666666;
+	font-size: 16px;
+	font-weight: bold;
+	font-family: Helvetica,Arial,sans-serif;
+	text-decoration: none;
+	line-height: 2.8em;
+	vertical-align: middle;
+
+	text-shadow: 0 1px 0 rgba( 255, 255, 255, 0.6 );
+
+	cursor: pointer;
+
+	-webkit-user-select: auto;
+	-moz-user-select: auto;
+	user-select: auto;
+}
+
+.btnStyle:before
+{
+	content: "";
+
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+
+	border-radius: 1.5em;
+	-moz-border-radius: 1.5em;
+	-webkit-border-radius: 1.5em;
+
+	background-image: linear-gradient( rgba(0,0,0,0.2) 0%, rgba(255,255,255,0.2) 100% );
+	background-image: -moz-linear-gradient( top, rgba(0,0,0,0.2), rgba(255,255,255,0.2) );
+	background-image: -webkit-gradient( linear, left top, left bottom, from(rgba(0,0,0,0.2)), to(rgba(255,255,255,0.2)) );
+
+	box-shadow: 0 -1px 0 0 rgba( 255,255,255,0.6 ) inset;
+	-moz-box-shadow: 0 -1px 0 0 rgba( 255,255,255,0.6 ) inset;
+	-webkit-box-shadow: 0 -1px 0 0 rgba( 255,255,255,0.6 ) inset;
+
+	z-index: -1;
+}
+
+.btnStyle:after
+{
+	content: "";
+
+	position: absolute;
+	top: 0.4em;
+	right: 0.4em;
+	left: 0.4em;
+	bottom: 0.4em;
+
+	border-radius: 1em;
+	-moz-border-radius: 1em;
+	-webkit-border-radius: 1em;
+
+	background-color: #CCCCCC;
+	background-image: linear-gradient( rgba( 255,255,255,0.3 ) 0%, rgba( 0,0,0,0.3 ) 100% );
+	background-image: -moz-linear-gradient( top, rgba(255,255,255,0.3), rgba(0,0,0,0.3) );
+	background-image: -webkit-gradient( linear, left top, left bottom, from(rgba(255,255,255,0.3)), to(rgba(0,0,0,0.3)) );
+
+	box-shadow: 0 0 0 1px rgba( 0,0,0,0.3 ), 0 0 1px 0 rgba( 255,255,255,0.8 ) inset;
+	-moz-box-shadow: 0 0 0 1px rgba( 0,0,0,0.3 ), 0 0 1px 0 rgba( 255,255,255,0.8 ) inset;
+	-webkit-box-shadow: 0 0 0 1px rgba( 0,0,0,0.3 ), 0 0 1px 0 rgba( 255,255,255,0.8 ) inset;
+
+	z-index: -1;
+}
+
+.btnStyle:hover
+{
+	color: #4F4F4F;
+
+}
+
+.btnStyle:active,
+.btnStyle.touched
+{
+	height: 2.5em;
+	padding-top: 0.3em;
+	line-height: 2.5em;
+	color: #4F4F4F;
+}
+
+.btnStyle:active:after,
+.btnStyle.touched:after
+{
+	background-color: #999999;
+	background-image: linear-gradient( rgba( 0,0,0,0.1 ) 0%, rgba( 255,255,255,0.1 ) 100% );
+	background-image: -moz-linear-gradient( top, rgba(0,0,0,0.1), rgba(255,255,255,0.1) );
+	background-image: -webkit-gradient( linear, left top, left bottom, from(rgba(0,0,0,0.1)), to(rgba(255,255,255,0.1)) );
+
+	box-shadow: 0 0 0 1px rgba( 0,0,0,0.3 ), 1px 1px 4px 0 rgba( 0,0,0,0.2 ) inset;
+	-moz-box-shadow: 0 0 0 1px rgba( 0,0,0,0.3 ), 1px 1px 4px 0 rgba( 0,0,0,0.2 ) inset;
+	-webkit-box-shadow: 0 0 0 1px rgba( 0,0,0,0.3 ), 1px 1px 4px 0 rgba( 0,0,0,0.2 ) inset;
+}
+
+
+
+
+
+/*--- ボタン用スタイル (Push) ---*/
+
+.btnStylePush
+{
+	display: inline-block;
+	position: relative;
+	height: 2.8em;
+	padding: 0 1.6em;
+	border: 0;
+
+	border-radius: 0.5em;
+	-moz-border-radius: 0.5em;
+	-webkit-border-radius: 0.5em;
+
+	background: none;
+
+	color: #4F4F4F;
+	font-size: 16px;
+	font-weight: bold;
+	font-family: Helvetica,Arial,sans-serif;
+	text-decoration: none;
+	line-height: 2.8em;
+	vertical-align: middle;
+
+	text-shadow: 0 1px 0 rgba( 255, 255, 255, 0.6 );
+
+	cursor: pointer;
+
+	-webkit-user-select: auto;
+	-moz-user-select: auto;
+	user-select: auto;
+}
+
+.btnStylePush:before
+{
+	content: "";
+
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+
+	border-radius: 0.5em;
+	-moz-border-radius: 0.5em;
+	-webkit-border-radius: 0.5em;
+
+	background-image: linear-gradient( rgba(0,0,0,0.2) 0%, rgba(255,255,255,0.2) 100% );
+	background-image: -moz-linear-gradient( top, rgba(0,0,0,0.2), rgba(255,255,255,0.2) );
+	background-image: -webkit-gradient( linear, left top, left bottom, from(rgba(0,0,0,0.2)), to(rgba(255,255,255,0.2)) );
+
+	box-shadow: 0 -1px 0 0 rgba( 255,255,255,0.6 ) inset;
+	-moz-box-shadow: 0 -1px 0 0 rgba( 255,255,255,0.6 ) inset;
+	-webkit-box-shadow: 0 -1px 0 0 rgba( 255,255,255,0.6 ) inset;
+
+	z-index: -1;
+}
+
+.btnStylePush:after
+{
+	content: "";
+
+	position: absolute;
+	top: 0.4em;
+	right: 0.4em;
+	left: 0.4em;
+	bottom: 0.4em;
+
+	border-radius: 0.5em;
+	-moz-border-radius: 0.5em;
+	-webkit-border-radius: 0.5em;
+
+	background-color: #CCCCCC;
+	background-image: linear-gradient( rgba( 255,255,255,0.3 ) 0%, rgba( 0,0,0,0.3 ) 100% );
+	background-image: -moz-linear-gradient( top, rgba(255,255,255,0.3), rgba(0,0,0,0.3) );
+	background-image: -webkit-gradient( linear, left top, left bottom, from(rgba(255,255,255,0.3)), to(rgba(0,0,0,0.3)) );
+
+	box-shadow: 0 0 0 1px rgba( 0,0,0,0.3 ), 0 0 1px 0 rgba( 255,255,255,0.8 ) inset;
+	-moz-box-shadow: 0 0 0 1px rgba( 0,0,0,0.3 ), 0 0 1px 0 rgba( 255,255,255,0.8 ) inset;
+	-webkit-box-shadow: 0 0 0 1px rgba( 0,0,0,0.3 ), 0 0 1px 0 rgba( 255,255,255,0.8 ) inset;
+
+	z-index: -1;
+}
+
+.btnStylePush:hover
+{
+	color: #2F2F2F;
+
+}
+
+.btnStylePush:active,
+.btnStylePush.touched
+{
+	height: 2.5em;
+	padding-top: 0.3em;
+	line-height: 2.5em;
+	color: #4F4F4F;
+}
+
+.btnStylePush:active:after,
+.btnStylePush.touched:after
+{
+	background-color: #999999;
+	background-image: linear-gradient( rgba( 0,0,0,0.1 ) 0%, rgba( 255,255,255,0.1 ) 100% );
+	background-image: -moz-linear-gradient( top, rgba(0,0,0,0.1), rgba(255,255,255,0.1) );
+	background-image: -webkit-gradient( linear, left top, left bottom, from(rgba(0,0,0,0.1)), to(rgba(255,255,255,0.1)) );
+
+	box-shadow: 0 0 0 1px rgba( 0,0,0,0.3 ), 1px 1px 4px 0 rgba( 0,0,0,0.2 ) inset;
+	-moz-box-shadow: 0 0 0 1px rgba( 0,0,0,0.3 ), 1px 1px 4px 0 rgba( 0,0,0,0.2 ) inset;
+	-webkit-box-shadow: 0 0 0 1px rgba( 0,0,0,0.3 ), 1px 1px 4px 0 rgba( 0,0,0,0.2 ) inset;
+}
+
+
+
+
+
+/*--- ボタン用スタイル (White) ---*/
+
+.btnStyleWhite
+{
+	zoom: 1;
+	overflow: hidden;
+	display: inline-block;
+	*display: inline;
+	position: relative;
+	/*padding: 0.7em 1.6em;*/
+
+	border: 1px solid #666666;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+
+	background: #EFEFEF;
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(#FFFFFF), color-stop(0.90,#BFBFBF), to(#BFBFBF));
+	background: -moz-linear-gradient(#FFFFFF, #BFBFBF 90%, #BFBFBF);
+	background: linear-gradient(#FFFFFF, #BFBFBF 90%, #BFBFBF);
+
+	box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	0 0 1px 0 rgba( 255,255,255,0.8 ) inset;
+
+	-moz-box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	0 0 1px 0 rgba( 255,255,255,0.8 ) inset;
+
+	-webkit-box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	0 0 1px 0 rgba( 255,255,255,0.8 ) inset;
+
+	color: #4F4F4F;
+	font-weight: bold;
+	font-family: Helvetica,Arial,sans-serif;
+	text-shadow: 0px 1px 1px #FFFFFF;
+	text-decoration: none;
+	line-height: 1.1;
+	vertical-align: bottom;
+
+	cursor: pointer;
+}
+
+.btnStyleWhite:after
+{
+	content: "";
+
+	zoom: 1;
+	display: inline-block;
+	*display: inline;
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	height: 50%;
+
+	background: #2F2F2F;
+
+	opacity: 0.04;
+	z-index: 100;
+}
+
+.btnStyleWhite:active,
+.btnStyleWhite.touched
+{
+	/*padding: 0.76em 1.6em 0.64em ;*/
+
+	background: #EFEFEF;
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(#FFFFFF), color-stop(0.90,#BFBFBF), to(#BFBFBF));
+	background: -moz-linear-gradient(#FFFFFF, #BFBFBF 90%, #BFBFBF);
+	background: linear-gradient(#FFFFFF, #BFBFBF 90%, #BFBFBF);
+
+	box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	1px 1px 2px 0 rgba( 0,0,0,0.8 ) inset;
+
+	-moz-box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	1px 1px 2px 0 rgba( 0,0,0,0.8 ) inset;
+
+	-webkit-box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	1px 1px 2px 0 rgba( 0,0,0,0.8 ) inset;
+
+	color: #666666;
+}
+
+.btnStyleWhite:active:after,
+.btnStyleWhite.touched:after
+{
+	height: 100%;
+	background: #1F1F1F;
+
+	opacity: 0.08;
+}
+
+
+
+
+
+/*--- ボタン用スタイル (Black) ---*/
+
+.btnStyleBlack
+{
+	zoom: 1;
+	overflow: hidden;
+	display: inline-block;
+	*display: inline;
+	position: relative;
+	/*padding: 0.7em 1.6em;*/
+
+	border: 1px solid #333333;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+
+	background: #333333;
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(#6F6F6F), color-stop(0.90,#1A1A1A), to(#1A1A1A));
+	background: -moz-linear-gradient(#6F6F6F, #1A1A1A 90%, #1A1A1A);
+	background: linear-gradient(#6F6F6F, #1A1A1A 90%, #1A1A1A);
+
+	box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	0 0 1px 0 rgba( 255,255,255,0.8 ) inset;
+
+	-moz-box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	0 0 1px 0 rgba( 255,255,255,0.8 ) inset;
+
+	-webkit-box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	0 0 1px 0 rgba( 255,255,255,0.8 ) inset;
+
+	color: #FFFFFF;
+	font-weight: bold;
+	font-family: Helvetica,Arial,sans-serif;
+	text-shadow: 0px 1px 1px #000000;
+	text-decoration: none;
+	line-height: 1.1;
+	vertical-align: bottom;
+
+	cursor: pointer;
+}
+
+.btnStyleBlack:after
+{
+	content: "";
+
+	zoom: 1;
+	display: inline-block;
+	*display: inline;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 50%;
+
+	background: #FFFFFF;
+
+	opacity: 0.04;
+	z-index: 100;
+}
+
+.btnStyleBlack:active,
+.btnStyleBlack.touched
+{
+	/*padding: 0.76em 1.6em 0.64em ;*/
+
+	background: #333333;
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(#5F5F5F), color-stop(0.90,#1A1A1A), to(#1A1A1A));
+	background: -moz-linear-gradient(#5F5F5F, #1A1A1A 90%, #1A1A1A);
+	background: linear-gradient(#5F5F5F, #1A1A1A 90%, #1A1A1A);
+
+	box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	1px 1px 2px 0 rgba( 0,0,0,0.8 ) inset;
+
+	-moz-box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	1px 1px 2px 0 rgba( 0,0,0,0.8 ) inset;
+
+	-webkit-box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	1px 1px 2px 0 rgba( 0,0,0,0.8 ) inset;
+
+	color: #F19149;
+}
+
+.btnStyleBlack:active:after,
+.btnStyleBlack.touched:after
+{
+	height: 100%;
+	background: #000000;
+
+	opacity: 0.05;
+}
+
+
+
+
+
+/*--- ボタン用スタイル (Blue) ---*/
+
+.btnStyleBlue
+{
+	zoom: 1;
+	overflow: hidden;
+	display: inline-block;
+	*display: inline;
+	position: relative;
+	/*padding: 0.7em 1.6em;*/
+
+	border: 1px solid #043B73;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+
+	background: #043B73;
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(#0A68CC), color-stop(0.90,#00254A), to(#00254A));
+	background: -moz-linear-gradient(#0A68CC, #00254A 90%, #00254A);
+	background: linear-gradient(#0A68CC, #00254A 90%, #00254A);
+
+	box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	0 0 1px 0 rgba( 255,255,255,0.8 ) inset;
+
+	-moz-box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	0 0 1px 0 rgba( 255,255,255,0.8 ) inset;
+
+	-webkit-box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	0 0 1px 0 rgba( 255,255,255,0.8 ) inset;
+
+	color: #FFFFFF;
+	font-weight: bold;
+	font-family: Helvetica,Arial,sans-serif;
+	text-shadow: 0px 1px 1px #043B73;
+	text-decoration: none;
+	line-height: 1.1;
+	vertical-align: bottom;
+
+	cursor: pointer;
+}
+
+.btnStyleBlue:after
+{
+	content: "";
+
+	zoom: 1;
+	display: inline-block;
+	*display: inline;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 50%;
+
+	background: #FFFFFF;
+
+	opacity: 0.04;
+	z-index: 100;
+}
+
+.btnStyleBlue:active,
+.btnStyleBlue.touched
+{
+	/*padding: 0.76em 1.6em 0.64em ;*/
+
+	background: #043B73;
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(#0A68CC), color-stop(0.90,#00254A), to(#00254A));
+	background: -moz-linear-gradient(#0A68CC, #00254A 90%, #00254A);
+	background: linear-gradient(#0A68CC, #00254A 90%, #00254A);
+
+	box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	1px 1px 2px 0 rgba( 0,0,0,0.8 ) inset;
+
+	-moz-box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	1px 1px 2px 0 rgba( 0,0,0,0.8 ) inset;
+
+	-webkit-box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	1px 1px 2px 0 rgba( 0,0,0,0.8 ) inset;
+
+	color: #F19149;
+}
+
+.btnStyleBlue:active:after,
+.btnStyleBlue.touched:after
+{
+	height: 100%;
+	background: #000000;
+
+	opacity: 0.05;
+}
+
+
+
+
+
+/*--- ボタン用スタイル (Red) ---*/
+
+.btnStyleRed
+{
+	zoom: 1;
+	overflow: hidden;
+	display: inline-block;
+	*display: inline;
+	position: relative;
+	/*padding: 0.7em 1.6em;*/
+
+	border: 1px solid #660000;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+
+	background: #660000;
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(#E31414), color-stop(0.90,#5C0C06), to(#5C0C06));
+	background: -moz-linear-gradient(#E31414, #5C0C06 90%, #5C0C06);
+	background: linear-gradient(#E31414, #5C0C06 90%, #5C0C06);
+
+	box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	0 0 1px 0 rgba( 255,255,255,0.8 ) inset;
+
+	-moz-box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	0 0 1px 0 rgba( 255,255,255,0.8 ) inset;
+
+	-webkit-box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	0 0 1px 0 rgba( 255,255,255,0.8 ) inset;
+
+	color: #FFFFFF;
+	font-weight: bold;
+	font-family: Helvetica,Arial,sans-serif;
+	text-shadow: 0px 1px 1px #660000;
+	text-decoration: none;
+	line-height: 1.1;
+	vertical-align: bottom;
+
+	cursor: pointer;
+}
+
+.btnStyleRed:after
+{
+	content: "";
+
+	zoom: 1;
+	display: inline-block;
+	*display: inline;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 50%;
+
+	background: #FFFFFF;
+
+	opacity: 0.06;
+	z-index: 100;
+}
+
+.btnStyleRed:active,
+.btnStyleRed.touched
+{
+	/*padding: 0.76em 1.6em 0.64em ;*/
+
+	background: #660000;
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(#E31414), color-stop(0.90,#5C0C06), to(#5C0C06));
+	background: -moz-linear-gradient(#E31414, #5C0C06 90%, #5C0C06);
+	background: linear-gradient(#E31414, #5C0C06 90%, #5C0C06);
+
+	box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	1px 1px 2px 0 rgba( 0,0,0,0.8 ) inset;
+
+	-moz-box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	1px 1px 2px 0 rgba( 0,0,0,0.8 ) inset;
+
+	-webkit-box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	1px 1px 2px 0 rgba( 0,0,0,0.8 ) inset;
+
+	color: #FFFFFF;
+}
+
+.btnStyleRed:active:after,
+.btnStyleRed.touched:after
+{
+	height: 100%;
+	background: #000000;
+
+	opacity: 0.05;
+}
+
+
+
+
+
+/*--- ボタン用スタイル (Orange) ---*/
+
+.btnStyleOrange
+{
+	zoom: 1;
+	overflow: hidden;
+	display: inline-block;
+	*display: inline;
+	position: relative;
+	/*padding: 0.7em 1.6em;*/
+
+	border: 1px solid #BC6600;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+
+	background: #EA8603;
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(#FCD432), color-stop(0.90,#EA8603), to(#EA8603));
+	background: -moz-linear-gradient(#FCD432, #EA8603 90%, #EA8603);
+	background: linear-gradient(#FCD432, #EA8603 90%, #EA8603);
+
+	box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	0 0 1px 0 rgba( 255,255,255,0.8 ) inset;
+
+	-moz-box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	0 0 1px 0 rgba( 255,255,255,0.8 ) inset;
+
+	-webkit-box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	0 0 1px 0 rgba( 255,255,255,0.8 ) inset;
+
+	color: #FFFFFF;
+	font-weight: bold;
+	font-family: Helvetica,Arial,sans-serif;
+	text-shadow: 0px 1px 1px #542E00;
+	text-decoration: none;
+	line-height: 1.1;
+	vertical-align: bottom;
+
+	cursor: pointer;
+}
+
+.btnStyleOrange:after
+{
+	content: "";
+
+	zoom: 1;
+	display: inline-block;
+	*display: inline;
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	height: 50%;
+
+	background: #2F2F2F;
+
+	opacity: 0.04;
+	z-index: 100;
+}
+
+.btnStyleOrange:active,
+.btnStyleOrange.touched
+{
+	/*padding: 0.76em 1.6em 0.64em ;*/
+
+	background: #EFEFEF;
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(#F98E0D), color-stop(0.90,#DB7505), to(#DB7505));
+	background: -moz-linear-gradient(#F98E0D, #DB7505 90%, #DB7505);
+	background: linear-gradient(#F98E0D, #DB7505 90%, #DB7505);
+
+	box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	1px 1px 2px 0 rgba( 0,0,0,0.8 ) inset;
+
+	-moz-box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	1px 1px 2px 0 rgba( 0,0,0,0.8 ) inset;
+
+	-webkit-box-shadow:
+	0 0 0 1px rgba( 0,0,0,0.1 ),
+	1px 1px 2px 0 rgba( 0,0,0,0.8 ) inset;
+
+	color: #FFFFFF;
+}
+
+.btnStyleOrange:active:after,
+.btnStyleOrange.touched:after
+{
+	height: 100%;
+	background: #1F1F1F;
+
+	opacity: 0.08;
+}
+
+
+
+
+

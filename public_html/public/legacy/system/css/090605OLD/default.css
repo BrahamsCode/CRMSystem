@@ -1,0 +1,243 @@
+
+
+/* ==========================================================
+
+CSS Information
+
+ File name:      default.css
+
+ Author:         Takeshi Okajima (admin)
+
+ Style Info:     全ページ共通レイアウト設定
+
+========================================================== */
+
+
+body {
+	width: 100%;
+	color: #2F2F2F;
+	font-size: 12px;/* 文字サイズ計算＝【基本サイズ ÷ 表示したいサイズ * 100 （小数点以下切り上げ） */
+	font-family: "Hiragino Maru Gothic Pro","メイリオ",Osaka,"ＭＳ Ｐゴシック","MS PGothic",Sans-Serif;
+	text-align: center;
+	line-height: 1.6;
+	behavior: url("js/csshover2.htc");
+}
+
+/* for IE6 【表示したいサイズ÷16(ブラウザ基本サイズ)】*/
+* html body {
+	font-size: 75%;
+}
+
+/* for IE7 */
+*:first-child+html body {
+	font-size: 75%;
+}
+
+/*body *,*/
+body p {
+	line-height: 1.6;
+}
+
+h1,h2,h3,h4,h5,h6 {
+	font-size: 100%;
+}
+
+p {
+	margin: 10px 0;
+}
+
+
+/*リンク表示方法*/
+a:link {
+	color: #0000FF;
+	text-decoration: underlne;
+}
+
+a:visited {
+	color: #6600CC;
+	text-decoration: underlne;
+}
+
+a:active {
+	color: #FF0000;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #FF0000;
+	text-decoration: none;
+}
+
+
+
+
+
+
+/* ==========================================================
+
+			ヘッダー設定
+
+========================================================== */
+h1 {
+	padding: 0.5em;
+}
+
+#logo {
+	font-size: 300%;
+	font-weight: bold;
+}
+
+#header ul {
+	margin: 3px 0;
+	line-height: 1;
+}
+
+#header li {
+	display: inline;
+	margin-left: 8px;
+	padding-left: 8px;
+	border-left: 1px solid #CCCCCC;
+	zoom: 1;
+}
+
+#header li:first-child {
+	margin-left: 0;
+	padding-left: 0;
+	border-left: none;
+}
+
+#header li.first-child { /*IE-expression (first-child) */
+	margin-left: 0;
+	padding-left: 0;
+	border-left: none;
+}
+
+#header li { /* IE-expression (first-child) */
+	behavior: expression(
+	this.className += (this.previousSibling == null) ? " first-child" : "",
+	this.style.behavior = "none"
+	);
+}
+
+
+
+
+/* ==========================================================
+
+			メインナビゲーション設定
+
+========================================================== */
+#navi {
+	overflow: hidden;
+	zoom: 1;
+}
+
+#navi li {
+	display: inline;
+	float: left;
+	margin-left: 5px;
+}
+
+
+
+
+
+/* ==========================================================
+
+			コンテンツ全体枠設定
+
+========================================================== */
+#container {
+	width: 908px;
+	margin: 0 auto;
+}
+
+#header {
+	position: relative;
+	width: 900px;
+	background: url(../img/h_top_1.gif) no-repeat 100% 0;
+	zoom: 1;
+}
+
+/* カバー */
+#cover {
+	height: 253px;
+	background: url(../img/cover_bg.gif) no-repeat;
+	margin-bottom: 10px;
+	padding-top: 8px;
+	text-align: center;
+}
+
+#main {
+	overflow: hidden;
+}
+
+#main2 {
+	overflow: hidden;
+	width: 700px;
+}
+
+/* コンテンツ繰り返し枠設定 */
+.contents {
+	clear: both;
+	overflow: hidden;
+	margin-bottom: 15px;
+}
+
+
+
+
+
+
+
+/* ==========================================================
+
+			サイドナビゲーション設定
+
+========================================================== */
+#sideNavi {
+	
+}
+
+
+
+
+
+/* ==========================================================
+
+			フッター設定
+
+========================================================== */
+#footer {
+	clear: both;
+	padding-top: 15px;
+	text-align: center;
+	zoom: 1;
+}
+
+#footer li {
+	display: inline;
+	margin-left: 8px;
+	padding-left: 8px;
+	border-left: 1px solid #666666;
+	zoom: 1;
+}
+
+#footer li:first-child {
+	margin-left: 0;
+	padding-left: 0;
+	border-left: none;
+}
+
+#footer li.first-child { /*IE-expression (first-child) */
+	margin-left: 0;
+	padding-left: 0;
+	border-left: none;
+}
+
+#footer li { /* IE-expression (first-child) */
+	behavior: expression(
+	this.className += (this.previousSibling == null) ? " first-child" : "",
+	this.style.behavior = "none"
+	);
+}

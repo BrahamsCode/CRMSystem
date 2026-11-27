@@ -1,0 +1,1562 @@
+﻿
+
+/* ==========================================================
+
+CSS Information
+
+ File name:      main.css
+
+ Author:         Takeshi Okajima (admin)
+
+ Style Info:     詳細設定用
+
+========================================================== */
+
+
+/* ==========================================================
+
+			ログイン設定
+
+========================================================== */
+body.noBg {
+	background: #FFFFFF;
+}
+
+#loginWrap {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 426px;
+	min-height: 450px;
+	height: auto !important;
+	height: 450px;
+	margin-left: -213px;
+	margin-top: -225px;
+}
+
+#loginContainer {
+	width: 426px;
+	background: url(../img/bg_login_m.gif) repeat-y;
+	margin: 20px auto;
+}
+
+#loginTitle {
+	width: 426px;
+	height: 71px;
+	margin: 0 0 15px;
+	padding: 75px 0 0 4px;
+	background: url(../img/bg_login_t.gif) no-repeat;
+	text-align: left;
+	text-indent: -9999px;
+}
+
+#loginBox {
+	zoom: 1;
+	padding-bottom: 14px;
+	background: url(../img/bg_login_b.gif) no-repeat 0 100%;
+}
+
+#loginBox fieldset {
+	
+}
+
+#loginBox legend {
+	display: none;
+}
+
+#loginBox dl {
+	zoom: 1;
+	padding: 0 20px 0 60px;
+}
+
+#loginBox dt {
+	clear: both;
+	float: left;
+	width: 7em;
+	padding-right: 0.5em;
+	border-right: 1px dashed #666666;
+	font-weight: bold;
+	text-align: right;
+}
+
+#loginBox dd {
+	padding: 0 0 10px 8em;
+	text-align: left;
+	_text-indent: -3px;
+}
+
+#loginBox dd input {
+	width: 150px;
+}
+
+/* フォームのボタン設定 */
+div.btnBox {
+	overflow: hidden;
+	width: 100%;
+	height: auto;
+	margin: 10px 0;
+	text-align: center;
+}
+
+div.btnBox form {
+	display: inline;
+}
+
+div.btnBox input.btn {
+	padding: 0 15px;
+}
+
+
+div.btnBox .kensakuKekka{
+	text-align: left;
+	display:-moz-inline-box;
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+}
+
+
+
+/* ==========================================================
+
+			機能選択設定
+
+========================================================== */
+.functionSelect {
+	overflow: hidden;
+	clear: both;
+	width: 630px;
+	margin: auto;
+	text-align: center;
+}
+
+.functionSelect2 {
+	overflow: hidden;
+	clear: both;
+	width: 840px;
+	margin: auto;
+	text-align: center;
+}
+
+.functionSelect li,
+.functionSelect2 li {
+	zoom: 1;
+	display:-moz-inline-box;
+	display: inline-block;
+	*display: inline;
+	margin: 0 10px 10px 0;
+}
+
+.functionSelect li a,
+.functionSelect2 li a {
+	display: block;
+	zomm: 1;
+}
+
+
+#header .functionSelect {
+	width: auto;
+	margin: 0 15px 0 0;
+	padding: 15px 0 10px 335px;
+	overflow: visible;
+	text-align: right;
+}
+
+#header .functionSelect ul {
+	margin: 15px 0 10px 0;
+	overflow: visible;
+	float: none;
+}
+
+#header .functionSelect li {
+	margin: 0 0 0 3px;
+}
+
+#header .functionSelect a {
+	margin-top: 2px;
+	padding: 1px 6px;
+	display: block;
+	padding-left: 24px;
+	background: #F5F5F5 url(../img/hn_icon.gif) no-repeat 5px 50%;
+	border: 1px solid #FFFFFF;
+	position: relative;
+	color: #FFFFFF;
+	text-decoration: underline;
+}
+
+#header .functionSelect a:hover {
+	color: #333;
+	text-decoration: none;
+}
+
+#header .functionSelect span {
+	zoom: 1;
+
+}
+
+#header .functionSelect #selectCategory0 {
+	/*background-color: #E2CC93;*/
+	background-color: #9ABCBB;
+}
+
+#header .functionSelect #selectCategory1 {
+	/*background-color: #EAA0C2;*/
+	background-color: #B89496;
+}
+
+#header .functionSelect #selectCategory2 {
+	/*background-color: #C898ED;*/
+	background-color: #7E7A4F;
+}
+
+#header .functionSelect #selectCategory3 {
+	/*background-color: #9DACEA;*/
+	background-color: #B8B699;
+}
+
+#header .functionSelect #selectCategory4 {
+	/*background-color: #8DD3CE;*/
+	background-color: #8DD3CE;
+}
+
+#header .functionSelect #selectCategory5 {
+	/*background-color: #ADCE93;*/
+	background-color: #ADCE93;
+}
+
+#header .functionSelect #selectCategory6 {
+	/*background-color: #8DBAD3;*/
+	background-color: #AD99BA;
+}
+
+#header .functionSelect #selectCategory7 {
+	/*background-color: #EFC4A0;*/
+	background-color: #EFC4A0;
+}
+
+
+
+/* ==========================================================
+
+			中ページ設定ここから
+
+========================================================== */
+.cover {
+	text-align: center;
+}
+.h2Title {
+	margin-top: 0;
+	padding: 7px 10px 5px 10px;
+	background: #8A7F6D;
+	color: #FFFFFF;
+}
+
+.h3Title {
+	padding: 2px 7px;
+	border-bottom: 1px solid #828E93;
+	border-left: 5px solid #828E93;
+	font-weight: bold;
+}
+
+
+
+
+
+
+
+/* ==========================================================
+
+			ログイン・パスワード管理設定
+
+========================================================== */
+.col1 {
+	background: #FFFFFF;
+}
+
+.col2,
+.col4,
+.col6 {
+	background: #E8F2DD;
+}
+
+.col3,
+.col5,
+.col7 {
+	background: #FFFFE5;
+}
+
+
+.auth {
+	
+}
+
+.auth li {
+	display: list-item!important;
+	width: 7em;
+	margin-bottom: 2px;
+	padding: 0 5px;
+	border: 1px solid #CCCCCC;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	text-align: left;
+	background: #F9F9F9;
+}
+
+.auth li.authSelected {
+	border-color: #336699;
+	background: #AAC0DD;
+}
+
+
+/*
+.auth li.auth0 {
+	border-color: #77AADD;
+	background: #F9F9F9;
+
+}
+
+.auth li.auth1 {
+	border-color: #6699CC;
+	background: #EEF0FF;
+}
+
+.auth li.auth2 {
+	border-color: #5588BB;
+	background: #CCE0FF;
+}
+
+.auth li.auth3 {
+	border-color: #336699;
+	background: #AAC0DD;
+}
+*/
+
+/* ==========================================================
+
+			スケジュール管理設定
+
+========================================================== */
+#trow {
+	overflow: hidden;
+	width: 82.2%;
+	height: 2.5em;
+	margin-left: 15%;
+	font-size: 12px;
+}
+
+#tcol {
+	overflow: hidden;
+	float: left;
+	width: 15%;
+	height: 488px;
+	background: #EFEFEF;
+	margin-bottom: 1.7%;
+	font-size: 12px;
+}
+
+#tcol table {
+	width: 100%;
+	height: 100%;
+}
+
+#tcol td {
+	height: 5.09em;
+	*height: 4em;
+	border: 1px solid #CCCCCC;
+	border-bottom: 2px solid #CCCCCC;
+	text-align: center;
+}
+
+/* IE8 */
+html>/**/body #tcol td {
+	height /*\**/: 4.95em\9
+}
+
+#tbody {
+	overflow-x: auto;
+	overflow-y: scroll;
+	float: left;
+	width: 84%;
+	height: 504px;
+	font-size: 12px;
+}
+
+.scheduleTitle,
+.scheduleBox  {
+	width: 200em;
+}
+
+.scheduleTitle th {
+	padding: 5px;
+	border: 1px solid #CCCCCC;
+	background: #EFEFEF;
+}
+
+.scheduleTitle td {
+	padding: 5px;
+	border: 1px solid #CCCCCC;
+	color: #FFFFFF;
+}
+
+.scheduleBox th {
+	padding: 5px;
+	border: 1px solid #CCCCCC;
+	background: #EFEFEF;
+}
+
+.scheduleBox .tr td {
+	border-bottom: 2px solid #87AFAE;
+}
+
+.scheduleBox td {
+	height: 3.4em;
+	*height: 2.4em;
+	padding: 5px;
+	border: 1px solid #CCCCCC;
+	color: #FFFFFF;
+}
+
+/* IE8 */
+html>/**/body .scheduleBox td {
+	height /*\**/: 1.6em\9
+}
+
+
+
+
+
+
+/* ==========================================================
+
+			クーポン設定
+
+========================================================== */
+.placeholder {
+	background: #FFF1AF;
+}
+
+.icono {
+	cursor: move;
+}
+
+.pointer {
+	cursor : pointer;
+}
+
+#upbutton {
+	background: url(../img/img_image_select_off.gif);
+	width:140px;
+	height:30px;
+	text-align:left;
+}
+
+#upbutton.hover {
+	background: url(../img/img_image_select_on.gif);
+	width:140px;
+	height:30px;
+	cursor: pointer;
+}
+
+/* クーポン新規追加 */
+/*旧設定
+#preview {
+	margin: 0;
+	padding: 1px;
+	height: 270px;
+	display: block;
+}
+#gallery {
+	text-align: center;
+	margin: 0;
+	padding: 1px;
+	height: 280px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	float: right;
+	width: 52%;
+	background: #CFCFCF;
+}
+#gallery li {
+	display: inline;
+	margin-left: 5px;
+	margin-top: 5px;
+}
+#gallery li img {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	cursor: pointer;
+}
+*/
+#preview {
+	display: inline;
+	width: 240px;
+	height: 270px;
+	margin: 0 -250px 0 0;
+	padding: 1px;
+	float: left;
+}
+#galleryOutline {
+	display: inline;
+	width: 100%;
+	margin-bottom: 10px;
+	float: right;
+}
+#gallery {
+	height: 260px;
+	margin: 0 0 0 250px;
+	padding: 10px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	background: #F9F9F9;
+	text-align: left;
+	border-top: 1px solid #CCCCCC;
+	border-right: 0px solid #CCCCCC;
+	border-bottom: 1px solid #DDDDDD;
+	border-left: 1px solid #D3D3D3;
+}
+#gallery li {
+	display: inline;
+	margin: 5px 5px 5px 0;
+}
+#gallery li img {
+	width: 90px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	cursor: pointer;
+	vertical-align: text-top;
+}
+
+#titlecolor_selector{
+	position: relative;
+	width: 36px;
+	height: 36px;
+	background: url(../img/select.png);
+}
+
+#titlecolor_selector div {
+	position: absolute;
+	top: 3px;
+	left: 3px;
+	width: 30px;
+	height: 30px;
+	background: url(../img/select.png) center;
+}
+
+#naiyoucolor_selector {
+	position: relative;
+	width: 36px;
+	height: 36px;
+	background: url(../img/select.png);
+}
+
+#naiyoucolor_selector div {
+	position: absolute;
+	top: 3px;
+	left: 3px;
+	width: 30px;
+	height: 30px;
+	background: url(../img/select.png) center;
+}
+
+#kigencolor_selector{
+	position: relative;
+	width: 36px;
+	height: 36px;
+	background: url(../img/select.png);
+}
+
+#kigencolor_selector div {
+	position: absolute;
+	top: 3px;
+	left: 3px;
+	width: 30px;
+	height: 30px;
+	background: url(../img/select.png) center;
+}
+
+#bangoucolor_selector {
+	position: relative;
+	width: 36px;
+	height: 36px;
+	background: url(../img/select.png);
+}
+
+#bangoucolor_selector div {
+	position: absolute;
+	top: 3px;
+	left: 3px;
+	width: 30px;
+	height: 30px;
+	background: url(../img/select.png) center;
+}
+
+
+.couponList li {
+	display: inline;
+}
+
+.couponList li a {
+	text-decoration: none;
+}
+
+.couponList li img {
+	vertical-align: text-top;
+}
+
+.couponDisp {
+	display:-moz-inline-box;
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+	position: relative;
+	cursor: pointer;
+	*margin-right: 5px;
+}
+
+.couponDisp .couponDispChild {
+	display: none;
+	position: absolute;
+	bottom: 0;
+	right: 50px;
+}
+
+.couponDisp:hover .couponDispChild {
+	display: block;
+	padding: 8px;
+	background: #FFFFFF;
+	border: 1px solid #CCCCCC;
+}
+
+
+
+
+/* ==========================================================
+
+			プライバシーポリシー設定
+
+========================================================== */
+/* (進学社で使用。繰り返す場合はクラスに変える) */
+#privacy {
+	
+}
+
+#privacy dl {
+	margin: 10px 0;
+	line-height: 1.8em;
+	zoom: 1;
+}
+
+#privacy dt {
+	/*border-bottom: 1px solid #666666;*/
+	font-weight: bold;
+	color: #666666;
+}
+
+#privacy dd {
+	margin-bottom: 15px;
+}
+
+#privacy ol {
+	padding-left: 25px;
+	clear: both;
+}
+
+#privacy ol li {
+	margin-bottom: 5px;
+	list-style: outside decimal;
+}
+
+#privacy p {
+	margin: 0 0 10px;
+}
+
+
+/* (反さんのフォーマット用) */
+ol.privacy,
+ol.privacy ol {
+	margin: 10px 0;
+}
+
+ol.privacy li {
+	margin: 0 20px 10px 30px;
+	padding-top: 5px;
+	line-height: 1.6em;
+	list-style: decimal;
+}
+
+ol.privacy li ol li {
+	border: 0;
+	margin: 0 0 10px 20px;
+	padding: 0;
+	line-height: 1.4em;
+	list-style-type: lower-roman;
+}
+
+ol.privacy ul {
+	margin: 10px 0;
+}
+
+ol.privacy li dl {
+	margin: 10px 0;
+	line-height: 1.4em;
+}
+
+ol.privacy li dt {
+	font-weight: bold;
+}
+
+ol.privacy li dd ul {
+	margin: 0;
+}
+
+ol.privacy li dl dd li {
+	border: 0;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+ol.privacy li dl li {
+	margin: 0;
+}
+
+
+#printImg {
+	display: none;
+}
+
+
+
+
+/* ==========================================================
+
+			相互リンク(中身はulに.listBoxを使用)設定
+
+========================================================== */
+#link {
+	margin: auto;
+	clear: both;
+}
+
+#link li {
+	border-bottom: 1px dotted #999999;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+	overflow: hidden;
+	clear: both;
+	zoom: 1;
+}
+
+#link li dd {
+	line-height: 1.4;
+}
+
+
+
+
+
+
+/* ==========================================================
+
+			お問い合わせ系設定
+
+========================================================== */
+.form fieldset {
+	clear: both;
+	margin-bottom: 20px;
+	padding: 10px;
+	border: 1px dashed #CCCCCC;
+	_display: inline;
+}
+
+.form fieldset .tableBox {
+	margin: 0;
+}
+
+.tableBox table {
+	margin: 0;
+}
+
+.form legend {
+	margin-bottom: 10px;
+	padding: 2px 20px;
+	border: 2px solid #828E93;
+	background: #FAF2DD;
+	font-size: 134%;
+	font-weight: bold;
+}
+
+.form label {
+	cursor: pointer;
+}
+
+.form li {
+	display: inline;
+}
+
+.form .bulletPoint li {
+	display: list-item;
+}
+
+.form .mainBox p {
+	margin: 10px 0;
+	float: none;
+}
+/*
+.form dl {
+	border-bottom: 1px solid #CCCCCC;
+	overflow: hidden;
+	zoom: 1;
+}
+*/
+
+.form em {
+	margin-left: 5px;
+	color: #FE0000;
+}
+/*
+.form dl.top {
+	border-top: 1px solid #CCCCCC;
+}
+
+.form dt {
+	width: 170px;
+	padding: 10px 0 10px 10px;
+	text-align: left;
+	font-weight: bold;
+	color: #FFFFFF;
+	clear: both;
+	float: left;
+}
+
+.form dt em,
+.form label em {
+	margin-left: 5px;
+	color: #FE0000;
+}
+
+.form dd {
+	padding: 10px 0 10px 190px;
+	text-align: left;
+	*//*_text-indent: -3px;*//*
+}*/
+
+.form dd li,
+.checkBtn li,
+.selectBox li,
+.textBox li {
+	margin-right: 6px;
+	display:-moz-inline-box;
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+}
+
+.form .normal li,
+.checkBtn .normal li {
+	margin: 0 0 5px 0;
+	display: block;
+}
+
+.form .formFloat2 {
+	_text-indent: -3px;
+}
+
+.form .normal ul {
+	zoom: 1;
+}
+
+.formFloat2 li {
+	margin: 0 0 10px 0;
+}
+
+.form dd dl {
+	zoom: 1;
+}
+
+.form dd dt {
+	width: 120px;
+}
+
+.form dd dd {
+	padding: 10px 0 10px 140px;
+}
+
+.form #yuubin {
+	margin-bottom: 5px;
+}
+
+.form .checkBtn input {
+	border: none;
+	margin-right: 5px;
+	vertical-align: middle;
+	display: inline;
+	float: left;
+	zoom: 1;
+}
+
+.form .selectBox,
+.form .selectBox select {
+	margin-right: 3px;
+}
+
+
+.form small,
+.form .inputSmall {
+	font-size: 0.8em;
+}
+
+.maxListLength {
+	margin: 0;
+	padding: 0;
+	float: right;
+}
+
+.maxListLength .selectBox {
+	margin-left: 5px;
+}
+
+/* ボタンに直でクラス名が付いている時 */
+.form input.checkBtn {
+	border: none;
+	margin-right: 5px;
+	vertical-align: middle;
+}
+
+.form dl.checkBtn {
+	margin-bottom: 10px;
+	padding-bottom: 5px;
+}
+
+.form .checkBtn dt {
+	padding: 0;
+	position: absolute;
+}
+
+.form .checkBtn dd {
+	padding: 0 0 0 190px;
+	zoom: 1;
+}
+
+.form .checkBtn dd input {
+	float: none;
+}
+
+
+.form .writeArea {
+	width: 360px;
+	margin-right: 5px;
+}
+
+.form .writeAreaL {
+	width: 90%;
+	margin-right: 5px;
+}
+
+.form .inputD {
+	margin-right: 5px;
+}
+
+.form .input3S {/*2文字用*/
+	width: 20px;
+	margin-right: 5px;
+}
+
+.form .input2S {/*4文字用*/
+	width: 35px;
+	margin-right: 5px;
+}
+
+.form .inputS {/*6文字用*/
+	width: 65px;
+	margin-right: 5px;
+}
+
+.form .inputM {
+	width: 100px;
+	margin-right: 5px;
+}
+
+.form .input2M {
+	width: 150px;
+	margin-right: 5px;
+}
+
+.form .inputL {
+	width: 220px;
+}
+
+.form .sampleText {
+	color: #999999;
+}
+
+.form dl:hover {
+	background: #FEFEFE;
+}
+
+#loginBox dd input,
+.form .writeArea,
+.form .writeAreaL,
+.form .inputD,
+.form .input3S,
+.form .input2S,
+.form .inputS,
+.form .inputM,
+.form .input2M,
+.form .inputL,
+.form td textarea {
+	border: 1px solid #7F9DB9;
+	padding: 2px;
+}
+
+#loginBox dd input,
+.form .writeArea:hover,
+.form .writeArea:active,
+.form .writeArea:focus,
+.form .writeAreaL:hover,
+.form .writeAreaL:active,
+.form .writeAreaL:focus,
+.form .inputD:hover,
+.form .inputD:active,
+.form .inputD:focus,
+.form .input3S:hover,
+.form .input3S:active,
+.form .input3S:focus,
+.form .input2S:hover,
+.form .input2S:active,
+.form .input2S:focus,
+.form .inputS:hover,
+.form .inputS:active,
+.form .inputS:focus,
+.form .inputM:hover,
+.form .inputM:active,
+.form .inputM:focus,
+.form .input2M:hover,
+.form .input2M:active,
+.form .input2M:focus,
+.form .inputL:hover,
+.form .inputL:active,
+.form .inputL:focus,
+.form td textarea:hover,
+.form td textarea:active,
+.form td textarea:focus {
+	background: #FEFEFE;
+	border: 1px solid #FF9900;
+}
+
+.form dd input#form_button {
+	border: outset;
+	padding: 0;
+}
+
+/* inputのチェックボタン系のホバーはなしの方向で */
+.form dd .checkBtn input:hover,
+.form dd .checkBtn input:active,
+.form dd .checkBtn input:focus,
+.form dd input.checkBtn:hover,
+.form dd input.checkBtn:active,
+.form dd input.checkBtn:focus {
+	background: none;
+	border: none;
+}
+
+div.btnBox {
+	width: 100%;
+	height: auto;
+	margin: 15px 0;
+	text-align: center;
+	overflow: hidden;
+}
+
+div.btnBox form {
+	display: inline;
+	zoom: 1;
+}
+
+div.btnBox input {
+	padding: 0 15px;
+}
+
+.form .Ng {
+	background: #FFEEEE;
+	color: #EE0000;
+}
+
+.form #errorCom {
+	width: 500px;
+	border: 1px dashed #FF0000;
+	margin: 10px auto;
+	padding: 5px;
+	color: #FFFF00;
+}
+
+.form #sendOk {
+	height: 100%;
+	padding: 10px 0 10px 0;
+	font-size: 170%;
+	color: #FE0000;
+	text-align: center;
+}
+
+/*項目設定ファイル内tableセルのチェック用label*/
+.cellLable {
+	display: block;
+}
+
+.up_photo {
+	display:-moz-inline-box;
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+	width: 140px;
+	height: 30px;
+	margin: 10px auto;
+	background: transparent url(../img/img_photo_select_off.gif) no-repeat scroll 0 0;
+	vertical-align: middle;
+}
+
+.up_photo.hover {
+	margin: 10px auto;
+	background: transparent url(../img/img_photo_select_on.gif) no-repeat scroll 0 0;
+}
+
+#photo {
+	display:-moz-inline-box;
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+	width: 140px;
+	height: 30px;
+	margin: 10px auto;
+	background: transparent url(../img/img_photo_select_off.gif) no-repeat scroll 0 0;
+	vertical-align: middle;
+}
+
+#photo.hover {
+	margin: 10px auto;
+	background: transparent url(../img/img_photo_select_on.gif) no-repeat scroll 0 0;
+}
+
+
+#gazou {
+	width: 100%;
+	margin: 0 auto;
+}
+
+#gazou br {
+	display: none;
+}
+
+
+#photo2 {
+	display:-moz-inline-box;
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+	width: 140px;
+	height: 30px;
+	margin: 10px auto;
+	background: transparent url(../img/img_photo_select_off.gif) no-repeat scroll 0 0;
+}
+
+#photo2.hover {
+	margin: 10px auto;
+	background: transparent url(../img/img_photo_select_on.gif) no-repeat scroll 0 0;
+}
+
+
+#gazou2 {
+	width: 100%;
+	margin: 0 auto;
+}
+
+#gazou2 br {
+	display: none;
+}
+
+
+/*----------------タブ処理-----------------------*/
+.tabHeadline {
+	display:-moz-inline-box;
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+	margin: 0 2px -1px 0;
+	padding: 2px 20px;
+	border: 1px solid #778877;
+	background: #EFEFEF;
+}
+
+.tabHeadline a {
+	display: block;
+	text-decoration: none;
+}
+
+.tabBody {
+	padding: 10px;
+	border: 1px dashed #CCCCCC;
+
+}
+
+.tabBody .tableBox {
+	margin-bottom: 0;
+}
+
+/*----------------詳細のサブメニュー-----------------------*/
+
+.subMenu {
+	text-align: right;
+	margin-bottom: 3px;
+}
+
+.subMenu li {
+	display: inline;
+	margin-left: 2px;
+}
+
+
+/* ==========================================================
+
+			サイトマップ設定
+
+========================================================== */
+/* (ダルチザンで使用) */
+#sitemap {
+	width: 550px;
+	overflow: hidden;
+}
+
+#sitemapLeft {
+	width: 270px;
+}
+
+#sitemapRight {
+	width: 270px;
+	margin-top: 2em;
+}
+
+#sitemap .oneStair {
+	background: none;
+	margin: 0 0 5px 0;
+	padding: 0;
+}
+
+#sitemap li {
+	background: url(../img/icon_sitemap.gif) no-repeat;
+	margin: 0 0 10px 20px;
+	padding: 0 0 0 25px;
+	font-weight: bold;
+	overflow: hidden;
+	clear: both;
+	zoom: 1;
+}
+
+#sitemap li a {
+	width: 100%;
+	display: block;
+}
+
+#sitemap ul {
+	overflow: hidden;
+	float: left;
+}
+
+#sitemap ul ul {
+	float: none;
+}
+
+#sitemap ul ul li {
+	background: url(../img/icon_arrow.gif) no-repeat 0 50%;
+	margin-bottom: 5px;
+	padding: 0 0 0 10px;
+	font-weight: normal;
+	zoom:1;
+}
+
+
+/* (ZOKKAで使用) */
+.sitemap dt {
+	font-size: 133%;
+	font-weight: bold;
+}
+
+.sitemap dd {
+	font-size: 117%;
+}
+
+.sitemap li {
+	padding-left: 45px;
+	background: url(../img/line_middle.gif) no-repeat scroll 18px 0;
+	line-height: 1.9;
+}
+
+.sitemap_box {
+	padding: 20px 10px 10px;
+	overflow: hidden;
+	clear: both;
+}
+
+.sitemap_box dl {
+	width: 270px;
+	float: left;
+}
+
+.sitemap_box dt {
+	font-size: 117%;
+}
+
+
+.furiwakeList {
+	width: 100%;
+	margin: 0;
+}
+
+.furiwakeList th {
+	width: 20%;
+	border: 0;
+	border-bottom: 1px dotted #CCCCCC;
+	background: none;
+}
+
+.furiwakeList th label {
+	line-height: 1.8;
+}
+
+.furiwakeList td {
+	border: 0;
+	border-bottom: 1px dotted #CCCCCC;
+}
+
+
+
+
+
+/* ==========================================================
+
+			カラーピッカー設定
+
+========================================================== */
+.colorsel {
+	width: 120px;
+	display:-moz-inline-box;
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+	vertical-align: middle;
+
+}
+
+.colorsel li {
+	width: 13px;
+	margin: 0 1px 1px 0;
+	border: 1px;
+	border-color: #E0E0E0;
+	border-style: solid;
+	display:-moz-inline-box;
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+	padding: 2px;
+	vertical-align: bottom;
+}
+
+.colorSelect {
+	margin-right: 3px;
+	display:-moz-inline-box;
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+	width: 32px;
+	height: 32px;
+	border: 3px solid #999999;
+	vertical-align: middle;
+}
+
+
+.palette {
+	width:13px;
+	height:13px;
+}
+
+
+/* ==========================================================
+
+			カード管理設定
+
+========================================================== */
+
+.modeSelect {
+	
+}
+
+.modeSelect li {
+	display:-moz-inline-box;
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+	min-height: 18px;
+	height: auto!important;
+	hight: 18px;
+	margin-right: 10px;
+	padding: 3px 5px 3px 23px;
+	border: 2px solid #336699;
+	background: #EEEEEE url(../img/checkoff.gif) no-repeat scroll 0 30%;
+	cursor: pointer;
+}
+
+.modeSelect li:hover {
+	border: 2px solid #5599BB;
+	background-color: #F5F5F5;
+}
+
+li.modeSelected {
+	border: 2px solid #DC143C;
+	background: #FFEEEE url(../img/checkon.gif) no-repeat scroll 0 30%;
+}
+
+li.modeSelected:hover {
+	border: 2px solid #EE5555;
+	background-color: #FFF5F5;
+}
+
+
+
+
+
+
+/* ==========================================================
+
+			カレンダー設定
+
+========================================================== */
+/* ========== テーブル4の設定(テーブル100％、左見出しとしてthサイズ固定。td線あり) ========= */
+.calenderTable  {
+	width: 100%;
+	margin-bottom: 30px;
+	border: 2px solid #CCCCCC;
+}
+
+.calenderTable th {
+	border: 3px solid #DCDFE2;
+	background: #DAE5EA;
+	padding: 5px;
+	font-weight: normal;
+	text-align: center;
+}
+
+.calenderTable td {
+	border: 3px solid #DCDFE2;
+	background: #F2F2F2;
+	padding: 5px;
+	text-align: center;
+}
+
+.calenderTable td.holidaySet {
+	background: #FFDDE1;
+}
+
+.calenderTable td:hover {
+	background: #EFF7FF;
+}
+
+.calenderTable td span {
+	display: block;
+	zoom: 1;
+	background: #FFFFFF;
+	text-align: center;
+}
+
+.calenderTable td .normalday {
+	font-weight: bold;
+}
+
+.calenderTable td .holiday {
+	width: 100%;
+	color: #EE0000;
+	font-weight: bold;
+}
+
+.calenderTable td .nowday {
+	background: #557799;
+	border: 1px solid;
+	border-color: #224466 #99BBDD #99BBDD #224466;
+	color: #FFFFFF;
+	font-weight: bold;
+}
+
+.calenderTable td label {
+	display: block;
+	zoom: 1;
+	cursor: pointer;
+}
+
+.calenderTable td .inputDay {
+	margin-top: 5px;
+}
+
+
+
+
+
+/* ==========================================================
+
+			商品管理設定
+
+========================================================== */
+.cateBox1 {
+	width:100%;
+	font-size:12px;
+}
+
+.cateBox1 .tableBox6 {
+	width:98%;
+	margin-left:10px;
+	order-collapse:order-collapse;
+}
+
+
+
+
+/* ==========================================================
+
+			アクセス解析
+
+========================================================== */
+/*
+.graphTitleM {
+	border-left: 5px solid #666666;
+	margin-bottom: 0;
+	padding-left: 8px;
+	font-size: 167%;
+	font-weight: bold;
+	text-align: left;
+	line-height: 1.4;
+}
+
+.graphTitleS {
+	border-left: 5px solid #666666;
+	margin-bottom: 0;
+	padding-left: 7px;
+	font-size: 117%;
+	font-weight: bold;
+	text-align: left;
+	line-height: 1.4;
+}
+*/
+
+.graphTitleM {
+	padding-left: 8px;
+	border: 1px solid lightgrey;
+	background: #EEEEEE;
+	font-size: 130%;
+}
+
+.graphTitleS {
+	border-left: 5px solid #666666;
+	margin-bottom: 0;
+	padding-left: 7px;
+	font-size: 117%;
+	font-weight: bold;
+	text-align: left;
+	line-height: 1.4;
+}

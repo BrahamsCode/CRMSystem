@@ -76,6 +76,17 @@ it('borra de forma lógica con disp_flg = 9 y lo oculta', function () {
     expect(DB::table('tb_shop')->where('cd', 1)->exists())->toBeFalse();
 });
 
+it('trata disp_flg NULL como visible, igual que el legacy', function () {
+    DB::table('tb_shop')->insert([
+        ['cd' => 1, 'kaishamei' => 'A', 'disp_flg' => null],
+        ['cd' => 2, 'kaishamei' => 'B', 'disp_flg' => '9'],
+        ['cd' => 3, 'kaishamei' => 'C', 'disp_flg' => '1'],
+    ]);
+
+    expect(Shop::orderBy('cd')->pluck('cd')->all())->toBe([1, 3])
+        ->and(Shop::onlyDeleted()->pluck('cd')->all())->toBe([2]);
+});
+
 it('relaciona tienda, personal y terminales por sus columnas del legacy', function () {
     DB::table('tb_shop')->insert(['cd' => 3, 'kaishamei' => '梅田店', 'disp_flg' => '1']);
     DB::table('tb_staff')->insert([

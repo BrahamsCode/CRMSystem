@@ -1,0 +1,63 @@
+/* ========================================================================
+
+CSS Information
+
+ File name:	vRippleEffect.css
+
+ Style Info:	波紋エフェクトプラグイン表示設定
+
+======================================================================== */
+
+
+
+/* ========================================================================
+
+ 設定
+
+======================================================================== */
+
+/* エフェクト
+------------------------------------------------------------------------ */
+
+.v_ripple_effect_animation_layer
+{
+	diplay: block;
+	position: absolute;
+
+	border-radius: 100%;
+
+	background: #6BF4A4;
+
+	transform: scale(0);
+}
+
+.v_ripple_effect_animation_layer.animate
+{
+	-o-animation: v_ripple_animation 0.65s linear;
+	-ms-animation: v_ripple_animation 0.65s linear;
+	-webkit-animation: v_ripple_animation 0.65s linear;
+	animation: v_ripple_animation 0.65s linear;
+}
+
+@keyframes v_ripple_animation
+{
+	100% { opacity: 0; transform: scale(2.5); }
+}
+
+@-o-keyframes v_ripple_animation
+{
+	100% { opacity: 0; transform: scale(2.5); }
+}
+
+@-ms-keyframes v_ripple_animation
+{
+	100% { opacity: 0; transform: scale(2.5); }
+}
+
+@-webkit-keyframes v_ripple_animation
+{
+	100% { opacity: 0; transform: scale(2.5); }
+}
+
+
+

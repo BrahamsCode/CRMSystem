@@ -7,7 +7,7 @@
  */
 $providers = [
     App\Providers\AppServiceProvider::class,
-    App\Providers\FortifyServiceProvider::class,
+    App\Providers\NucleoServiceProvider::class,
 ];
 
 foreach (glob(__DIR__ . '/../app/Providers/*ServiceProvider.php') ?: [] as $archivo) {

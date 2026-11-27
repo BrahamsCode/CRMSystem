@@ -1,0 +1,29 @@
+
+/* -----------------------------------------------------------
+
+CSS Information
+
+
+ File name:      print.css
+
+ Style Info:    プリント設定
+
+----------------------------------------------------------- */
+
+input[type="submit"] {
+	padding: 5px 10px!important;
+}
+
+input[type="button"] {
+	padding: 5px 7px!important;
+}
+
+select,option {
+	line-height: 1.5em;
+}
+
+input {
+	font-weight: normal;
+}
+
+

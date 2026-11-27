@@ -1,0 +1,280 @@
+
+
+
+/* ==========================================================
+
+CSS Information
+
+ File name:      base.css
+
+ Author:         Takeshi Okajima (admin)
+
+ Style Info:     デフォルトのスタイルのリセット及び基本設定
+
+========================================================== */
+
+
+* {
+	margin: 0px;
+	padding: 0px;
+	font-style: normal;
+}
+
+html {
+	overflow-y: scroll;
+}
+
+div,table {
+	margin: auto;
+	border-spacing: 0;
+	border-collapse: collapse;
+	text-align: left;
+}
+
+/*body *,*/
+body p {
+	line-height: 1.6;
+}
+
+table {
+	font-size: 1em;
+}
+
+br {
+	vertical-align: middle;/* FFで改行あるなしで高さが微妙に変わるのを回避 */
+}
+
+h1,h2,h3,h4,h5,h6 {
+	font-size: 100%;
+	font-weight: normal;
+
+}
+
+p {
+	margin: 10px 0;
+}
+
+ul,ol,li {
+	list-style: none;
+}
+
+fieldset,img/*,input*/ { 
+	border: 0;
+	vertical-align: bottom;
+}
+
+br {
+	vertical-align: middle;/* FFで改行あるなしで高さが微妙に変わるのを回避 */
+}
+
+/*
+img {
+	behavior: expression(IEPNGFIX.fix(this));
+}*/
+
+address,caption,cite,code,dfn,em,var {
+	font-style: normal;
+	font-weight: normal;
+}
+
+form label {
+	cursor : pointer;
+}
+
+select {
+	font-family: "ヒラギノ角ゴ Pro W3","Hiragino Kaku Gothic Pro","HiraKakuPro-W3",Osaka,"ＭＳ Ｐゴシック","MS PGothic",Sans-Serif;
+}
+
+select option {
+	padding : 0 5px;
+}
+
+q: before,q: after {
+	content: '';
+}
+
+abbr,acronym {
+	border: 0;
+	font-variant: normal;
+}
+
+object,embed {
+	vertical-align: top;
+}
+
+a {
+	cursor: pointer;
+}
+
+
+/*a:hover img {
+	opacity: 0.7;
+	filter: alpha(opacity=70);
+}*/
+
+/* 全ページ共通設定ここから ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ */
+.attention {
+	color: #FF0000;
+}
+
+.pickup {
+	color: #0777A8;
+}
+
+.textRed {
+	color: #FF0000;
+}
+
+.textYellow {
+	color: #FFFF00;
+}
+
+.textPink {
+	color: #FF99FF;
+}
+
+.textLightGray {
+	color: #CCCCCC;
+}
+
+.text4L {
+	font-size: 200%;
+}
+
+.text3L {
+	font-size: 160%;
+}
+
+.text2L {
+	font-size: 140%;
+}
+
+.textL {
+	font-size: 120%;
+}
+
+.textS {
+	font-size: 80%;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+/* テキスト位置設定 */
+.center {
+	margin: auto;
+	text-align: center;
+}
+
+.left {
+	text-align: left;
+}
+
+.right {
+	text-align: right;
+}
+
+.m0 {
+	margin: 0;
+}
+
+.mT10 {
+	margin-top: 10px;
+}
+
+.mB10 {
+	margin-bottom: 10px;
+}
+
+.mB20 {
+	margin-bottom: 20px;
+}
+
+.mR10 {
+	margin-right: 10px;
+}
+
+.mR20 {
+	margin-right: 20px;
+}
+
+.mL10 {
+	margin-left: 10px;
+}
+
+.mL20 {
+	margin-left: 20px;
+}
+
+.mRL10 {
+	margin: 0 10px 0 10px;
+}
+
+
+.p0 {
+	padding: 0;
+}
+
+.p10 {
+	padding: 10px;
+}
+
+.pT5 {
+	padding-top: 5px;
+}
+
+.pT10 {
+	padding-top: 10px;
+}
+
+.pB10 {
+	padding-bottom: 10px;
+}
+
+.pR10 {
+	padding-right: 10px;
+}
+
+.pL10 {
+	padding-left: 10px;
+}
+
+.pB20 {
+	padding-bottom: 20px;
+}
+
+.pRL10 {
+	padding: 0 10px 0 10px;
+}
+
+.floatLeftBox li {
+	float: left;
+}
+
+.floatLeft {
+	float: left;
+}
+
+.floatRight {
+	float: right;
+}
+
+.clearBoth {
+	clear: both;
+}
+
+.imgTop {
+	vertical-align: top;
+}
+
+.imgBottom {
+	vertical-align: bottom;
+}
+
+.imgMiddle {
+	vertical-align: middle;
+}
+
+
+/* 全ページ共通設定ここまで ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ */

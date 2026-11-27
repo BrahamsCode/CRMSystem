@@ -1,0 +1,1825 @@
+
+
+/* ==========================================================
+
+CSS Information
+
+ File name:      default.css
+
+ Author:         Takeshi Okajima (admin)
+
+ Style Info:     全ページ共通レイアウト設定
+
+========================================================== */
+
+
+body {
+	width: 100%;
+	color: #2F2F2F;
+	font-size: 12px;/* 文字サイズ計算＝【基本サイズ ÷ 表示したいサイズ * 100 （小数点以下切り上げ） */
+	font-family: Osaka,"ＭＳ Ｐゴシック","MS PGothic",Sans-Serif;
+	text-align: center;
+	line-height: 1.6;
+}
+
+/* for IE6 【表示したいサイズ÷16(ブラウザ基本サイズ)】*/
+* html body {
+	font-size: 75%;
+}
+
+/* for IE7 */
+*:first-child+html body {
+	font-size: 75%;
+}
+
+/* for IE8 */
+html>/**/body {
+  font-size/*\**/: 75%\9;
+}
+
+/*body *,*/
+body p {
+	line-height: 1.6;
+}
+
+p {
+	margin: 10px 0;
+}
+
+
+/*リンク表示方法*/
+a {
+	outline: none;
+}
+
+a:link {
+	color: #00479D;
+	text-decoration: underline;
+}
+
+a:visited {
+	color: #00479D;
+	text-decoration: underline;
+}
+
+a:active {
+	color: #0066FF;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #0066FF;
+	text-decoration: none;
+}
+
+
+
+/* リンク画像ホバー時透過 */
+a:hover img {
+	opacity: 0.7;
+	filter: alpha(opacity=70);
+}
+
+/* リンク時写真透過キャンセル設定 */
+#header a:hover img,
+.pageTop a:hover img,
+.btnBox a:hover img,
+.btnBox2 a:hover img,
+.noHover a:hover img {
+	opacity: 1;
+	filter: alpha(opacity=100);
+}
+
+
+
+h2 {
+	clear: both;
+	padding: 3px 0 4px 6px;
+	border: 1px solid #CCCCCC;
+	background: url(../img/h2_bg.gif) repeat-x scroll 0 50%;
+}
+
+h2 span {
+	display: block;
+	padding-left: 6px;
+	border-left: 4px solid #E50E0E;
+	line-height: 1.6;
+}
+
+h3 {
+	clear: both;
+	margin: 10px auto;
+	padding: 4px 5px;
+	border-left: 5px solid #333333;
+	border-bottom: 1px solid #333333;
+	color: #222222;
+	font-size: 117%;
+}
+
+h4 {
+	font-size: 117%;
+}
+
+
+
+
+/* ===========================================================
+
+			使いまわし要素設定
+
+=========================================================== */
+
+/* ========== ■■■■テキスト・画像並び系■■■■ ========= */
+
+/* ========== 新着など用枠有ボックス ========= */
+.topics,
+.topics2 {
+	overflow: auto;
+	min-height: 120px;
+	height: auto !important;
+	height: 120px;
+	padding: 5px;
+	border: 1px solid #CCCCCC;
+}
+
+.topics dt,
+.topics2 dt {
+	float: left;
+	color: #660000;
+}
+
+.topics dd {
+	margin-bottom: 5px;
+	padding-left: 6.5em;/* dtのテキスト幅+0.5emが理想サイズ */
+	padding-bottom: 5px;
+	border-bottom: 1px dotted #666666;
+}
+
+.topics2 dd {
+	margin-bottom: 5px;
+	padding-left: 8em;/* dtのテキスト幅+0.5emが理想サイズ */
+	padding-bottom: 5px;
+	border-bottom: 1px dotted #666666;
+}
+
+/* ========== ブロックを囲む箱(線有り) ========= */
+.column {
+	clear: both;
+	overflow: hidden;
+	margin-bottom: 20px;
+	border: 1px solid #666666;
+}
+
+/* ========== ブロックを囲む箱(線なし) ========= */
+.column2 {
+	clear: both;
+	overflow: hidden;
+	margin-bottom: 20px;
+}
+
+
+/* ========== 普通の線なしの囲み ========= */
+.block {
+	clear: both;
+	overflow: hidden;
+	margin: 10px 10px 20px;
+}
+
+/* ========== 線有りの囲み ========= */
+.block2 {
+	clear: both;
+	overflow: hidden;
+	margin: 10px 10px 20px;
+	padding: 15px 10px;
+	border: 5px solid #666666;
+}
+
+/* ========== 画像にフロートで組む時 ========= */
+.figLeft {
+	float: left;
+	margin: 10px 10px 10px 0;
+}
+
+.figRight {
+	float: right;
+	margin: 10px 0 10px 10px;
+}
+
+
+/* ========== イメージとテキストの横並び ========= */
+.imgText dt {
+	float: left;
+	margin-right: 10px;
+}
+
+.imgText2 dt {
+	float: left;
+}
+
+.imgText dt img,
+.imgText dt2 img {
+	padding: 2px;
+	border: 1px solid #666666;
+}
+
+.imgText2 dd {
+	padding-left: 125px;/* 横にある画像の横幅+10pxが理想サイズ */
+}
+
+
+/* ========== イメージが並ぶパターン ========= */
+.imgList {
+	overflow: hidden;
+}
+
+.imgList dt {
+	float: left;
+}
+
+.imgList li {
+	float: left;
+	width: 180px;
+	margin-bottom: 10px;
+}
+
+.imgList li img {
+	padding: 2px;
+	border: 1px solid #666666;
+}
+
+/* テキストとイメージが並ぶパターンのテキスト設定 */
+.imgList li span {
+	display: block;
+	text-align: center;
+}
+
+
+/* ========== 可変横並び画像とテキストの設定ここから(dlに指定中にdlは使用不可。左に画像Ver) ========= */
+.autoBoxL dl {
+	display: table;
+	zoom: 1;
+}
+
+.autoBoxL dt {
+	padding: 0 5px;
+	vertical-align: top;
+	display: table-cell;
+}
+
+.autoBoxL dt img {
+	/*border: 1px solid #666666;*/
+}
+
+.autoBoxL dd {
+	width: 100%;
+	vertical-align: top;
+	display: table-cell;
+}
+
+/* for IE6 */
+* html .autoBoxL dd {
+	width: auto;
+	direction: ltr;
+	zoom: 1;
+}
+* html .autoBoxL dt {
+	width: expression(this.getElementsByTagName("img")[0].clientWidth);
+	float: left;
+	zoom: 1;
+}
+
+/* for IE7 */
+*:first-child+html .autoBoxL dd {
+	width: auto;
+	direction: ltr;
+}
+*:first-child+html .autoBoxL dt {
+	width: expression(this.getElementsByTagName("img")[0].clientWidth);
+	float: left;
+}
+
+
+/* ========== 可変横並び画像とテキストの設定ここから(右に画像Ver) ========= */
+.autoBoxR {
+	display: table;
+	zoom: 1;
+	direction: rtl;
+	margin-top: 10px;
+}
+
+.autoBoxR .autoText {
+	display: table-cell;
+	padding-right: 10px;
+}
+
+.autoBoxR .autoText p {
+	margin: 0 0 10px;
+}
+
+.autoBoxR .autoImg {
+	display: table-cell;
+	direction: rtl;
+	margin: 0;
+	vertical-align: top;
+}
+
+.autoBoxR .autoImg img {
+	border: 1px solid #666666;
+	padding: 2px;
+}
+
+/* for IE6 */
+* html .autoBoxR .autoText {
+	float: left;
+	zoom: 1;
+	width: auto;
+}
+* html .autoBoxR .autoImg {
+	float: right;
+	zoom: 1;
+	width: expression(this.getElementsByTagName("img")[0].clientWidth);
+}
+
+/* fot IE7 */
+*:first-child+html .autoBoxR .autoText {
+	width: auto;
+	float: left;
+	zoom: 1;
+}
+*:first-child+html .autoBoxR .autoImg {
+	width: expression(this.getElementsByTagName("img")[0].clientWidth);
+	float: right;
+	zoom: 1;
+}
+
+
+/* ========== 可変横並び画像とテキストの設定ここから(divに指定。中にdl使用OK) ========= */
+.autoBox2 {
+	overflow: hidden;
+	display: table;
+	zoom: 1;
+}
+
+.autoBox2 .autoImage {
+	padding: 0 5px;
+	vertical-align: top;
+	display: table-cell;
+}
+
+.autoBox2 .autoImage img {
+	padding: 2px;
+	border: 1px solid #FF5BB3;
+}
+
+.autoBox2 .autoText {
+	width: 100%;
+	vertical-align: top;
+	display: table-cell;
+}
+
+/* for IE6 */
+* html .autoBox2 .autoImage {
+	float: left;
+	width: expression(this.getElementsByTagName("img")[0].clientWidth);
+	margin: 0;
+	zoom: 1;
+}
+* html .autoBox2 .autoText {
+	width: auto;
+	direction: ltr;
+	zoom: 1;
+}
+
+/* for IE7 */
+*:first-child+html .autoBox2 .autoImage {
+	float: left;
+	width: expression(this.getElementsByTagName("img")[0].clientWidth);
+	margin: 0;
+}
+*:first-child+html .autoBox2 .autoText {
+	width: auto;
+	direction: ltr;
+}
+
+
+
+
+/* ========== ■■■■リスト系■■■■ ========= */
+
+/* ========== 普通の●リスト ========= */
+.listDisc {
+	clear: both;
+	padding-left: 20px;
+}
+
+.listDisc li {
+	margin-bottom: 5px;
+	list-style: outside disc;
+}
+
+/* ========== 算用数字の順リスト ========= */
+.listDecimal {
+	clear: both;
+	padding-left: 20px;
+}
+
+.listDecimal li {
+	margin-bottom: 5px;
+	list-style: outside decimal;
+}
+
+
+
+
+/* ========== ■■■■表系■■■■ ========= */
+
+/* ========== 表設定ボーダーあり設定 ========= */
+dl.diList {
+	margin: auto auto 20px;
+	padding-top: 10px;
+	border-top: 1px solid #990000;
+}
+
+.dlList dt {
+	clear: both;
+	float: left;
+	width: 10em;
+	font-weight: bold;
+	text-align: center;
+}
+
+.dlList dd {
+	margin-bottom: 10px;
+	padding: 0 0 10px 10em;
+	border-bottom: 1px solid #990000;
+	text-align: left;
+	_text-indent: -3px;
+}
+
+/* ========== 表設定ボーダーなし ========= */
+dl.dlList2 {
+	clear: both;
+	margin: 0 auto 20px;
+}
+
+.dlList2 dt {
+	clear: both;
+	float: left;
+	width: 10em;
+	margin-top: 10px;
+}
+
+.dlList2 dd {
+	padding: 10px 0 10px 11em;
+	border-bottom: 1px solid #FFFFFF;
+	text-align: left;
+	_text-indent: -3px;
+}
+
+/* ========== dl表設定ボーダーなし position使用 ========= */
+dl.dlList3 {
+	clear: both;
+	margin: 10px 10px 20px;
+	zoom: 1;
+}
+
+.dlList3 dt {
+	position: absolute;
+	width: 6em;
+	padding-right: 10px;
+	border-right: 1px dashed #666666;
+	font-weight: bold;
+	text-align: right;
+}
+
+.dlList3 dd {
+	margin-bottom: 5px;
+	padding: 0 0 5px 7.5em;
+	_text-indent: -3px;
+}
+
+.dlList3 dd li {
+	padding-left: 7em;
+	zoom: 1;
+}
+
+
+
+
+
+/* ========== テーブル100％枠設定 ========== */
+.tableFrame {
+	overflow-x: scroll;
+	overflow-y: hidden;
+	width: 100%;
+}
+/* ========== テーブル1の設定(テーブル100％、th,tdに枠線とぱでんぐ＆thの横幅・背景指定) ========= */
+.tableBox  {
+	width: 100%;
+	margin-bottom: 15px;
+}
+
+.tableBox th {
+	width: 15%;
+	padding: 5px;
+	border: 1px solid #CCCCCC;
+	background: #EFEFEF;
+}
+
+.tableBox td {
+	padding: 5px;
+	border: 1px solid #CCCCCC;
+}
+
+/* ========== テーブル2の設定(テーブル100％、左見出しとしてthサイズ固定。td線なし) ========= */
+.tableBox2  {
+	width: 100%;
+/*	margin-bottom: 30px; */
+	border: 2px solid #CCCCCC;
+}
+
+.tableBox2 th {
+	background: #CFDBE5;
+	border-right: 1px solid #87AFAE;
+	padding: 5px;
+}
+
+.tableBox2 td {
+	padding: 5px;
+}
+
+
+/* ========== テーブル3の設定(テーブル100％、左見出しとしてthサイズ固定。td線なし。テキストセンター) ========= */
+.tableBox3  {
+	width: 99%;
+	border: 2px solid #CCCCCC;
+}
+
+.tableBox3 th {
+	background: #CFDBE5;
+	border: 1px solid #87AFAE;
+	padding: 5px;
+	text-align: center;
+}
+
+.tableBox3 td {
+	border: 1px solid #87AFAE;
+	border-bottom: 2px solid #87AFAE;
+	padding: 5px;
+	text-align: center;
+}
+
+
+
+/* ========== テーブル4の設定(テーブル100％、左見出しとしてthサイズ固定。td線あり) ========= */
+.tableBox4  {
+	width: 100%;
+	margin-bottom: 30px;
+	border: 2px solid #CCCCCC;
+}
+
+.tableBox4 th {
+	border: 1px solid #CCCCCC;
+	background: #EFEFEF;
+	padding: 5px;
+}
+
+.tableBox4 td {
+	border: 1px solid #CCCCCC;
+	padding: 5px;
+}
+
+
+/* ========== テーブル5の設定(テーブル100％、左見出しとしてthサイズ固定。td線あり。テキストセンター) ========= */
+.tableBox5  {
+	width: 100%;
+	margin-bottom: 30px;
+	border: 2px solid #CCCCCC;
+}
+
+.tableBox5 th {
+	border: 1px solid #CCCCCC;
+	background: #EFEFEF;
+	padding: 5px;
+	text-align: center;
+}
+
+.tableBox5 td {
+	border: 1px solid #CCCCCC;
+	padding: 5px;
+	text-align: center;
+}
+
+/* ========== テーブル6の設定(.tableListにて、inline-block上の並べ方を想定。テーブルの中のテーブルの設定有) ========= */
+.tableList {
+	text-align: center;
+}
+
+.tableList li {
+	margin: 0 5px 10px 0;
+	display:-moz-inline-box;
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+	width: 17.6em;
+}
+
+.tableBox6 {
+	width: 100%;
+	border: 1px solid #CCCCCC;
+	padding: 10px;
+}
+
+.tableBox6 {
+	text-align: center;
+}
+
+.tableBox6 thead {
+	background: #CFDBE5;
+	color: #334455;
+	font-size: 120%;
+}
+
+.tableBox6 tbody th {
+	width: 50%;
+	background: #F2F2F2;
+	border-top: 1px solid #CCCCCC;
+	border-right: 1px solid #CCCCCC;
+	color: #555555;
+}
+
+.tableBox6 td {
+	padding: 8px;
+	border-top: 1px solid #CCCCCC;
+}
+
+.tableBox6 table {
+	width: 100%;
+	border: 1px solid #CCCCCC;
+}
+
+.tableBox6 table th {
+	text-align: center;
+}
+
+.tableBox6 table td {
+	padding: 5px;
+}
+
+/* ========== テーブル7の設定(thead,tbody有、一セルの幅が20%で全体横幅100%) ========= */
+.tableBox7  {
+	width: 100%;
+	border: 2px solid #CCCCCC;
+	text-align: center;
+}
+
+.tableBox7 th {
+	border: 1px solid #CCCCCC;
+	background: #EFEFEF;
+	padding: 5px;
+}
+
+.tableBox7 td {
+	border: 1px solid #CCCCCC;
+	padding: 5px;
+}
+
+.tableBox7 tbody th {
+	width: 20%;
+}
+
+/* ========== テーブル8の設定(テーブル100％、th,tdに枠線とぱでんぐ＆thの横幅・背景指定) ========= */
+.tableBox8  {
+	width: 100%;
+	margin-bottom: 15px;
+}
+
+.tableBox8 th {
+	padding: 5px;
+	border: 1px solid #CCCCCC;
+	background: #EFEFEF;
+}
+
+.tableBox8 td {
+	padding: 5px;
+	border: 1px solid #CCCCCC;
+}
+
+/* ========== テーブル9の設定(テーブル100％、th,tdに枠線とぱでんぐ＆thの横幅・背景指定) ========= */
+.tableBox9  {
+	width: 100%;
+	/*margin-bottom: 15px;*/
+}
+
+.tableBox9 th {
+	width: 15%;
+	padding: 5px;
+	border: 1px solid #CCCCCC;
+	background: #EFEFEF;
+	font-weight: normal;
+	vertical-align: top;
+}
+
+.tableBox9 td {
+	padding: 5px;
+	border: 1px solid #CCCCCC;
+}
+
+/* ========== テーブル@の設定(テーブル100％、枠線、ぱでんぐ大きめ、テーブルの中のテーブルの設定有) ========= */
+.tableBox@ {
+	width: 100%;
+	border: 1px solid #CCCCCC;
+	padding: 10px;
+}
+
+.tableBox@ td {
+	padding: 8px;
+}
+
+.tableBox@ table {
+	width: 100%;
+	border: 1px solid #CCCCCC;
+}
+
+.tableBox@ table th {
+	text-align: center;
+}
+
+.tableBox@ table td {
+	padding: 5px;
+}
+
+/* テーブルのtr背景色設定 */
+.tableBg {
+	background: #F2F2F2;
+}
+
+.tableBorderT {
+	border-top: 2px solid #87AFAE;
+}
+
+.tableBox2 tr:hover,
+.tableBox3 tr:hover,
+.tableBox2 tr.bg:hover,
+.tableBox3 tr.bg:hover {
+	background: url(../img/tr_bg.gif) repeat-x -5px 0;
+}
+
+
+/* テーブルの画像全てに枠線 
+.tableBox img,
+.tableBox2 img {
+	border: 1px solid #000000;
+	paddig: 4px;
+}*/
+
+.tableBox tr.bg,
+.tableBox2 tr.bg,
+.tableBox3 tr.bg,
+.tableBox4 tr.bg,
+.tableBox5 tr.bg {
+	background: #EFEFEF;
+}
+
+/* FF3.5で画像をmiddleにしないと隙間があく件について */
+.tableBox td img,
+.tableBox2 td img,
+.tableBox3 td img,
+.tableBox4 td img,
+.tableBox5 td img {
+	vertical-align: middle;
+}
+
+.tableBox .btn3,
+.tableBox2 .btn3,
+.tableBox3 .btn3,
+.tableBox4 .btn3,
+.tableBox5 .btn3 {
+	width: 220px;
+}
+
+
+
+/* ========== 画像・テキストのリンクボタン設定(基本btnBoxがフォームボタン用、boxBtn2がYahooみたいなリンク用) ========= */
+.btnBox {
+	margin-top: 50px;
+	text-align: center;
+}
+
+.btnBox2 {
+	clear: both;
+	margin: 15px auto;
+	text-align: center;
+}
+
+.btnBox2 a {
+	zoom: 1;
+	background: #35658F;
+	border: 1px solid #35658F;
+	padding: 3px 10px;
+	text-decoration: none;
+	line-height: 1;
+	vertical-align: middle;
+	color: #FFFFFF;
+}
+
+.btnBox2 a:link,
+.btnBox2 a:visited {
+	text-decoration: none;
+	color: #FFFFFF;
+}
+
+.btnBox2 a:hover {
+	background: #FFFFFF;
+	border: 1px solid #35658F;
+	color: #35658F;
+}
+
+.btnBox2 li.now b {
+	zoom: 1;
+	background: none;
+	border: 1px solid #35658F;
+	padding: 3px 10px;
+	color: #35658F;
+	font-size: 134%;
+	font-weight: bold;
+	line-height: 1;
+	vertical-align: middle;
+}
+
+.btnBox2 .btn a,
+.btnBox2 .btn a:hover {
+	background: none;
+	border: none;
+	padding: 0;
+}
+
+.btnBox li,
+.btnBox2 li {
+	display: inline;
+	margin: 0 2px;
+}
+
+.btnBox2 li img {
+	display: inline;
+	vertical-align: middle;
+}
+
+/* operaハック */
+dl.toolTip:not(\*|*) { top: -13px; }
+
+dl.toolTip {
+	display:-moz-inline-box;
+	display: inline-block;
+	position: relative;
+}
+
+*html dl.toolTip {
+	display: inline;
+	zoom: 1;
+}
+
+*:first-child+html dl.toolTip {
+	display: inline;
+	zoom: 1;
+}
+
+dl.toolTip .toolTipFig {
+	*font-size: 1px;
+}
+
+dl.toolTip .toolTipFig:hover {
+
+}
+
+dl.toolTip .toolTipFig img {
+	vertical-align: top;
+}
+
+
+
+dl.toolTip .toolTipBody {
+	display: none;
+	position: absolute;
+	bottom: 18px;
+	right: 0;
+	padding: 3px 5px 2px;
+	background: #FFFEFC;
+	border: 1px solid #336699;
+	font-weight: normal;
+}
+
+dl.toolTip:hover .toolTipBody {
+	display: block;
+	width: 220px;
+	z-index: 2;
+}
+
+*html dl.toolTip:hover .toolTipBody {
+	zoom: 1;
+}
+
+*:first-child+html dl.toolTip:hover .toolTipBody {
+	zoom: 1;
+}
+
+
+.formBtnCenter {
+	text-align: center;
+}
+
+.formBtnCenter form {
+	display:-moz-inline-box;
+	display: inline-block;
+	*display: block;
+	*zoom: 1;
+}
+
+.formBtnCenter li {
+	margin-left: 5px;
+	display:-moz-inline-box;
+	display: inline-block;
+	*display: block;
+	*zoom: 1;
+}
+
+.formBtnCenter li:first-child{
+	margin-left: 0;
+}
+
+.formBtnCenter li.first-child{ /*IE-expression (first-child) */
+	margin-left: 0;
+}
+.formBtnCenter li{ /* IE-expression (first-child) */
+	behavior: expression(
+	this.className += (this.previousSibling == null) ? " first-child" : "",
+	this.style.behavior = "none"
+);
+}
+
+
+
+
+
+
+/* ==========================================================
+
+			中ページ設定ここから
+
+========================================================== */
+.cover {
+	text-align: center;
+}
+.h2Title {
+	margin-top: 0;
+	padding: 7px 10px 5px 10px;
+	background: #828E93;
+	color: #FFFFFF;
+}
+
+.h3Title {
+	padding: 2px 7px;
+	border-bottom: 1px solid #828E93;
+	border-left: 5px solid #828E93;
+	font-weight: bold;
+}
+
+
+
+
+
+
+
+/* ==========================================================
+
+			全ページ共通設定
+
+========================================================== */
+/* 注意色(基本赤) */
+.attention {
+	color: #FF0000;
+}
+
+/* 注意色以外で目立たせたい色 */
+.pickup {
+	color: #0777A8;
+}
+
+.textRed {
+	color: #FF0000;
+}
+
+.textYellow {
+	color: #FFFF00;
+}
+
+.textPink {
+	color: #FF99FF;
+}
+
+.textLightGray {
+	color: #CCCCCC;
+}
+
+.text4L {
+	font-size: 200%;
+}
+
+.text3L {
+	font-size: 160%;
+}
+
+.text2L {
+	font-size: 140%;
+}
+
+.textL {
+	font-size: 120%;
+}
+
+.textS {
+	font-size: 80%;
+}
+
+.text2S {
+	font-size: 60%;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+/* テキスト位置設定 */
+.center {
+	margin: auto;
+	text-align: center;
+}
+
+/* テキスト位置設定 */
+.textCenter {
+	text-align: center;
+}
+
+.left {
+	text-align: left;
+}
+
+.right {
+	text-align: right;
+}
+
+.m0 {
+	margin: 0;
+}
+
+.mT10 {
+	margin-top: 10px;
+}
+
+.mB5 {
+	margin-bottom: 5px;
+}
+
+.mB10 {
+	margin-bottom: 10px;
+}
+
+.mB20 {
+	margin-bottom: 20px;
+}
+
+.mR10 {
+	margin-right: 10px;
+}
+
+.mR20 {
+	margin-right: 20px;
+}
+
+.mL5 {
+	margin-left: 5px;
+}
+
+.mL10 {
+	margin-left: 10px;
+}
+
+.mL20 {
+	margin-left: 20px;
+}
+
+.mRL10 {
+	margin: auto 10px;
+}
+
+
+.p0 {
+	padding: 0;
+}
+
+.p10 {
+	padding: 10px;
+}
+
+.pT5 {
+	padding-top: 5px;
+}
+
+.pT10 {
+	padding-top: 10px;
+}
+
+.pB10 {
+	padding-bottom: 10px;
+}
+
+.pR10 {
+	padding-right: 10px;
+}
+
+.pL10 {
+	padding-left: 10px;
+}
+
+.pB20 {
+	padding-bottom: 20px;
+}
+
+.pRL10 {
+	padding: auto 10px;
+}
+
+/* リストをフロート左へ */
+.floatLeftBox li {
+	float: left;
+}
+
+.floatLeft {
+	float: left;
+}
+
+/* リストをフロート右へ */
+.floatRightBox li {
+	float: right;
+}
+.floatRight {
+	float: right;
+}
+
+.clearBoth {
+	clear: both;
+}
+
+.imgTop {
+	vertical-align: top;
+}
+
+.imgBottom {
+	vertical-align: bottom;
+}
+
+.imgMiddle {
+	vertical-align: middle;
+}
+
+.displayNone {
+	display: none;
+}
+
+
+
+/* ==========================================================
+
+			ヘッダー設定
+
+========================================================== */
+#header {
+	/*height: 85px;*/
+	min-height: 85px;
+	height: auto!important;
+	height: 85px;
+	background: #FFFFFF url(../img/bg_header.gif) repeat-x 0 100%;
+	margin: 0;
+	position: relative;
+	border-top: 4px solid #C9D0D3;
+}
+
+#logo {
+	display: inline;
+	float: left;
+	margin: 12px 0 0 20px;
+	position: absolute;
+}
+
+#header ul {
+	display: inline;
+	float: right;
+	overflow: hidden;
+	margin-right: 15px;
+}
+
+#header .subNavi li {
+	display: inline;
+	margin-left: 2px;
+}
+
+#header .subNavi {
+	position: relative;
+	top: -4px;
+}
+
+
+
+/* ==========================================================
+
+			コンテンツ全体枠設定
+
+========================================================== */
+#container {
+	min-width: 950px;
+	width: expression(document.body.clientWidth < 952 ? "950px" : document.body.clientWidth > 10002 ? "100%" : "auto");
+	margin: 0;
+}
+
+/* カバー */
+#cover {
+	margin-bottom: 10px;
+	padding-top: 8px;
+	background: url(../img/bg_cover.gif) no-repeat;
+	text-align: center;
+}
+
+
+.wrap {
+	overflow: hidden;
+	width: 100%;
+	/*background: #DEE0E2 url(../img/bg_main1.gif) repeat-x;*/
+	margin: 0;
+}
+
+.main1 {
+	float: right;
+	width: 100%;
+	/*background: url(../img/ln_bg.gif) repeat-y;*/
+}
+
+.oneColumn .main1 {
+	background: none;
+}
+
+
+.main2 {
+	min-height: 340px;
+	height: auto !important;
+	height: 340px;
+	margin-left: 221px;
+	padding: 10px 15px 10px 10px;
+	background: url(../img/bg_main2.gif) no-repeat 100% 0;
+}
+
+.oneColumn .main2 {
+	margin-left: 0;
+	padding: 10px 15px 10px 10px;
+	background: url(../img/bg_main2.gif) no-repeat 100% 0;
+}
+
+.main3 {
+	padding: 10px 10px 0 10px;
+	/*background: url(../img/bg_main3.jpg) repeat-x;*/
+}
+
+.main4 {
+	background: #FFFFFF url(../img/bg_main4.gif) no-repeat;
+}
+
+.main5 {
+	/*height: 100%;*/
+	background: url(../img/bg_main5.gif) no-repeat 100% 0;
+}
+
+.main6 {
+	background: url(../img/bg_main6.gif) no-repeat 0 100%;
+}
+
+.main7 {
+	background: url(../img/bg_main7.gif) no-repeat 100% 100%;
+}
+
+.main {
+	zoom: 1;
+	padding: 20px;
+}
+
+/* コンテンツ繰り返し枠設定 */
+.contents {
+	clear: both;
+	margin-bottom: 30px;
+}
+
+
+
+
+
+
+
+/* ==========================================================
+
+			サイドナビゲーション設定
+
+========================================================== */
+/* ===== カテゴリー共通パーツ ===== */
+.loginName b {
+	display:-moz-inline-box;
+	display: inline-block;
+	*display: inline;
+	zoom: 1;
+	overflow: hidden;
+	visibility: hidden;
+	width: 14px;
+	height: 61px;
+	vertical-align: bottom;
+}
+
+.loginName span {
+	display:-moz-inline-box;
+	display: inline-block;
+	width: 150px;
+	line-height: 1;
+	vertical-align: bottom;
+	color: #FFFFFF;
+}
+
+.leftNavi dt:hover {
+	cursor: pointer;
+}
+
+.leftNavi dd ul {
+	background: url(../img/ln_bg_dd.gif) no-repeat 50% 0;
+}
+
+.leftNavi dd li {
+	padding: 5px 10px;
+	background: url(../img/ln_bg_dd.gif) no-repeat 50% 100%;
+}
+
+.leftNavi dd li a {
+	display: block;
+	padding-left: 20px;
+	background: url(../img/ln_icon.gif) no-repeat 0 50%;
+}
+
+
+
+/* ===== カテゴリー0 ===== */
+.leftNavi00 {
+	float: left;
+	width: 221px;
+	margin: 0 -221px 10px 0;
+	background: url(../img/ln_bg0.gif) repeat-y;
+}
+
+.leftNavi00 .leftNavi {
+	padding: 5px 0 0 15px;
+	background: url(../img/ln_bg_t0.gif) no-repeat;
+}
+
+.leftNavi00 .loginName {
+	position: relative;
+	left: -5px;
+	width: 205px;
+	height: 75px;
+	margin: 0 0 10px;
+	background: url(../img/ln_bg_login0.gif) no-repeat;
+}
+
+.leftNavi00 dl {
+	width: 195px;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+	background: #FFFFFF url(../img/ln_t_b0.gif) no-repeat 0 100%;
+}
+
+.leftNavi00 dt {
+	display: block;
+	width: 135px;
+	min-height: 32px;
+	height: auto !important;
+	height: 32px;
+	padding: 17px 30px 0;
+	background: url(../img/ln_t0.gif) no-repeat;
+	font-size: 134%;
+	font-weight: bold;
+	line-height: 1;
+	outline: none;
+}
+
+
+/* ===== カテゴリー1 ===== */
+.leftNavi01 {
+	float: left;
+	width: 221px;
+	margin: 0 -221px 10px 0;
+	background: url(../img/ln_bg1.gif) repeat-y;
+}
+
+.leftNavi01 .leftNavi {
+	padding: 5px 0 0 15px;
+	background: url(../img/ln_bg_t1.gif) no-repeat;
+}
+
+.leftNavi01 .loginName {
+	position: relative;
+	left: -5px;
+	width: 205px;
+	height: 75px;
+	margin: 0 0 10px;
+	background: url(../img/ln_bg_login1.gif) no-repeat;
+}
+
+.leftNavi01 dl {
+	width: 195px;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+	background: #FFFFFF url(../img/ln_t_b1.gif) no-repeat 0 100%;
+}
+
+.leftNavi01 dt {
+	display: block;
+	width: 135px;
+	min-height: 32px;
+	height: auto !important;
+	height: 32px;
+	padding: 17px 30px 0;
+	background: url(../img/ln_t1.gif) no-repeat;
+	font-size: 134%;
+	font-weight: bold;
+	line-height: 1;
+	outline: none;
+}
+
+
+/* ===== カテゴリー2 ===== */
+.leftNavi02 {
+	float: left;
+	width: 221px;
+	margin: 0 -221px 10px 0;
+	background: url(../img/ln_bg2.gif) repeat-y;
+}
+
+.leftNavi02 .leftNavi {
+	padding: 5px 0 0 15px;
+	background: url(../img/ln_bg_t2.gif) no-repeat;
+}
+
+.leftNavi02 .loginName {
+	position: relative;
+	left: -5px;
+	width: 205px;
+	height: 75px;
+	margin: 0 0 10px;
+	background: url(../img/ln_bg_login2.gif) no-repeat;
+}
+
+.leftNavi02 dl {
+	width: 195px;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+	background: #FFFFFF url(../img/ln_t_b2.gif) no-repeat 0 100%;
+}
+
+.leftNavi02 dt {
+	display: block;
+	width: 135px;
+	min-height: 32px;
+	height: auto !important;
+	height: 32px;
+	padding: 17px 30px 0;
+	background: url(../img/ln_t2.gif) no-repeat;
+	font-size: 134%;
+	font-weight: bold;
+	line-height: 1;
+	outline: none;
+}
+
+
+/* ===== カテゴリー3 ===== */
+.leftNavi03 {
+	float: left;
+	width: 221px;
+	margin: 0 -221px 10px 0;
+	background: url(../img/ln_bg3.gif) repeat-y;
+}
+
+.leftNavi03 .leftNavi {
+	padding: 5px 0 0 15px;
+	background: url(../img/ln_bg_t3.gif) no-repeat;
+}
+
+.leftNavi03 .loginName {
+	position: relative;
+	left: -5px;
+	width: 205px;
+	height: 75px;
+	margin: 0 0 10px;
+	background: url(../img/ln_bg_login3.gif) no-repeat;
+}
+
+.leftNavi03 dl {
+	width: 195px;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+	background: #FFFFFF url(../img/ln_t_b3.gif) no-repeat 0 100%;
+}
+
+.leftNavi03 dt {
+	display: block;
+	width: 135px;
+	min-height: 32px;
+	height: auto !important;
+	height: 32px;
+	padding: 17px 30px 0;
+	background: url(../img/ln_t3.gif) no-repeat;
+	font-size: 134%;
+	font-weight: bold;
+	line-height: 1;
+	outline: none;
+}
+
+
+/* ===== カテゴリー4 ===== */
+.leftNavi04 {
+	float: left;
+	width: 221px;
+	margin: 0 -221px 10px 0;
+	background: url(../img/ln_bg4.gif) repeat-y;
+}
+
+.leftNavi04 .leftNavi {
+	padding: 5px 0 0 15px;
+	background: url(../img/ln_bg_t4.gif) no-repeat;
+}
+
+.leftNavi04 .loginName {
+	position: relative;
+	left: -5px;
+	width: 205px;
+	height: 75px;
+	margin: 0 0 10px;
+	background: url(../img/ln_bg_login4.gif) no-repeat;
+}
+
+.leftNavi04 dl {
+	width: 195px;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+	background: #FFFFFF url(../img/ln_t_b4.gif) no-repeat 0 100%;
+}
+
+.leftNavi04 dt {
+	display: block;
+	width: 135px;
+	min-height: 32px;
+	height: auto !important;
+	height: 32px;
+	padding: 17px 30px 0;
+	background: url(../img/ln_t4.gif) no-repeat;
+	font-size: 134%;
+	font-weight: bold;
+	line-height: 1;
+	outline: none;
+}
+
+
+/* ===== カテゴリー5 ===== */
+.leftNavi05 {
+	float: left;
+	width: 221px;
+	margin: 0 -221px 10px 0;
+	background: url(../img/ln_bg5.gif) repeat-y;
+}
+
+.leftNavi05 .leftNavi {
+	padding: 5px 0 0 15px;
+	background: url(../img/ln_bg_t5.gif) no-repeat;
+}
+
+.leftNavi05 .loginName {
+	position: relative;
+	left: -5px;
+	width: 205px;
+	height: 75px;
+	margin: 0 0 10px;
+	background: url(../img/ln_bg_login5.gif) no-repeat;
+}
+
+.leftNavi05 dl {
+	width: 195px;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+	background: #FFFFFF url(../img/ln_t_b5.gif) no-repeat 0 100%;
+}
+
+.leftNavi05 dt {
+	display: block;
+	width: 135px;
+	min-height: 32px;
+	height: auto !important;
+	height: 32px;
+	padding: 17px 30px 0;
+	background: url(../img/ln_t5.gif) no-repeat;
+	font-size: 134%;
+	font-weight: bold;
+	line-height: 1;
+	outline: none;
+}
+
+
+/* ===== カテゴリー6 ===== */
+.leftNavi06 {
+	float: left;
+	width: 221px;
+	margin: 0 -221px 10px 0;
+	background: url(../img/ln_bg6.gif) repeat-y;
+}
+
+.leftNavi06 .leftNavi {
+	padding: 5px 0 0 15px;
+	background: url(../img/ln_bg_t6.gif) no-repeat;
+}
+
+.leftNavi06 .loginName {
+	position: relative;
+	left: -5px;
+	width: 205px;
+	height: 75px;
+	margin: 0 0 10px;
+	background: url(../img/ln_bg_login6.gif) no-repeat;
+}
+
+.leftNavi06 dl {
+	width: 195px;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+	background: #FFFFFF url(../img/ln_t_b6.gif) no-repeat 0 100%;
+}
+
+.leftNavi06 dt {
+	display: block;
+	width: 135px;
+	min-height: 32px;
+	height: auto !important;
+	height: 32px;
+	padding: 17px 30px 0;
+	background: url(../img/ln_t6.gif) no-repeat;
+	font-size: 134%;
+	font-weight: bold;
+	line-height: 1;
+	outline: none;
+}
+
+
+/* ===== カテゴリー7 ===== */
+.leftNavi07 {
+	float: left;
+	width: 221px;
+	margin: 0 -221px 10px 0;
+	background: url(../img/ln_bg7.gif) repeat-y;
+}
+
+.leftNavi07 .leftNavi {
+	padding: 5px 0 0 15px;
+	background: url(../img/ln_bg_t7.gif) no-repeat;
+}
+
+.leftNavi07 .loginName {
+	position: relative;
+	left: -5px;
+	width: 205px;
+	height: 75px;
+	margin: 0 0 10px;
+	background: url(../img/ln_bg_login7.gif) no-repeat;
+}
+
+.leftNavi07 dl {
+	width: 195px;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+	background: #FFFFFF url(../img/ln_t_b7.gif) no-repeat 0 100%;
+}
+
+.leftNavi07 dt {
+	display: block;
+	width: 135px;
+	min-height: 32px;
+	height: auto !important;
+	height: 32px;
+	padding: 17px 30px 0;
+	background: url(../img/ln_t7.gif) no-repeat;
+	font-size: 134%;
+	font-weight: bold;
+	line-height: 1;
+	outline: none;
+}
+
+
+
+/* ===== カテゴリー8 ===== */
+.leftNavi08 {
+	float: left;
+	width: 221px;
+	margin: 0 -221px 10px 0;
+	background: url(../img/ln_bg8.gif) repeat-y;
+}
+
+.leftNavi08 .leftNavi {
+	padding: 5px 0 0 15px;
+	background: url(../img/ln_bg_t8.gif) no-repeat;
+}
+
+.leftNavi08 .loginName {
+	position: relative;
+	left: -5px;
+	width: 205px;
+	height: 75px;
+	margin: 0 0 10px;
+	background: url(../img/ln_bg_login8.gif) no-repeat;
+}
+
+.leftNavi08 dl {
+	width: 195px;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+	background: #FFFFFF url(../img/ln_t_b8.gif) no-repeat 0 100%;
+}
+
+.leftNavi08 dt {
+	display: block;
+	width: 135px;
+	min-height: 32px;
+	height: auto !important;
+	height: 32px;
+	padding: 17px 30px 0;
+	background: url(../img/ln_t8.gif) no-repeat;
+	font-size: 134%;
+	font-weight: bold;
+	line-height: 1;
+	outline: none;
+}
+
+
+
+
+
+/* ==========================================================
+
+			フッター設定
+
+========================================================== */
+#footer {
+	clear: both;
+	zoom: 1;
+	overflow: hidden;
+	padding: 10px 25px 10px 20px;
+	border-top: 4px solid #DDDDDD;
+}
+
+#footer .copy {
+	float: left;
+	margin: 0;
+}
+
+/* ========== このページのトップへ設定 ========= */
+.pageTop {
+	float: right;
+	margin: 0;
+}
+
+
+#footer li {
+	display: inline;
+	margin-left: 8px;
+	padding-left: 8px;
+	border-left: 1px solid #666666;
+	zoom: 1;
+}
+
+#footer li:first-child {
+	margin-left: 0;
+	padding-left: 0;
+	border-left: none;
+}
+
+#footer li.first-child { /*IE-expression (first-child) */
+	margin-left: 0;
+	padding-left: 0;
+	border-left: none;
+}
+
+#footer li { /* IE-expression (first-child) */
+	behavior: expression(
+	this.className += (this.previousSibling == null) ? " first-child" : "",
+	this.style.behavior = "none"
+	);
+}
+
+
