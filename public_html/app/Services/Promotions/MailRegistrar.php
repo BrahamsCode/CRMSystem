@@ -95,7 +95,12 @@ class MailRegistrar
             $row['画像タイトル'] = (string) $in['pic_link'];
         }
 
-        $mail = DB::transaction(fn () => MailmagMaster::create($row));
+        $mail = DB::transaction(function () use ($row, $mailType, $in) {
+            $mail = MailmagMaster::create($row);
+            $this->markSurveyIssued($mailType, $in);
+
+            return $mail;
+        });
 
         if ($immediate) {
             SendMailmagJob::dispatch($mail->cd)->afterResponse();
@@ -147,7 +152,13 @@ class MailRegistrar
             $row += $this->imageColumns($in);
         }
 
-        if (array_key_exists('get_coupon_cd', $in) && (string) $in['get_coupon_cd'] === '') {
+        if ($mailType === 'anketo') {
+            // type_data_cd es la encuesta: el legacy la borraba si se quitaba el cupón (get_coupon_cd vacío) y el envío
+            // perdía su アンケート; aquí se conserva y el cupón va a attached_cd
+            if ((string) ($in['hakkou_cd'] ?? '') !== '') {
+                $row['type_data_cd'] = (int) $in['hakkou_cd'];
+            }
+        } elseif (array_key_exists('get_coupon_cd', $in) && (string) $in['get_coupon_cd'] === '') {
             $row['type_data_cd'] = null;
         } elseif ($mailType !== 'anketo' && (string) ($in['get_coupon_cd'] ?? '') !== '') {
             $row['type_data_cd'] = (int) $in['get_coupon_cd'];
@@ -155,7 +166,10 @@ class MailRegistrar
             $row['type_data_cd'] = (int) $in['hakkou_cd'];
         }
 
-        DB::transaction(fn () => MailmagMaster::query()->whereKey($mail->cd)->update($row));
+        DB::transaction(function () use ($mail, $row, $mailType, $in) {
+            MailmagMaster::query()->whereKey($mail->cd)->update($row);
+            $this->markSurveyIssued($mailType, $in);
+        });
         $mail->refresh();
         $this->schedule($mail);
 
@@ -177,6 +191,22 @@ class MailRegistrar
                 'mag_cd' => $mail->cd,
             ]);
         });
+    }
+
+    /**
+     * mail_send_frm.php / mail_future_send_frm.php: al registrar una アンケート, la encuesta (hakkou_cd) queda 発行済
+     * (hyouji_flg = 1, hakkou_date) con el cupón adjunto en attached_cd si se eligió uno.
+     */
+    private function markSurveyIssued(string $mailType, array $in): void
+    {
+        if ($mailType !== 'anketo' || (string) ($in['hakkou_cd'] ?? '') === '') {
+            return;
+        }
+        $row = ['hyouji_flg' => '1', 'hakkou_date' => (string) time()];
+        if ((string) ($in['get_coupon_cd'] ?? '') !== '') {
+            $row['attached_cd'] = (int) $in['get_coupon_cd'];
+        }
+        DB::table('tb_c3_anketo_cate')->where('cd', (int) $in['hakkou_cd'])->update($row);
     }
 
     private function imageColumns(array $in): array

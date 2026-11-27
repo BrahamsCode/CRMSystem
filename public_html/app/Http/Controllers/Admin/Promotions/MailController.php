@@ -63,9 +63,9 @@ class MailController extends Controller
         return view('admin.promocion.inc.mail_customer_select_frm', $formData->for($filters) + [
             'menu' => $mailType,
             'mailType' => $mailType,
-            'title' => match ($mailType) { 'deco' => 'デコメール', 'mycoupon' => 'クーポン', 'auto', 'autodeco' => '自動', default => 'メール' },
+            'title' => match ($mailType) { 'deco' => 'デコメール', 'mycoupon' => 'クーポン', 'auto', 'autodeco' => '自動', 'anketo' => 'アンケート', default => 'メール' },
             'mode' => in_array($mailType, MailRegistrar::AUTO_TYPES, true) ? '配信条件選択' : '発行条件選択',
-            'activeAc' => self::activeAc($mailType),
+            'activeAc' => self::activeAc($this->prefix($mailType)),
             'selectAction' => route($this->route($mailType, 'select')),
             'issueAction' => route($this->route($mailType, 'create')),
             'searchFormPartial' => 'admin.promocion.inc.customer_search_form',
@@ -74,7 +74,7 @@ class MailController extends Controller
             // 自動: las condiciones de auto_new_confirm ($auto_mail_send_data) viajan ocultas hasta el registro
             'carry' => array_filter($request->only(array_merge(['mailmagcd', 'coupon_cd', 'hakkou_cd', 'get_coupon_cd', 'get_coupon_text'],
                 in_array($mailType, MailRegistrar::AUTO_TYPES, true) ? ['step1', 'step2_1', 'step2_2', 'step2_3', 'step2_jikan', 'step2_fun', 'mail_type', 'kind'] : [])),
-                fn ($v) => is_string($v) && $v !== ''),
+                fn ($v) => is_scalar($v) && (string) $v !== ''),
         ]);
     }
 
@@ -222,7 +222,7 @@ class MailController extends Controller
         }
         $m = fn (string $c) => (string) $mail->getAttribute($c);
         // mail_future_frm.php: en follow/auto el tipo es el de la fila (texto o デコメール)
-        if (in_array($mail->type_flg, array_merge(MailRegistrar::FOLLOW_TYPES, MailRegistrar::AUTO_TYPES), true)) {
+        if (in_array($mail->type_flg, array_merge(MailRegistrar::FOLLOW_TYPES, MailRegistrar::AUTO_TYPES, ['anketo']), true)) {
             $mailType = (string) $mail->type_flg;
         }
         $recurring = in_array($mailType, ['follow', 'followdeco', 'auto', 'autodeco'], true);
@@ -257,6 +257,15 @@ class MailController extends Controller
             if ($m('type_data_cd') !== '') {
                 // follow/auto: el cupón adjunto se edita (get_coupon_cd); el resto lo arrastra como hakkou_cd
                 $in[$recurring ? 'get_coupon_cd' : 'hakkou_cd'] = $m('type_data_cd');
+            }
+            // アンケート: type_data_cd es la encuesta; su cupón adjunto (attached_cd) sale elegido (setCoupon del legacy)
+            if ($mailType === 'anketo' && $m('type_data_cd') !== '') {
+                $attached = DB::table('tb_c3_anketo_cate')->where('cd', (int) $m('type_data_cd'))->value('attached_cd');
+                $coupon = $attached ? DB::table('tb_mycoupon_master')->where('cd', (int) $attached)->first(['cd', 'title', 'comment']) : null;
+                if ($coupon) {
+                    $in['get_coupon_cd'] = (string) $coupon->cd;
+                    $in['get_coupon_text'] = '【'.$coupon->title.'   ／   '.$coupon->comment.'】('.$coupon->cd.')   ';
+                }
             }
             // follow: «<tienda> 宛» de send_parameter (tienda<>用途<>日数)
             if (in_array($mailType, ['follow', 'followdeco'], true)) {
@@ -426,6 +435,10 @@ class MailController extends Controller
             if (! $mail) {
                 return redirect()->route($this->route($mailType, 'future'));
             }
+            // Como en mail_future_frm.php: el tipo del programado es el de su fila (アンケート, follow/auto con o sin デコ)
+            if (in_array($mail->type_flg, array_merge(MailRegistrar::FOLLOW_TYPES, MailRegistrar::AUTO_TYPES, ['anketo']), true)) {
+                $mailType = (string) $mail->type_flg;
+            }
             if (! $this->audience->has($uniqid) || $verify === '' || ($in['naiyou'] ?? '') === '' || ($in['jikan'] ?? '') === '' || ($in['fun'] ?? '') === '') {
                 return redirect()->route('admin.promocion.templates.index');
             }
@@ -469,7 +482,7 @@ class MailController extends Controller
             'menu' => $mailType,
             'toolName' => $this->toolName(),
             // Bloque del menú lateral: メルマガ管理 (.ac1) o デコメール管理 (.ac9)
-            'activeAc' => self::activeAc($mailType),
+            'activeAc' => self::activeAc($this->prefix($mailType)),
             'isMaster' => $this->staff->isMaster(),
             'shops' => $this->staff->shops(),
             'staffShopCd' => $this->staff->shopCd(),
@@ -493,13 +506,33 @@ class MailController extends Controller
 
     private function route(string $mailType, string $action): string
     {
-        return 'admin.promocion.'.self::family($mailType).'.'.$action;
+        // Prefijo de la pantalla, el de la familia y, si la familia no tiene esa acción (p. ej. 過去配信 de アンケート), mail_mag
+        foreach ([$this->prefix($mailType), self::family($mailType), 'mail'] as $prefix) {
+            if (\Illuminate\Support\Facades\Route::has($name = 'admin.promocion.'.$prefix.'.'.$action)) {
+                return $name;
+            }
+        }
+
+        return $name;
+    }
+
+    /**
+     * Prefijo de rutas de la pantalla: el de la familia del mailType o, si la ruta lo fija con `->defaults('mailFamily', …)`
+     * (el `$menu` de los envoltorios legacy, p. ej. 返信メール de お客様アンケート: mail_type = mail, prefijo anketo2.reply),
+     * ese, para el mailType de la propia ruta. route() vuelve a la familia si la acción no existe con el prefijo.
+     */
+    private function prefix(string $mailType): string
+    {
+        $route = request()->route();
+        $override = $route?->defaults['mailFamily'] ?? null;
+
+        return $override && $mailType === ($route->defaults['mailType'] ?? null) ? (string) $override : self::family($mailType);
     }
 
     /** Los programados de cupón se listan y editan en mail_mag (mail_future_list.php incluye type_flg coupon) */
     private function futureType(string $mailType): string
     {
-        return $mailType === 'mycoupon' ? 'mail' : $mailType;
+        return in_array($mailType, ['mycoupon', 'anketo'], true) ? 'mail' : $mailType;
     }
 
     /** Prefijo de rutas de la familia: mail (mail_mag), deco (decomail), coupons.mail (mycoupon), follow o auto */
@@ -508,20 +541,28 @@ class MailController extends Controller
         return match ($mailType) {
             'deco' => 'deco',
             'mycoupon' => 'coupons.mail',
+            'anketo' => 'anketo.mail',
             'follow', 'followdeco' => 'follow',
             'auto', 'autodeco' => 'auto',
             default => 'mail',
         };
     }
 
-    /** Bloque del menú lateral: メルマガ (.ac1), デコメール (.ac9), マイクーポン (.ac7), フォロー (.ac10) o 自動 (.ac11) */
-    public static function activeAc(string $mailType): string
+    /**
+     * Bloque del menú lateral por mailType o prefijo de rutas: メルマガ (.ac1), デコメール (.ac9), マイクーポン (.ac7),
+     * フォロー (.ac10), 自動 (.ac11), アンケート (.ac8) o 返信メール de お客様アンケート (anketo2.reply, .ac109)
+     */
+    public static function activeAc(string $mailTypeOrPrefix): string
     {
-        return match (self::family($mailType)) {
+        $prefix = in_array($mailTypeOrPrefix, ['anketo2.reply', 'anketo.mail', 'coupons.mail'], true) ? $mailTypeOrPrefix : self::family($mailTypeOrPrefix);
+
+        return match ($prefix) {
             'deco' => '.ac9',
             'coupons.mail' => '.ac7',
             'follow' => '.ac10',
             'auto' => '.ac11',
+            'anketo.mail' => '.ac8',
+            'anketo2.reply' => '.ac109',
             default => '.ac1',
         };
     }

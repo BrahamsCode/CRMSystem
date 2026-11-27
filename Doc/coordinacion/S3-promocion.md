@@ -73,6 +73,8 @@ Ver `Doc/diseno/promocion.md` §6. Las principales: controladores en `Admin/Prom
 
 ## Hecho
 
+- 2026-11-27 — M3 compatible con F6 de S4: `carry` acepta escalares (AnketoMailTest); pedidos S4: `family()`/`activeAc()` con `anketo` (`anketo.mail`, .ac8) y prefijo por ruta `->defaults('mailFamily', 'anketo2.reply')` (.ac109); `MailRegistrar` marca la encuesta 発行済 (alta y edición, cupón en attached_cd); la edición/actualización de un programado toma el tipo de su fila y una アンケート ya no pierde su encuesta al quitar el cupón (bug del legacy).
+
 - 2026-11-27 — M3: 自動 / フォロー (condiciones, envío, programados con 起動/停止, edición, 例外顧客).
 
 - 2026-11-27 — Pedidos S0: rama de tablet de ポイント仕様管理 (`roid.popUp` a las plantillas de category3 y `roid.windowClose`); `CustomerPushService::send()` (push a un cliente: push_master + push_notifications opcional + aviso g-api) para S5.

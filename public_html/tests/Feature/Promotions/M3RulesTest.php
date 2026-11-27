@@ -133,3 +133,27 @@ it('busca socios para el 例外顧客 de follow/auto y pinta los elegidos', func
         ->assertSee('<div id="member_2">', false)->assertSee('【A002】&emsp;佐藤 花子', false);
     $this->get(route('legacy.promocion.inc.ajax_get_shop_data'))->assertSee('<option value="2" >支店</option>', false);
 });
+
+it('アンケート: el registro marca la encuesta emitida y la edición conserva encuesta y cupón (pedidos de S4)', function () {
+    DB::table('tb_c3_anketo_cate')->insert(['cd' => 10, 'name' => '満足度', 'disp_flg' => '1', 'attached_cd' => 5]);
+    DB::table('tb_base_system_child')->insert(['cd' => 32, 'tb_base_system_cd' => 3, 'system_name' => 'マイクーポン管理', 'system_flg' => '1']);
+    DB::table('tb_mycoupon_master')->insert(['cd' => 5, 'tb_shop_cd' => -1, 'title' => '回答特典', 'comment' => '10%OFF', 'disp_flg' => '1']);
+    $uniqid = app(\App\Services\Promotions\MailAudience::class)->storeRaw("WHERE disp_flg = '1'", null, '');
+
+    $mail = app(\App\Services\Promotions\MailRegistrar::class)->register('anketo',
+        ['title' => 'Q', 'naiyou' => '本文', 'send_flg' => '0', 'nen' => '2026', 'tuki' => '12', 'hi' => '01', 'jikan' => '09', 'fun' => '00',
+            'hakkou_cd' => '10', 'get_coupon_cd' => '5'], $uniqid, '1');
+    $cate = DB::table('tb_c3_anketo_cate')->where('cd', 10)->first();
+    expect([(int) $mail->type_data_cd, $cate->hyouji_flg, (int) $cate->attached_cd])->toBe([10, '1', 5])->and($cate->hakkou_date)->not->toBeNull();
+
+    $page = $this->get(route('admin.promocion.mail.edit', ['mailmagcd' => $mail->cd]))->assertOk()
+        ->assertSee('name="get_coupon_cd" value="5"', false)->assertSee('【回答特典', false);
+    preg_match('/name="search_uniqid" value="(\w{16})"/', $page->getContent(), $m);
+
+    // Quitar el cupón ya no borra la encuesta del envío (el legacy ponía type_data_cd = NULL)
+    $this->post(route('admin.promocion.mail.update'), ['mailmagcd' => $mail->cd, 'search_uniqid' => $m[1], 'mail_type' => 'anketo', 'hakkou_cd' => '10',
+        'get_coupon_cd' => '', 'title' => 'Q', 'naiyou' => '本文', 'nen' => '2026', 'tuki' => '12', 'hi' => '02', 'jikan' => '09', 'fun' => '00', 'mail_send_verify' => '7'])->assertOk();
+    expect((int) DB::table('mailmag_master')->where('cd', $mail->cd)->value('type_data_cd'))->toBe(10)
+        ->and(\App\Http\Controllers\Admin\Promotions\MailController::activeAc('anketo2.reply'))->toBe('.ac109')
+        ->and(\App\Http\Controllers\Admin\Promotions\MailController::activeAc('anketo'))->toBe('.ac8');
+});
