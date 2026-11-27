@@ -43,4 +43,15 @@ Route::prefix('system/category3')->name('promocion.')->group(function () {
             ->name(str_replace('/', '.', $file))->defaults('target', "admin.promocion.$target");
     }
     Route::post('anketo2/ajax_set_anketo.php', [\App\Http\Controllers\Admin\Promotions\AnketoCateController::class, 'setActive'])->name('anketo2.ajax_set_anketo');
+
+    // --- F4 (S2) ---
+    // ポイント集計 / ポイント一括付与: GET de las .php del menú → pantallas nuevas y el AJAX que llama el JS
+    Route::get('point/point_aggregate.php', [\App\Http\Controllers\Admin\Promotions\PointAggregateController::class, 'legacy'])->name('point.point_aggregate');
+    Route::post('point/ajax_point_aggregate.php', [\App\Http\Controllers\Admin\Promotions\PointAggregateController::class, 'data'])->name('point.ajax_point_aggregate');
+    Route::get('point/csv_grant_points.php', [\App\Http\Controllers\Admin\Promotions\PointGrantController::class, 'legacy'])->name('point.csv_grant_points');
+    // --- fin F4 ---
+
+    // --- F5 (S2) ---
+
+    // --- fin F5 ---
 });

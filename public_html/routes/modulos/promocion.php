@@ -153,4 +153,16 @@ Route::prefix('promocion')->name('promocion.')->group(function () {
             Route::post('anketo_reply_new_send', 'replyStore')->name('store');
         });
     });
+
+    // --- F4 (S2) ---
+    // ポイント集計 y ポイント一括付与 (point): pantalla + AJAX (también en la URL literal del legacy) y subida del CSV
+    Route::get('point/point_aggregate', [\App\Http\Controllers\Admin\Promotions\PointAggregateController::class, 'index'])->name('points.aggregate');
+    Route::post('point/ajax_point_aggregate', [\App\Http\Controllers\Admin\Promotions\PointAggregateController::class, 'data'])->name('points.aggregate.ajax');
+    Route::get('point/csv_grant_points', [\App\Http\Controllers\Admin\Promotions\PointGrantController::class, 'index'])->name('points.grant-csv');
+    Route::post('point/csv_grant_points', [\App\Http\Controllers\Admin\Promotions\PointGrantController::class, 'store'])->name('points.grant-csv.store');
+    // --- fin F4 ---
+
+    // --- F5 (S2) ---
+
+    // --- fin F5 ---
 });

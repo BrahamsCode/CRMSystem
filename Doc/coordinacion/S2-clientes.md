@@ -7,7 +7,7 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — Todas las filas del diseño están hechas o descartadas. Esperar encargos de S0 (QA, ajustes, responsive al final).
+## Próximo paso — F4 (ポイント集計, 一括付与 CSV, comandos `promocion:register-point`/`paid-member-point`) y F5 (スタンプ: デザイン, 仕様, ルール, クーポンお知らせ, plantillas, comandos) dentro de `promocion` (encargo de S0, 2026-11-27; modelos y servicios de S3 sin tocar, bloques `F4 (S2)`/`F5 (S2)`, proveedor `PromocionFidelizacionServiceProvider`).
 
 ## Tarea anterior — Diseño (sin código, HECHO)
 

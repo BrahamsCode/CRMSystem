@@ -138,8 +138,8 @@ return [
             'links' => [
                 ['label' => 'ポイント仕様管理', 'url' => "$p/point/point_config", 'can' => 'kengen.1037.2'],
                 ['label' => 'ポイントルール一覧', 'url' => "$p/point/point_rules_list", 'can' => ['promocion.point-rules.enabled']],
-                ['label' => 'ポイント集計', 'url' => '/system/category3/point/point_aggregate.php', 'can' => 'promocion.beacon.enabled'],
-                ['label' => 'ポイント一括付与', 'url' => '/system/category3/point/csv_grant_points.php', 'can' => 'promocion.app-ext-shop.enabled'],
+                ['label' => 'ポイント集計', 'url' => "$p/point/point_aggregate", 'can' => 'promocion.beacon.enabled'],
+                ['label' => 'ポイント一括付与', 'url' => "$p/point/csv_grant_points", 'can' => 'promocion.app-ext-shop.enabled'],
             ],
         ],
         [

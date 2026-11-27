@@ -261,13 +261,13 @@ Decisiones F6 (S4, 2026-11-27):
 | `point_rules_list.php` | ポイントルール一覧 | `point-rules.index` | `PointRuleController@index` | L tb_point_rules, tb_shop | pendiente |
 | `point_rules_new.php`, `point_rules_update.php`, `_frm`, `_errchk`, `_register` | ポイントルール新規 / 修正 | `point-rules.create/store/edit/update` | `PointRuleController@*` | E tb_point_rules, hatuban; L tb_kingaku_rank_master, tb_raiten_rank_master | pendiente |
 | `point_rules_delete.php` | (削除) | `point-rules.destroy` | `PointRuleController@destroy` | E tb_point_rules (DELETE físico, como el legacy) | pendiente |
-| `point_aggregate.php`, `ajax_point_aggregate.php` | ポイント集計 | `points.aggregate`, `points.aggregate.ajax` | `PointAggregateController@index/data` | L tb_point_log, tb_shop | pendiente |
-| `csv_grant_points.php` | ポイント一括付与 | `points.grant-csv` (GET/POST), `points.grant-csv.base` | `PointGrantController@*` | L tb_customer; E tb_customer_point, tb_point_log | pendiente |
+| `point_aggregate.php`, `ajax_point_aggregate.php` | ポイント集計 | `points.aggregate`, `points.aggregate.ajax` | `PointAggregateController@index/data` | L tb_point_log, tb_shop | hecho (F4, S2): el no master ve su tienda (el SQL del legacy fallaba sin espacio antes de `ORDER BY`) |
+| `csv_grant_points.php` | ポイント一括付与 | `points.grant-csv` (GET; `?mode=base_csv` = ひな形), `points.grant-csv.store` | `PointGrantController@index/store` | L tb_customer; E tb_customer_point, tb_point_log | hecho (F4, S2): con `PointService` en una transacción; una fila inválida no deja ningún punto (el legacy dejaba los de las filas anteriores) |
 | `point_alert_mail_template_entry.php`, `_register.php` | ポイント有効期限切れ前通知 テンプレート | `points.alert-template` | `PointTemplateController@alert` | L/E admin_master, contents_master | pendiente |
 | `point_shikkou_mail_template_entry.php`, `_register.php` | ポイント失効通知 テンプレート | `points.shikkou-template` | `PointTemplateController@shikkou` | L/E admin_master | pendiente |
 | `point_shikkou_alert_mail_template_entry.php`, `_register.php` | 失効前通知 テンプレート (múltiple) | `points.shikkou-alert-template` | `PointTemplateController@shikkouAlert` | L/E point_shikkou_alert | pendiente |
 | `sendPointShikkouMail.php`, `sendPointShikkouAlertMail.php`, `sendPointShikkouAlertMailMultiple.php` | (cron) | — | comandos `promocion:point-*` | E tb_customer_point, tb_point_log, push_master | descartado: no son vistas; Scheduler |
-| `setRegisterPoint.php`, `setPaidMemberPoint.php` | (cron) | — | comandos `promocion:register-point`, `promocion:paid-member-point` | E tb_customer_point, tb_point_log, push_master | descartado: no son vistas; Scheduler |
+| `setRegisterPoint.php`, `setPaidMemberPoint.php` | (cron) | — | comandos `promocion:register-point`, `promocion:paid-member-point` | E tb_customer_point, tb_point_log, push_master | hecho (F4, S2): comandos `promocion:register-point` (cada 5 min, con ポイント管理 y `application_use_flg = 1`) y `promocion:paid-member-point` (10:00 Asia/Tokyo, con ポイント管理 y `app_layout_mode = 1`) en `PromocionFidelizacionServiceProvider`; clases `GrantRegisterPointsCommand`/`GrantPaidMemberPointsCommand` |
 | `mailCommon.php`, `inc/page.php` | fragmento | — | `LoyaltyMail` (Mailable) | — | descartado: no son vistas |
 
 #### スタンプ管理 — `stamp/`
