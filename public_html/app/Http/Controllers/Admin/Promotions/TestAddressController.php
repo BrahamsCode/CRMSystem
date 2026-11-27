@@ -9,6 +9,7 @@ use App\Models\Shop;
 use App\Models\Staff;
 use App\Services\Promotions\RankOrder;
 use App\Services\Promotions\StaffContext;
+use App\Services\Promotions\Form2Db;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -68,15 +69,15 @@ class TestAddressController extends Controller
         DB::transaction(function () use ($request, $shopCd) {
             match ($request->input('act')) {
                 'new' => TestMailAddress::create([
-                    'name' => (string) $request->input('name'),
-                    'email' => (string) $request->input('email'),
+                    'name' => Form2Db::clean($request->input('name')),
+                    'email' => Form2Db::clean($request->input('email')),
                     'tb_shop_cd' => $shopCd,
                     'rank' => (int) TestMailAddress::query()->where('disp_flg', '1')->where('tb_shop_cd', $shopCd)->max('rank') + 1,
                     'disp_flg' => '1',
                 ]),
                 'up' => TestMailAddress::query()->whereKey($request->integer('cd'))->firstOrFail()->update([
-                    'name' => (string) $request->input('name'),
-                    'email' => (string) $request->input('email'),
+                    'name' => Form2Db::clean($request->input('name')),
+                    'email' => Form2Db::clean($request->input('email')),
                     'tb_shop_cd' => $shopCd,
                     'disp_flg' => '1',
                 ]),

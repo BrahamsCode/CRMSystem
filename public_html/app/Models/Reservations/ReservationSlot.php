@@ -13,7 +13,8 @@ use Illuminate\Support\Carbon;
 
 /**
  * Turno de atención de un empleado en un día (受付日, `tb_yoyaku_uketsuke_day`).
- * `moushikomi_date` 'Y/m/d'; `start_time`/`end_time` (y descanso) en segundos desde las 00:00.
+ * `moushikomi_date` 'Y/m/d'; `start_time`/`end_time` en segundos desde las 00:00 (pueden pasar de 86400);
+ * `start_break_time`/`end_break_time`: texto 'HH:MM' unidos por '<>' (uno por descanso), como los guarda el legacy.
  * La tienda sale de `tb_staff.shop_cd`.
  */
 class ReservationSlot extends LegacyModel

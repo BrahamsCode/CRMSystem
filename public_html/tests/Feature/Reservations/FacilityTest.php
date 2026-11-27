@@ -1,11 +1,13 @@
 <?php
 
+require_once __DIR__ . '/helpers.php';
+
 use App\Models\Reservations\Facility;
 
 // 設備管理 (legacy: setsubi_new.php, setsubi_register.php)
 
 beforeEach(function () {
-    \Tests\Feature\Reservations\ScreenSetup::boot();
+    reservasLogin();
 });
 
 it('carga la pantalla de la tienda con su lista', function () {

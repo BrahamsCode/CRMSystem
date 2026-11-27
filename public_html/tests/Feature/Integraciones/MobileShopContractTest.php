@@ -14,9 +14,8 @@ const MS_FIXTURES = __DIR__.'/../../Fixtures/integraciones';
 
 /** Casos que todavía no tienen endpoint en Laravel (o se comparan aparte) */
 const MS_PENDING = [
-    // Necesitan el servicio de puntos de S3 (setPoint)
+    // Necesitan exchangeSalesItem() de S3, aún no integrado
     'ms_point_exchange_not_exchangeable', 'ms_point_exchange_missing', 'ms_point_exchange_ok',
-    'ms_point_use_missing', 'ms_point_use_ok', 'ms_point_use_insufficient',
 ];
 
 beforeEach(function () {
@@ -99,6 +98,25 @@ it('reproduce byte a byte las respuestas del legacy de /api/* (salvo mpa_*)', fu
 
     expect($compared)->toBeGreaterThan(30);
 })->skip(fn () => ! class_exists(\Firebase\JWT\JWT::class), 'falta firebase/php-jwt (pedido a S1)');
+
+it('point_use resta puntos y deja el rastro del legacy en tb_point_log (terminal -3, staff -1)', function () {
+    $auth = json_decode($this->call('POST', '/api/auth', [], [], [], ['CONTENT_TYPE' => 'application/json'],
+        json_encode(['user_id' => 'fixture-user', 'password' => 'fixture-pass']))->getContent());
+
+    $this->call('POST', '/api/mobile_shop/point_use', [], [], [],
+        ['HTTP_AUTHORIZATION' => 'Bearer '.$auth->jwt, 'CONTENT_TYPE' => 'application/json'],
+        json_encode(['customer_id' => 1000001, 'shop_cd' => 1, 'use_points' => 10]))
+        ->assertOk();
+
+    $log = DB::table('tb_point_log')->where('action_flg', 'api:point_use')->first();
+
+    expect(DB::table('tb_customer_point')->where('tb_customer_cd', 1609897927001809158)->value('service_point'))->toBe(490)
+        ->and($log->tb_terminal_cd)->toBe(-3)
+        ->and($log->tb_staff_cd)->toBe(-1)
+        ->and($log->tb_shop_cd)->toBe(1)
+        ->and($log->shori_mae_point)->toBe(500)
+        ->and($log->shouhi_point)->toBe(10);
+});
 
 it('responde 404 JSON a una ruta /api desconocida (el legacy daba un fatal 500)', function () {
     $this->get('/api/nope')

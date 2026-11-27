@@ -2,6 +2,7 @@
 
 namespace App\Services\Terminales;
 
+use App\Support\LegacyText;
 use App\Models\Terminales\SignageDisplay;
 use App\Models\Terminales\SignageProgram;
 use Closure;
@@ -93,9 +94,10 @@ class SignageDisplayService
             // El formulario no envía terminal_id ni terminal_type: el legacy los deja vacíos al guardar
             'terminal_id' => '',
             'terminal_type' => '',
-            'tb_c7_movie_program_cds' => (string) ($input['tb_c7_movie_program_cds'] ?? ''),
-            'comment' => (string) ($input['comment'] ?? ''),
-            'name' => (string) $input['name'],
+            // Como display_register.php: todo el texto pasa por get_form()
+            'tb_c7_movie_program_cds' => LegacyText::form($input['tb_c7_movie_program_cds'] ?? ''),
+            'comment' => LegacyText::form($input['comment'] ?? ''),
+            'name' => LegacyText::form($input['name']),
         ]);
 
         DB::transaction(function () use ($display, $isNew, $input) {

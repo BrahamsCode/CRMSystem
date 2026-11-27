@@ -47,8 +47,6 @@ class AppImageScreen
         $data = [
             'section' => $section,
             'applicationUseFlg' => (int) AdminMaster::current()->application_use_flg === 1,
-            // El legacy no define $site_name en esta pantalla: el <title> queda 「ショップページ設定 - 」
-            'siteName' => '',
             'shops' => $shops,
             'mypageConfig' => $mypageConfig,
             'slots' => [],

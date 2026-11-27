@@ -1,0 +1,24 @@
+<?php
+
+/*
+ * Menú lateral de 業務支援管理 (category5), copia de system/inc/left_navi5.php.
+ * Formato: Doc/contratos/NUCLEO.md, "Menú lateral". Cada bloque sale solo si su tb_base_system_child
+ * está activo. Los enlaces se agregan a medida que S5 implementa cada pantalla (las demás siguen
+ * en el diseño: Doc/diseno/operaciones-integraciones.md §1).
+ */
+return [
+    'category' => 5,
+    'blocks' => [
+        [
+            'title' => 'スタッフ管理',
+            'image' => 'ln_t5_1.gif',
+            'ac' => 'ac1',
+            'child' => 'スタッフ管理',
+            'links' => [
+                ['label' => 'スタッフグループ設定', 'url' => '/admin/operaciones/staff-groups', 'can' => 'nucleo.master'],
+                ['label' => 'スタッフ検索項目設定', 'url' => '/admin/operaciones/staff-fields'],
+                ['label' => 'インフォメーション管理', 'url' => '/admin/operaciones/information'],
+            ],
+        ],
+    ],
+];

@@ -7,9 +7,9 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — オススメ, 求人 y ガチャリン (submódulos 2–4)
+## Próximo paso — 6 `digitalsignage` HTML5 (reproductor con el mismo contrato)
 
-Hecho: マイコレ y 電子看板 completos (controladores, rutas `admin.mypage.*`, `admin.terminales.*`, `legacy.mypage.apli-file-upload`, pruebas). Pendiente de S1 para verlos de verdad: `layouts.legacy`, login con `session('shop_cd')`, CSRF de jQuery. Las pruebas usan un layout mínimo de `tests/Feature/Terminales/fixtures/` y saltan `auth:admin`. Siguiente: オススメ (+push), 求人 + 職種 (+`writeFloormap`), ガチャリン (`LotteryConfig` sobre `contents_master`).
+Hecho: submódulos 1–5 y menús (`config/menu/mypage.php`, `terminales.php`). Siguiente: reproductor `/digitalsignage/?shop_cd=&display_cd=` en HTML5 (XML del programa, sondeos `ajax_*`, cupones impresos con `CouponService` de S3, ruleta y tragaperras) en `routes/publico/senalizacion.php`. Luego 9 ペーパーサイネージ y 10 ICカード.
 
 ## Tarea anterior — Diseño (sin código, hecho)
 
@@ -41,7 +41,13 @@ Ver diseño §5. A S0: BD `admin` de `signage/` (no está en el esquema); GoTel/
 
 ## Decisiones
 
-- マイコレ: main/thumbnail por `shop_cd` (lo que lee `mpa_corresponding`); cover se compacta moviendo imagen+enlace+banderas juntos; temporales en `hp/uploads/c6/apli_temp/`. 電子看板: 最後に追加 = max(rank)+1 y renumera; ▲▼ sin tocar `update_date`; los materiales guardan `tb_display_cd`; el borrado de un display no arrastra sus materiales (a decidir). `$siteName` provisional en `TerminalesServiceProvider` (tb_office cd=1).
+- Menús: solo entradas vivas; ガチャリン sin entrada (comentada en left_navi6); オススメ con etiqueta fija (el legacy usa el nombre de tb_mobile_navi); ペーパーサイネージ/ICカード/ビーコン con URL legacy hasta migrarse.
+
+- コメント HOME de マイコレ: sin get_form2 (mobile_mycolle_edit.php no lo usa); `"`→`'` y serialize, se imprime con `{{ }}`. ガチャリン: premios en `field='rate'` (float_data %, int_data 本数), `prize_count` = contador del día.
+
+- Texto de formularios: 電子看板, 求人 y 職種 usan `get_form()` → `LegacyText::form()`; オススメ y マイコレ `get_form2()` → `LegacyText::input()`; ガチャリン `form2Db`. Pendiente de que S1 integre `LegacyText`/`LegacyCheck`. `SignageFeedBuilder` sigue escapando para XML: los textos de get_form() no llegan escapados a la BD.
+
+- マイコレ: main/thumbnail por `shop_cd` (lo que lee `mpa_corresponding`); cover se compacta moviendo imagen+enlace+banderas juntos; temporales en `hp/uploads/c6/apli_temp/`. 電子看板: 最後に追加 = max(rank)+1 y renumera; ▲▼ sin tocar `update_date`; los materiales guardan `tb_display_cd`; el borrado de un display no arrastra sus materiales: comportamiento del legacy que los deja huérfanos, se mantiene por paridad (S0) y queda para revisar en Japón.
 
 - Vistas: `content` = interior de `<div class="main">`. 電子看板 sin pantallas de confirmación (el legacy no las tiene: `processing` con meta Refresh); 放映素材 usa `layouts.legacy-popup`. マイコレ renderiza solo la sección visible. Bugs corregidos/conservados: ver resúmenes en el commit de vistas.
 
@@ -52,6 +58,10 @@ Ver diseño §5. A S0: BD `admin` de `signage/` (no está en el esquema); GoTel/
 - Config de マイコレ y ガチャリン en `contents_master` (modelo de S1) vía servicios de S4; `mypage_config` sigue con `serialize()` (lo leen `mpa_*`).
 
 ## Hecho
+
+- 2026-11-27 Menús laterales de category6/7 con Gates `mypage.mycolle` (app activa + 1035) y `terminales.paper-signage` (UI CRM2): suite 310 verde.
+
+- 2026-11-27 オススメ (+push), 求人 + 職種 (+floormap), ガチャリン (`LotteryConfig`, filas `rate`/`prize_count` como lee S3), LegacyText por pantalla, pruebas con login real: suite 308 verde.
 
 - 2026-11-27 マイコレ (5 secciones + `ajax_apliFileUpload.php`) y 電子看板 (素材/プログラム/ディスプレイ, ▲▼, XML al guardar): suite 214 verde.
 

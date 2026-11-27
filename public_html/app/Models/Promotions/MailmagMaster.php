@@ -19,6 +19,9 @@ class MailmagMaster extends LegacyModel
 
     protected $table = 'mailmag_master';
 
+    /** El legacy numera con hatuban.koumoku = 'mailmag' (mail_send_frm.php) */
+    protected string $hatubanKoumoku = 'mailmag';
+
     protected $casts = [
         'cd' => 'integer',
         'type_data_cd' => 'integer',

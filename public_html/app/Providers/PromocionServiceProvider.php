@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Services\Customers\VisitLoyalty;
+use App\Services\Promotions\GApiPushTrigger;
 use App\Services\Promotions\NullPosGateway;
 use App\Services\Promotions\PosGateway;
 use App\Services\Promotions\PromocionVisitLoyalty;
+use App\Services\Promotions\PushTrigger;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\ServiceProvider;
 
@@ -38,6 +40,9 @@ class PromocionServiceProvider extends ServiceProvider
     {
         // POS fuera de alcance (CONVENCIONES §3 y §4)
         $this->app->bind(PosGateway::class, NullPosGateway::class);
+
+        // Aviso al servidor de push de la app (g-api), mismo contrato que Push.php::exec
+        $this->app->bind(PushTrigger::class, GApiPushTrigger::class);
 
         // Sellos y puntos de la visita para VisitService de S2 (S2 enlaza la nula con bindIf)
         $this->app->bind(VisitLoyalty::class, PromocionVisitLoyalty::class);

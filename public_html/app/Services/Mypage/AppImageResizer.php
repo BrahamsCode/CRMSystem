@@ -62,6 +62,39 @@ class AppImageResizer
         return $this->encode($target, $extension === 'gif' ? 'gif' : 'jpg');
     }
 
+    /**
+     * Escala conservando proporción como `convert -resize`: con $height null, a $width de ancho
+     * (`-resize 480x`); con $height, para caber en $width×$height (`-resize 240x240`). Amplía o reduce.
+     * $format: 'jpg' o 'gif'.
+     */
+    public function scale(string $contents, string $extension, int $width, ?int $height, string $format): ?string
+    {
+        $source = $this->load($contents, $extension);
+        if ($source === null) {
+            return null;
+        }
+
+        $scale = $width / imagesx($source);
+        if ($height !== null) {
+            $scale = min($scale, $height / imagesy($source));
+        }
+        $targetWidth = max(1, (int) round(imagesx($source) * $scale));
+        $targetHeight = max(1, (int) round(imagesy($source) * $scale));
+
+        $target = $this->canvas($targetWidth, $targetHeight, $format === 'gif');
+        imagecopyresampled($target, $source, 0, 0, 0, 0, $targetWidth, $targetHeight, imagesx($source), imagesy($source));
+
+        return $this->encode($target, $format);
+    }
+
+    /** Ancho de la imagen, o null si no es una imagen */
+    public function width(string $contents): ?int
+    {
+        $size = @getimagesizefromstring($contents);
+
+        return $size ? (int) $size[0] : null;
+    }
+
     private function load(string $contents, string $extension): ?GdImage
     {
         $image = @imagecreatefromstring($contents);

@@ -8,6 +8,7 @@ use App\Services\Integraciones\MobileShop\InvalidFilterException;
 use App\Services\Integraciones\MobileShop\MobileShopApi;
 use App\Services\Integraciones\MobileShop\MobileShopClient;
 use App\Services\Integraciones\MobileShop\MobileShopJwt;
+use App\Services\Promotions\PointService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -152,6 +153,49 @@ class MobileShopController extends Controller
         }
 
         return $this->success($claims, $data, $this->api->currentPoint($customerCd));
+    }
+
+    /**
+     * POST /api/mobile_shop/point_use: resta puntos con el servicio de S3 (Point::setPoint del legacy),
+     * marcando el origen como el legacy: tb_terminal_cd = -3, tb_staff_cd = -1, action_flg 'api:point_use'.
+     * Responde el resultado de setPoint sin envoltorio.
+     */
+    public function pointUse(Request $request, PointService $points): Response
+    {
+        $claims = $this->claims($request);
+        if ($claims instanceof Response) {
+            return $claims;
+        }
+
+        $data = $this->body($request);
+        $errors = [];
+        if (! $this->validId($data->customer_id ?? null)) {
+            $errors[] = 'IDがありません。';
+        }
+        if (! $this->validId($data->shop_cd ?? null)) {
+            $errors[] = '店舗コードがありません。';
+        }
+        if (! $this->validId($data->use_points ?? null)) {
+            $errors[] = 'ポイント指定がありません。';
+        }
+        if ($errors) {
+            return LegacyJson::response(['status' => 'ng', 'message' => implode(' ', $errors)]);
+        }
+
+        $customerCd = $this->api->customerCdById($data->customer_id);
+        if (! $customerCd) {
+            return LegacyJson::response(['status' => 'ng', 'message' => '顧客コードが見つかりません。']);
+        }
+
+        return LegacyJson::response($points->setPoint(
+            (int) $data->use_points,
+            PointService::SUBTRACT,
+            (int) $data->shop_cd,
+            -1,
+            $customerCd,
+            'api:point_use',
+            -3,
+        ));
     }
 
     /** GET /api/mobile_shop/sales_items[/<cd>] */

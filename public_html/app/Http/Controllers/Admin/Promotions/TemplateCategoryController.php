@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Promotions\MailTemplateCategoryRequest;
 use App\Models\Promotions\MailTemplateCategory;
 use App\Services\Promotions\RankOrder;
+use App\Services\Promotions\Form2Db;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -47,7 +48,7 @@ class TemplateCategoryController extends Controller
                 ? MailTemplateCategory::withDeleted()->findOrFail($request->integer('cd'))
                 : new MailTemplateCategory;
 
-            $category->fill(['name' => (string) $request->input('name'), 'disp_flg' => '1', 'hyouji_flg' => '1']);
+            $category->fill(['name' => Form2Db::clean($request->input('name')), 'disp_flg' => '1', 'hyouji_flg' => '1']);
             $category->save();
 
             if ($category->rank === null) {

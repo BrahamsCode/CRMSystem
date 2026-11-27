@@ -1,11 +1,13 @@
 <?php
 
+require_once __DIR__ . '/helpers.php';
+
 use App\Models\Reservations\ReservationMenuCategory;
 
 // 予約項目カテゴリ管理 (legacy: yoyaku_koumoku_category.php, _register.php, ajax_yoyaku_koumoku_category.php)
 
 beforeEach(function () {
-    \Tests\Feature\Reservations\ScreenSetup::boot();
+    reservasLogin();
 });
 
 function menuCategoryRow(string $name, int $rank, string $hyouji = '1'): ReservationMenuCategory

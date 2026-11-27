@@ -5,6 +5,7 @@ namespace App\Services\Promotions;
 use App\Models\AdminMaster;
 use App\Models\Promotions\CustomerPoint;
 use App\Models\Promotions\PointLog;
+use App\Models\Sales\SalesItem;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -58,7 +59,8 @@ class PointService
 
             PointLog::create([
                 'tb_shop_cd' => $shopCd,
-                'tb_staff_cd' => $staffCd,
+                // El legacy guarda NULL si el personal es 0 o vacío
+                'tb_staff_cd' => $staffCd ?: null,
                 'tb_customer_cd' => $customerCd,
                 'tb_terminal_cd' => $terminalCd,
                 'action_flg' => $actionFlg ?: null,
@@ -69,6 +71,43 @@ class PointService
 
             return ['status' => 'ok', 'res' => $points . ($type === self::ADD ? 'ポイントを追加しました。' : 'ポイントを削減しました。')];
         });
+    }
+
+    /**
+     * Canje de un producto por puntos (Point::exchangeSalesItem): el producto debe ser canjeable
+     * (is_exchangeable_of_point = 1, number_of_points_exchanged >= 0), la tienda estar en
+     * available_shop_cds y el cliente tener saldo; resta con action_flg `exchangeSalesItem:<cd>:<nombre>`
+     * y personal 0 (NULL). Mismas respuestas que el legacy: ok/res o ng/res (ng/message si setPoint no puede restar).
+     *
+     * @return array{status: string, res?: string, message?: string}
+     */
+    public function exchangeSalesItem(int|string $customerCd, int|string $salesItemCd, int|string $shopCd): array
+    {
+        $positive = fn ($v) => preg_match('/^[1-9][0-9]*$/', (string) $v) === 1;
+        if (! $positive($customerCd) || ! $positive($salesItemCd) || ! $positive($shopCd)) {
+            return ['status' => 'ng', 'res' => '不正なリクエスト。'];
+        }
+
+        if (! DB::table('tb_customer')->where('cd', (int) $customerCd)->exists()) {
+            return ['status' => 'ng', 'res' => '顧客情報がありません。'];
+        }
+
+        // SalesItem::find del legacy no filtra borrados: sin scopes globales
+        $item = SalesItem::query()->withoutGlobalScopes()->find((int) $salesItemCd);
+        if (! $item || (int) $item->is_exchangeable_of_point !== 1 || (int) $item->number_of_points_exchanged < 0) {
+            return ['status' => 'ng', 'res' => '交換可能商品ではありません。'];
+        }
+
+        if (! in_array((int) $shopCd, $item->availableShopCds(), true)) {
+            return ['status' => 'ng', 'res' => '使用可能な店舗ではありません。'];
+        }
+
+        $needed = (int) $item->number_of_points_exchanged;
+        if ($this->balance((int) $customerCd) < $needed) {
+            return ['status' => 'ng', 'res' => 'ポイントが不足です。'];
+        }
+
+        return $this->setPoint($needed, self::SUBTRACT, (int) $shopCd, 0, (int) $customerCd, "exchangeSalesItem:{$salesItemCd}:{$item->name}");
     }
 
     /** Saldo actual (tb_customer_point.service_point) */

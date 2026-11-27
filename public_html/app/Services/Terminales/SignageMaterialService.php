@@ -2,6 +2,7 @@
 
 namespace App\Services\Terminales;
 
+use App\Support\LegacyText;
 use App\Models\Terminales\SignageDisplay;
 use App\Models\Terminales\SignageMaterial;
 use Closure;
@@ -94,12 +95,13 @@ class SignageMaterialService
             ? $input['categorize_value_0_new']
             : ($input['categorize_value_0'] ?? '');
 
+        // Como screen_saver_register.php: todo el texto pasa por get_form()
         $material->fill([
-            'title' => (string) $input['title'],
-            'categorize_value_0' => (string) $category,
-            'comment' => (string) $input['comment'],
-            'play_frame_sec' => (string) ($input['play_frame_sec'] ?? ''),
-            'filetype' => (string) $input['filetype'],
+            'title' => LegacyText::form($input['title']),
+            'categorize_value_0' => LegacyText::form($category),
+            'comment' => LegacyText::form($input['comment']),
+            'play_frame_sec' => LegacyText::form($input['play_frame_sec'] ?? ''),
+            'filetype' => LegacyText::form($input['filetype']),
             'disp_flg' => '1',
         ]);
         if (! empty($input['tb_display_cd'])) {
