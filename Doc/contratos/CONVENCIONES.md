@@ -21,7 +21,7 @@
 
 ## 1. Versiones
 
-- **PHP 8.5** (Docker `php:8.5-fpm-trixie`), **Laravel 13** (`laravel/framework ^13.0`, `php: ^8.3` en `composer.json`), PostgreSQL 18, Pest, Vite + Tailwind 4.
+- **PHP 8.5** (Docker `php:8.5-fpm-trixie`), **Laravel 13** (`laravel/framework ^13.0`, `php: ^8.3` en `composer.json`), PostgreSQL 18, Pest. UI con los CSS y JS del legacy (sección 0); Vite/Tailwind solo para lo nuevo, si hace falta.
 - Solo **S1** cambia `composer.json`, `composer.lock`, `package.json`, `package-lock.json`, `config/`, `bootstrap/`. Otra sesión que necesite un paquete lo pide a S0.
 
 ## 2. Propiedad de carpetas
@@ -66,14 +66,12 @@ Un modelo que necesitan varios módulos (por ejemplo `Customer`) lo **lee** cual
 
 - Controladores delgados; la lógica en `app/Services/<Modulo>/` o `app/Actions/<Modulo>/`. Validación en Form Requests.
 - Textos de pantalla en japonés directo en el Blade (copiados del legacy) o en `lang/ja`. Nada de texto japonés suelto en los controladores.
-- Configuración propia de un módulo (categorías de `contents_master`/`admin_master` que solo usa ese módulo): tabla tipada del módulo `<algo>_settings` (fila única), no una tabla genérica clave-valor. S1 solo mantiene la configuración global y su importador mapea cada categoría a la tabla del módulo según el diseño de ese módulo.
-- Códigos legacy (`cd`), en este orden:
-  1. **`id = cd`** cuando la tabla nueva sale 1:1 de una sola tabla legacy y su código aparece en un contrato externo (URL de dispositivos o de la app, parámetros o respuestas de API): `shops`, `customers`, `staff`, `visits`, productos, displays y programas de señalización… El importador inserta con `id` explícito y después ajusta la secuencia (`SELECT setval(pg_get_serial_sequence('<tabla>','id'), MAX(id))`). Así los registros nuevos siguen la numeración y el contrato usa siempre `id`.
-  2. **`legacy_cd`** (`bigint`, índice único con su discriminador) solo cuando varias tablas legacy se funden en una (los `cd` chocarían) y el código sigue saliendo en un contrato. Los registros nuevos la dejan en null.
-  3. Todo lo demás: la tabla `legacy_id_map` del importador de S1 (tabla legacy, `cd` → `id` nuevo), sin columna en la tabla destino.
+- Configuración: donde la guarda el legacy (`admin_master`, `contents_master` por `category`/`field`, columnas de `tb_shop`…), leída y escrita con modelos sobre esas tablas. Sin tablas `<algo>_settings` nuevas.
+- Códigos: los `cd` del legacy, numerados con `hatuban` (servicio común de S1). Los contratos externos siguen usando los mismos `cd`: no hay mapeo ni importador.
+- Modelos de tablas legacy compartidas: un modelo por tabla, del dueño de la sección 3. Si dos módulos necesitan la misma `tb_*`, la lee cualquiera, pero solo su dueño cambia el modelo, igual que antes.
 - POS (fuera de alcance): cada módulo que lo necesite declara **su** interfaz en `app/Services/<Modulo>/PosGateway.php`, con los métodos que usa, y la enlaza a una implementación nula en su `<Modulo>ServiceProvider`. No hay una interfaz común: así ningún archivo es compartido.
 - CSV de descarga: Shift_JIS (`SJIS-win`) como el legacy, porque los abren en Excel en Japón. Un helper común lo publica S1; mientras tanto, cada módulo usa uno propio con la misma firma.
-- `hyouji_flg` (表示/非表示, 停止) → `status` (`0` inactivo, `1` activo) de `ESTANDARES_BD.md` §3; no crear un `display_flg` aparte.
+- Banderas del legacy (`hyouji_flg`, `disp_flg`, `*_flg` en texto) tal cual: mismos valores que el legacy, con constantes o enums PHP para nombrarlos.
 - Borrado lógico con `disp_flg = 9`, como el legacy (sección 0). Fechas con Carbon; **nunca** reproducir el `mktime()` que daba 1970.
 - Correo: Mailables (`QUEUE_CONNECTION=sync`: las tablas de Laravel no se usan; los envíos masivos van en comandos del Scheduler). Envíos programados: Scheduler (`routes/console.php`, dueño S1; cada módulo registra sus tareas en un `ServiceProvider` propio en `app/Providers/<Modulo>ServiceProvider.php`).
 - CSV: `StreamedResponse` (reemplaza Flash). PDF: el paquete que defina S1.
