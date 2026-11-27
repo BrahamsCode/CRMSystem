@@ -73,6 +73,7 @@ Recibidos de S0 el 2026-11-26 (para la Cola, después de la Fase 1; S0 los asign
 
 ## Hecho
 
+- **基本情報管理: 機能設定 (2026-11-27):** los 16 bloques de `features_config.php` (admin_master, contents_master, 不達配信 y パスコード de モバイルショップ), igual a la muestra con Playwright; `LegacyText::db()`. Plantillas de caducidad y ajax de vigencia de category0 descartados (sin entrada). `tests/Feature/Base/FeaturesTest.php`. Suite: 444 en verde.
 - **基本情報管理: ショートカット管理 (2026-11-27):** registradas ordenables (AJAX `ajax_bookmark.php`), funciones registrables por categoría con 更新 e 初期化 (SQL literal del legacy). `tests/Feature/Base/BookmarkTest.php`. Suite: 395 en verde.
 - **基本情報管理 1/5 (2026-11-27):** 店舗情報管理 (lista, detalle, alta/edición con 確認, borrar/recuperar) y 店舗グループ en las URL del legacy, verificados con Playwright contra la muestra; comunes `AreaTree`, `LegacyHtml`, `LegacyCheck`, `LegacyText`, `ZipController` (todas las URL zip.php). Pruebas `tests/Feature/Base/`. Suite: 301 en verde.
 

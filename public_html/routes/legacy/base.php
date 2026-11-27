@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\Base\AreaController;
 use App\Http\Controllers\Admin\Base\AuthorityController;
 use App\Http\Controllers\Admin\Base\BookmarkController;
+use App\Http\Controllers\Admin\Base\FeaturesController;
 use App\Http\Controllers\Admin\Base\IndexController;
 use App\Http\Controllers\Admin\Base\OfficeController;
 use App\Http\Controllers\Admin\Base\ShopCategoryController;
@@ -52,6 +53,9 @@ Route::name('base.')->group(function () {
         Route::get('area_confirm.php', 'confirmDelete')->name('confirm');
         Route::post('area_register.php', 'register')->name('register');
     });
+
+    // 機能設定 (cada bloque guarda con su act y se vuelve a pintar)
+    Route::match(['get', 'post'], 'system/category0/config/features_config.php', FeaturesController::class)->name('features');
 
     // ショートカット管理
     Route::prefix('system/category0/config')->name('bookmarks.')->controller(BookmarkController::class)->group(function () {
