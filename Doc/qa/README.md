@@ -31,3 +31,7 @@ S1, 2026-11-27. Comparación con Playwright entre la muestra (`https://developme
 - **サポート** en la cabecera: solo sale en dominios crm-s (`LegacyUi::isCrmsDomain`), igual que en el legacy; en `localhost` no aparece.
 - **Enlace 「ページトップ」 del pie**: apunta a la URL actual; la muestra tiene `/system/category0/` porque Apache añade la barra final, y Laravel sirve `/system/category0`. Mismo destino.
 - **Menús de mantenimiento** (権限項目管理, システム管理, CRM端末管理, データベース管理): solo con IP de desarrollo o con login de soporte, como el legacy. Con `artisan serve`, `STAGE` del contenedor no llega a las peticiones web: para verlos en local hay que ponerlo en el `.env` del worktree.
+
+## PDF con japonés (`LegacyPdf`)
+
+Comprobado a ojo (2026-11-27): HTML con kanji, kana de ancho completo y medio (ｶﾀｶﾅ), ①②③, ￥, 〒 y una tabla, convertido a PNG con `pdftoppm` (poppler) en un contenedor efímero: [capturas/pdf-japones.png](capturas/pdf-japones.png), detalle a 300 dpi en [capturas/pdf-japones-detalle.png](capturas/pdf-japones-detalle.png). Fuente incrustada: `MPDFAA+Sun-ExtA` (CID TrueType, subconjunto, con ToUnicode). Todo se lee bien; solo el kanji de nombres 髙 (U+9AD9) no se distingue de 高 a esa resolución: si las etiquetas DM o los 請求書 necesitan esos caracteres exactos, configurar IPAex (`CRM_PDF_DEFAULT_FONT=ipaexm`, NUCLEO.md §11).
