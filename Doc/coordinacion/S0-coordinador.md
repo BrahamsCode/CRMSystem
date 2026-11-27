@@ -90,6 +90,13 @@
   `laravel13` queda con 360 pruebas en verde. En los worktrees aparecen fallos sueltos (QueryException) en pruebas de otros módulos cuando varias sesiones corren pruebas a la vez o cuando `vendor/` está a medio instalar; al repetir pasan. Se integra con la corrida limpia en `CRMSystem/`.
 - 2026-11-27 (00:35): integrados 基本情報確認・変更, el asistente de primer acceso y 権限管理 (S1), F1a マイクーポン (S3) y el reproductor `digitalsignage` HTML5 (S4). `laravel13` con 383 pruebas en verde. `MobileShopContractTest` falla solo en el worktree de S4 (entorno de ese worktree) y pasa en `CRMSystem/`. S1, S3 y S4 se detuvieron por límite de uso; sus pendientes están en su archivo de estado.
 - 2026-11-27 (00:50): integrados S1 a4dab5f (master ya no salta `*.enabled`/`nucleo.*`, `system/img` completo, `label_from` en el menú) y S5 (API JWT completa, byte a byte con las 53 fixtures, y `MobileShopContractTest` autosuficiente). Causa del fallo en el worktree de S4: `vendor/` viejo, sin `php-jwt`. `en-docker.sh` reinstala ahora `vendor/` cuando cambia `composer.lock`. `laravel13` con 385 pruebas en verde.
+- 2026-11-27 (01:10): integrados:
+  - S1: `graph_pie`/`graph_bar` y ショートカット管理.
+  - S3: F1 completo (issue/hakkou descartados: solo los enlazaba una versión vieja sin uso).
+  - S4: ペーパーサイネージ e ICカード.
+  - S5: スタッフ管理 completo.
+  `laravel13` con 437 pruebas en verde. C1 de S2 (8f39ad3) NO se integra todavía: con él falla `F1CouponsTest`, porque la vista de S3 llama a `route('admin.clientes.show', ['kaiin_cd' => …])` y el parámetro de S2 es `{customer}`. Lo arregla S3.
+  La búsqueda guardada de clientes queda en una sola clave de sesión, `customer_search.<uniqid>` (dueño S2), que S3 lee sin copiarla.
 - 2026-11-27: siguiente tarea de S1 (Antony: el login primero): modelo base y traits comunes, luego el login contra el personal del legacy, el layout idéntico y los estáticos comunes.
 
 ## Hecho
