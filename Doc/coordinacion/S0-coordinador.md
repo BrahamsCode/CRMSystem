@@ -191,6 +191,11 @@
   - Arreglo de S3: los cd en formato legacy (point_shikkou_alert, por ejemplo) usan `legacyCd` y no pasan por hatuban.
   - Pendiente de Antony: si activa el modo ext-shop para la demo (una fila de contents_master; lo detalla NUCLEO.md §13).
   - `artisan test --parallel` da 8 fallos de signage: las BD paralelas no tienen ese esquema. La referencia es la suite en serie.
+- 2026-11-27 (tarde), tercera pasada (orden de Antony: datos con casos límite y testeo real en :8081):
+  - Las 5 fases A están integradas y crmsystem2 recargada (migrate:fresh + bd-legacy + db:seed).
+  - Riesgo encontrado: :8081 llamaba a b.g-api.net de producción (admin_master.push_api_host=1 del backup). Hubo 2 llamadas setStoreTel con domain=localhost, de S1. Solución: interruptor común `GApi` (S1, dc7f712) y regla en CONVENCIONES §4. S3, S4 y S5 deben adaptar sus servicios. El seeder pone push_api_host=0 y system_mail @example.com.
+  - .env local (no versionado): correo a Mailpit, CRM_GAPI_ENABLED=false y claves de prueba de tool/api y JWT (RSA en storage/app/keys). php-fpm corre como `apache`: storage es de apache.
+  - Suite completa: solo la paso yo, en serie, porque las sesiones en paralelo agotaban la memoria. Pruebas inestables: Contenido\DemoSeederTest (S4), SimpleReservationTest y WorkingDayTest (en vigilancia).
 
 ## Hecho
 
