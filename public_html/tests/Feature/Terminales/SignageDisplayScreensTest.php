@@ -3,17 +3,14 @@
 use App\Models\Terminales\SignageDisplay;
 use App\Models\Terminales\SignageMaterial;
 use App\Models\Terminales\SignageProgram;
-use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\Facades\Storage;
 
-require_once __DIR__.'/fixtures/S4TestHelpers.php';
+require_once __DIR__.'/helpers.php';
 
 /* ディスプレイ (display_*.php): pantallas, alta/edición, borrado lógico y ▲▼ */
 
 beforeEach(function () {
-    s4UseTestLayout();
-    $this->withoutMiddleware(Authenticate::class);
-    $this->withSession(['shop_cd' => 1]);
+    s4Login(); // login real de S1: master de la tienda 1
     Storage::fake('public');
 
     SignageMaterial::create([
@@ -106,4 +103,18 @@ it('reordena con ▲▼ sin cambiar update_date', function () {
 
     $this->get(route('admin.terminales.signage-displays.index'))
         ->assertSee('thisCd=52&amp;thisRow=1&amp;kind=down', false);
+});
+
+it('guarda el texto como get_form() de display_register.php', function () {
+    $this->post(route('admin.terminales.signage-displays.store'), [
+        'name' => '　"入口" 1F\'s ', 'comment' => 'A&B <b>', 'tb_c7_movie_program_cds' => '30', 'hb_which' => '0', 'act' => 'up',
+    ])->assertOk();
+
+    // get_form(): recorta espacios 半角/全角, quita ", cambia ' por ’ y no escapa HTML
+    $display = SignageDisplay::query()->where('comment', 'A&B <b>')->firstOrFail();
+    expect($display->name)->toBe('入口 1F’s');
+
+    $this->get(route('admin.terminales.signage-displays.show', $display->cd))
+        ->assertOk()
+        ->assertSee('A&amp;B &lt;b&gt;', false);
 });

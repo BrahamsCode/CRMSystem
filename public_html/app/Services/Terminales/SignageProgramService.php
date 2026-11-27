@@ -2,6 +2,7 @@
 
 namespace App\Services\Terminales;
 
+use App\Support\LegacyText;
 use App\Models\Promotions\MycouponMaster;
 use App\Models\Terminales\SignageDisplay;
 use App\Models\Terminales\SignageMaterial;
@@ -117,7 +118,8 @@ class SignageProgramService
             $systemCoupons[] = (string) ($input['system_tb_mycoupon_master_cds'.$i] ?? '');
         }
 
-        $text = fn (string $key) => (string) ($input[$key] ?? '');
+        // Como movie_program_register.php: todo el texto pasa por get_form()
+        $text = fn (string $key) => LegacyText::form($input[$key] ?? '');
         $program->fill([
             // El formulario no envía terminal_id ni terminal_type: el legacy los deja vacíos al guardar
             'terminal_id' => '',

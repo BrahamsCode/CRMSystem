@@ -123,8 +123,9 @@ class MypageConfig
     }
 
     /**
-     * Guarda los comentarios como mobile_mycolle_edit.php: comillas dobles del texto → simples y serialize.
-     * Al leer (pantalla y API) vuelven a ser dobles.
+     * Guarda los comentarios como mobile_mycolle_edit.php (type=home_comment): sin get_form ni get_form2,
+     * solo comillas dobles → simples y serialize. La API (mpa_corresponding.php) entrega el texto tal cual
+     * a la app, así que no se escapa (paridad); la pantalla lo imprime con {{ }}.
      */
     public function saveHomeComments(array $comments): void
     {

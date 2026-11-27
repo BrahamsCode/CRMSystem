@@ -5,19 +5,14 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
-require_once __DIR__ . '/../Terminales/fixtures/S4TestHelpers.php';
+require_once __DIR__ . '/helpers.php';
 
 /* マイコレ管理 (mobile_mycolle_edit*.php) y su endpoint ajax_apliFileUpload.php */
 
 const MYCOLLE_URL = '/system/category6/user_hp/ajax_apliFileUpload.php';
 
 beforeEach(function () {
-    s4UseTestLayout();
-    s4LoadLegacyRoutes('mypage', 'legacy.mypage.apli-file-upload');
-    $this->withoutMiddleware();
-    Storage::fake('public');
-
-    DB::table('admin_master')->updateOrInsert(['cd' => 1], ['application_use_flg' => 1]);
+    mypageLogin();
     DB::table('tb_area')->insert([
         ['cd' => 7001, 'pid' => 0, 'name' => '関西', 'row_lis' => 1, 'flg' => '1', 'disp_flg' => '1'],
         ['cd' => 7002, 'pid' => 7001, 'name' => '大阪', 'row_lis' => 2, 'flg' => '1', 'disp_flg' => '1'],
@@ -42,7 +37,7 @@ function mycolleTempImage(int $width = 1000, int $height = 1000): string
 it('carga las 5 pantallas de マイコレ', function (string $section, string $text) {
     $this->get(route('admin.mypage.app-images.edit', ['section' => $section]))
         ->assertOk()
-        ->assertSee('<title>ショップページ設定 - </title>', false)
+        ->assertSee('<title>ショップページ設定 - shop</title>', false)
         ->assertSee($text);
 })->with([
     'all' => ['all', 'マイコレHOMEに追加するコメント'],
@@ -102,7 +97,7 @@ it('guarda la コメント HOME y comment_flg como el legacy', function () {
     $config = app(MypageConfig::class);
     $raw = DB::table('contents_master')->where('field', 'apli_home_comment')->value('text_data');
 
-    // Las comillas dobles del texto se guardan como simples; al leer vuelven a ser dobles (pantalla y API)
+    // Como mobile_mycolle_edit.php: sin get_form2; las comillas dobles se guardan como simples y vuelven al leer
     expect($raw)->toContain("ようこそ '全店'")
         ->and($config->homeComments())->toBe([0 => 'ようこそ "全店"', 9001 => '梅田'])
         ->and($config->mypageConfig()['comment_flg'])->toEqual([-1 => 1, 9002 => 1]);
