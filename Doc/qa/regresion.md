@@ -16,6 +16,47 @@ Cada sesión escribe solo en su subsección. Formato de cada fallo: `| pantalla 
 
 ### Operaciones / 勤怠 / integraciones (S5)
 
+Recorrido en :8081 con los datos de fe7296c (antes de la recarga) como `master`, `tencho_umeda` (店長), `umeda01` y `qa_partial` (matriz vieja). Lo creado lleva «QA-S5» y se borró al terminar, salvo el empleado `QA-S5 試験 太郎` (梅田店), que se queda para la segunda vuelta. Muestra consultada en solo lectura.
+
+| Pantalla (URL) | Fallo | Corrección + prueba Pest | Commit |
+|---|---|---|---|
+| スタッフ新規登録 / 修正 y su 確認 (`/admin/operaciones/staff/create`, `/staff/confirm`) | La fila ログインID salía vacía. En Blade, `管理者用ID@else` no compila el `@else` porque la `@` va pegada a una letra latina, así que la rama del empleado nunca se pintaba | `{{ '管理者用ID' }}@else` en `form` y `partials/summary`; aserciones en `StaffEntryTest` (formulario y 確認) | 90b1daa |
+| 勤怠一覧 variante 2 (`/admin/operaciones/working/day2`) | Error de JS «Unexpected identifier 'selectBox'»: el `class="selectBox"` se insertaba sin escapar dentro de una cadena JS con comillas dobles, y se rompía todo el script de edición de la fila | Comillas escapadas en el `@include` de `edit-js`; aserción en `WorkingDayTest` | 90b1daa |
+| 勤怠一覧 / 集計 con los datos demo | Las marcas del seeder (fase A anterior) calculaban 出勤/遅刻/早出 y 退社/残業/早退 respecto al turno, no a la jornada de la tienda. Las pantallas calculan con `start_work_time` + 8 h + 休憩, y salían horas incoherentes (salida 17:10 con 退社 → 19:00) | `AsistenciaDemoSeeder::standardDay()`: el 勤怠 usa la jornada estándar de la tienda; los turnos (シフト) mantienen su variedad. Cubierto en `DemoSeederTest` | 90b1daa |
+
+Probado sin fallos:
+- **スタッフ:** búsqueda, paginación (10 por página), CSV (`user.csv`), alta → 確認 → registro, edición, 削除, 復元 y ficha con tarjeta (pestaña 2).
+- **グループ:** alta, 修正, ▲▼ y 削除.
+- **検索項目設定:** guardado sin pérdidas.
+- **インフォメーション:** alta con tienda y 役職, HTML escapado, 修正 y 削除.
+- **勤怠データ (kintai):**
+  - alta, edición y borrado (el borrado confirma con `jquery.alerts`);
+  - CSV diario y mensual (este último desde 各種設定);
+  - 端末パスワード: error y cambio, devuelto a 9999;
+  - 各種設定: guardado.
+- **勤怠一覧:** calendario → día, edición en la fila (cambio y vuelta atrás), CSV, スタッフ一覧 y 集計.
+- **シフト:**
+  - 日別: pintado y guardado de un turno, que luego se quitó;
+  - 月別: carga;
+  - シフト区分: alta, 修正, ▲ y 削除.
+- **営業日設定:** marcar y desmarcar un 休日.
+- **Usuario limitado:** el menú oculta alta, グループ, シフト区分, パスワード y 各種設定, y esas URL dan 403. La ficha solo ofrece 戻る y no hay botón CSV.
+- **API con curl:**
+  - CTI: `jGetCustomerData` (socio y `NO_DATA`), `customerDetailHtml` y `ctiWindow` (búsqueda, y agenda con `customerCd`);
+  - `mpa_corresponding`, `mpa_getTopBanner` y `mpa_getCoverFlow`;
+  - `appview`: `qr_code`, `memberId`, `coupon`, `used_coupon_list`, `stamp`, `visit_history`, `photo_gallery` y `member_kiyaku`, con un socio demo de S2.
+
+Paridad comprobada con la muestra:
+- スタッフ一覧 vacía hasta buscar.
+- El ID del formulario usa la tienda de la sesión y el registro, la elegida.
+- インフォメーション «No» = `cd`.
+- `rank` de un grupo nuevo = n.º de grupos + 1. Sale 2.º porque los grupos sembrados tienen `rank` 99–101 (S1).
+
+Pendientes:
+- `tool/api` y la API JWT de la tienda móvil no se pueden probar en :8081: su `.env` no tiene `CRM_API_KEY`, `MOBILESHOP_API_USER`/`PASS` ni las claves RSA. `tool/api` responde vacío y `/api/auth` da `Invalid config.`, como el legacy sin configuración. Hacen falta valores locales de prueba (S0).
+- Las columnas 普通残業/休日残業/休日出勤 de 集計 siguen vacías: pregunta de S2 en `para-japon.md` §3.
+- Segunda vuelta tras la recarga con los datos nuevos (fase A).
+
 Web local `http://localhost:8081` (checkout principal en `laravel13`, BD `crmsystem2` con el esquema `signage`). La muestra no se tocó.
 
 ## Segunda pasada: `laravel13` 1c56ac2 (2026-11-27)
