@@ -94,6 +94,8 @@ Un modelo que necesitan varios módulos (por ejemplo `Customer`) lo **lee** cual
   - No depende del orden de desarrollo: usa las tiendas y el staff que haya (`tb_shop`, `tb_staff` activos); el de núcleo añade más, pero los demás funcionan también con la única tienda del backup.
   - Fechas alrededor de hoy (últimos 12 meses y próximas 2 semanas), para que 集計, listas y 予約表 salgan llenos.
   - Una prueba Pest en `tests/Feature/<Modulo>/DemoSeederTest.php`: siembra, comprueba conteos y que una segunda ejecución no duplica.
+  - `DatabaseSeeder` llama a `DemoSeeder`: `php artisan db:seed` carga todo.
+  - Casos de prueba además de los típicos (Antony, 2026-11-27): varias tiendas; estados distintos (activo, baja `disp_flg='9'`, pendiente, enviado, usado, caducado); casos límite (fechas de fin de mes, de año y del 29/02, japonés largo hasta el máximo del campo, kana de ancho medio, campos opcionales vacíos, importes 0 y grandes) y bastantes filas para que haya paginación.
 
 ## 5. Paridad
 

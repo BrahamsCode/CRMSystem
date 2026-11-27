@@ -1,5 +1,21 @@
 # Regresión de punta a punta (S1, 2026-11-27)
 
+## Tercera pasada: testeo real por módulo con datos (Antony, 2026-11-27)
+
+Web `http://localhost:8081` (BD `crmsystem2` recargada con `migrate:fresh` + `bd-legacy.sh` + `db:seed`). Cada sesión recorre con Playwright todas sus pantallas como master y como usuario limitado: listar, buscar, alta, edición, borrado, CSV, PDF y paginación. Compara el HTML y el comportamiento con development.crm-s.net, en **solo lectura**.
+
+Cada sesión escribe solo en su subsección. Formato de cada fallo: `| pantalla (URL) | fallo | corrección + prueba Pest | commit |`. Al final de cada subsección va una línea de resumen: pantallas probadas, fallos encontrados y corregidos, y pendientes.
+
+### Núcleo / 基本情報 (S1)
+
+### Clientes / ventas / reservas (S2)
+
+### Promoción (S3)
+
+### マイページ / 端末 / señalización (S4)
+
+### Operaciones / 勤怠 / integraciones (S5)
+
 Web local `http://localhost:8081` (checkout principal en `laravel13`, BD `crmsystem2` con el esquema `signage`). La muestra no se tocó.
 
 ## Segunda pasada: `laravel13` 1c56ac2 (2026-11-27)
