@@ -43,7 +43,9 @@ it('carga la lista de rangos desde el menú con los dos tipos activos', function
         ->assertSee('期間内の来店回数が <span class="bold attention">5回</span> 以上', false)
         ->assertSee('name="hyouji_flg_', false)
         // ランクを表示しない (customer_rank_disp_flg vacío = '9')
-        ->assertSee('id="rank_disp9" name="customer_rank_disp_flg" checked', false);
+        ->assertSee('id="rank_disp9" name="customer_rank_disp_flg" checked', false)
+        // Ordenar (sortable): la lista de tipos va sin espacios, si no el selector sería "# raitenRankList"
+        ->assertSee("var baseStr = 'kingaku,raiten';", false);
 });
 
 it('sin módulos activos no muestra ninguna lista', function () {

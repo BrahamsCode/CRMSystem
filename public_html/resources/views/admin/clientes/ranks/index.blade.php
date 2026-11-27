@@ -149,7 +149,8 @@ $(document).ready(function(){
 
 	// 並び替え設定 ----------------------------------------------------------------------------
 
-	var baseStr = @json(implode(',', $types));
+	{{-- No @json: Blade parte sus argumentos por las comas y saldría "kingaku, raiten" (→ selector "# raitenRankList") --}}
+	var baseStr = {{ \Illuminate\Support\Js::from(implode(',', $types)) }};
 	var rankKeyArr = baseStr.split(',');
 	var rankReturn;
 
