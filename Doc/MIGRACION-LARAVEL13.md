@@ -68,7 +68,7 @@ Contado en `crm2-php8/public_html` (2,441 archivos PHP). Nombres de módulo seg�
 | Carpeta | PHP | Qué es | Notas |
 |---|---|---|---|
 | `hp/` | 387 | Sitio y área de socio (マイページ del cliente final) | **Fuera de alcance** (obsoleto). Lo que la app o los dispositivos leían de `hp/uploads/` se migra a Storage |
-| `touchcation/` | 305 | Quiosco Android (`jp.CrmShWeb`, APK en `version/`) | Contrato con la APK: `terminal_cd`, `androidId` en la URL |
+| `touchcation/` | 305 | Quiosco Android (`jp.CrmShWeb`, APK en `version/`) | **Fuera de alcance** (no se usa, Antony 2026-11-26), igual que su gestión `category7/kiosk/` |
 | `signage/`, `digitalsignage/` | 92 + 28 | Señalización digital | |
 | `api/` | 20 | API JWT para la tienda móvil (`MOBILESHOP_*`) | Contrato en `crm2-php8/README.md` |
 | `appview/` | 34 | Vistas para la app | |

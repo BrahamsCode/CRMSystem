@@ -5,7 +5,7 @@
 
 ## Próximo paso
 
-1. Arranque (ver protocolo). Confirmar a S1 la Fase 1 (Laravel 13) y a S2–S6 el diseño de su grupo (`Doc/diseno/<grupo>.md`).
+1. Arranque (ver protocolo). Confirmar a S1 la Fase 1 (Laravel 13) y a S2–S5 el diseño de su grupo (`Doc/diseno/<grupo>.md`).
    - Primero: asegurar que `CRMSystem/` tenga Laravel 12 funcionando en el Docker nuevo (`bash scripts/en-docker.sh php artisan migrate --seed`; la BD de PostgreSQL 18 empieza vacía).
 2. Cuando S1 termine la Fase 1 con pruebas en verde: commit en `l13/nucleo`, merge a integración, actualizar las demás ramas, y asignar a S1 el núcleo (paso 2 del plan).
 3. Cuando llegue cada diseño: revisarlo contra el análisis y `CONVENCIONES.md`, aprobarlo o devolverlo con cambios concretos.
@@ -14,8 +14,8 @@
 
 **Al arrancar:**
 1. Leer [ORCHESTRATION.md](../planificacion/ORCHESTRATION.md), secciones 4 y 7, y [CONVENCIONES.md](../contratos/CONVENCIONES.md).
-2. Leer el archivo de estado de cada sesión en su worktree: `../CRMSystem-nucleo/Doc/coordinacion/S1-nucleo.md`, `../CRMSystem-clientes/Doc/coordinacion/S2-clientes.md`, `../CRMSystem-promocion/Doc/coordinacion/S3-promocion.md`, `../CRMSystem-contenido/Doc/coordinacion/S4-contenido.md`, `../CRMSystem-operaciones/Doc/coordinacion/S5-operaciones.md`, `../CRMSystem-quiosco/Doc/coordinacion/S6-quiosco.md`.
-3. `ListAgents`. Nombres: **"S1 Nucleo"**, **"S2 Clientes"**, **"S3 Promocion"**, **"S4 Contenido"**, **"S5 Operaciones"**, **"S6 Quiosco"**. Si alguna no aparece, anotarlo y volver a mirar en el siguiente ciclo, sin esperar en bucle.
+2. Leer el archivo de estado de cada sesión en su worktree: `../CRMSystem-nucleo/Doc/coordinacion/S1-nucleo.md`, `../CRMSystem-clientes/Doc/coordinacion/S2-clientes.md`, `../CRMSystem-promocion/Doc/coordinacion/S3-promocion.md`, `../CRMSystem-contenido/Doc/coordinacion/S4-contenido.md`, `../CRMSystem-operaciones/Doc/coordinacion/S5-operaciones.md`.
+3. `ListAgents`. Nombres: **"S1 Nucleo"**, **"S2 Clientes"**, **"S3 Promocion"**, **"S4 Contenido"**, **"S5 Operaciones"**. Si alguna no aparece, anotarlo y volver a mirar en el siguiente ciclo, sin esperar en bucle.
 4. A cada sesión abierta: `SendMessage` con `notify_when_idle: true` confirmando su tarea actual.
 5. Terminar el turno. **No consultar en bucle**: los avisos llegan solos.
 
@@ -54,7 +54,7 @@
 
 ## Decisiones
 
-- 2026-11-26: orquestación creada (S0 + 6 trabajadores, ver ORCHESTRATION.md §7). Rama de integración `laravel13`. Todos los permisos: los trabajadores hacen commit y push de su rama, S0 integra. Fuera por ahora: POS (`category11`), SNS (`category12`) y serie N de touchcation; `digitalsignage` se mantiene (reproductor Flash → HTML5). Análisis vista por vista en `Doc/analisis-legacy/`. `hp/` fuera de alcance (Antony).
+- 2026-11-26: orquestación creada (S0 + 5 trabajadores, ver ORCHESTRATION.md §7). Rama de integración `laravel13`. Todos los permisos: los trabajadores hacen commit y push de su rama, S0 integra. Fuera (confirmado que no se usan): POS (`category11`), SNS (`category12`) y touchcation con `category7/kiosk/`; `digitalsignage` se mantiene (reproductor Flash → HTML5). Análisis vista por vista en `Doc/analisis-legacy/`. `hp/` fuera de alcance (Antony).
 
 ## Hecho
 

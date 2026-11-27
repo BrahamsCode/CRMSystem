@@ -18,8 +18,8 @@ Reescritura en **Laravel 13 + PHP 8.5** del CRM legacy (VivaTech / Japón). El c
 
 - **Paridad funcional:** todo lo que el legacy hace, Laravel lo hace. Los servicios viejos se reemplazan por los de Laravel (Mail + colas, Scheduler, Storage, Policies, StreamedResponse…), paso a paso.
 - **Fuera de alcance:** `hp/` (sitio viejo), `admin/` y `system/category8` (女の子管理).
-- **Fuera de alcance por ahora:** POS (`system/category11`, terminales `CRMPOS-<id>` y conexión a los servidores POS de tienda), SNS (`system/category12`) y la serie N de touchcation.
-- **Integraciones externas** (quiosco, APIs, app): mantener URL y contrato. Ver `Doc/legacy-crm2/INTEGRATIONS.md` y `Doc/analisis-legacy/07-*.md`, `08-*.md`.
+- **Fuera de alcance por ahora:** POS (`system/category11`, terminales `CRMPOS-<id>` y conexión a los servidores POS de tienda), SNS (`system/category12`) y touchcation (quiosco táctil y su gestión `category7/kiosk/`): confirmado que no se usan (Antony, 2026-11-26).
+- **Integraciones externas** (APIs, app, señalización): mantener URL y contrato. Ver `Doc/legacy-crm2/INTEGRATIONS.md` y `Doc/analisis-legacy/07-*.md`, `08-*.md` (secciones signage y digitalsignage).
 - **Idioma:** respuestas, documentos y comentarios en español; textos de pantalla en japonés (`lang/ja`); identificadores en inglés, salvo términos de dominio que ya existen.
 - **Nombres:** PHP `camelCase` en métodos y variables como Laravel, clases `PascalCase`; BD `snake_case`.
 - **Secretos:** nunca en el código ni en git. `Doc/legacy-crm2/env-legacy.example` (copia del `.env.example` de crm2-php8) tiene claves reales de producción: se puede leer para configurar el `.env` local, pero sus valores nunca van a un archivo versionado.

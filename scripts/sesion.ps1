@@ -1,4 +1,4 @@
-# Abre UNA sesion de Claude Code de la orquestacion del CRM (S0 a S6).
+# Abre UNA sesion de Claude Code de la orquestacion del CRM (S0 a S5).
 # Normalmente lo llama iniciar-sesiones.ps1; tambien se puede usar solo:
 #   powershell -ExecutionPolicy Bypass -File scripts\sesion.ps1 -Sesion S2
 #   powershell -ExecutionPolicy Bypass -File scripts\sesion.ps1 -Sesion S2 -Continuar
@@ -6,7 +6,7 @@
 
 param(
     [Parameter(Mandatory = $true)]
-    [ValidateSet('S0', 'S1', 'S2', 'S3', 'S4', 'S5', 'S6')]
+    [ValidateSet('S0', 'S1', 'S2', 'S3', 'S4', 'S5')]
     [string]$Sesion,
 
     # Retoma la ultima conversacion de la carpeta. Por defecto NO: una sesion nueva que lee su archivo de estado gasta menos.
@@ -32,7 +32,7 @@ Set-Location $dir
 # Prompts de arranque (sin comillas dobles adentro: PowerShell 5.1 las pasa mal a programas externos).
 if ($Sesion -eq 'S0') {
     $prompt = "Eres S0 Coordinador CRM, el ORQUESTADOR autonomo de la migracion del CRM legacy a Laravel 13. Lee Doc/coordinacion/S0-coordinador.md y sigue su seccion 'Protocolo de orquestacion' sin pedir confirmacion. " +
-              "No escribes codigo de modulos: delegas en S1 a S6 con ListAgents y SendMessage (con notify_when_idle) y decides con lo que dicen los md. " +
+              "No escribes codigo de modulos: delegas en S1 a S5 con ListAgents y SendMessage (con notify_when_idle) y decides con lo que dicen los md. " +
               "Integras TU: merge de las ramas l13/* en laravel13, push de laravel13 y actualizacion de los worktrees, segun la seccion 'Integracion' de tu archivo. Nunca push --force. " +
               "Detente a preguntarle a Antony SOLO por datos que solo el tiene o decisiones de producto que no esten en los md, con un mensaje que empiece con ANTONY:. Prioridad: autonomia."
 }

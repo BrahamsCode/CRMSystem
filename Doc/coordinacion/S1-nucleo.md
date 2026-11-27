@@ -20,7 +20,7 @@ Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archiv
 
 1. **Núcleo** (`Doc/contratos/NUCLEO.md`, lo escribes tú): carga automática de `routes/modulos/*.php` dentro del grupo `admin` y de `config/menu/*.php` en el menú lateral; layout del sistema del personal (paridad visual con la muestra de desarrollo); login del personal y permisos (Policies/Gates equivalentes a `cKengen`/`ACCESS_LEVEL_*`); tiendas; módulos activables (`tb_base_system`, `tb_base_system_child` → システム選択 ya existe, commit `7cf0c1c`). Fuente: `Doc/analisis-legacy/00-nucleo-y-base.md`.
 2. **基本情報管理** (category0): pantallas de configuración y tiendas.
-3. **Grupos de rutas para dispositivos y APIs** (los usan S5 y S6): grupo sin `auth:admin` ni CSRF, con su propia cookie de sesión, para el quiosco (`routes/modulos/quiosco.php`) y las integraciones (`routes/modulos/integraciones.php`). Documentarlo en `NUCLEO.md`. Las integraciones en sí las hace S5.
+3. **Grupos de rutas para dispositivos y APIs** (los usan S4 y S5): grupo sin `auth:admin` ni CSRF, con su propia cookie de sesión, para los reproductores de señalización (`routes/modulos/senalizacion.php`) y las integraciones (`routes/modulos/integraciones.php`). Documentarlo en `NUCLEO.md`. Las integraciones las hace S5 y los reproductores S4.
 4. **Importador legacy:** comando `crm:importar-legacy` que lee una BD restaurada de `crm2019.backup` (o un volcado de producción) y llena las tablas nuevas, por módulo (cada módulo aporta su mapeo en su diseño).
 5. Paquetes comunes que pidan los módulos (PDF, Excel, FCM…), vía S0.
 

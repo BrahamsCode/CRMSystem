@@ -11,7 +11,7 @@ $shell = New-Object -ComObject WScript.Shell
 $acceso = $shell.CreateShortcut($destino)
 $acceso.TargetPath = $bat
 $acceso.WorkingDirectory = $repo
-$acceso.Description = 'Levanta Docker y abre las sesiones S0 a S6 de la migracion del CRM a Laravel 13'
+$acceso.Description = 'Levanta Docker y abre las sesiones S0 a S5 de la migracion del CRM a Laravel 13'
 $acceso.IconLocation = "$env:SystemRoot\System32\shell32.dll,137"
 $acceso.Save()
 

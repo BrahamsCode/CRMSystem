@@ -1,4 +1,4 @@
-# Lanzador del CRM (Laravel 13): levanta Docker, prepara los worktrees y abre las sesiones S0 a S6,
+# Lanzador del CRM (Laravel 13): levanta Docker, prepara los worktrees y abre las sesiones S0 a S5,
 # cada una en su pestana de Windows Terminal, con su modelo y esfuerzo.
 # Uso normal: doble clic en INICIAR-CRM.bat
 #   -Sesiones S0,S1      abre solo esas
@@ -8,8 +8,8 @@
 # Nota: archivo solo con caracteres ASCII a proposito (PowerShell 5.1 lee mal los acentos sin BOM).
 
 param(
-    [ValidateSet('S0', 'S1', 'S2', 'S3', 'S4', 'S5', 'S6')]
-    [string[]]$Sesiones = @('S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S0'),  # S0 al final: cuando arranca, las demas ya existen
+    [ValidateSet('S0', 'S1', 'S2', 'S3', 'S4', 'S5')]
+    [string[]]$Sesiones = @('S1', 'S2', 'S3', 'S4', 'S5', 'S0'),  # S0 al final: cuando arranca, las demas ya existen
     [switch]$Continuar,
     [switch]$SoloVerificar,
     [switch]$SinDocker
@@ -50,7 +50,7 @@ $necesarios = @(
     'CLAUDE.md', 'Doc/MIGRACION-LARAVEL13.md', 'Doc/contratos/CONVENCIONES.md',
     'Doc/planificacion/ORCHESTRATION.md', 'Doc/coordinacion/README.md',
     'Doc/coordinacion/S1-nucleo.md', 'Doc/coordinacion/S2-clientes.md', 'Doc/coordinacion/S3-promocion.md',
-    'Doc/coordinacion/S4-contenido.md', 'Doc/coordinacion/S5-operaciones.md', 'Doc/coordinacion/S6-quiosco.md',
+    'Doc/coordinacion/S4-contenido.md', 'Doc/coordinacion/S5-operaciones.md',
     'Doc/analisis-legacy/README.md', 'scripts/en-docker.sh', 'scripts/claude-settings.json', 'docker/docker-compose.yml'
 )
 $faltan = @()
@@ -60,11 +60,11 @@ foreach ($archivo in $necesarios) {
 }
 $pendientes = git -C $repo status --porcelain -- CLAUDE.md Doc scripts docker
 if ($faltan.Count -gt 0) {
-    Write-Aviso 'Estos archivos no estan en commit; S1 a S6 no los veran (no se crearan worktrees nuevos):'
+    Write-Aviso 'Estos archivos no estan en commit; S1 a S5 no los veran (no se crearan worktrees nuevos):'
     $faltan | ForEach-Object { Write-Host "     $_" }
 }
 elseif ($pendientes) {
-    Write-Aviso 'Hay cambios sin commit en CRMSystem; S1 a S6 no los veran hasta el commit y el merge:'
+    Write-Aviso 'Hay cambios sin commit en CRMSystem; S1 a S5 no los veran hasta el commit y el merge:'
     $pendientes | Select-Object -First 10 | ForEach-Object { Write-Host "     $_" }
 }
 else { Write-Host '   OK' -ForegroundColor Green }
@@ -84,7 +84,7 @@ if ($hayDocker -and -not $SinDocker) {
     }
 }
 
-# 5. Worktrees de S1 a S6
+# 5. Worktrees de S1 a S5
 # Permisos locales de los trabajadores: commit y push SOLO de su rama l13/<grupo>.
 # Lo unico bloqueado es lo que los haria pisarse: merge (lo hace S0), cambiar de rama,
 # tocar otro worktree (git -C) y subir a la rama de integracion.

@@ -1,7 +1,7 @@
 # Convenciones compartidas (el "contrato" entre sesiones)
 
 > Lo cambia **solo S0**. Si una sesión necesita otra cosa, la pide a S0 por mensaje y la anota en "Pedidos" de su archivo de estado.
-> Objetivo: que 6 sesiones trabajen en paralelo en el mismo Laravel sin pisarse al fusionar.
+> Objetivo: que 5 sesiones trabajen en paralelo en el mismo Laravel sin pisarse al fusionar.
 
 ## 1. Versiones
 
@@ -36,11 +36,10 @@ Cada módulo escribe **solo** en sus carpetas. `<Modulo>` en PascalCase inglés,
 | S1 Núcleo | `nucleo`, `base` (基本情報管理), importador legacy | `00-nucleo-y-base.md` | `Admin`, `Shop`, `Terminal`, `Staff` (login y permisos), `BaseModel`, `Concerns/*`, módulos activables, `hatuban`/numeración, configuración global (`admin_master`, `contents_master`) |
 | S2 Clientes | `clientes` (顧客管理), `ventas` (販売管理), `reservas` (予約管理: category9, `r/`, `reserve/`) | `01-clientes-y-ventas.md`, `05-…` (sección category9), `07-…` (secciones `r/` y `reserve/`) | `Customer*`, `CustomCategory`, `CustomField*`, `CustomValue`, `FieldSetting`, `Visit*`, productos y ventas, reservas |
 | S3 Promoción | `promocion` (販売促進管理: mensajería y fidelización) | `03a-promocion-mensajeria.md`, `03b-promocion-fidelizacion.md` | `Coupon*`, `Message*`, `Point*`, `Stamp*`, `Rank*`, `Survey*`, `CustomerGroup*` |
-| S4 Contenido | `mypage` (マイページ管理), `web` (ホームページ管理), `terminales` (端末管理: beacon, felica, kiosk, señalización de category7), `senalizacion` (`signage/`, `digitalsignage/`) | `04-web-y-mypage.md`, `05-…` (sección category7), `08-…` (secciones signage y digitalsignage) | Contenido de mypage, páginas, catálogos, displays y programas de señalización, beacons, felica |
+| S4 Contenido | `mypage` (マイページ管理), `web` (ホームページ管理), `terminales` (端末管理: beacon, felica, card_signage, digital_signage de category7), `senalizacion` (`signage/`, `digitalsignage/`) | `04-web-y-mypage.md`, `05-…` (sección category7), `08-…` (secciones signage y digitalsignage) | Contenido de mypage, páginas, catálogos, displays y programas de señalización, beacons, felica |
 | S5 Operaciones | `operaciones` (業務支援管理: staff, 勤怠, turnos), `integraciones` (API tienda móvil, `mpa_*`, `appview/`, `tool/api`, CTI, `exp_cmd/`, `version/`) | `05-…` (sección category5), `07-pos-api-y-externos.md` | Asistencia, turnos, horarios; contratos externos (rutas `routes/modulos/integraciones.php` sin `auth:admin`) |
-| S6 Quiosco | `quiosco` (touchcation: pantallas y endpoints que consume la APK) | `08-quiosco-y-senalizacion.md` (secciones touchcation y contrato de dispositivos) | Sesión de quiosco y su grupo de rutas sin `auth:admin` ni CSRF |
 
-**Fuera de alcance por ahora (Antony, 2026-11-26):** POS (`system/category11` completo, incluido `category11/yoyaku`; terminales `CRMPOS-<id>`/`pos_session.php`; conexión a los servidores POS de cada tienda: donde el legacy llama al POS, dejar una interfaz `PosGateway` sin implementación y anotarlo), SNS (`system/category12`) y la serie N de touchcation (`common_n`, `point/`, `stamp/`, `all_in_one_apk/`).
+**Fuera de alcance por ahora (Antony, 2026-11-26):** POS (`system/category11` completo, incluido `category11/yoyaku`; terminales `CRMPOS-<id>`/`pos_session.php`; conexión a los servidores POS de cada tienda: donde el legacy llama al POS, dejar una interfaz `PosGateway` sin implementación y anotarlo), SNS (`system/category12`) y touchcation completo (`touchcation/` y su gestión `system/category7/kiosk/`, tablas `tb_nextouch_*`): confirmado que no se usan.
 
 Un modelo que necesitan varios módulos (por ejemplo `Customer`) lo **lee** cualquiera, pero solo su dueño lo **cambia**.
 

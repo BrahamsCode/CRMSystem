@@ -10,7 +10,6 @@ Un archivo por sesión. **Cada sesión lee y edita solo el suyo** (así no hay c
 | [S3-promocion.md](S3-promocion.md) | S3 Promocion | `l13/promocion` · `CRMSystem-promocion/` |
 | [S4-contenido.md](S4-contenido.md) | S4 Contenido | `l13/contenido` · `CRMSystem-contenido/` |
 | [S5-operaciones.md](S5-operaciones.md) | S5 Operaciones | `l13/operaciones` · `CRMSystem-operaciones/` |
-| [S6-quiosco.md](S6-quiosco.md) | S6 Quiosco | `l13/quiosco` · `CRMSystem-quiosco/` |
 
 ## Formato obligatorio (para gastar pocos tokens)
 
