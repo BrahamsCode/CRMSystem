@@ -9,7 +9,7 @@ Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archiv
 
 ## Próximo paso
 
-Tercera pasada hecha, también la segunda vuelta en `:8081` con la fase A (ver "Hecho" y `Doc/qa/regresion.md`). Esperando la siguiente tarea de S0.
+Repaso de subidas en `:8081` hecho, sin fallos (ver "Hecho"). Esperando la siguiente tarea de S0.
 
 **A) Base legacy** (corto; subir apenas esté): traits `app/Models/Concerns/` `HasHatuban` (numeración por `koumoku`), `LegacySoftDeletes` (scope `disp_flg <> '9'`, `delete()` pone `'9'`), `LegacyTimestamps` (`touroku_date`/`update_date` epoch en texto); modelo base `LegacyModel` (`cd`, no incremental, sin timestamps, `$guarded=[]`); servicio `Hatuban`; modelos `Shop` (`tb_shop`), `Staff` (`tb_staff`), `Terminal` (`tb_terminal`), `AdminMaster`, `ContentsMaster`, con pruebas sobre el esquema legacy; registrar `<Modulo>ServiceProvider` existentes en `bootstrap/providers.php`. Terminado: pruebas en verde, commit, push, aviso.
 
@@ -72,6 +72,24 @@ Recibidos de S0 el 2026-11-26 (para la Cola, después de la Fase 1; S0 los asign
 - `CSRF`: no había referencias a `VerifyCsrfToken`/`ValidateCsrfToken` en el código; nada que renombrar a `PreventRequestForgery`.
 
 ## Hecho
+
+- **Repaso de subidas en `:8081` (2026-11-27, laravel13 9cd5981):**
+  - Alcance: núcleo/基本情報 no tiene formularios de subida propios (en el legacy, category0 no usa `$_FILES`). Lo que sube archivos y es de S1:
+    - el endpoint común `system/inc/ajax_picupload.php`, con `system/uploads/`;
+    - la ruta genérica `/hp/uploads/{path}`.
+  - Prueba con master y `qa_partial` desde 予定プッシュ修正 (`push_new?type_flg=follow&cd=9`), con el AjaxUpload real (iframe, `_token` del layout):
+    - JPEG de 900×600 → miniatura de 240×160;
+    - PNG → `.jpg`, como el legacy;
+    - GIF → `.gif`;
+    - `.txt` → lo rechaza el JS.
+  - Casos directos:
+    - sin nombre, campo inválido, no imagen y sin archivo → `error:`;
+    - `../` en el nombre → se limpia;
+    - sin `_token` → 302;
+    - sin sesión → al login;
+    - `system/uploads/../.env` → 404.
+  - `laravel.log`: 0 líneas nuevas. Los temporales de prueba están borrados.
+  - Dato, no fallo: las imágenes del push de seguimiento 9 (`hp/uploads/c3/push_follow/9/*.jpg`) dan 404 porque el backup no trae los archivos de `hp/uploads`.
 
 - **Tercera pasada (2026-11-27):** fase A: NucleoDemoSeeder con casos límite (心斎橋店 de baja, nombre de 255 caracteres, 天王寺店 sin opcionales), `qa_partial`/`qa12345` (QA部分権限), `taishoku01` 退職 y 歩合 (8a248cb). Fase B: recorrido del núcleo en `:8081` y `:18081` (resumen en `Doc/qa/regresion.md`, subsección S1); fallos corregidos: ショートカット a URL legacy (4cd2fa7), お問い合わせ `system/contact/` migrada y favicon (4edb8f8), interruptor común `App\Support\GApi` (`CRM_GAPI_ENABLED`) y seeder con `push_api_host = 0` y `system_mail` @example.com (dc7f712). `:18081` = contenedor `s1-serve` con `php -S` (no `artisan serve`, que no pasa `STAGE`).
 - **Datos de demostración (2026-11-27):** `database/seeders/Demo/NucleoDemoSeeder.php` siembra 3 tiendas (梅田店, 難波店, 京都店), el árbol de áreas 関西 › 大阪 / 京都, los grupos de tienda 直営店 y フランチャイズ, y los grupos de staff 店長 y スタッフ con su `tb_kengen`. Añade 10 staff con la clave `demo1234` y activa los módulos y las opciones de menú. Es idempotente (comprobado con migrate:fresh + bd-legacy.sh y dos ejecuciones) y está documentado en NUCLEO.md §13, con su `DemoSeederTest`.
