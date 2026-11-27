@@ -98,6 +98,13 @@
   `laravel13` con 437 pruebas en verde. C1 de S2 (8f39ad3) NO se integra todavía: con él falla `F1CouponsTest`, porque la vista de S3 llama a `route('admin.clientes.show', ['kaiin_cd' => …])` y el parámetro de S2 es `{customer}`. Lo arregla S3.
   La búsqueda guardada de clientes queda en una sola clave de sesión, `customer_search.<uniqid>` (dueño S2), que S3 lee sin copiarla.
 - 2026-11-27 (01:20): integrados el arreglo de S3 (541d12d: la ruta de la ficha y la búsqueda en `customer_search.*`), C1 de S2 (顧客一覧・検索, ficha con 14 pestañas, alta y edición), y de S5 `MobileShopClient` y `UrlTransferData::customer()`. `laravel13` con 496 pruebas en verde.
+- 2026-11-27 (01:40): integrados:
+  - S1: 機能設定 (las plantillas de caducidad de category0 se descartan: ninguna pantalla las abre), la conexión `signage` y `LegacyCsv`.
+  - S2: C2 y R3, `VisitRecordService` (firma) y `ajax_changePaidMemberFlg`.
+  - S5: `tool/api` 7/8 y CTI, más `mpa_*` (paso 9).
+  `laravel13` con 566 pruebas en verde y sin modelos duplicados por tabla.
+- Decisión: el reparto de rangos es de S2 (`clientes:asignar-rangos`, como `category1/rank` del legacy) y usa los modelos de rangos de S3. S3 no hace `promocion:customer-rank`.
+- Para Japón: `getStaffList` (`tool/api`) devuelve `login_pass` y CTI no tiene autenticación (contrato intacto). `F1CouponsTest` («ranking de uso», 37 s) es lenta e intermitente bajo carga.
 - 2026-11-27: siguiente tarea de S1 (Antony: el login primero): modelo base y traits comunes, luego el login contra el personal del legacy, el layout idéntico y los estáticos comunes.
 
 ## Hecho

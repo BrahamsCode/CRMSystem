@@ -71,4 +71,27 @@ Route::prefix('reservas')->name('reservas.')->group(function () {
     // ajax_uketsuke_status.php: el JS del 予約表 llama a la URL legacy /system/category9/yoyaku/ajax_uketsuke_status.php (la publica otra sesión → esta acción)
     Route::get('slots/status', [\App\Http\Controllers\Admin\Reservations\ReservationSlotController::class, 'status'])->name('slots.status');
     // --- fin R2 ---
+    // --- R3 ---
+    // Flujo de reserva: yoyaku.php → yoyaku_calendar.php → yoyaku_customer_select.php → yoyaku_register.php
+    Route::controller(\App\Http\Controllers\Admin\Reservations\ReservationController::class)->group(function () {
+        Route::get('create', 'create')->name('create');
+        Route::get('calendar-select', 'calendar')->name('calendar-select');
+        Route::get('customer-select', 'customerSelect')->name('customer-select');
+        Route::post('/', 'store')->name('store');
+        // ajax_yoyaku_register.php (cambio desde el popup del 予約表; misma respuesta de texto)
+        Route::put('{reservation}', 'update')->whereNumber('reservation')->name('update');
+        // ajax_move_objs.php (mover a otro empleado / cambiar día y hora)
+        Route::post('move', 'move')->name('move');
+        // 顧客関連づけ: related_customer.php y ajax_related_customer.php
+        Route::get('related-customer', 'relatedCustomer')->name('related-customer');
+        Route::post('related-customer', 'storeRelatedCustomer')->name('related-customer.store');
+    });
+    // AJAX de apoyo: ajax_yoyaku_menu.php, ajax_staff.php, ajax_search_kaiin.php
+    Route::controller(\App\Http\Controllers\Admin\Reservations\ReservationOptionController::class)
+        ->prefix('options')->name('options.')->group(function () {
+            Route::match(['get', 'post'], 'menus', 'menus')->name('menus');
+            Route::match(['get', 'post'], 'staff', 'staff')->name('staff');
+            Route::match(['get', 'post'], 'members', 'members')->name('members');
+        });
+    // --- fin R3 ---
 });
