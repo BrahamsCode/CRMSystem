@@ -76,6 +76,11 @@
 - 2026-11-27: integrados la base legacy de S1 (3666439: `LegacyModel`, traits, `Hatuban`, `Shop`/`Staff`/`Terminal`/`AdminMaster`/`ContentsMaster`, autorregistro de providers; 29 pruebas en verde) y los estáticos de S3 y S4 y la ruta del XML de S4. S2–S5 empiezan sus modelos. El parcial y el servicio de búsqueda de clientes de `system/inc` son de S2 (pedido de S3).
 - 2026-11-27: integrados los modelos y las vistas de S4 (submódulos 1–5), el bloque 0.1 de S3 y D1 de S2. `laravel13` con 143 pruebas en verde. Los estáticos, fixtures y modelos de S5 vuelven a S5 por `public/admin/` (choca con el prefijo `/admin` de Laravel: el directorio da 403 en `/admin/`). Pedidos a S1: el scope de `disp_flg` debe incluir NULL (`COALESCE`), `app.timezone = Asia/Tokyo`, el Gate `kengen` con lista de códigos y paso libre a master, jQuery UI en el layout y `/hp/img/banner/`.
 - 2026-11-27: integrados los estáticos, las fixtures de contrato (53 casos del legacy) y los modelos de S5, con el font-awesome ya en `public/legacy/admin/`. `laravel13` con 173 pruebas en verde.
+- 2026-11-27: integrados el entregable B de S1 (login, logout y システム選択 contra `tb_staff`, ambos layouts, CSRF, `routes/legacy`, estáticos en `/system/...`, Gates, `Asia/Tokyo`, arreglo de `disp_flg` NULL, `php-jwt`, `session('shop_cd')`, `$siteName` y NUCLEO.md), M1 de S3, マイコレ y 電子看板 de S4, R1 de S2 y la API JWT de S5. `laravel13` con 289 pruebas en verde; la web responde 200 en `/system/login.php`.
+- 2026-11-27:
+  - CONVENCIONES: el texto de formulario se guarda con `LegacyText::input()` (`get_form2()`) y se imprime con `{!! !!}`, como el legacy (propuesta de S1).
+  - S4: al borrar un display no se borran sus 素材, igual que el legacy (los deja huérfanos).
+  - El port de `Point::setPoint` para la API de S5 es de S3 (`PointService`).
 - 2026-11-27: siguiente tarea de S1 (Antony: el login primero): modelo base y traits comunes, luego el login contra el personal del legacy, el layout idéntico y los estáticos comunes.
 
 ## Hecho
