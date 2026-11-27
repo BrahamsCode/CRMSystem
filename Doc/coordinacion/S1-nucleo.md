@@ -7,16 +7,11 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente de "Cola". Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — Fase 1: Laravel 12 → 13 en PHP 8.5
+## Próximo paso — A) Base legacy, luego B) Login + layout (S0, 2026-11-26)
 
-> **2026-11-26, cambio de base (Antony):** misma BD y misma UI que el legacy (`CONVENCIONES.md`, sección 0). Ya están hechos en `laravel13`: el esquema `database/schema/pgsql-schema.sql`, el borrado de lo construido sobre tablas nuevas (incluidos `Admin`, la tabla `admins` y el layout Tailwind) y `scripts/bd-legacy.sh`. Si tu rama no lo tiene, pídele a S0 que haga el merge de `laravel13`. Fortify quedó apuntando a `App\Models\Admin`, que ya no existe: el login se rehace en el núcleo.
+**A) Base legacy** (corto; subir apenas esté): traits `app/Models/Concerns/` `HasHatuban` (numeración por `koumoku`), `LegacySoftDeletes` (scope `disp_flg <> '9'`, `delete()` pone `'9'`), `LegacyTimestamps` (`touroku_date`/`update_date` epoch en texto); modelo base `LegacyModel` (`cd`, no incremental, sin timestamps, `$guarded=[]`); servicio `Hatuban`; modelos `Shop` (`tb_shop`), `Staff` (`tb_staff`), `Terminal` (`tb_terminal`), `AdminMaster`, `ContentsMaster`, con pruebas sobre el esquema legacy; registrar `<Modulo>ServiceProvider` existentes en `bootstrap/providers.php`. Terminado: pruebas en verde, commit, push, aviso.
 
-1. Verificar el entorno: `bash scripts/en-docker.sh php -v` (debe decir 8.5) y `bash scripts/en-docker.sh php artisan test` con Laravel 12 (línea base: anotar cuántas pruebas pasan).
-2. `public_html/composer.json`: `php: ^8.3`, `laravel/framework: ^13.0` y las versiones compatibles de `laravel/fortify`, `laravel/tinker`, `pestphp/pest` (4.x), `pestphp/pest-plugin-laravel`, `nunomaduro/collision`, `laravel/pail`, `laravel/sail`, `laravel/pint`. `composer update` con `bash scripts/en-docker.sh composer update -W`.
-3. Aplicar la guía oficial de actualización 12 → 13 (cambios de configuración, `bootstrap/app.php`, deprecaciones). Edición quirúrgica.
-4. Criterio de terminado: `php artisan --version` = 13.x, mismas pruebas en verde que la línea base, `npm run build` OK (`docker compose run --rm node npm run build` desde `docker/` del repo principal no sirve para tu worktree: usa `bash scripts/en-docker.sh npm ci && bash scripts/en-docker.sh npm run build`).
-5. `Dockerfile` de la raíz (Render): `php:8.2-apache` → PHP 8.5, coherente con `docker/dockerfile`.
-6. Avisar a S0.
+**B) Login + layout**, en orden: 1) login del personal contra `tb_staff`/`admin_master` (guard propio, mismas credenciales; quitar Fortify/`Admin`); 2) estáticos comunes en `public/legacy/` (`system/css|js|images|plugin`, `common/`); 3) layout Blade idéntico (`inc/head.php`, `header.php`, `left_navi*`, `footer.php`) con contrato de secciones; 4) menú desde `config/menu/*.php`; 5) Gates `<modulo>.<acción>` ≈ `cKengen`; 6) システム選択; 7) `NUCLEO.md`. Terminado: login/logout contra `bd-legacy.sh` (master del backup) con la misma pantalla, pruebas Pest de login y layout, commit, push, aviso.
 
 ## Cola (después de la Fase 1, en orden)
 
@@ -53,10 +48,18 @@ Recibidos de S0 el 2026-11-26 (para la Cola, después de la Fase 1; S0 los asign
 
 ## Decisiones
 
+- Base legacy (A): `LegacySoftDeletes` filtra `disp_flg <> '9'` literal (como el SQL del legacy: un `disp_flg` NULL también queda fuera); `restore()` pone `'1'`; `forceDelete()` borra la fila. `Staff::active()` exige `disp_flg = '1'` (lo que pide el login legacy).
+- `LegacyTimestamps`: epoch en texto por defecto (`time()`), formato cambiable con `$legacyDateFormat` (p. ej. `tb_shop_category` usa `Y/m/d H:i:s`); las columnas no se castean a Carbon al leer (hay `update_date` vacíos), se usa `legacyDate('col')`. También cubre `Model::where()->update()`.
+- `Hatuban::next()` = `set_hatuban` (sin fila: inserta kazu=2 y devuelve 1); `peek()` = `view_hatuban`.
+- `Terminal` sin borrado lógico (el legacy hace DELETE). `ContentsMaster` solo lee `disp_flg = '1'` (como `Base.php`).
+- `bootstrap/providers.php` registra solo cualquier `app/Providers/*ServiceProvider.php`: los módulos no editan ese archivo.
+
 - Fase 1: `config/session.php` → `serialization = json` y `config/cache.php` → `serializable_classes = false` (valores del skeleton 13; si chocan con la base de Antony con `file`, prevalece la suya). `lock_path` de la caché de archivos → `framework/cache/locks`; canal `daily` de logging `days` → `max_files` (skeleton 13).
 - `Dockerfile` (Render): `php:8.5-apache-trixie`, Node 24, sin instalar `opcache` (ya viene en el núcleo de 8.5). Se corrige `npm ci --only=production`, que omitía Vite (devDependency) y rompía el build.
 - `CSRF`: no había referencias a `VerifyCsrfToken`/`ValidateCsrfToken` en el código; nada que renombrar a `PreventRequestForgery`.
 
 ## Hecho
+
+- **A) Base legacy (2026-11-26):** `app/Models/LegacyModel.php`, `Concerns/{HasHatuban,LegacySoftDeletes,LegacySoftDeletingScope,LegacyTimestamps}.php`, `app/Services/Nucleo/Hatuban.php`, modelos `Shop`, `Staff`, `Terminal`, `AdminMaster` (`current()`), `ContentsMaster` (`text/int/put`). Pruebas `tests/Feature/Nucleo/LegacyBaseTest.php` (7). Suite: 29 en verde.
 
 - **Fase 1 (2026-11-26):** Laravel 12.69.3 → **13.44.1** en PHP 8.5.13. Línea base L12: 86 pruebas en verde (238 aserciones); con L13: las mismas 86 en verde. `npm ci && npm run build` OK (Vite 7). Paquetes: fortify 1.44, tinker 3.2, pest 4.7, pest-plugin-laravel 4.1, pail 1.3, pint 1.32, sail 1.71, collision 8.9.
