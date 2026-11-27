@@ -137,6 +137,9 @@
   `laravel13` con 862 pruebas en verde. El M3 de S3 (c6b03e5) NO se integra: rompe `AnketoMailTest` de S4 (el flujo de `MailController` cambió). Lo arreglan S3 y S4 juntos.
 - Reparto final de S3 (el grupo con más pendiente): F4 y F5 → S2; M5 y M7 → S4. S3 se queda con M4, F1b y M6. M10 (apoyo al importador) se descarta: ya no hay importador. M9 y F8 esperan a Antony.
 - Para Japón (appview, S5): el legacy fallaba con `touroku_bonus > 0`, el push de bienvenida no llegaba y `pushMessage.php` no existía; aquí funcionan. Además se escapan con `h()` (XSS del legacy).
+- 2026-11-27 (05:30): integrados `LegacyPdf` de S1 (mPDF 8.3.1, el mismo del legacy, con fuente japonesa), `AppviewReservationTest` de S5 y la QA parcial de category5 (sin diferencias propias), y las filas de paridad cuadradas de S2. `laravel13` con 868 pruebas en verde.
+- La sesión del socio de `r/`/`reserve/` sale del token md5(cd:touroku_date) con el que la app los abre (ya en R7). La otra vía, el login de `hp/user`, está fuera de alcance: se lo pregunto a Antony.
+- Las 5 sesiones se detuvieron hacia las 04:05 por límite de uso; se les pide que retomen.
 - 2026-11-27: siguiente tarea de S1 (Antony: el login primero): modelo base y traits comunes, luego el login contra el personal del legacy, el layout idéntico y los estáticos comunes.
 
 ## Hecho

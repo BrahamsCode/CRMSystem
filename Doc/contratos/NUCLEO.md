@@ -151,3 +151,19 @@ LegacyCsv::encode(string $utf8): string                       // UTF-8 → SJIS-
 - `$options`: `quote` = `'all'` (por defecto: cada celda entre comillas, `"` → `""`), `'minimal'` (solo si lleva `,` `"` o salto) o `'none'` (tal cual); `eol` (`"\r\n"`); `content_type` (`'text/x-csv'`; algunos legacy usan `application/octet-stream`); `chunk` (500 filas).
 - Formatos especiales del legacy (tabulador inicial para que Excel no convierta números, líneas de título antes de la cabecera): se arman en la celda o con `line()` + `encode()` dentro de un `streamDownload` propio.
 
+
+## 11. PDF: `App\Support\LegacyPdf` (mPDF 8.3)
+
+El mismo paquete que el legacy (`signage/pdf/invoice.php`). Por defecto `mode => 'ja'` + autoScriptToLang/autoLangToFont: el japonés sale con la fuente CJK incluida en mPDF (Sun-ExtA, incrustada), sin instalar fuentes.
+
+```php
+LegacyPdf::make(array $config = []): \Mpdf\Mpdf                       // instancia configurada (maquetar a mano: etiquetas DM)
+LegacyPdf::fromHtml(string $html, array $config = []): string          // bytes del PDF
+LegacyPdf::fromView(string $view, array $data = [], array $config = []): string
+LegacyPdf::download(string $filename, string $html, array $config = [], bool $inline = false): StreamedResponse
+LegacyPdf::downloadView(string $filename, string $view, array $data = [], array $config = [], bool $inline = false): StreamedResponse
+```
+
+- `$config` pisa las opciones de mPDF (`format` 'A4-L' o `[ancho, alto]` en mm, `margin_*`…). `inline: true` = `Output(..., 'I')`; por defecto descarga (`'D'`).
+- Fuentes propias (IPAex, Noto): dejar los `.ttf` en `config('crm.pdf.font_dir')` (`CRM_PDF_FONT_DIR`, por defecto `storage/fonts`), declararlos en `crm.pdf.fonts` (ya están `ipaexg`/`ipaexm`) y elegir con `CRM_PDF_DEFAULT_FONT`. Solo se registran si el archivo existe; los archivos no van en git.
+- Temporales en `storage/framework/cache/mpdf`.
