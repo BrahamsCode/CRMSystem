@@ -7,11 +7,11 @@
 
 Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archivo y seguir con la siguiente. Si falta un detalle menor, decide lo más simple que respete las convenciones, anótalo en "Decisiones" y sigue. Al terminar todo o bloquearte: `SendMessage` a "S0 Coordinador CRM" (una línea: qué hiciste, qué sigue, qué necesitas). Cada entregable terminado con pruebas en verde: `git add` de tus rutas, commit (mensaje en español) y `git push origin <tu rama>`; después avisa a S0, que integra en `laravel13`. No haces merge ni cambias de rama; nunca `--force`.
 
-## Próximo paso — M1 (plantillas y direcciones de prueba): controladores, rutas y menú sobre las vistas ya hechas
+## Próximo paso — M2 (メルマガ / デコメール)
 
-Bloque 0.1 terminado (2026-11-26): 36 modelos en `app/Models/Promotions/` con relaciones y pruebas de lectura; `PromocionServiceProvider` (Scheduler con `promocion:clean-temp`, `PosGateway` → `NullPosGateway`); servicios sobre `tb_*`: `PointRuleResolver`, `LotteryService`, `CouponService`, `SendSchedulePlanner`, `PointLogClassifier`, `LegacyTime`. Pruebas: 76 de promoción, suite completa 105 en verde. Vistas M1 y 発行条件選択 subidas en el mismo push.
+発行条件選択 (con `CustomerSearch` y los parciales de búsqueda de S2) → redacción (`inc/mail_frm.php`) → confirmación → registro, prueba, imagen, 例外会員, programados, pasados, detalle, destinatarios, CSV y anulación; `MailSender`, `MailRenderer` (usa `MailReplaceTags`) y `promocion:send-mail` con `SendSchedulePlanner`.
 
-Después, en el orden del diseño: M2 (envíos メルマガ/デコメール, con `MailSender` y `promocion:send-mail`), F1, F2…
+M1 terminado (2026-11-26): `TemplateController`, `TemplateCategoryController`, `TestAddressController` (Admin/Promotions), Form Requests, servicios `RankOrder`, `StaffContext`, `MailReplaceTags`; rutas `routes/modulos/promocion.php` (pantallas `admin.promocion.*`) y `routes/legacy/promocion.php` (AJAX/registros con la URL del legacy, `legacy.promocion.*`); menú `config/menu/promocion.php` (bloque メルマガ管理). Pruebas `M1TemplatesTest` (11); suite completa 190 en verde. Las pruebas montan un layout mínimo y cargan `routes/legacy/promocion.php` mientras S1 no publique layout, login del personal y carga de `routes/legacy`.
 
 ## Diseño v2 (aprobado)
 
@@ -58,5 +58,7 @@ Detalle en `Doc/diseno/promocion.md` §5. Resumen:
 Ver `Doc/diseno/promocion.md` §6. Las principales: controladores en `Admin/Promotions` (existente) con rutas/vistas/lang/menú `promocion`; ninguna pantalla en `hecho` porque la base existente no cumple aún la paridad (textos fuera de `lang/ja`, sin Form Requests ni Policies, faltan campos); `anketo`+`anketo2` → `surveys.type`; `hyouji_flg` → `status`; históricos de envío como solo lectura (la SQL `振分配信` no se migra); saldos de puntos/sellos como movimiento inicial.
 
 ## Hecho
+
+- 2026-11-26 — M1: plantillas, categorías y direcciones de prueba (controladores, rutas, menú, 11 pruebas).
 
 - 2026-11-26 — Diseño `Doc/diseno/promocion.md`: paridad (todas las vistas de 03a y 03b), esquema y mapeo `tb_*`, servicios viejos → Laravel, orden (bloque 0: 3 pts, mensajería: ≈ 33, fidelización: ≈ 35,5) y pedidos. Esperando revisión de S0.

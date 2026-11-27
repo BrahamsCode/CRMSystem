@@ -475,6 +475,7 @@ Orden con una sola sesión (decisión de S0): 0.1 → M1 → M2 → F1 → F2 �
 6. Paquete PDF (QR印刷, etiquetas DM); mantener `bacon/bacon-qr-code`.
 7. Helper CSV SJIS-win; ruta `/hp/uploads/{path}` hacia Storage (imágenes de correos, push y 新着情報).
 8. `app.timezone = Asia/Tokyo` (el legacy usa `date.timezone = Asia/Tokyo`; hoy es `UTC`). Mientras tanto, S3 interpreta sus horas con `App\Services\Promotions\LegacyTime::ZONE`; `LegacyTimestamps::legacyDate()` sí depende de `app.timezone`.
+9. Guard y login sobre `Staff` (hoy `auth:admin` apunta a un modelo `Admin` que no existe), layouts `layouts.legacy`/`layouts.legacy-popup` y carga de `routes/legacy/*.php` en `routes/web.php`; unir `config/menu/promocion.php` en el menú lateral. Las pruebas de S3 usan un layout mínimo mientras tanto.
 
 ### A S2 (clientes / reservas)
 1. Modelo `Reservation` (sobre `tb_yoyaku`) con scope `remindable()`.
