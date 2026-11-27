@@ -56,6 +56,8 @@ return [
     'notify' => [
         // shop_new_register.php: alta de tienda
         'shop_created' => env('CRM_NOTIFY_SHOP_CREATED', 'support@glory.ne.jp'),
+        // system/contact: 要望・お問い合わせ de la cabecera (お問合せ); el legacy envía desde y hacia esta dirección
+        'contact' => env('CRM_NOTIFY_CONTACT', 'crm@extlink.co.jp'),
     ],
 
     /* Días que se recuerda el usuario en el login (cookie, casilla ログイン情報を保存) */
