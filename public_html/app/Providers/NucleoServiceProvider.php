@@ -10,6 +10,7 @@ use App\Services\Nucleo\StaffLogin;
 use App\Services\Nucleo\TempUploads;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Http\Middleware\TrustProxies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -39,6 +40,8 @@ class NucleoServiceProvider extends ServiceProvider
                 ->withoutOverlapping();
         });
 
+        self::trustProxies((string) config('crm.trusted_proxies', ''));
+
         Auth::provider('legacy_staff', fn ($app, array $config) => new LegacyStaffUserProvider($app['hash'], $config['model']));
 
         RateLimiter::for('staff-login', fn (Request $request) => Limit::perMinute(20)->by((string) $request->input('admin_id') . '|' . $request->ip()));
@@ -51,6 +54,20 @@ class NucleoServiceProvider extends ServiceProvider
                 $view->with('siteName', self::siteName());
             }
         });
+    }
+
+    /**
+     * Proxies de confianza para el middleware TrustProxies (global en Laravel): `crm.trusted_proxies`
+     * ('*' o lista con comas). Vacío no cambia nada: request()->ip() es REMOTE_ADDR, como el legacy.
+     */
+    public static function trustProxies(string $value): void
+    {
+        $value = trim($value);
+        if ($value === '') {
+            return;
+        }
+
+        TrustProxies::at($value === '*' ? '*' : array_values(array_filter(array_map('trim', explode(',', $value)))));
     }
 
     private static function siteName(): string

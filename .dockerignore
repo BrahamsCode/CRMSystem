@@ -1,39 +1,56 @@
+# Contexto de la imagen de producción (Dockerfile de la raíz). Las rutas son relativas a la raíz:
+# `.env` solo cubre ./.env, por eso public_html/ lleva sus propias líneas (Doc/contratos/DESPLIEGUE.md §1).
+
 # Git
 .git
 .gitignore
 
-# Docker
-docker/
+# Docker: solo entra lo de producción (docker/produccion y la política de ImageMagick)
+docker/*
+!docker/produccion
+!docker/policy.xml
 Dockerfile
 docker-compose.yml
 .dockerignore
-docker-entrypoint.sh
 
-# Documentación
+# Documentación y scripts de desarrollo
 Doc/
+scripts/
 README.md
 *.md
 
-# Archivos de entorno locales
+# Archivos de entorno locales (nunca en la imagen: la configuración sale de las variables del servicio)
 .env
 .env.local
 .env.*.local
+public_html/.env
+public_html/.env.*
 
 # Dependencias (se instalarán en el build)
 public_html/node_modules
 public_html/vendor
+public_html/public/build
+public_html/public/hot
 
-# Archivos temporales de Laravel
+# Enlace de storage:link del desarrollo (lo recrea el entrypoint)
+public_html/public/storage
+
+# Archivos temporales de Laravel y subidas del desarrollo
 public_html/storage/*.key
 public_html/storage/logs/*
 public_html/storage/framework/cache/*
 public_html/storage/framework/sessions/*
 public_html/storage/framework/views/*
+public_html/storage/framework/testing
+public_html/storage/app/public/*
+public_html/storage/app/private/*
+public_html/storage/fonts
 public_html/bootstrap/cache/*
 
 # Testing
 public_html/.phpunit.cache
 public_html/tests/
+public_html/phpunit.xml
 
 # IDE
 .vscode

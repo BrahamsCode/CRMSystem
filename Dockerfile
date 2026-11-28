@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1
-# Dockerfile optimizado para producción en Render
-# PHP 8.5 como docker/dockerfile (desarrollo usa FPM + Apache aparte; Render, un solo contenedor con mod_php)
+# Imagen de PRODUCCIÓN (Render u otro hosting con contenedores). Doc/contratos/DESPLIEGUE.md.
+# PHP 8.5 como docker/dockerfile (desarrollo usa FPM + Apache aparte; aquí, un solo contenedor con mod_php).
+# Nada de esto lo usa el docker local (docker/docker-compose.yml) ni scripts/en-docker.sh.
 FROM php:8.5-apache-trixie
 
 # Copiar Composer
@@ -14,6 +15,7 @@ RUN ln -s ../lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
 
 # Instalar extensiones PHP y dependencias del sistema
 # opcache ya viene compilado en el núcleo de PHP 8.5: no se instala aparte
+# fonts-ipaexfont-*: IPAex (licencia IPA) para los PDF con nombres (髙, 﨑…), NUCLEO.md §11
 RUN --mount=type=bind,from=mlocati/php-extension-installer:2,source=/usr/bin/install-php-extensions,target=/usr/local/bin/install-php-extensions \
     install-php-extensions pdo_pgsql pgsql pdo_mysql intl zip gd pcntl exif bcmath imagick \
     && apt-get update \
@@ -22,28 +24,38 @@ RUN --mount=type=bind,from=mlocati/php-extension-installer:2,source=/usr/bin/ins
         postgresql-client \
         imagemagick \
         jpegoptim optipng pngquant gifsicle \
+        fonts-ipaexfont-gothic fonts-ipaexfont-mincho \
         tzdata \
     && ln -snf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime \
     && echo "Asia/Tokyo" > /etc/timezone \
     && a2enmod rewrite headers \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/*
 
-# Configuración de zona horaria y Apache
-ENV TZ=Asia/Tokyo \
-    APACHE_DOCUMENT_ROOT=/var/www/public
+# IPAex en una sola carpeta (config('crm.pdf.font_dir')), fuera de storage/ por si storage es un disco montado
+RUN mkdir -p /usr/local/share/fonts/ipaex \
+    && ln -s "$(find /usr/share/fonts -name ipaexg.ttf | head -n1)" /usr/local/share/fonts/ipaex/ipaexg.ttf \
+    && ln -s "$(find /usr/share/fonts -name ipaexm.ttf | head -n1)" /usr/local/share/fonts/ipaex/ipaexm.ttf \
+    && test -s /usr/local/share/fonts/ipaex/ipaexg.ttf && test -s /usr/local/share/fonts/ipaex/ipaexm.ttf
 
-# Configurar DocumentRoot de Apache para Laravel
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
-    && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+# Zona horaria y PDF (valores por defecto de la imagen; las variables del servicio los pisan)
+ENV TZ=Asia/Tokyo \
+    CRM_PDF_FONT_DIR=/usr/local/share/fonts/ipaex \
+    CRM_PDF_DEFAULT_FONT=ipaexm
+
+# Apache: vhost propio con AllowOverride All (public/.htaccess) y LimitRequestBody
+COPY docker/produccion/000-default.conf /etc/apache2/sites-available/000-default.conf
+
+# PHP de producción (sin display_errors, opcache sin revisar archivos)
+COPY docker/produccion/php.ini /usr/local/etc/php/conf.d/zz-app.ini
+
+# Política de ImageMagick (la misma que se monta en desarrollo)
+COPY docker/policy.xml /etc/ImageMagick-7/policy.xml
 
 # Establecer directorio de trabajo
 WORKDIR /var/www
 
-# Copiar archivos del proyecto
+# Copiar archivos del proyecto (.dockerignore deja fuera .env, vendor, node_modules, subidas y pruebas)
 COPY public_html /var/www
-
-# Copiar configuración personalizada de PHP
-COPY docker/php.ini /usr/local/etc/php/conf.d/zz-app.ini
 
 # Instalar dependencias de Composer (optimizado para producción)
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
@@ -54,10 +66,11 @@ RUN npm ci \
     && npm run build \
     && rm -rf node_modules
 
-# Establecer permisos correctos
-RUN chown -R www-data:www-data /var/www \
-    && chmod -R 755 /var/www/storage \
-    && chmod -R 755 /var/www/bootstrap/cache
+# El código queda de root; Apache (www-data) solo escribe en storage/ y bootstrap/cache/
+RUN mkdir -p storage/app/public storage/app/private storage/framework/cache/data storage/framework/sessions \
+        storage/framework/views storage/logs bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R ug+rwX storage bootstrap/cache
 
 # Exponer puerto 80
 EXPOSE 80

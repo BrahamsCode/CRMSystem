@@ -42,6 +42,13 @@ return [
     'developer_ips' => array_filter(array_map('trim', explode(',', (string) env('CRM_DEVELOPER_IPS', '')))),
 
     /*
+     * Proxies de confianza (balanceador del hosting): '*' o IP/rangos separados por comas. Vacío = ninguno, se usa
+     * REMOTE_ADDR como el legacy. Detrás de un proxy hace falta para la IP real (developer_ips, límite de login,
+     * tb_login_rireki) y para saber que la petición llegó por HTTPS. Lo aplica NucleoServiceProvider::trustProxies().
+     */
+    'trusted_proxies' => (string) env('TRUSTED_PROXIES', ''),
+
+    /*
      * Login de soporte del proveedor (system/login.php): usuarios `Relation` y `extsupport`
      * verificados contra el servidor externo; entran como `master` con estas claves internas.
      */
