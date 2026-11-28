@@ -9,7 +9,7 @@ Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archiv
 
 ## Próximo paso — Esperar a S0 / Antony
 
-Hecho (promocion, por reparto de carga): F6 アンケート/お客様アンケート, F7 来店履歴, M8 DM発行; permisos de mypage (QA). Pendiente: クリックカウンタ de anketo (M4 de S3); en espera de Antony: ビーコン, GoTel/PDF, volcado de `signage/`.
+Hecho (promocion, por reparto de carga): F6 アンケート/お客様アンケート, F7 来店履歴, M8 DM発行; permisos de mypage (QA). クリックカウンタ de anketo: hecha por S3 (M4). En espera de Antony: ビーコン, GoTel/PDF, volcado de `signage/`.
 
 ## Tarea anterior — Diseño (sin código, hecho)
 
@@ -76,6 +76,8 @@ Ver diseño §5. A S0: BD `admin` de `signage/` (no está en el esquema); GoTel/
 - Config de マイコレ y ガチャリン en `contents_master` (modelo de S1) vía servicios de S4; `mypage_config` sigue con `serialize()` (lo leen `mpa_*`).
 
 ## Hecho
+
+- 2026-11-28 Recomprobación de imágenes de S4 en :8081 tras `storage:link`/`APP_URL` (todo 200; S4 usa `hp/uploads/`). クリックカウンタ de anketo ya la hizo S3 (M4). Sin tarea: espera a S0 (no correr Pest hasta su aviso).
 
 - 2026-11-28 `database/seeders/Demo/ContenidoDemoSeeder.php`: マイコレ (カバー 4, バナー 3, HOME y サムネイル), オススメ 3, 求人 3 (2 職種, floormap.xml), ガチャリン (config + tiradas de socios), 電子看板 (3 素材 con imagen, 2 プログラム horizontal/vertical con XML, 2 displays), ペーパーサイネージ 3, ICカード 5 (3 asignadas), signage/ (paquete, 3 imágenes, 2 terminales). Idempotente por bloque; sin socios o sin esquema signage/ salta esa parte. Placeholders GD en el disco public. `tests/Feature/Contenido/DemoSeederTest.php`. Suite 991 verde.
 
