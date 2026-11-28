@@ -141,6 +141,7 @@ Diferencias con crm2-php8, a propósito: `DocumentRoot /var/www/public` (Laravel
 
 | Cuándo | `laravel13` | Qué | Pruebas |
 |---|---|---|---|
+| 2026-11-27 22:50 | 45106e6 (S2) | `DemoSociosSeederTest` ya no depende del orden: tomaba una カルテ con `first()` sin `ORDER BY` | Customers 177/177 (S2: 3 corridas con `--order-by=random`) |
 | 2026-11-27 22:45 | 654aadb (S3) | **Hueco de paridad cerrado:** caducidad de puntos del cron del legacy (`promocion:point-shikkou`, `point-shikkou-alert` y `--due`, con `PointExpiryMailer`). `stamp-shikkou` queda programada una sola vez (`ScheduleSinDuplicadosTest`). Auditoría de las tareas del cron del legacy (crontab dinámico de `cSendSchedule` + guardas `PHP_SAPI`) en `Doc/qa/cron-legacy.md`: ninguna en «falta». En producción todo corre con un solo `schedule:run` cada minuto | Promotions 272/272 |
 | 2026-11-27 22:35 | 51b2674 | Suite completa en serie con la imagen de S1 y el arreglo de kintai: 1 fallo, `DemoSociosSeederTest`, que depende del orden de las pruebas (sola pasa 3/3). Se la paso a S2 para que no dependa del orden. `RouteTableTest` en verde: ya no quedan rutas duplicadas | **1055/1056** |
 | 2026-11-27 22:20 | 6e287cb (S1) | Imagen de producción de S1 (§13, puntos 1–7 y 9): `.dockerignore` sin `.env` (el Dockerfile anterior ni siquiera construía), Apache de producción con `AllowOverride`, `php.ini` de producción, `policy.xml`, IPAex, entrypoint sin `migrate` (habría cargado el esquema sobre la BD del legacy), con `storage:link`, `optimize` y planificador, `trustProxies` y `.env.example` completo. Nuevas `RouteTableTest` y `TrustProxiesTest`. Verificado: build OK, imagen sin `.env`, login y pantallas en 200 con caché | Suite en serie en curso (S1: 1053 en verde en su worktree) |
@@ -148,8 +149,7 @@ Diferencias con crm2-php8, a propósito: `DocumentRoot /var/www/public` (Laravel
 | 2026-11-27 22:05 | 241bf13 | S2 reverifica en :8081 los permisos de reservas y el CSV de 予約一覧出力: sin fallos. S1 escribe `DESPLIEGUE.md` | — |
 | 2026-11-27 22:00 | 85a2f10 | Suite completa en serie con las sesiones paradas: 1041 en verde y 5 fallos (4 del entorno y 1 real, el de kintai) | 1041/1046 |
 
-Hallazgos abiertos:
-- `DemoSociosSeederTest` depende del orden de las pruebas (lo arregla S2).
+Hallazgos abiertos: ninguno. Lo que queda espera a Antony o a Japón (§8, `Doc/qa/para-japon.md` y `DESPLIEGUE.md`, «Decide Antony»).
 
 ## 8. Siguiente paso
 
