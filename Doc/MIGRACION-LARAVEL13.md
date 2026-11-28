@@ -141,6 +141,7 @@ Diferencias con crm2-php8, a propósito: `DocumentRoot /var/www/public` (Laravel
 
 | Cuándo | `laravel13` | Qué | Pruebas |
 |---|---|---|---|
+| 2026-11-27 22:45 | 654aadb (S3) | **Hueco de paridad cerrado:** caducidad de puntos del cron del legacy (`promocion:point-shikkou`, `point-shikkou-alert` y `--due`, con `PointExpiryMailer`). `stamp-shikkou` queda programada una sola vez (`ScheduleSinDuplicadosTest`). Auditoría de las tareas del cron del legacy (crontab dinámico de `cSendSchedule` + guardas `PHP_SAPI`) en `Doc/qa/cron-legacy.md`: ninguna en «falta». En producción todo corre con un solo `schedule:run` cada minuto | Promotions 272/272 |
 | 2026-11-27 22:35 | 51b2674 | Suite completa en serie con la imagen de S1 y el arreglo de kintai: 1 fallo, `DemoSociosSeederTest`, que depende del orden de las pruebas (sola pasa 3/3). Se la paso a S2 para que no dependa del orden. `RouteTableTest` en verde: ya no quedan rutas duplicadas | **1055/1056** |
 | 2026-11-27 22:20 | 6e287cb (S1) | Imagen de producción de S1 (§13, puntos 1–7 y 9): `.dockerignore` sin `.env` (el Dockerfile anterior ni siquiera construía), Apache de producción con `AllowOverride`, `php.ini` de producción, `policy.xml`, IPAex, entrypoint sin `migrate` (habría cargado el esquema sobre la BD del legacy), con `storage:link`, `optimize` y planificador, `trustProxies` y `.env.example` completo. Nuevas `RouteTableTest` y `TrustProxiesTest`. Verificado: build OK, imagen sin `.env`, login y pantallas en 200 con caché | Suite en serie en curso (S1: 1053 en verde en su worktree) |
 | 2026-11-27 22:15 | 9bd0f45 | **Fallo real arreglado (S5):** `POST admin/operaciones/kintai` estaba registrada dos veces; con `route:cache` (producción) el alta de 勤怠 no se procesaba. S2, S3 y S4 comprobaron sus pruebas con caché y sin ella: sin más duplicados. `phpunit.xml` ya no depende del `.env` local (`APP_URL`, avisos). En `CRMSystem/` las pruebas se pasan sin caché de rutas | Operaciones 78/78; S2 338, S3 264 y S4 252, con caché y sin ella |
@@ -148,8 +149,7 @@ Diferencias con crm2-php8, a propósito: `DocumentRoot /var/www/public` (Laravel
 | 2026-11-27 22:00 | 85a2f10 | Suite completa en serie con las sesiones paradas: 1041 en verde y 5 fallos (4 del entorno y 1 real, el de kintai) | 1041/1046 |
 
 Hallazgos abiertos:
-- `promocion:stamp-shikkou` estaba programada dos veces y habría enviado dos veces los avisos de caducidad de sellos. S3 ya tiene el arreglo escrito, a falta de pruebas.
-- **Hueco de paridad:** no existe la caducidad de puntos del cron del legacy (`sendPointShikkou*`). El `PromocionServiceProvider` apuntaba a un `PointShikkouCommand` que no existe. S3 audita las 12 tareas del cron del legacy en `Doc/qa/cron-legacy.md` e implementa las que falten.
+- `DemoSociosSeederTest` depende del orden de las pruebas (lo arregla S2).
 
 ## 8. Siguiente paso
 
