@@ -203,7 +203,11 @@ it('al socio le manda un enlace firmado a Mi página solo si existe la ruta de S
         && str_contains($mail->body, '→確認はログイン後、予約一覧からどうぞ')
         && ! str_contains($mail->body, 'login_pass') && ! str_contains($mail->body, 'user/login.php'));
 
-    // Con la ruta de Mi página publicada, el enlace firmado
+    // Con la ruta de Mi página publicada, el enlace firmado. Con `route:cache` (producción)
+    // no se pueden añadir rutas en tiempo de ejecución: esa parte solo se comprueba sin caché.
+    if (app()->routesAreCached()) {
+        return;
+    }
     Route::get('__test/mypage/{customer}', fn () => '')->name('publico.mypage.login');
     app('router')->getRoutes()->refreshNameLookups();
     Mail::fake();
