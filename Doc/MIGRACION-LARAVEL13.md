@@ -135,10 +135,24 @@ Diferencias con crm2-php8, a propósito: `DocumentRoot /var/www/public` (Laravel
 | 1' | Diseño por grupo (`Doc/diseno/`) | **Hecho (2026-11-27)**: v2 sobre la BD y la UI del legacy, aprobados: S2 (84 pts), S3 (≈83), S4, S5 (63, de los que 22 esperan 勤怠) |
 | 2 | **Misma BD y misma UI que el legacy** (Antony, 2026-11-26): esquema `database/schema/pgsql-schema.sql` desde `crm2019.backup`, modelos sobre `tb_*`, mismos CSS; responsive al final. Lo construido sobre tablas nuevas se borró | **Hecho (esquema y limpieza)** |
 | 3+ | Módulos en paralelo según `Doc/planificacion/ORCHESTRATION.md` | **Hecho salvo decisiones de Japón** (2026-11-27): 989 pruebas en verde; paridad del 97 % (`Doc/qa/paridad.md`), con 7 pendientes (スマトピ, ビーコン, `shukei`); regresión de punta a punta sin errores 500 (`Doc/qa/regresion.md`); informe en `Doc/qa/para-japon.md` |
+| 4 | Endurecer para producción (`Doc/contratos/DESPLIEGUE.md`) | **En curso (2026-11-27, noche)**: imagen de producción lista (S1); falta lo que depende del hosting (§13, puntos 8, 10, 11 y 12) y «Decide Antony» |
+
+### 7b. Avance (bitácora, lo más nuevo arriba)
+
+| Cuándo | `laravel13` | Qué | Pruebas |
+|---|---|---|---|
+| 2026-11-27 22:20 | 6e287cb (S1) | Imagen de producción de S1 (§13, puntos 1–7 y 9): `.dockerignore` sin `.env` (el Dockerfile anterior ni siquiera construía), Apache de producción con `AllowOverride`, `php.ini` de producción, `policy.xml`, IPAex, entrypoint sin `migrate` (habría cargado el esquema sobre la BD del legacy), con `storage:link`, `optimize` y planificador, `trustProxies` y `.env.example` completo. Nuevas `RouteTableTest` y `TrustProxiesTest`. Verificado: build OK, imagen sin `.env`, login y pantallas en 200 con caché | Suite en serie en curso (S1: 1053 en verde en su worktree) |
+| 2026-11-27 22:15 | 9bd0f45 | **Fallo real arreglado (S5):** `POST admin/operaciones/kintai` estaba registrada dos veces; con `route:cache` (producción) el alta de 勤怠 no se procesaba. S2, S3 y S4 comprobaron sus pruebas con caché y sin ella: sin más duplicados. `phpunit.xml` ya no depende del `.env` local (`APP_URL`, avisos). En `CRMSystem/` las pruebas se pasan sin caché de rutas | Operaciones 78/78; S2 338, S3 264 y S4 252, con caché y sin ella |
+| 2026-11-27 22:05 | 241bf13 | S2 reverifica en :8081 los permisos de reservas y el CSV de 予約一覧出力: sin fallos. S1 escribe `DESPLIEGUE.md` | — |
+| 2026-11-27 22:00 | 85a2f10 | Suite completa en serie con las sesiones paradas: 1041 en verde y 5 fallos (4 del entorno y 1 real, el de kintai) | 1041/1046 |
+
+Hallazgos abiertos:
+- `promocion:stamp-shikkou` estaba programada dos veces y habría enviado dos veces los avisos de caducidad de sellos. S3 ya tiene el arreglo escrito, a falta de pruebas.
+- **Hueco de paridad:** no existe la caducidad de puntos del cron del legacy (`sendPointShikkou*`). El `PromocionServiceProvider` apuntaba a un `PointShikkouCommand` que no existe. S3 audita las 12 tareas del cron del legacy en `Doc/qa/cron-legacy.md` e implementa las que falten.
 
 ## 8. Siguiente paso
 
-1. (2026-11-27, noche) El plan de `ORCHESTRATION.md` §4 está cumplido salvo lo que espera a Japón. S0 pasa la suite completa en serie sobre `laravel13` y S1 prepara `Doc/contratos/DESPLIEGUE.md`. La siguiente fase (responsive y rediseño, despliegue o cargar datos reales) la decide Antony.
+1. (2026-11-27, noche) El plan de `ORCHESTRATION.md` §4 está cumplido salvo lo que espera a Japón. Ahora se prepara la producción (fase 4). Antony debe decidir el hosting, el dominio, el corte, el SMTP y la versión de PostgreSQL (`DESPLIEGUE.md`, «Decide Antony»), y cuál es la fase siguiente: responsive y rediseño, o datos reales.
 
 ## 8b. Respuestas de Antony (2026-11-27)
 
