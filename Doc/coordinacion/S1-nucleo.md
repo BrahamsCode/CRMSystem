@@ -9,7 +9,7 @@ Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archiv
 
 ## Próximo paso
 
-`Doc/contratos/DESPLIEGUE.md` escrito (ver "Hecho"). Esperando la siguiente tarea de S0: los cambios de su sección 13 (casi todos de S1) los asigna S0 tras «Decide Antony».
+§13 de DESPLIEGUE.md (puntos 1-7 y 9), tabla de rutas e imagen de producción verificada (ver "Hecho"). Esperando la siguiente tarea de S0. Los puntos 8, 10, 11 y 12 de §13 esperan a Antony o a otras sesiones.
 
 **A) Base legacy** (corto; subir apenas esté): traits `app/Models/Concerns/` `HasHatuban` (numeración por `koumoku`), `LegacySoftDeletes` (scope `disp_flg <> '9'`, `delete()` pone `'9'`), `LegacyTimestamps` (`touroku_date`/`update_date` epoch en texto); modelo base `LegacyModel` (`cd`, no incremental, sin timestamps, `$guarded=[]`); servicio `Hatuban`; modelos `Shop` (`tb_shop`), `Staff` (`tb_staff`), `Terminal` (`tb_terminal`), `AdminMaster`, `ContentsMaster`, con pruebas sobre el esquema legacy; registrar `<Modulo>ServiceProvider` existentes en `bootstrap/providers.php`. Terminado: pruebas en verde, commit, push, aviso.
 
@@ -73,6 +73,25 @@ Recibidos de S0 el 2026-11-26 (para la Cola, después de la Fase 1; S0 los asign
 
 ## Hecho
 
+- **Imagen de producción (2026-11-27):** §13 de DESPLIEGUE.md, puntos 1-7 y 9:
+  - `.dockerignore`; `docker/produccion/{000-default.conf,php.ini}`; `policy.xml`;
+  - IPAex con los paquetes de Debian;
+  - entrypoint sin `.env`, `key:generate` ni `migrate`, y con `storage:link`, `optimize` y `schedule:work` (worker detrás de `CRM_QUEUE_WORKER_ENABLED`);
+  - `TRUSTED_PROXIES` (`NucleoServiceProvider::trustProxies`, `TrustProxiesTest`);
+  - `.env.example` completo.
+
+  Pedido de S0:
+  - `RouteTableTest` (método+URI y nombres duplicados, nombres de grupo sin completar; kintai de S5 saltada);
+  - nombres propios para las `index.php` de `category-top`, category0 y お問い合わせ.
+
+  Verificado:
+  - `docker build` OK, sin `.env` en la imagen, y `optimize` OK al arrancar;
+  - con la caché puesta, login, システム選択 y portadas y pantallas de módulos en 200 contra una copia de la BD de desarrollo;
+  - estáticos servidos por Apache, PDF con IPAex incrustada.
+
+  Suite: 1053 en verde, 1 saltada.
+
+  Hallazgo para S3: `promocion:stamp-shikkou` está programada dos veces.
 - **Despliegue (2026-11-27, laravel13 85a2f10):** `Doc/contratos/DESPLIEGUE.md`, solo documentación. Cubre:
   - imagen de Render, entrypoint, variables de producción, planificador y cola;
   - `storage:link`, persistencia, `signage`/`beacon`, IPAex, cachés, proxy y comprobación;

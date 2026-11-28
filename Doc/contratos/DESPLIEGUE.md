@@ -10,6 +10,8 @@ Qué falta para llevar `laravel13` a un servidor. Revisado sobre `laravel13` 85a
 
 No se construyó la imagen ni se desplegó nada. Lo marcado **(verificar)** se dedujo del código y hay que confirmarlo en el primer build.
 
+**Actualización (2026-11-27):** los problemas de las secciones 1, 2, 3 (`.env.example`), 8 y 11 (proxies) ya están corregidos; el estado está en la sección 13. Las tablas siguientes se dejan como el diagnóstico de partida.
+
 Leyenda: **Bloquea** = sin esto no funciona o es inseguro. **Falta** = hay que hacerlo antes de producción. **Mejora** = recomendable.
 
 ## 1. Imagen: `Dockerfile` de Render
@@ -107,6 +109,8 @@ Reemplazan el crontab que el legacy reescribía desde PHP (`cSendSchedule`). Tod
 | `CleanTempCommand` | diaria | ídem |
 | `GrantRegisterPointsCommand` (cada 5 min), `GrantPaidMemberPointsCommand` (10:00), sellos (cada minuto) | ver proveedor | `PromocionFidelizacionServiceProvider` |
 
+**Hallazgo (2026-11-27, `schedule:list` en la imagen):** `promocion:stamp-shikkou` está registrada **dos veces** cada minuto, desde `PromocionServiceProvider::TASKS` y desde `PromocionFidelizacionServiceProvider`. Para S3: dejar una sola.
+
 Cómo correrlo:
 
 - **VPS o servidor propio:** crontab de `www-data`: `* * * * * cd /var/www && php artisan schedule:run >> /dev/null 2>&1`.
@@ -193,7 +197,8 @@ Hace falta un *Persistent Disk* montado en `/var/www/storage` (o al menos en `st
 - Condiciones, ya comprobadas:
   - ningún `env()` fuera de `config/` (en `app/`, `routes/` y `bootstrap/` no hay ninguno);
   - los menús usan `[Clase::class, 'metodo']` y no closures (NUCLEO §6);
-  - `route:cache` funciona: S0 lo corre antes de las pruebas.
+  - `route:cache` funciona: S0 lo corre antes de las pruebas;
+  - `tests/Feature/Nucleo/RouteTableTest.php` falla si dos rutas comparten método+URI o nombre, o si una se queda con el nombre del grupo sin completar. Con la caché se pisarían sin aviso. `POST admin/operaciones/kintai` queda saltada hasta que S5 la corrija.
 - **No** en desarrollo, en `:8081` ni en los worktrees: con caché de config, un cambio en `.env` o `config/` no se ve hasta `optimize:clear`, y las pruebas fijan valores con `config([...])`.
 - `opcache.validate_timestamps = 0` en producción (sección 1). Por eso cada despliegue tiene que reiniciar Apache o crear un contenedor nuevo; en Render ya pasa.
 
@@ -235,17 +240,26 @@ Hace falta un *Persistent Disk* montado en `/var/www/storage` (o al menos en `st
 
 ## 13. Lista de cambios pendientes (para que S0 los asigne)
 
-| # | Cambio | Dueño probable |
-|---|---|---|
-| 1 | `.dockerignore`: excluir `public_html/.env*` y `public_html/storage/app/{public,private}/*` | S0/S1 |
-| 2 | Apache de producción con `AllowOverride All` (o vhost propio) y `LimitRequestBody` | S1 |
-| 3 | `docker/php-production.ini` y usarlo en el `Dockerfile` | S1 |
-| 4 | Copiar `docker/policy.xml` en la imagen | S1 |
-| 5 | Entrypoint: quitar `cp .env.example`, `key:generate` y `migrate --force`; añadir `storage:link --force`, crear y dar permisos a `storage/*` y usar `optimize`; arrancar el planificador (y el worker si se decide) | S1 |
-| 6 | `trustProxies()` en `bootstrap/app.php` | S1 |
-| 7 | Completar `.env.example` con las variables de la sección 3; `APP_LOCALE=ja` | S1 |
-| 8 | `render.yaml`: `APP_LOCALE=ja`; sesión, caché y cola según la decisión; disco persistente; variables de la sección 3 (`sync: false`) y *Secret Files* de las claves | S0/S1, tras «Decide Antony» |
-| 9 | Descarga de IPAex en el build (si se decide) | S1 |
+Los puntos 1-7 y 9 están **hechos** (S1, 2026-11-27) y verificados con la imagen construida (`docker build`):
+
+- la imagen no lleva `.env`;
+- `optimize` no falla al arrancar;
+- con la caché de config y de rutas puesta, `/system/login.php`, システム選択 y las portadas y pantallas de los módulos responden 200 contra una copia de la BD de desarrollo;
+- `/system/css/mainStyle.css` lo sirve Apache, sin cookie de Laravel;
+- un PDF con 髙/﨑 incrusta IPAex;
+- `schedule:list` muestra las tareas.
+
+| # | Cambio | Dueño probable | Estado |
+|---|---|---|---|
+| 1 | `.dockerignore`: excluir `public_html/.env*` y `public_html/storage/app/{public,private}/*` | S0/S1 | **Hecho.** Además excluye `public/build`, `public/storage`, las pruebas y `scripts/`. Corregido también que excluyera `docker/` y `docker-entrypoint.sh`, que el `Dockerfile` copia: el build anterior no podía terminar. Solo entran `docker/produccion/` y `docker/policy.xml`. |
+| 2 | Apache de producción con `AllowOverride All` (o vhost propio) y `LimitRequestBody` | S1 | **Hecho:** `docker/produccion/000-default.conf` (vhost propio, `ServerName`, 256 MB); quitados los `sed` del `DocumentRoot`. |
+| 3 | `docker/php-production.ini` y usarlo en el `Dockerfile` | S1 | **Hecho:** `docker/produccion/php.ini`. |
+| 4 | Copiar `docker/policy.xml` en la imagen | S1 | **Hecho:** `/etc/ImageMagick-7/policy.xml` (ImageMagick 7.1.1 en trixie). |
+| 5 | Entrypoint: quitar `cp .env.example`, `key:generate` y `migrate --force`; añadir `storage:link --force`, crear y dar permisos a `storage/*` y usar `optimize`; arrancar el planificador (y el worker si se decide) | S1 | **Hecho.** Sin `APP_KEY` el contenedor no arranca. La espera a PostgreSQL tiene límite (`DB_WAIT_SECONDS`). `optimize` corre como `www-data`. `schedule:work` arranca con `CRM_SCHEDULER_ENABLED=true` (por defecto) y `queue:work` con `CRM_QUEUE_WORKER_ENABLED=false` (por defecto), los dos con reinicio. El docker local y `en-docker.sh` no cambian. |
+| 6 | `trustProxies()` en `bootstrap/app.php` | S1 | **Hecho** con `TRUSTED_PROXIES` → `NucleoServiceProvider::trustProxies()` (`TrustProxies::at()`), con prueba `TrustProxiesTest`. No va en `bootstrap/app.php` porque ahí la configuración aún no está cargada. |
+| 7 | Completar `.env.example` con las variables de la sección 3; `APP_LOCALE=ja` | S1 | **Hecho:** interruptores externos apagados (`CRM_GAPI_ENABLED=false`, `MOBILESHOP_EXTLINK_ENABLED=false`), `TRUSTED_PROXIES` y las variables del entrypoint comentadas. |
+| 8 | `render.yaml`: `APP_LOCALE=ja`; sesión, caché y cola según la decisión; disco persistente; variables de la sección 3 (`sync: false`) y *Secret Files* de las claves | S0/S1, tras «Decide Antony» | Pendiente |
+| 9 | Descarga de IPAex en el build (si se decide) | S1 | **Hecho** con los paquetes de Debian `fonts-ipaexfont-gothic`/`-mincho` (sin descarga externa), enlazados en `/usr/local/share/fonts/ipaex`. La imagen pone `CRM_PDF_FONT_DIR` y `CRM_PDF_DEFAULT_FONT=ipaexm`, y el build falla si faltan los `.ttf`. |
 | 10 | Probar `SendMailmagJob` con una lista grande y decidir la cola | S3 + S0 |
 | 11 | Comparar el esquema de producción con `pgsql-schema.sql` y preparar un script para lo que falte | S1 (Cola 4), con el volcado |
 | 12 | Actualizar `DEPLOY_RENDER.md`: habla de `AdminSeeder`, `CatalogSeeder`, la rama `brahamscode/modulo-promocion` y `migrate` | S0 |

@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 // Solo master: el legacy oculta 基本情報管理 a los demás (header.php, select.php) pero no cerraba las URL
 Route::name('base.')->middleware('can:nucleo.master')->group(function () {
     Route::get('system/category0', IndexController::class)->name('index');
-    Route::get('system/category0/index.php', IndexController::class);
+    Route::get('system/category0/index.php', IndexController::class)->name('index.php');
 
     // 店舗情報管理
     Route::prefix('system/category0/shop')->name('shops.')->controller(ShopController::class)->group(function () {
@@ -116,10 +116,10 @@ Route::name('nucleo.graph.')->controller(GraphController::class)->group(function
 Route::name('nucleo.category-top.')->controller(\App\Http\Controllers\Admin\Nucleo\CategoryTopController::class)->group(function () {
     foreach (array_keys(\App\Http\Controllers\Admin\Nucleo\CategoryTopController::MENUS) as $category) {
         Route::get("system/category{$category}", 'show')->name((string) $category)->defaults('category', $category);
-        Route::get("system/category{$category}/index.php", 'show')->defaults('category', $category);
+        Route::get("system/category{$category}/index.php", 'show')->name("{$category}.index")->defaults('category', $category);
     }
     Route::get('system/category9', 'reservations')->name('9');
-    Route::get('system/category9/index.php', 'reservations');
+    Route::get('system/category9/index.php', 'reservations')->name('9.index');
 });
 
 /*
@@ -136,6 +136,6 @@ Route::name('nucleo.uploads.')->controller(\App\Http\Controllers\Admin\Nucleo\Pi
  */
 Route::name('nucleo.contact.')->controller(\App\Http\Controllers\Admin\Nucleo\ContactController::class)->group(function () {
     Route::match(['get', 'post'], 'system/contact', 'form')->name('form');
-    Route::match(['get', 'post'], 'system/contact/index.php', 'form');
+    Route::match(['get', 'post'], 'system/contact/index.php', 'form')->name('form.index');
     Route::post('system/contact/contact_complete.php', 'send')->name('send');
 });
