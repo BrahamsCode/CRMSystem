@@ -9,7 +9,7 @@ Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archiv
 
 ## Próximo paso
 
-Sin tareas abiertas (2026-11-27): rama al día con `laravel13` (0240481). Esperando la siguiente tarea de S0 o el volcado de producción/staging (Cola 4).
+`Doc/contratos/DESPLIEGUE.md` escrito (ver "Hecho"). Esperando la siguiente tarea de S0: los cambios de su sección 13 (casi todos de S1) los asigna S0 tras «Decide Antony».
 
 **A) Base legacy** (corto; subir apenas esté): traits `app/Models/Concerns/` `HasHatuban` (numeración por `koumoku`), `LegacySoftDeletes` (scope `disp_flg <> '9'`, `delete()` pone `'9'`), `LegacyTimestamps` (`touroku_date`/`update_date` epoch en texto); modelo base `LegacyModel` (`cd`, no incremental, sin timestamps, `$guarded=[]`); servicio `Hatuban`; modelos `Shop` (`tb_shop`), `Staff` (`tb_staff`), `Terminal` (`tb_terminal`), `AdminMaster`, `ContentsMaster`, con pruebas sobre el esquema legacy; registrar `<Modulo>ServiceProvider` existentes en `bootstrap/providers.php`. Terminado: pruebas en verde, commit, push, aviso.
 
@@ -73,6 +73,17 @@ Recibidos de S0 el 2026-11-26 (para la Cola, después de la Fase 1; S0 los asign
 
 ## Hecho
 
+- **Despliegue (2026-11-27, laravel13 85a2f10):** `Doc/contratos/DESPLIEGUE.md`, solo documentación. Cubre:
+  - imagen de Render, entrypoint, variables de producción, planificador y cola;
+  - `storage:link`, persistencia, `signage`/`beacon`, IPAex, cachés, proxy y comprobación;
+  - 12 cambios pendientes y «Decide Antony».
+
+  Hallazgos que bloquean:
+  - `public_html/.env` entra en la imagen (`.dockerignore`);
+  - Apache con `AllowOverride None` (verificar);
+  - el entrypoint copia `.env.example` y corre `migrate --force` (cargaría `pgsql-schema.sql` sobre la BD del legacy).
+
+  Además falta `trustProxies()`.
 - **Repaso de subidas en `:8081` (2026-11-27, laravel13 9cd5981):**
   - Alcance: núcleo/基本情報 no tiene formularios de subida propios (en el legacy, category0 no usa `$_FILES`). Lo que sube archivos y es de S1:
     - el endpoint común `system/inc/ajax_picupload.php`, con `system/uploads/`;
