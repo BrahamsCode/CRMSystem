@@ -16,8 +16,7 @@ use Illuminate\Support\Facades\DB;
  * si la hora configurada cayó en los últimos 5 minutos, suma registPoints a los clientes registrados hace `days`
  * días que aún no tienen el movimiento `crm:newRegist`/`mycolle:newRegist` (personal 1, terminal -100).
  *
- * Nombre de clase distinto de `RegisterPointCommand` a propósito: PromocionServiceProvider::TASKS (S3) programaría
- * esa clase sin las condiciones del legacy; la programa PromocionFidelizacionServiceProvider.
+ * La programa solo PromocionFidelizacionServiceProvider, con las condiciones del legacy (no PromocionServiceProvider::TASKS).
  */
 class GrantRegisterPointsCommand extends Command
 {

@@ -21,8 +21,7 @@ use Illuminate\Support\Facades\Log;
  *    (paid_member_flg 2 o 3) cuyo servicio empezó en el mes de hace `months` meses;
  * 3. deja un push en push_master para esos socios y avisa a g-api (PushTrigger), con el mismo texto que el legacy.
  *
- * Nombre de clase distinto de `PaidMemberPointCommand` a propósito: PromocionServiceProvider::TASKS (S3) la
- * programaría cada minuto; la programa PromocionFidelizacionServiceProvider a las 10:00.
+ * La programa solo PromocionFidelizacionServiceProvider, a las 10:00 (no PromocionServiceProvider::TASKS).
  */
 class GrantPaidMemberPointsCommand extends Command
 {

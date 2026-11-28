@@ -28,17 +28,13 @@ class PromocionServiceProvider extends ServiceProvider
 {
     /**
      * Tareas: clase del comando => frecuencia (método de Illuminate\Console\Scheduling\Event).
-     * Se registran las que ya existen; el resto llega con su submódulo (§3 del diseño):
-     *   promocion:send-mail (M2), promocion:send-follow-push (M5), promocion:point-* (F4),
-     *   promocion:stamp-* (F5), promocion:clean-temp (M10).
+     * Solo las tareas sin condición propia. Las de puntos y sellos (F4/F5: register-point, paid-member-point,
+     * stamp-shikkou, stamp-shikkou-alert) van en PromocionFidelizacionServiceProvider con la hora y la condición
+     * del crontab de cSendSchedule; no repetirlas aquí (se enviarían dos veces: ScheduleSinDuplicadosTest).
      */
     public const TASKS = [
         'App\\Console\\Commands\\Promotions\\SendMailCommand' => 'everyMinute',
         'App\\Console\\Commands\\Promotions\\SendFollowPushCommand' => 'everyFiveMinutes',
-        'App\\Console\\Commands\\Promotions\\RegisterPointCommand' => 'everyFiveMinutes',
-        'App\\Console\\Commands\\Promotions\\PointShikkouCommand' => 'everyMinute',
-        'App\\Console\\Commands\\Promotions\\StampShikkouCommand' => 'everyMinute',
-        'App\\Console\\Commands\\Promotions\\PaidMemberPointCommand' => 'everyMinute',
         'App\\Console\\Commands\\Promotions\\CleanTempCommand' => 'daily',
     ];
 

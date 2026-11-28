@@ -25,6 +25,18 @@ class PromocionFidelizacionServiceProvider extends ServiceProvider
                 ->timezone(\App\Services\Promotions\LegacyTime::ZONE)
                 ->when(fn () => \App\Console\Commands\Promotions\GrantPaidMemberPointsCommand::shouldSchedule())
                 ->withoutOverlapping();
+            // Caducidad de puntos (S3): sendPointShikkouMail / sendPointShikkouAlertMail a la hora de admin_master
+            // (tb_office.start_work_time si falta) y sendPointShikkouAlertMailMultiple a la alert_time de cada aviso
+            $points = fn () => $this->app->make(\App\Services\Promotions\PointExpiryMailer::class);
+            $schedule->command(\App\Console\Commands\Promotions\PointShikkouAlertCommand::class)->everyMinute()
+                ->when(fn () => $points()->isDue(\App\Services\Promotions\PointExpiryMailer::ALERT, now()))
+                ->withoutOverlapping();
+            $schedule->command(\App\Console\Commands\Promotions\PointShikkouAlertCommand::class, ['--due'])->everyMinute()
+                ->when(fn () => $points()->dueAlertCds(now()) !== [])
+                ->withoutOverlapping();
+            $schedule->command(\App\Console\Commands\Promotions\PointShikkouCommand::class)->everyMinute()
+                ->when(fn () => $points()->isDue(\App\Services\Promotions\PointExpiryMailer::SHIKKOU, now()))
+                ->withoutOverlapping();
             // fin F4
 
             // F5
