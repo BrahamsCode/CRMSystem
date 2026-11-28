@@ -131,14 +131,14 @@ Diferencias con crm2-php8, a propósito: `DocumentRoot /var/www/public` (Laravel
 |---|---|---|
 | 0 | Docker igual que crm2-php8 + documentación de referencia | **Hecho (2026-11-26)** |
 | 0b | Análisis vista por vista (`Doc/analisis-legacy/`, ≈ 1.020 vistas, ≈ 615 puntos) y orquestación (`Doc/planificacion/`, `INICIAR-CRM.bat`) | **Hecho (2026-11-26)** |
-| 1 | Subir Laravel 12 → 13 y PHP 8.5 (`composer.json`, Pest 4, Fortify, Dockerfile de Render) | Pendiente — S1 |
+| 1 | Subir Laravel 12 → 13 y PHP 8.5 (`composer.json`, Pest 4, Fortify, Dockerfile de Render) | **Hecho (2026-11-27)**: Laravel 13.44.1 sobre PHP 8.5.13 |
 | 1' | Diseño por grupo (`Doc/diseno/`) | **Hecho (2026-11-27)**: v2 sobre la BD y la UI del legacy, aprobados: S2 (84 pts), S3 (≈83), S4, S5 (63, de los que 22 esperan 勤怠) |
 | 2 | **Misma BD y misma UI que el legacy** (Antony, 2026-11-26): esquema `database/schema/pgsql-schema.sql` desde `crm2019.backup`, modelos sobre `tb_*`, mismos CSS; responsive al final. Lo construido sobre tablas nuevas se borró | **Hecho (esquema y limpieza)** |
 | 3+ | Módulos en paralelo según `Doc/planificacion/ORCHESTRATION.md` | **Hecho salvo decisiones de Japón** (2026-11-27): 989 pruebas en verde; paridad del 97 % (`Doc/qa/paridad.md`), con 7 pendientes (スマトピ, ビーコン, `shukei`); regresión de punta a punta sin errores 500 (`Doc/qa/regresion.md`); informe en `Doc/qa/para-japon.md` |
 
 ## 8. Siguiente paso
 
-1. Commit del contexto y doble clic en `INICIAR-CRM.bat` (ver `Doc/planificacion/ARRANQUE.md`). A partir de ahí, S0 orquesta: el plan está en `Doc/planificacion/ORCHESTRATION.md` y el estado de cada sesión en `Doc/coordinacion/`.
+1. (2026-11-27, noche) El plan de `ORCHESTRATION.md` §4 está cumplido salvo lo que espera a Japón. S0 pasa la suite completa en serie sobre `laravel13` y S1 prepara `Doc/contratos/DESPLIEGUE.md`. La siguiente fase (responsive y rediseño, despliegue o cargar datos reales) la decide Antony.
 
 ## 8b. Respuestas de Antony (2026-11-27)
 

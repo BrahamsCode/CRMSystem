@@ -198,6 +198,7 @@
   - .env local (no versionado): correo a Mailpit, CRM_GAPI_ENABLED=false y claves de prueba de tool/api y JWT (RSA en storage/app/keys). php-fpm corre como `apache`: storage es de apache.
   - Suite completa: solo la paso yo, en serie, porque las sesiones en paralelo agotaban la memoria. Pruebas inestables: Contenido\DemoSeederTest (S4), SimpleReservationTest y WorkingDayTest (en vigilancia).
 - 2026-11-27 (16:00), tercera pasada casi cerrada (laravel13 cffd6f3). Fallos corregidos con prueba: S1 4, S2 6, S3 7, S4 5, S5 4. Interruptores para salir a internet: GApi (S1; S3, S4 y S5 ya lo usan) y MOBILESHOP_EXTLINK_ENABLED (S5); auditoría en Doc/qa/llamadas-externas.md. Pendientes: S4 compara el HTML con la muestra; la suite completa en serie la cortó el sistema por falta de memoria (los módulos pasan uno a uno) y hay que relanzarla con las sesiones paradas.
+- 2026-11-27 (noche): las 5 sesiones, libres y con todo integrado (laravel13 85a2f10, con el estado de S1). Congelé las pruebas en los worktrees para pasar la suite completa en serie. Mientras tanto, S2 reverifica en :8081 lo que quedaba tras la fusión (permisos de reservas y CSV de 予約一覧出力) y S1 escribe `Doc/contratos/DESPLIEGUE.md` (solo documentación). Le pregunto a Antony por la siguiente fase.
 
 ## Hecho
 
