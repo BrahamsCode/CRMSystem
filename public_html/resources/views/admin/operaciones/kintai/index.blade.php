@@ -80,8 +80,7 @@ function recordDelete( url, staffCd ){
 <p class="h2Title">■日付別勤怠データ一覧</p>
 
 
-<form class="form" method="post" action="{{ route('admin.operaciones.kintai.index') }}">
-@csrf
+<form class="form" method="get" action="{{ route('admin.operaciones.kintai.index') }}">
 <div class="dateSelectArea">
 
 <fieldset>
