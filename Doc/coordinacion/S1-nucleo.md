@@ -9,7 +9,7 @@ Trabajas sin pedir confirmación. Al terminar cada tarea: actualizar este archiv
 
 ## Próximo paso
 
-Repaso de subidas en `:8081` hecho, sin fallos (ver "Hecho"). Esperando la siguiente tarea de S0.
+Sin tareas abiertas (2026-11-27): rama al día con `laravel13` (0240481). Esperando la siguiente tarea de S0 o el volcado de producción/staging (Cola 4).
 
 **A) Base legacy** (corto; subir apenas esté): traits `app/Models/Concerns/` `HasHatuban` (numeración por `koumoku`), `LegacySoftDeletes` (scope `disp_flg <> '9'`, `delete()` pone `'9'`), `LegacyTimestamps` (`touroku_date`/`update_date` epoch en texto); modelo base `LegacyModel` (`cd`, no incremental, sin timestamps, `$guarded=[]`); servicio `Hatuban`; modelos `Shop` (`tb_shop`), `Staff` (`tb_staff`), `Terminal` (`tb_terminal`), `AdminMaster`, `ContentsMaster`, con pruebas sobre el esquema legacy; registrar `<Modulo>ServiceProvider` existentes en `bootstrap/providers.php`. Terminado: pruebas en verde, commit, push, aviso.
 
@@ -32,7 +32,7 @@ Repaso de subidas en `:8081` hecho, sin fallos (ver "Hecho"). Esperando la sigui
 ## Pedidos
 
 - **Hechos (2026-11-27):** condiciones `*.enabled` que master no salta; `label_from`/`title_from` en el menú; `system/img` ya estaba completo (480 archivos).
-- **基本情報管理 pendiente:** ショートカット管理, エリア管理, 機能設定 + plantillas de caducidad, mantenimiento (システム管理, 権限項目管理, CRM端末管理). Ver `Doc/diseno/nucleo-base.md`.
+- **基本情報管理:** completo (ショートカット管理, エリア管理, 機能設定, システム管理, 権限項目管理, CRM端末管理; ver "Hecho"). Pendientes solo de la Cola: punto 4 (volcado real, depende de Antony) y punto 5 (paquetes a pedido).
 
 Recibidos de S0 el 2026-11-26 (para la Cola, después de la Fase 1; S0 los asigna al integrar):
 
