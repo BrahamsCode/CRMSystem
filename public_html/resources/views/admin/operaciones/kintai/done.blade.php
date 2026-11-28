@@ -25,8 +25,7 @@ $(document).ready(function() {
 <p>{{ $message }}</p>
 
 
-<form class="form" method="post" action="{{ route('admin.operaciones.kintai.index') }}">
-@csrf
+<form class="form" method="get" action="{{ route('admin.operaciones.kintai.index') }}">
 <div class="btnBox">
 <input type="submit" name="act" id="act" class="btnStyleM" value="　　戻る　　" />
 <input type="hidden" name="yy" value="{{ $query['yy'] }}" />

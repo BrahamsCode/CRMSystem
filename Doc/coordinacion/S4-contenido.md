@@ -77,6 +77,8 @@ Ver diseño §5. A S0: BD `admin` de `signage/` (no está en el esquema); GoTel/
 
 ## Hecho
 
+- 2026-11-28 Rutas con `route:cache` (pedido de S0, d660f6d): 252 pruebas de S4 (Contenido, Mypage, Terminales, Senalizacion, Unit/Terminales y las suyas de Promotions/Integraciones) en verde con y sin caché; sin rutas registradas en tiempo de ejecución en mis pruebas. Rastreo de duplicadas método+URI en todo `routes/web.php`: solo `POST admin/operaciones/kintai` (S5, ya conocida).
+
 - 2026-11-28 Recomprobación de imágenes de S4 en :8081 tras `storage:link`/`APP_URL` (todo 200; S4 usa `hp/uploads/`). クリックカウンタ de anketo ya la hizo S3 (M4). Sin tarea: espera a S0 (no correr Pest hasta su aviso).
 
 - 2026-11-28 `database/seeders/Demo/ContenidoDemoSeeder.php`: マイコレ (カバー 4, バナー 3, HOME y サムネイル), オススメ 3, 求人 3 (2 職種, floormap.xml), ガチャリン (config + tiradas de socios), 電子看板 (3 素材 con imagen, 2 プログラム horizontal/vertical con XML, 2 displays), ペーパーサイネージ 3, ICカード 5 (3 asignadas), signage/ (paquete, 3 imágenes, 2 terminales). Idempotente por bloque; sin socios o sin esquema signage/ salta esa parte. Placeholders GD en el disco public. `tests/Feature/Contenido/DemoSeederTest.php`. Suite 991 verde.

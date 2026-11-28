@@ -72,7 +72,8 @@ Route::prefix('operaciones')->name('operaciones.')->group(function () {
     Route::post('shifts/month', [StaffShiftController::class, 'saveMonth'])->name('shifts.month.save');
 
     // 勤怠管理 (kintai/): lista del día, alta y CSV diario para todos (la tienda del no master es la suya)
-    Route::match(['get', 'post'], 'kintai', [KintaiController::class, 'index'])->name('kintai.index');
+    // Solo GET: el POST de 'kintai' es el alta (dos rutas con el mismo método y URI cambian de dueña con route:cache)
+    Route::get('kintai', [KintaiController::class, 'index'])->name('kintai.index');
     Route::get('kintai/create', [KintaiController::class, 'create'])->name('kintai.create');
     Route::post('kintai', [KintaiController::class, 'store'])->name('kintai.store');
     Route::get('kintai/csv', [KintaiCsvController::class, 'daily'])->name('kintai.csv.daily');
