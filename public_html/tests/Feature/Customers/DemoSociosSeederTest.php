@@ -107,22 +107,25 @@ it('llena la lista y las pestañas de la ficha con los socios demo', function ()
     $tab('')->assertSee($customer->name)->assertSee('090-0000-');
     $lastVisit = DB::table('tb_raiten_rireki')->where('user_cd', $cd)->orderByDesc('raiten_time')->value('raiten_time');
     $tab('4')->assertSee(Carbon::createFromTimestamp((int) $lastVisit, 'Asia/Tokyo')->format('Y/m/d H:i'))->assertSee('本店');
-    $tab('8')->assertSee(number_format((int) DB::table('tb_point_log')->where('tb_customer_cd', $cd)->orderByDesc('touroku_date')->value('kaikei')));
+    $tab('8')->assertSee(number_format((int) DB::table('tb_point_log')->where('tb_customer_cd', $cd)->orderByDesc('touroku_date')->orderByDesc('cd')->value('kaikei')));
     $tab('10')->assertSee('<span class="genzaiStamp">' . $customer->stamp_count . '</span>', false);
 
-    $karte = DB::table('tb_karute')->first();
-    $this->get(route('admin.clientes.show', [$karte->tb_customer_cd, 'tab' => '5']))->assertOk()
+    // Orden total y la カルテ pedida por karute_cd (sin él, la pestaña muestra la última del cliente)
+    $karte = DB::table('tb_karute')->orderBy('cd')->first();
+    $this->get(route('admin.clientes.show', [$karte->tb_customer_cd, 'tab' => '5', 'karute_cd' => $karte->cd]))->assertOk()
         ->assertSee(explode("\n", $karte->comment)[0]);
 
-    $photo = DB::table('tb_photo_album')->first();
+    $photo = DB::table('tb_photo_album')->orderBy('cd')->first();
     $this->get(route('admin.clientes.show', [$photo->tb_customer_cd, 'tab' => '7', 'photoalbum_cd' => $photo->cd]))->assertOk()
         ->assertSee("photoalbum/{$photo->cd}/0_l.jpg", false)->assertSee($photo->comment);
 
-    $referrer = DB::table('tb_customer')->whereNotNull('shoukai_tb_customer_cd')->where('email1', 'like', 'demo%')->first();
+    // Solo los referidos que tab13 lista (socio activo)
+    $referrer = DB::table('tb_customer')->whereNotNull('shoukai_tb_customer_cd')->where('email1', 'like', 'demo%')
+        ->where('disp_flg', '1')->where('touroku_kubun', Customer::MEMBER_KUBUN)->orderBy('cd')->first();
     $this->get(route('admin.clientes.show', [$referrer->shoukai_tb_customer_cd, 'tab' => '13']))->assertOk()
         ->assertSee($referrer->name);
 
-    $sub = DB::table('tb_customer_sub')->where('form_title', 'like', SociosDemoSeeder::CUSTOM_CATEGORY . '<>髪質')->first();
+    $sub = DB::table('tb_customer_sub')->where('form_title', 'like', SociosDemoSeeder::CUSTOM_CATEGORY . '<>髪質')->orderBy('cd')->first();
     $this->get(route('admin.clientes.show', [$sub->tb_customer_cd, 'tab' => 'custom', 'search_cate_cd' => $sub->tb_search_cate_cd]))->assertOk()
         ->assertSee(SociosDemoSeeder::CUSTOM_CATEGORY)->assertSee($sub->text_data);
 });
