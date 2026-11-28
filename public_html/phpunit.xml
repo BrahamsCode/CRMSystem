@@ -20,6 +20,10 @@
     <php>
         <ini name="memory_limit" value="512M"/>
         <env name="APP_ENV" value="testing"/>
+        <env name="APP_URL" value="http://localhost"/>
+        <!-- Las pruebas no dependen del .env local (:8081, avisos a Mailpit): mismos valores que config/crm.php -->
+        <env name="CRM_NOTIFY_CONTACT" value="crm@extlink.co.jp"/>
+        <env name="CRM_NOTIFY_SHOP_CREATED" value="support@glory.ne.jp"/>
         <env name="APP_MAINTENANCE_DRIVER" value="file"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="BROADCAST_CONNECTION" value="null"/>
